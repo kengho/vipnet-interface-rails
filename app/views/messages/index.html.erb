@@ -1,0 +1,22 @@
+<h1>Messages</h1>
+
+<table border=1>
+  <tr>
+    <th>id</th>
+    <th>source</th>
+    <th>network_id</th>
+    <th>content</th>
+    <th>created_at</th>
+  </tr>
+
+  <% @messages.each do |message| %>
+    <tr>
+      <td><%= message.id %></td>
+      <td><%= message.source %></td>
+      <td><%= message.network_id %></td>
+      <td><%= message.content %></td>
+      <td><%= message.created_at %></td>
+    </tr>
+  <% end %>
+</table>
+<%= will_paginate @messages, class: "pagination" %>

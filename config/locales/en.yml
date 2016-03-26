@@ -1,0 +1,189 @@
+# Files in the config/locales directory are used for internationalization
+# and are automatically loaded by Rails. If you want to use locales other
+# than English, add the necessary files in this directory.
+#
+# To use the locales, use `I18n.t`:
+#
+#     I18n.t 'hello'
+#
+# In views, this is aliased to just `t`:
+#
+#     <%= t('hello') %>
+#
+# To use a different locale, set it with `I18n.locale`:
+#
+#     I18n.locale = :es
+#
+# This would use the information in config/locales/es.yml.
+#
+# To learn more, please read the Rails Internationalization guide
+# available at http://guides.rubyonrails.org/i18n.html.
+
+en:
+  default:
+    title: "ViPNet Nodes"
+  api:
+    v1:
+      doc:
+        index:
+          title: "API documentation"
+          overall_label: "Overall"
+          request: "Request"
+          response: "Repsonse"
+          format: "Format"
+          nodes_label: "Getting data by nodes's ID"
+          fields: "Fields"
+          enabled_comment: "Node's status in ViPNet Network Control Center"
+          vipnet_version_comment: "\"?\" if gotten by some coordinator value conflicts with other values"
+          accessips_label: "Getting data by accessip"
+          accessips_label_comment: "only[] param is similar to p.1"
+          errors_label: "Errors"
+          wrong_params: "Wrong params"
+          node_not_found: "Node not found"
+          internal_error: "Server error"
+  nodes:
+    row:
+      remote_status:
+        result_false:
+          more: "More"
+        spinner:
+          wait: "Please, wait" # html_safe
+      availability:
+        button_label: "Check<br>availability" # html_safe
+        node_deleted: "Node deleted"
+        more: "More"
+        dated_data: "Dated data"
+        from: "from"
+        to: "to"
+        node_disabled: "Node disabled"
+        node_available: "Node available"
+        node_unavailable: "Node unavailable"
+      datetime:
+        service_started: "Service started at"
+        before: "b."
+        unknown_date: "It is impossible to know for sure<br>creation date of this node" # html_safe
+      history:
+        update_button_tooltip_text: "Load last data" # html_safe
+        update_true_tooltip_text: "Last data loaded" # html_safe
+        update_false_tooltip_text: "Error" # html_safe
+        history_button_tooltip_text: "Load history" # html_safe
+        history_true_tooltip_text: "History loaded" # html_safe
+        history_false_tooltip_text: "History not found" # html_safe
+        undo_label: "Cancel"
+      remote_status_button:
+        last_data: "Last data"
+        history: "History"
+        node: "Node"
+        now: "now"
+        available: "available"
+        unavailable: "unavailable"
+        enable_js: "Enable JavaScript for more convenience."
+        back: "back"
+    fullscreen_tooltip:
+      node-deleted:
+        short: "Node deleted"
+        long: >
+          <span>This node was deleted by ViPNet administrator. PC with ViPNet Client with this ID can't use any of protected network features, such as using protected servers or Business Mail.</span>
+          <span>Reasons for deleting ViPNet nodes:</span>
+          <ol><li>node was create temporarily;</li>
+          <li>someone with corresponding rights initiated deletion for objective reasons (uselessness, dismissal, etc.);</li>
+          <li>node was created for testing purpose.</li>
+          </ol>If node shouldn't be deleted, contact ViPNet administrator.
+      no-accessips:
+        short: "No accessips"
+        long: >
+          <span>Node's availability in any moment could be determined by making connection to certain <a href='https://en.wikipedia.org/wiki/Port_%28computer_networking%29'>port</a> and <a href='https://en.wikipedia.org/wiki/IP_address'>IP address</a>, called «accessip».</span>
+          <span>This service collects information about nodes from ViPNet Coordinator. Node gets related to coordinator accessip at the time of the first request to it and updated over the time when node's network settings changed.</span>
+          <span>Each node is connected at least to one coordinator, therefore, lack of accessips indicates, that</span>
+          <ol><li>corresponding ViPNet distributive (DST file) never was initialized to ViPNet Client,</li>
+          <li>or this distributive was initialized, but because of network problems was unable to make request to coordinator.</li>
+          </ol><span>Node will be unavailable until this causes are eliminated.</span>
+      node-unavailable:
+        short: "Node unavailable"
+        long: >
+          <span>Node could be unavailable because of:</span>
+          <ol><li>lack of node's network connection;</li>
+          <li>wrong node's ViPNet Client settings (coordinator for connections, mode, etc.);</li>
+          <li>transit network problems;</li>
+          <li>malfuncion of used for check availablility ViPNet Coordinator;</li>
+          <li>node's firewall that blocks 5100\TCP;</li>
+          <li>lack of node's references that have related tunnel for this service;</li>
+          <li>node's deletion in other network.</li></ol>
+      node-disabled:
+        short: "Node disabled"
+        long: >
+          <span>Node was disabled by ViPNet administrator.</span>
+          <span>PC with ViPNet Client with this ID can't use any of protected network features, such as using protected servers or Business Mail. Node could be disabled by someone with corresponding rights for objective reasons.</span>
+          <span>If node shouldn't be disabled, contact ViPNet administrator.</span>
+      close: "(Press Esc or click outside this field to exit.)"
+    header:
+      title: "ViPNet Nodes"
+      search_results_subtitle: "Searh results"
+      last_changed_nodes_subtitle: "Last changes"
+      settings: "Settings"
+      support: "Support"
+      profile: "Profile"
+      exit: "Exit"
+    thead:
+      search_button:
+        label: "Search"
+      id_label: "ID"
+      name_label: "Name"
+      ip_label: "IP address"
+      software_label: "Software version"
+      created_label: "Created at"
+      deleted_label: "Deleted at"
+  settings:
+    flash:
+      password: "Password"
+      error_saving_user: "Error saving user"
+      user_saved: "User saved"
+      user_destroyed: "User deleted"
+      error_destroying_user: "Error deleting user"
+      settings_saved: "Settings saved"
+    index:
+      title: "Settings"
+      label: "Settings"
+      general: "General"
+      users: "Users"
+      # settings vars
+      checker: "Check availablility API"
+      support_email: "Support Email"
+      networks_to_ignore: "Ignoring networks"
+      nodes_per_page: "Nodes per page"
+      # end settings vars
+      submit_label: "Save"
+      email: "Email"
+      role: "Role"
+      add: "Add"
+      save: "Save"
+      delete: "Delete"
+      delete_confirm: "Delete user"
+    select_role:
+      administrator: "Administrator"
+      user: "User"
+      editor: "Editor"
+  shared:
+    password:
+      password_label: "Password"
+      password_confirmation_label: "Password confirmation"
+      current_password_label: "Current password"
+      new_password_label: "New password"
+  user_sessions:
+    new:
+      title: "Sign in"
+      label: "Sign in"
+      submit_label: "Sign in"
+      remember_me: "Remember me"
+  users:
+    edit:
+      title: "Profile"
+      label: "Profile"
+      submit_label: "Save"
+    flash:
+      error_saving_user_settings: "Unable to save user settings"
+      user_settings_saved: "User settings successfully saved"
+  will_paginate:
+    previous_label: "<i class='material-icons'>chevron_left</i>"
+    next_label: "<i class='material-icons'>chevron_right</i>"
+    page_gap: "..."

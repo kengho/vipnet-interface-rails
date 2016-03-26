@@ -1,0 +1,7 @@
+<select name="role">
+  <% User.roles.each do |role| %>
+    <option <% if defined?(selected_role)%><% if role == selected_role %>selected="selected"<% end %><% end %> value="<%= role %>">
+      <%= t("." + role) %>
+    </option>
+  <% end %>
+</select>

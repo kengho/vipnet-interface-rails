@@ -1,0 +1,46 @@
+<div class="doc">
+  <p>0. <%= t(".overall_label") %></p>
+  <%= t(".request") %>: <span class="data">GET</span><br>
+  <%= t(".response") %>: <span class="data">JSON</span><br>
+  <%= t(".format") %> <span class="data">$VIPNET_ID: /^0x[0-9a-f]{8}$/ (0x1234abcd)</span><br>
+  <%= t(".format") %> <span class="data">$ACCESSIP: /^([0-9]{1,3}\.){3}[0-9]{1,3}$/ (IPv4)</span><br><br>
+  <p>1. <%= t(".nodes_label") %></p>
+  <%= t(".request") %>: <span class="get">api/v1/nodes?token=$GET_INFORMATION_TOKEN&vipnet_id=$VIPNET_ID</span><br>
+  <%= t(".response") %>: <span class="json">data: { name: "$NODE_NAME", enabled: [true | false] }</span><br>
+  <br>
+  <%= t(".request") %>: <span class="get">api/v1/nodes?$GET_INFORMATION_TOKEN&vipnet_id=$VIPNET_ID&only[]=name&only[]=created_first_at</span><br>
+  <%= t(".response") %>: <span class="json">data: { name: "$NODE_NAME", created_first_at: "$DATE_OF_CREATION" }</span><br>
+  <br>
+  <%= t(".fields") %>:
+  <ol>
+    <li><span class="json">vipnet_id: string</span></li>
+    <li><span class="json">name: string</span></li>
+    <li>
+      <span class="json">enabled: boolean</span>
+      <span class="comment">// <%= t(".enabled_comment") %></span>
+    </li>
+    <li>
+      <span class="json">category: string</span>
+      <span class="comment">// ["client" | "server"]</span>
+    </li>
+    <li><span class="json">created_first_at: datetime</span></li>
+    <li><span class="json">ips: { "summary": "$UNIQ_IPS_SEPARATED_BY_COMMAS", "$COORDINATOR_VIPNET_ID": "$IP1", ... }</span></li>
+    <li>
+      <span class="json">vipnet_version: { "summary": ["?" | "$SOFTWARE_VERSION"], "$COORDINATOR_VIPNET_ID": "$SOFTWARE_VERSION1", ... }</span>
+      <span class="comment">// <%= t(".vipnet_version_comment") %></span>
+    </li>
+  </ol>
+  <p>2. <%= t(".accessips_label") %></p>
+  <%= t(".request") %>: <span class="get">api/v1/accessips?token=$GET_INFORMATION_TOKEN&accessip=$ACCESSIP</span><br>
+  <%= t(".response") %>: <span class="json">data: { vipnet_id: "$VIPNET_ID", enabled: [true | false] }</span><br>
+  <span class="comment">// <%= t(".accessips_label_comment") %></span>
+  <p>3. <%= t(".errors_label") %></p>
+  <%= t(".wrong_params") %><br>
+  <span class="json">errors [ { title: "external", detail: "Expected $PARAM as param", links: { related: { href: "/api/v1/doc" } } } ]</span><br><br>
+  <%= t(".node_not_found") %><br>
+  <span class="json">errors [ { title: "external", detail: "Node not found" } ]</span><br><br>
+  <%= t(".internal_error") %><br>
+  <span class="json">errors [ { title: "internal", detail: "Please report to developer. $ERROR_DESCRIPTION. Params: { "$PARAMS" }" } ]</span><br><br>
+  <br>
+
+</div>

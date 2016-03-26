@@ -1,0 +1,30 @@
+.doc {
+  margin: 20px;
+  padding: 20px;
+  background-color: #eee;
+}
+
+.data, .get, .json, .comment {
+  font-family: monospace;
+}
+
+.get {
+  background-color: #ccd;
+  padding: 2px;
+}
+
+.json {
+  background-color: #cdc;
+  padding: 2px;
+}
+
+.comment {
+  font-style: italic;
+  color: #7a7;
+  display: block;
+  padding-bottom: 10px;
+}
+
+p {
+  font-weight: bold;
+}

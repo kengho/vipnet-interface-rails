@@ -1,0 +1,37 @@
+<td class="mdl-data-table__cell--non-numeric nodes__td">
+  <% if !node["history"] && node["enabled"] && !node["deleted_at"] %>
+    <div id="node-<%= node["id"] %>__check-availability">
+      <a data-remote="true" data-replace-link-by-spinner="true" href="nodes/availability/<%= node["id"] %>">
+        <%= render "nodes/row/remote_status/button", icon: "help", disabled: false, tooltip_text: t(".button_label").html_safe %>
+      </a>
+      <%= render "nodes/row/remote_status/spinner" %>
+      <%= render "nodes/row/remote_status/result_true", icon: "check_circle", tooltip_text: t(".node_available") %>
+      <%= render "nodes/row/remote_status/result_false", icon: "error", tooltip_text: t(".node_unavailable") + "<br>", tooltip_key: "node-unavailable" %>
+    </div>
+  <% else %>
+    <label class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent remote-status__alerts nodes__hover-for-tooltip" disabled>
+      <i id="node-<%= node["id"] %>__alerts" class="material-icons">warning</i>
+    </label>
+    <div class="nodes__tooltip--hoverable alerts__tooltip">
+      <% if node["deleted_at"] %>
+        <div>
+          <%= t(".node_deleted") %><br>
+          <span data-fullscreen-tooltip-key="node-deleted" class="nodes__link--same-page"><%= t(".more") %></span>
+        </div>
+      <% end %>
+      <% if node["history"] %>
+        <div>
+          <%= t(".dated_data") %><br>
+          <%= t(".from") %> <%= node["created_at"].strftime("%Y-%m-%d %H:%M UTC") %><br>
+          <%= t(".to") %> <%= node["updated_at"].strftime("%Y-%m-%d %H:%M UTC") %>
+        </div>
+      <% end %>
+      <% unless node["enabled"] %>
+        <div>
+          <%= t(".node_disabled") %><br>
+          <span data-fullscreen-tooltip-key="node-disabled" class="nodes__link--same-page"><%= t(".more") %></span>
+        </div>
+      <% end %>
+    </div>
+  <% end %>
+</td>

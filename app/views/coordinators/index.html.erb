@@ -1,0 +1,17 @@
+<h1>Coordinators</h1>
+
+<table border=1>
+  <tr>
+    <th>id</th>
+    <th>vipnet_id</th>
+    <th>name</th>
+  </tr>
+
+  <% @coordinators.each do |coordinator| %>
+    <tr>
+      <td><%= coordinator.id %></td>
+      <td><%= coordinator.vipnet_id %></td>
+      <td><%= coordinator.name %></td>
+    </tr>
+  <% end %>
+</table>

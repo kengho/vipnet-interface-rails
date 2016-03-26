@@ -1,0 +1,33 @@
+$primary-color: #009688;
+$accent-color: #7c4dff;
+$main-text-color: #333;
+$reversed-text-color: #eee;
+$main-link-color: #478;
+$main-link-color-hover: #6ab;
+$reversed-link-color: #adf;
+$reversed-link-color-hover: #9cd;
+$dark-gray-bgcolor: #272727;
+$light-gray-bgcolor: #666;
+$form-inside-bgcolor: #eee;
+$form-inside-bgcolor-hover: #ddd;
+$gray-icon-color: #666;
+
+%for-tooltips {
+  position: absolute;
+  visibility: hidden;
+  z-index: 500;
+  transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
+  transition-property: transform;
+  // ripoff mdl-tooltip
+  transform: scale(0);
+  transform-origin: center top 0px;
+  background: rgba(97, 97, 97, 0.9) none repeat scroll 0% 0%;
+  border-radius: 2px;
+  color: white;
+  display: inline-block;
+  font-size: 10px;
+  font-weight: 500;
+  line-height: 14px;
+  padding: 8px;
+  text-align: center;
+}

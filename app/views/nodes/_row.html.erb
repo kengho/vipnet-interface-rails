@@ -1,0 +1,33 @@
+<%
+  if defined?(row_id)
+    id = row_id
+  else
+    id = node["id"]
+  end
+  if node["history"]
+    row_classes = "nodes__row nodes__row--history"
+  else
+    row_classes = "nodes__row"
+  end
+%>
+
+<tr id="node-<%= id %>__row" class="<%= row_classes %>">
+  <%= render "nodes/row/string", value: node["vipnet_id"], node: node %>
+  <%= render "nodes/row/availability", node: node %>
+  <%= render "nodes/row/string", value: node["name"], node: node %>
+  <%= render "nodes/row/string", value: node["ips"]["summary"], node: node %>
+  <%= render "nodes/row/string", value: node["vipnet_version"]["summary"], node: node %>
+  <% if defined?(row_id) %>
+    <%= render "nodes/row/space" %>
+  <% else %>
+    <%= render "nodes/row/history", node: node %>
+  <% end %>
+  <%# http://stackoverflow.com/a/8550597 %>
+  <% if node["created_first_at"].to_date === first_node_created_at.to_date %>
+    <%= render "nodes/row/datetime", value: node["created_first_at"], created_at_tip: true, node: node, first_node_created_at: first_node_created_at %>
+  <% else %>
+    <%= render "nodes/row/datetime", value: node["created_first_at"], node: node %>
+  <% end %>
+  <%= render "nodes/row/datetime", value: node["deleted_at"] %>
+  <%= render "nodes/row/space" %>
+</tr>

@@ -1,0 +1,14 @@
+<% if @response[:div_suffix] == "history" %>
+  <%= @response[:place] == "before" ? t(".last_data") : t(".history") %>
+  <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+    <% @response[:args].each do |node| %>
+      <%= render "nodes/row", node: node, first_node_created_at: @response[:first_node_created_at], fullscreen_tooltips: @response[:fullscreen_tooltips] %>
+    <% end %>
+  </table>
+<% end %>
+<% if @response[:div_suffix] == "check-availability" %>
+  <% node_status = @response[:status] ? t(".available") : t(".unavailable") %>
+  <%= t(".node") %> "<%= @node.name %>" <%= t(".now") %> <%= node_status %>.<br>
+<% end %>
+<%= t(".enable_js") %><br>
+<%= link_to t(".back"), :back %>

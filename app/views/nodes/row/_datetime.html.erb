@@ -1,0 +1,12 @@
+<td class="mdl-data-table__cell--non-numeric nodes__td">
+  <% if value.class == ActiveSupport::TimeWithZone %>
+    <% if defined?(created_at_tip) %>
+      <span class="nodes__link--hover nodes__hover-for-tooltip"><%= t(".before") %></span>
+      <div class="nodes__tooltip created-at__tooltip">
+        <%= t(".service_started") %> <%= first_node_created_at.strftime("%Y-%m-%d") %><br>
+        <%= t(".unknown_date").html_safe %>
+      </div>
+    <% end %>
+    <%= value.strftime("%Y-%m-%d") %>
+  <% end %>
+</td>

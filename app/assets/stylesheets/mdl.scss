@@ -1,0 +1,45 @@
+@import "_shared";
+
+.mdl-layout__header {
+  background-color: $primary-color !important;
+}
+
+.mdl-button--primary {
+  color: $primary-color !important;
+}
+
+.mdl-button--fab.mdl-button--primary,
+.mdl-button--raised.mdl-button--primary {
+  background-color: $primary-color !important;
+  color: white !important;
+}
+
+.mdl-button--accent {
+  color: $accent-color !important;
+}
+
+.mdl-button--icon {
+  background-color: inherit !important;
+  &:hover {
+    background-color: rgba(158,158,158, 0.20) !important;
+  }
+  &:hover[disabled] {
+    background-color: transparent !important;
+  }
+}
+
+.mdl-badge:after {
+  background-color: $accent-color !important;
+  color: white !important;
+}
+
+.mdl-textfield__label::after {
+  background-color: $primary-color !important;
+}
+
+.mdl-textfield__label {
+  color: rgba(0,0,0, 0.26) !important;
+  .mdl-textfield--floating-label.is-focused & {
+    color: $primary-color !important;
+  }
+}

@@ -1,0 +1,168 @@
+ru:
+  default:
+    title: "Узлы ViPNet"
+  api:
+    v1:
+      doc:
+        index:
+          title: "Документация API"
+          overall_label: "Общие данные"
+          request: "Запрос"
+          response: "Ответ"
+          format: "Формат"
+          nodes_label: "Получение данных по номеру узла"
+          fields: "Поля"
+          enabled_comment: "Статус узла в Центре Управления Сетью ViPNet"
+          vipnet_version_comment: "\"?\" если от разных координаторов получены противоречивые данные"
+          accessips_label: "Получение данных по адресу доступа"
+          accessips_label_comment: "only[] аналогично п.1"
+          errors_label: "Ошибка"
+          wrong_params: "Неверные параметры"
+          node_not_found: "Узел не найден"
+          internal_error: "Ошибка сервера"
+  nodes:
+    row:
+      remote_status:
+        result_false:
+          more: "Больше"
+        spinner:
+          wait: "Пожалуйста,<br>подождите" # html_safe
+      availability:
+        button_label: "Проверить<br>доступность" # html_safe
+        node_deleted: "Узел удален"
+        more: "Больше"
+        dated_data: "Данные из истории"
+        from: "с"
+        to: "по"
+        node_disabled: "Узел отключен"
+        node_available: "Узел доступен"
+        node_unavailable: "Узел недоступен"
+      datetime:
+        service_started: "Сервис начал работу"
+        before: "до"
+        unknown_date: "Узнать точную дату<br>создания узла затруднительно" # html_safe
+      history:
+        update_button_tooltip_text: "Загрузить<br>последние данные" # html_safe
+        update_true_tooltip_text: "Последние данные<br>загружены" # html_safe
+        update_false_tooltip_text: "Ошибка" # html_safe
+        history_button_tooltip_text: "Загрузить историю" # html_safe
+        history_true_tooltip_text: "История загружена" # html_safe
+        history_false_tooltip_text: "История не найдена" # html_safe
+        undo_label: "Отменить"
+      remote_status_button:
+        last_data: "Последние данные"
+        history: "История"
+        node: "Узел"
+        now: "в данный момент"
+        available: "доступен"
+        unavailable: "недоступен"
+        enable_js: "Включите JavaScript дял большего удобства."
+        back: "назад"
+    fullscreen_tooltip: # html_safe
+      node-deleted:
+        short: "Узел удален"
+        long: >
+          <span>Данный узел был удален администратором ViPNet ГАУ РК «ЦИТ». На АРМ с ViPNet Client и таким ID (номер АП), не работают никакие функции защищенной сети ViPNet (нет доступа к защищенным серверам, не функционирует Деловая Почта, и т.п.)</span>
+          <span>Узлы ViPNet удаляются по следующим причинам:</span>
+          <ol><li>узел был создан временно и сроки его работы прошли;</li>
+          <li>ответственным за координацию использования СЗИ подразделением была создана заявка на удаление по объективным причинам (ненадобность, увольнение сотрудников, и т.п.);</li>
+          <li>узел был создан для тестовых целей и эти цели выполнены.</li></ol>
+          <span>Если узел не должен быть удален, обратитесь к администраторам ViPNet.</span>
+      no-accessips:
+        short: "Нет адресов<br>доступа"
+        long: >
+          <span>Доступность узла в данный момент можно выяснить с помощью программ проверки соединений с узла ViPNet (в данном случае с ViPNet координатора) по определенному <a href='https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%80%D1%82_%28%D0%BA%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5_%D1%81%D0%B5%D1%82%D0%B8%29'>порту</a> и <a href='https://ru.wikipedia.org/wiki/IP-%D0%B0%D0%B4%D1%80%D0%B5%D1%81'>IP-адресу</a>, в терминологии ViPNet называющемуся «адрес доступа».</span>
+          <span>Данный сервис собирает информацию об адресах доступа с ViPNet координаторов. Узел получает адрес доступа по отношению к координатору в момент первого обращения к нему и обновляется с течением времени при изменении настроек соединения (например, при перемещении узла из дома в сеть предприятия).</span>
+          <span>Поскольку все узлы ViPNet обязательно имеют связь хотя бы с одним из ViPNet координаторов в, отсутствие адресов доступа свидетельствует о том, что<ol>
+          <li>либо соответствующий дистрибутив ViPNet Client (DST-файл) ни разу не был установлен на АРМ с ViPNet Client,</li>
+          <li>либо он был установлен, но из-за некорректных настроек или отсутствия сети он ни разу не смог обратиться к ViPNet координатору.</li>
+          </ol><span>Узел будет недоступным до тех пор, пока эти причины не будут устранены.</span>
+      node-unavailable:
+        short: "Узел недоступен"
+        long: >
+          <span>Узел может быть недоступен по следующим причинам:</span>
+          <ol><li>узел выключен или отключен от сети;</li>
+          <li>на узле неправильно настроен ViPNet Client (координатор для соединений и режим работы);</li>
+          <li>какое-либо сетевое устройство (коммутатор, маршрутизатор и т.п.) по каким-либо причинам отбрасывает защищенный трафик;</li>
+          <li>не работает ViPNet координатор, через который проверяется доступность;</li>
+          <li>на узле настроен сторонний межсетевой экран, блокирующий запросы по порту 5100\TCP;</li>
+          <li>узлу не пришло обновление, в котором прописан туннель для данного сервиса;</li>
+          <li>узел принадлежит сторонней сети ViPNet и был удален.</li></ol>
+      node-disabled:
+        short: "Узел отключен"
+        long: >
+          <span>Узел отключен администратором ViPNet.</span>
+          <span>Данный узел не может использовать никакие функции защищенной сети ViPNet (нет доступа к защищенным серверам, не функционирует Деловая Почта, и т.п.) Узел может быть отключен по заявке от ответственного лица по различным причинам.</span>
+          <span>Если узел не должен быть отключен, обратитесь к администраторам ViPNet.</span>
+      close: "(Для возврата нажмите Esc или кликните мышкой вне этого поля.)"
+    header:
+      title: "Узлы ViPNet"
+      search_results_subtitle: "Результаты поиска"
+      last_changed_nodes_subtitle: "Последние изменения"
+      settings: "Настройки"
+      support: "Поддержка"
+      profile: "Профиль"
+      exit: "Выход"
+    thead:
+      search_button:
+        label: "Искать"
+      id_label: "ID"
+      name_label: "Имя"
+      ip_label: "IP-адрес"
+      software_label: "Версия ПО"
+      created_label: "Создан"
+      deleted_label: "Удален"
+  settings:
+    flash:
+      password: "Пароль"
+      error_saving_user: "Не удалось сохранить пользователя"
+      user_saved: "Пользователь сохранен"
+      user_destroyed: "Пользователь удален"
+      error_destroying_user: "Ошибка при удалении пользователя"
+      settings_saved: "Настройки сохранены"
+    index:
+      title: "Настройки"
+      label: "Настройки"
+      general: "Основные"
+      users: "Пользователи"
+      # settings vars
+      checker: "API для проверки доступности"
+      support_email: "Email поддержки"
+      networks_to_ignore: "Игнорируемые сети"
+      nodes_per_page: "Узлов на странице"
+      # end settings vars
+      submit_label: "Сохранить"
+      email: "Email"
+      role: "Роль"
+      add: "Добавить"
+      save: "Сохранить"
+      delete: "Удалить"
+      delete_confirm: "Удалить пользователя"
+    select_role:
+      administrator: "Администратор"
+      user: "Пользователь"
+      editor: "Редактор"
+  shared:
+    password:
+      password_label: "Пароль"
+      password_confirmation_label: "Подтверждение пароля"
+      current_password_label: "Текущий пароль"
+      new_password_label: "Новый пароль"
+  user_sessions:
+    new:
+      title: "Войти"
+      label: "Войти"
+      submit_label: "Войти"
+      remember_me: "Запомнить"
+  users:
+    edit:
+      title: "Профиль"
+      label: "Профиль"
+      submit_label: "Сохранить"
+    flash:
+      error_saving_user_settings: "Не удалось сохранить настройки пользователя"
+      user_settings_saved: "Настройки пользователя сохранены"
+  will_paginate:
+    previous_label: "<i class='material-icons'>chevron_left</i>"
+    next_label: "<i class='material-icons'>chevron_right</i>"
+    page_gap: "..."

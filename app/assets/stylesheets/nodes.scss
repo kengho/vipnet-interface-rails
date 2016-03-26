@@ -1,0 +1,263 @@
+@import "_shared";
+
+$nodes-max-width: 90%;
+$announcements-max-width: 500px;
+$row-ajax-color: #ffa;
+$row-ajax-color-hover: #ff8;
+
+* {
+  transition-duration: 0.1s !important;
+}
+
+.nodes__sub-title {
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.nodes__header a {
+  color: white !important;
+  text-decoration: none;
+}
+
+.header__back-icon {
+  display: block;
+  position: absolute;
+  height: 48px;
+  width: 48px;
+  border: 0px none;
+  text-align: right;
+  cursor: pointer;
+  font-size: 26px;
+  line-height: 50px;
+  margin: 10px 0px;
+  top: 0px;
+  left: 0px;
+  z-index: 4;
+  & a {
+    color: white;
+  }
+}
+
+.nodes {
+  z-index: 100;
+  padding: 20px;
+  max-width: $nodes-max-width;
+  margin: 0 auto;
+  & table {
+    width: 100%;
+  }
+}
+
+.nodes__th label {
+  font-weight: 500 !important;
+  color: $main-text-color !important;
+}
+
+.nodes__row--ajax {
+  background-color: $row-ajax-color;
+  &:hover {
+    background-color: $row-ajax-color-hover !important;
+  }
+}
+
+.nodes__td {
+  color: $main-text-color;
+}
+
+.nodes__th {
+  padding-bottom: 8px;
+}
+
+.nodes__empty-space-cell {
+  padding: 0 !important;
+}
+
+.nodes__textfield {
+  padding: 20px 0px 0px 0px;
+  width: 100%;
+  & input {
+    min-width: 90px;
+  }
+}
+
+.nodes__label::after {
+  position: absolute;
+  bottom: 0px;
+}
+
+.nodes__search-button {
+  z-index: 200;
+  position: absolute;
+  right: -20px;
+  top: 10px;
+}
+
+.remote-status__button,
+.history__button,
+div[name="status--true"],
+div[name="status--false"],
+div[name="spinner"],
+div[name="button--undo"] {
+  opacity: 0;
+}
+
+div[name="status--true"],
+div[name="status--false"],
+div[name="spinner"],
+div[name="button--undo"] {
+  z-index: 200;
+}
+
+.remote-status__button,
+.remote-status__button--undo {
+  z-index: 300;
+}
+
+.nodes__row:hover .remote-status__button,
+.nodes__row:hover .history__button {
+  opacity: 1;
+}
+
+.remote-status__button,
+.remote-status__status--true,
+.remote-status__status--false,
+.remote-status__button--undo,
+.remote-status__alerts {
+  position: absolute;
+  top: 6px;
+  left: 5px;
+}
+
+.remote-status__spinner {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  top: 11px;
+  left: 10px;
+  z-index: 200;
+}
+
+.nodes__tooltip,
+.nodes__tooltip--hoverable {
+  @extend %for-tooltips;
+}
+
+.nodes__tooltip {
+  top: 45px;
+  &--hoverable {
+    top: 35px;
+  }
+}
+
+.nodes__hover-for-tooltip:hover + .nodes__tooltip,
+.nodes__hover-for-tooltip:hover + .nodes__tooltip--hoverable,
+.nodes__tooltip--hoverable:hover {
+  visibility: visible;
+  transform: scale(1);
+}
+
+.alerts__tooltip {
+  width: 130px;
+  left: -52px;
+  & div {
+    padding: 4px 0px;
+  }
+}
+
+.remote-status__tooltip {
+  width: 90px;
+  left: -35px;
+}
+
+.created-at__tooltip {
+  width: 160px;
+  left: -60px;
+}
+
+// dotted link activates on hover, dashed on click
+.nodes__link--hover {
+  border-bottom: 1px dotted #000;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+.fullscreen-tooltip__text span {
+  display: block;
+  padding-top: 6px;
+  padding-bottom: 6px;
+}
+
+.fullscreen-tooltip__text a {
+  text-decoration: none;
+  color: $reversed-link-color;
+  &:hover {
+    color: $reversed-link-color-hover;
+  }
+}
+
+.nodes__link--same-page {
+  border-bottom: 1px dashed #adf;
+  text-decoration: none;
+  cursor: pointer;
+  color: $reversed-link-color;
+  &:hover{
+    color: $reversed-link-color-hover;
+  }
+}
+
+.fullscreen-tooltip {
+  z-index: 1000;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: none;
+  vertical-align: middle;
+  background-color: rgba(white, 0.85);
+}
+
+.fullscreen-tooltip__text {
+  color: $main-text-color;
+  text-align: justify;
+  width: 500px;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%,-50%);
+  padding: 20px;
+  background-color: $light-gray-bgcolor;
+  color: $reversed-text-color;
+  & p {
+    margin-bottom: 6px;
+    margin-top: 6px;
+  }
+}
+
+.pagination {
+  margin-top: 16px;
+  font-size: 13px;
+  text-align: center;
+  & a, & em, & .gap, & span {
+    text-align: center;
+    padding: 6px 12px 6px 12px;
+    color: $main-text-color;
+    text-decoration: none;
+    font-style: normal;
+    font-family: "Helvetica","Arial",sans-serif;
+  }
+}
+
+.pagination a i.material-icons,
+.pagination span i.material-icons, {
+  position: relative;
+  top: 4px;
+  font-size: 18px !important;
+}
+
+.pagination span.disabled {
+  visibility: hidden;
+}
+
+.pagination em.current {
+  background: $primary-color;
+  color: $reversed-text-color;
+}

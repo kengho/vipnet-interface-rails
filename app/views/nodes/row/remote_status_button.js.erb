@@ -1,0 +1,110 @@
+<%# to avoid fast calls conflicts %>
+var f = function() {
+
+  <% if @response[:place] %>
+    var row_ids = show_history();
+    render_status(<%= @response[:status] %>);
+    if (<%= @response[:status] %>) {
+      setTimeout(render_undo, 2000, row_ids);
+    } else {
+      setTimeout(render_default, 10000);
+    }
+  <% else %>
+    render_status(<%= @response[:status] %>);
+    setTimeout(render_default, 10000);
+  <% end %>
+
+  <% if @response[:place] %>
+    function show_history() {
+      <% row_ids = Array.new %>
+      <% @response[:args].each do |node| %>
+        <% row_id = "#{node.id}-#{SecureRandom.hex}" %>
+        <% row_ids.push(row_id) %>
+        $("#node-<%= @response[:node].id %>__row").<%= @response[:place] %>("\
+          <%= j render 'nodes/row',\
+          row_id: row_id,\
+          node: node,\
+          first_node_created_at: @response[:first_node_created_at] %>");
+        $("#node-<%= row_id %>__row").addClass("nodes__row--ajax");
+      <% end %>
+      $("span[data-fullscreen-tooltip-key]")
+        .click(function() {
+          $("#fullscreen-tooltip__" + $(this).data("fullscreen-tooltip-key"))
+            .css("z-index", "1000")
+            .css("display", "table-cell");
+        });
+      return row_ids = <%= row_ids.to_json.html_safe %>;
+    }
+
+    function render_undo(row_ids) {
+      show("button--undo");
+      hide("status--true", "status--false");
+      lower_label("status--true", "status--false");
+      $("#node-<%= @response[:node].id %>__<%= @response[:div_suffix] %> div[name='button--undo']")
+        .click(function() {
+          row_ids.forEach(function(item) {
+            $("#node-" + item + "__row").remove();
+          });
+          hide("button--undo");
+          show("button");
+        });
+    }
+  <% end %>
+
+  function render_status(status) {
+    if (status == true) {
+      show("status--true");
+      lower_label("status--true");
+    } else {
+      <% if @response[:reason] == "no accessips" %>
+        $("#node-<%= @response[:node].id %>__<%= @response[:div_suffix] %> div[name='status--false'] [name='tooltip_text']")
+          .html("<%= t('nodes.fullscreen_tooltip.no-accessips.short').html_safe %>");
+        $("#node-<%= @response[:node].id %>__<%= @response[:div_suffix] %> div[name='status--false'] .nodes__link--same-page")
+          .attr("data-fullscreen-tooltip-key", "no-accessips");
+      <% end %>
+      show("status--false");
+      lower_label("status--false");
+    }
+    hide("spinner");
+  }
+
+  function render_default() {
+    show("button");
+    hide("status--true", "status--false");
+    lower_label("status--true", "status--true");
+  }
+
+  function hide() {
+    <%# https://developer.mozilla.org/ru/docs/Web/JavaScript/Reference/Functions/arguments %>
+    args = Array.prototype.slice.call(arguments);
+    args.forEach(function(div_name) {
+      $("#node-<%= @response[:node].id %>__<%= @response[:div_suffix] %> div[name='" + div_name + "']").css({
+        "opacity" : "0",
+        "visibility" : "hidden",
+        "z-index" : "200"
+      });
+    });
+  }
+
+  function show() {
+    args = Array.prototype.slice.call(arguments);
+    args.forEach(function(div_name) {
+      $("#node-<%= @response[:node].id %>__<%= @response[:div_suffix] %> div[name='" + div_name + "']").css({
+        "opacity" : "1",
+        "visibility" : "visible",
+        "z-index" : "400"
+      });
+    });
+  }
+
+  function lower_label() {
+    args = Array.prototype.slice.call(arguments);
+    args.forEach(function(div_name) {
+      $("#node-<%= @response[:node].id %>__<%= @response[:div_suffix] %> div[name='" + div_name + "'] label").css({
+        "z-index" : "200"
+      });
+    });
+  }
+};
+
+f();

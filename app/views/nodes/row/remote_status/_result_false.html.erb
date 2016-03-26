@@ -1,0 +1,11 @@
+<div name="status--false">
+  <label class="mdl-button mdl-button--icon mdl-button--accent remote-status__status--false nodes__hover-for-tooltip" disabled>
+    <i class="material-icons"><%= icon %></i>
+  </label>
+  <div class="nodes__tooltip--hoverable remote-status__tooltip">
+    <div name="tooltip_text"><%= tooltip_text.html_safe %></div>
+    <% if defined?(tooltip_key) %>
+      <span data-fullscreen-tooltip-key="<%= tooltip_key %>" class="nodes__link--same-page"><%= t(".more") %></span>
+    <% end %>
+  </div>
+</div>

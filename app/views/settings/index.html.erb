@@ -1,0 +1,91 @@
+<body data-no-turbolink="true" class="settings">
+  <div class="settings__form mdl-shadow--2dp">
+    <h3>
+      <%= link_to "/nodes" do %>
+        <i class="material-icons settings__small-icon">arrow_back</i>
+      <% end -%>
+      <%= t(".label") %>
+    </h3>
+    <a href="#general" id="settings__a--general"><%= t(".general") %></a>
+    <a href="#users" id="settings__a--users"><%= t(".users") %></a>
+
+    <div id="general">
+      <form action="/settings" method="get">
+        <input hidden name="general" />
+        <% tabindex = 1 %>
+        <% @settings.each do |setting| %>
+        <div class="settings_field">
+          <span><%= t("." + setting.var) %></span>
+          <div class="mdl-textfield mdl-js-textfield settings__textfield">
+            <input class="mdl-textfield__input settings__input" name="<%= setting.var %>" id="settings__<%= setting.var %>" value="<%= setting.value %>" tabindex="<%= tabindex %>" type="text" />
+            <label class="mdl-textfield__label settings__label" for="settings__<%= setting.var %>"><%= setting.value %></label>
+          </div>
+        </div>
+        <% tabindex += 1 %>
+        <% end %>
+        <%= render "shared/submit", text: t(".submit_label"), tabindex: tabindex %>
+      </form>
+    </div>
+
+    <%# http://stackoverflow.com/a/15600151 %>
+    <div id="users" class="table">
+      <div class="tr">
+        <span class="td"><%= t(".email") %></span>
+        <span class="td"><%= t(".role") %></span>
+        <span class="td"></span>
+        <span class="td"></span>
+      </div>
+      <form action="/settings" method="get" class="tr">
+        <input hidden name="add_user" />
+        <% password = SecureRandom.hex(12) %>
+        <input hidden name="password" value="<%= password %>" />
+        <span class="td">
+          <%= render "users_email", id: "users__input", value: "" %>
+        </span>
+        <span class="td">
+          <%= render "select_role", selected_role: "user" %>
+        </span>
+        <span class="td">
+          <button type="submit" id="settings__add-user" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
+            <i class="material-icons">add</i>
+          </button>
+          <div class="mdl-tooltip" for="settings__add-user">
+            <%= t(".add") %>
+          </div>
+        </span>
+        <span class="td"></span>
+      </form>
+      <% @users.each do |user| %>
+        <form action="/settings" method="get" class="tr">
+          <input hidden name="users" />
+          <input hidden name="id" value="<%= user.id %>" />
+          <%= render "users_email", id: "users-#{user.id}__input", value: user.email %>
+          <span class="td">
+            <%= render "select_role", selected_role: user.role %>
+          </span>
+          <span class="td">
+            <button type="submit" id="settings__user-<%= user.id %>-save" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
+              <i class="material-icons">save</i>
+            </button>
+            <div class="mdl-tooltip" for="settings__user-<%= user.id %>-save">
+              <%= t(".save") %>
+            </div>
+          </span>
+          <span class="td">
+            <a href="/users/<%= user.id %>" rel="nofollow" data-method="delete" data-confirm="<%= t('.delete_confirm') %> <%= user.email %>?">
+              <span class="mdl-button mdl-js-button mdl-button--icon mdl-button--accent settings__hover-for-tooltip">
+                <i class="material-icons">close</i>
+              </span>
+              <div class="settings__tooltip buttons__tooltip">
+                <%= t(".delete") %>
+              </div>
+            </a>
+          </span>
+        </form>
+      <% end %>
+    </div>
+  </div>
+
+  <%= render "flash" %>
+
+</body>

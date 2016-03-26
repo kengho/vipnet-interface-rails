@@ -1,0 +1,132 @@
+@import "_shared";
+
+$settings-textfield-width: 600px;
+
+.settings__textfield {
+  padding: 20px 0px 0px 0px;
+  width: $settings-textfield-width;
+}
+
+.settings_field {
+  position: relative;
+  & span {
+    display: block;
+    position: absolute;
+    top: 0px;
+    color: $primary-color;
+  }
+}
+
+.settings__label {
+  position: absolute;
+  top: -20px;
+  &::after {
+    position: absolute;
+    bottom: 0px;
+  }
+}
+
+.settings {
+  background-color: $dark-gray-bgcolor;
+}
+
+.settings__form {
+  width: $settings-textfield-width;
+  margin: 0px auto;
+  padding: 20px;
+  background-color: $form-inside-bgcolor;
+  & a {
+    text-decoration: none;
+  }
+  & h3 {
+    color: $main-text-color;
+  }
+  & > a {
+    color: $main-link-color;
+    cursor: pointer;
+    &:hover {
+      color: $main-link-color-hover;
+    }
+  }
+}
+
+.settings__form-a-selected {
+  color: $main-link-color-hover !important;
+  border-bottom: 1px solid $main-link-color-hover;
+}
+
+.settings__small-icon {
+  color: $gray-icon-color !important;
+  font-size: 24px;
+  display: inline-block;
+}
+
+div.table {
+  display: table;
+  width: 100%;
+}
+
+form.tr, div.tr {
+  display: table-row;
+  width: 100%;
+  &:hover {
+    background-color: $form-inside-bgcolor-hover;
+  }
+}
+
+div.tr:nth-of-type(1):hover {
+  background-color: $form-inside-bgcolor;
+}
+
+div.tr:nth-of-type(1) span.td,
+tr.tr:nth-of-type(1) span.td {
+  color: $primary-color;
+}
+
+span.td {
+  display: table-cell;
+  padding: 6px;
+  width: 100%;
+  color: $main-text-color;
+}
+
+#general, #users {
+  display: none;
+  margin-top: 30px;
+}
+
+:target {
+  display: block !important;
+}
+
+.settings__tooltip {
+  @extend %for-tooltips;
+}
+
+.settings__tooltip {
+  top: 35px;
+}
+
+.settings__hover-for-tooltip:hover + .settings__tooltip {
+  visibility: visible;
+  transform: scale(1);
+}
+
+.buttons__tooltip {
+  width: 50px;
+  left: -17px;
+}
+
+.td a {
+  position: relative;
+}
+
+.users__textfield {
+  width: 100%;
+  padding: 0px !important;
+  vertical-align: bottom;
+    & label::after {
+      position: absolute;
+      bottom: 0px;
+    }
+}
