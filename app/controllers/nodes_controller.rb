@@ -47,11 +47,6 @@ class NodesController < ApplicationController
       @search = true
     end
 
-    # for created_at_tip
-    if Node.count > 0
-      @first_node_created_at = Node.reorder("created_at ASC").first.created_at
-    end
-
   end
 
   respond_to :js
@@ -82,8 +77,7 @@ class NodesController < ApplicationController
     @node = Node.find_by_id(params[:node_id])
     @response = {
       node: @node,
-      div_suffix: "history",
-      first_node_created_at: Node.last.created_at
+      div_suffix: "history"
     }
     @response[:args] = Node.where("vipnet_id = '#{@node.vipnet_id}' AND history = '#{!@node.history}'").reorder("updated_at ASC")
     if @node.history

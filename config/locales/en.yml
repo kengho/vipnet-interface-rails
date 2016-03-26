@@ -59,7 +59,6 @@ en:
         node_available: "Node available"
         node_unavailable: "Node unavailable"
       datetime:
-        service_started: "Service started at"
         before: "b."
         unknown_date: "It is impossible to know for sure<br>creation date of this node" # html_safe
       history:

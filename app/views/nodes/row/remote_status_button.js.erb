@@ -23,8 +23,7 @@ var f = function() {
         $("#node-<%= @response[:node].id %>__row").<%= @response[:place] %>("\
           <%= j render 'nodes/row',\
           row_id: row_id,\
-          node: node,\
-          first_node_created_at: @response[:first_node_created_at] %>");
+          node: node %>");
         $("#node-<%= row_id %>__row").addClass("nodes__row--ajax");
       <% end %>
       $("span[data-fullscreen-tooltip-key]")

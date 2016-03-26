@@ -20,7 +20,7 @@
                 <tbody>
                   <% @nodes.each do |node| %>
                     <% next if (@dont_show_history && node.history) %>
-                    <%= render "row", node: node, search: @search, first_node_created_at: @first_node_created_at %>
+                    <%= render "row", node: node, search: @search %>
                   <% end %>
                 </tbody>
               <% end %>

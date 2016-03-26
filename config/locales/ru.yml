@@ -38,7 +38,6 @@ ru:
         node_available: "Узел доступен"
         node_unavailable: "Узел недоступен"
       datetime:
-        service_started: "Сервис начал работу"
         before: "до"
         unknown_date: "Узнать точную дату<br>создания узла затруднительно" # html_safe
       history:

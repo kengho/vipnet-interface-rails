@@ -22,12 +22,7 @@
   <% else %>
     <%= render "nodes/row/history", node: node %>
   <% end %>
-  <%# http://stackoverflow.com/a/8550597 %>
-  <% if node["created_first_at"].to_date === first_node_created_at.to_date %>
-    <%= render "nodes/row/datetime", value: node["created_first_at"], created_at_tip: true, node: node, first_node_created_at: first_node_created_at %>
-  <% else %>
-    <%= render "nodes/row/datetime", value: node["created_first_at"], node: node %>
-  <% end %>
+  <%= render "nodes/row/datetime", value: node["created_first_at"], node: node %>
   <%= render "nodes/row/datetime", value: node["deleted_at"] %>
   <%= render "nodes/row/space" %>
 </tr>
