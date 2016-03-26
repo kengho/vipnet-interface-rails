@@ -1,19 +1,6 @@
 class SettingsController < ApplicationController
 
   def index
-    # default settings
-    unless Settings.support_email
-      Settings.support_email = String.new
-    end
-    unless Settings.checker
-      Settings.checker = "http://localhost:8080/?ip=#\{ip}&token=#\{token}"
-    end
-    unless Settings.nodes_per_page
-      Settings.nodes_per_page = "10"
-    end
-    unless Settings.networks_to_ignore
-      Settings.networks_to_ignore = "6670,6671"
-    end
 
     if params[:general]
       params.each do |param, value|
@@ -55,6 +42,7 @@ class SettingsController < ApplicationController
 
     @settings = Settings.unscoped.where("thing_id is null").reorder("var ASC")
     @users = User.all.reorder("email ASC")
+
   end
 
 end

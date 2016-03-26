@@ -8,6 +8,7 @@
 
 # http://stackoverflow.com/a/5458190
 loop do
+break
   STDOUT.puts "Enter administrator's email"
   email = STDIN.gets.strip
   STDOUT.puts "Enter administrator's password"
@@ -38,3 +39,14 @@ STDOUT.puts "POST_ADMINISTRATOR_TOKEN=#{POST_ADMINISTRATOR_TOKEN}"
 STDOUT.puts "CHECKER_TOKEN=#{CHECKER_TOKEN}"
 STDOUT.puts ""
 STDOUT.puts "(You may use your own tokens.)"
+
+# default settings
+# for some reason 'Setting.save_default(:some_key, "123")' doesn't work sometimes
+support_email = Settings.new(var: "support_email", value: "")
+support_email.save
+checker = Settings.new(var: "checker", value: "http://localhost:8080/?ip=#\{ip}&token=#\{token}")
+checker.save
+nodes_per_page = Settings.new(var: "nodes_per_page", value: "10")
+nodes_per_page.save
+networks_to_ignore = Settings.new(var: "networks_to_ignore", value: "6670,6671")
+networks_to_ignore.save
