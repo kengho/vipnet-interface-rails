@@ -8,7 +8,6 @@
 
 # http://stackoverflow.com/a/5458190
 loop do
-break
   STDOUT.puts "Enter administrator's email"
   email = STDIN.gets.strip
   STDOUT.puts "Enter administrator's password"
