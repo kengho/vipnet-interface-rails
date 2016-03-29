@@ -1,35 +1,31 @@
-<body data-no-turbolink="true">
-  
-  <% t("nodes.fullscreen_tooltip").each do |key, value| %>
-    <% if value.class == Hash %>
-      <%= render "fullscreen_tooltip", key: key, short: value[:short], long: value[:long] %>
-    <% end %>
+<% t("nodes.fullscreen_tooltip").each do |key, value| %>
+  <% if value.class == Hash %>
+    <%= render "fullscreen_tooltip", key: key, short: value[:short], long: value[:long] %>
   <% end %>
+<% end %>
 
-  <% @dont_show_history = @nodes.where("history = 'false'").size > 0 ? true : false %>
+<% @dont_show_history = @nodes.where("history = 'false'").size > 0 ? true : false %>
 
-  <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
-    <%= render "header" %>
-    <main class="mdl-layout__content">
-      <div class="page-content">
-        <div class="nodes">
-          <form action="/nodes" method="get">
-            <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-              <%= render "thead" %>
-              <% unless @nodes.empty? %>
-                <tbody>
-                  <% @nodes.each do |node| %>
-                    <% next if (@dont_show_history && node.history) %>
-                    <%= render "row", node: node, search: @search %>
-                  <% end %>
-                </tbody>
-              <% end %>
-            </table>
-            <%= will_paginate @nodes, class: "pagination" %>
-          </form>
-        </div>
+<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+  <%= render "header" %>
+  <main class="mdl-layout__content">
+    <div class="page-content">
+      <div class="nodes">
+        <form action="/nodes" method="get">
+          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
+            <%= render "thead" %>
+            <% unless @nodes.empty? %>
+              <tbody>
+                <% @nodes.each do |node| %>
+                  <% next if (@dont_show_history && node.history) %>
+                  <%= render "row", node: node, search: @search %>
+                <% end %>
+              </tbody>
+            <% end %>
+          </table>
+          <%= will_paginate @nodes, class: "pagination" %>
+        </form>
       </div>
-    </main>
-  </div>
-
-</body>
+    </div>
+  </main>
+</div>

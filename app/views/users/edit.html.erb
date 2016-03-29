@@ -1,39 +1,35 @@
-<body data-no-turbolink="true">
-
-  <div class="auth__form--outside">
-    <div class="auth__form mdl-shadow--2dp">
-      <%= render "shared/header", render_back_button: true, text: t(".label") %>
-      <%= form_for @user, method: :patch do |f| %>
-        <div class="locale">
-          <% available_locales = (I18n.available_locales - [:"zh-CN"] - [:"zh-TW"]).map(&:to_s) %>
-          <% available_locales.each do |available_locale| %>
-            <% checked = false %>
-            <% if current_user.settings.locale %>
-              <% checked = true if available_locale == current_user.settings.locale %>
-            <% else %>
-              <% checked = true if available_locale == I18n.default_locale.to_s %>
-            <% end %>
-            <input id="<%= available_locale %>" <% if checked %>checked<% end %> type="radio" name="locale" value="<%= available_locale %>">
-              <label for="<%= available_locale %>">
-                <%= available_locale %>
-              </label>
-            </input>
+<div class="auth__form--outside">
+  <div class="auth__form mdl-shadow--2dp">
+    <%= render "shared/header", render_back_button: true, text: t(".label") %>
+    <%= form_for @user, method: :patch do |f| %>
+      <div class="locale">
+        <% available_locales = (I18n.available_locales - [:"zh-CN"] - [:"zh-TW"]).map(&:to_s) %>
+        <% available_locales.each do |available_locale| %>
+          <% checked = false %>
+          <% if current_user.settings.locale %>
+            <% checked = true if available_locale == current_user.settings.locale %>
+          <% else %>
+            <% checked = true if available_locale == I18n.default_locale.to_s %>
           <% end %>
-          <noscript>
-            <button type="submit" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
-              <i class="material-icons">save</i>
-            </button>
-          </noscript>
-        </div>
-      <% end %>
-      <%= form_for @user, method: :patch do |f| %>
-        <%= render "shared/hidden_email" %>
-        <%= render "shared/password", type: "current_password" %>
-        <%= render "shared/password", type: "new_password" %>
-        <%= render "shared/password", type: "password_confirmation" %>
-        <%= render "shared/submit", text: t(".submit_label") %>
-      <% end %>
-    </div>
-    <%= render "flash" %>
-
-</body>
+          <input id="<%= available_locale %>" <% if checked %>checked<% end %> type="radio" name="locale" value="<%= available_locale %>">
+            <label for="<%= available_locale %>">
+              <%= available_locale %>
+            </label>
+          </input>
+        <% end %>
+        <noscript>
+          <button type="submit" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
+            <i class="material-icons">save</i>
+          </button>
+        </noscript>
+      </div>
+    <% end %>
+    <%= form_for @user, method: :patch do |f| %>
+      <%= render "shared/hidden_email" %>
+      <%= render "shared/password", type: "current_password" %>
+      <%= render "shared/password", type: "new_password" %>
+      <%= render "shared/password", type: "password_confirmation" %>
+      <%= render "shared/submit", text: t(".submit_label") %>
+    <% end %>
+  </div>
+  <%= render "flash" %>
