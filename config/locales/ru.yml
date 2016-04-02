@@ -161,7 +161,7 @@ ru:
     flash:
       error_saving_user_settings: "Не удалось сохранить настройки пользователя"
       user_settings_saved: "Настройки пользователя сохранены"
-  will_paginate:
+  pagination:
     previous_label: "<i class='material-icons'>chevron_left</i>"
     next_label: "<i class='material-icons'>chevron_right</i>"
     page_gap: "..."

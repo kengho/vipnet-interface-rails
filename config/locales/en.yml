@@ -182,7 +182,7 @@ en:
     flash:
       error_saving_user_settings: "Unable to save user settings"
       user_settings_saved: "User settings successfully saved"
-  will_paginate:
+  pagination:
     previous_label: "<i class='material-icons'>chevron_left</i>"
     next_label: "<i class='material-icons'>chevron_right</i>"
     page_gap: "..."

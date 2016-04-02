@@ -23,7 +23,7 @@
               </tbody>
             <% end %>
           </table>
-          <%= will_paginate @nodes, class: "pagination" %>
+          <%= will_paginate @nodes, class: "pagination", previous_label: t("pagination.previous_label"), next_label: t("pagination.next_label"), page_gap: t("pagination.page_gap") %>
         </form>
       </div>
     </div>
