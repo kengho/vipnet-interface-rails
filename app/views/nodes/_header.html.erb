@@ -35,17 +35,12 @@
           </label><%= t(".support") %>
         </a>
       <% end %>
-
-<% if false%>
-      <a href="/users/<%= current_user.id %>/edit" class="mdl-navigation__link">
-<% end %>
-      <%= link_to edit_user_path(current_user) , class: "mdl-navigation__link" do %>
+      <%= link_to edit_user_path(current_user), class: "mdl-navigation__link" do %>
         <label class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">person</i>
         </label><%= t(".profile") %>
       <% end %>
-      <!-- </a> -->
-      <%= link_to sign_out_path, method: :delete do %>
+      <%= link_to sign_out_path, class: "mdl-navigation__link", method: :delete do %>
         <label class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">exit_to_app</i>
         </label><%= t(".exit") %>
