@@ -52,7 +52,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         n.name = record["name"]
         n.enabled = record["enabled"]
         n.category = record["category"]
-        n.created_first_at_accuracy = created_first_at_accuracy if defined?(created_first_at_accuracy)
+        n.created_first_at_accuracy = created_first_at_accuracy if created_first_at_accuracy != nil
       end
       # set "created_first_at" and other fields for new node, update "history" for old nodes
       nodes_to_history = Node.where("vipnet_id = ? AND history = 'false'", node.vipnet_id)
