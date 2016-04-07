@@ -18,11 +18,15 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     end
     coordinators = Coordinator.where("vipnet_id = ?", coordinator_vipnet_id)
     if coordinators.size == 0
-      vipnet_id = new_record["vipnet_network_id"]
       name = new_iplirconf.sections["self"]["name"]
-      coordinator = Coordinator.new(vipnet_id: vipnet_id, name: name)
+      coordinator_vipnet_network_id = Node.network(coordinator_vipnet_id)
+      coordinator_network = Network.find_or_create_network(coordinator_vipnet_network_id)
+      unless coordinator_network
+        render plain: "error" and return
+      end
+      coordinator = Coordinator.new(vipnet_id: coordinator_vipnet_id, name: name, network_id: coordinator_network.id)
       unless coordinator.save
-        Rails.logger.error("Unable to save coordinator '#{new_record["vipnet_network_id"]}'")
+        Rails.logger.error("Unable to save coordinator '#{coordinator_vipnet_id}'")
         render plain: "error" and return
       end
     elsif coordinators.size == 1
@@ -35,9 +39,10 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
 
     existing_iplirconfs = Iplirconf.where("coordinator_id = ?", new_iplirconf.coordinator_id)
     if existing_iplirconfs.size == 0
-      new_iplirconf.save
+      # for cmp
       existing_iplirconf = Iplirconf.new
       existing_iplirconf.sections = Hash.new
+      existing_iplirconf.coordinator_id = new_iplirconf.coordinator_id
     elsif existing_iplirconfs.size == 1
       existing_iplirconf = existing_iplirconfs.first
     elsif existing_iplirconfs.size > 1
@@ -82,7 +87,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     existing_iplirconf.sections = new_iplirconf.sections
     existing_iplirconf.content = new_iplirconf.content
     unless existing_iplirconf.save
-      Rails.logger.error("Unable to save existing_iplirconf'")
+      Rails.logger.error("Unable to save existing_iplirconf")
       render plain: "error" and return
     end
 

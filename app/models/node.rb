@@ -42,6 +42,7 @@ class Node < ActiveRecord::Base
       end
     end
     accessips.reject!{ |a| a.nil? }
+    accessips
   end
 
   def availability
