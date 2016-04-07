@@ -18,7 +18,7 @@ class Api::V1::BaseController < ActionController::Base
       }
 
       actions_post = {
-        "api/v1/ipliconfs" => {
+        "api/v1/iplirconfs" => {
           :actions => ["create"],
           :token_name => "POST_HW_TOKEN"
         },
@@ -39,7 +39,7 @@ class Api::V1::BaseController < ActionController::Base
           end
         end
       end
-      
+
       if actions_post.key?(params[:controller])
         if actions_post[params[:controller]][:actions].include?(params[:action])
           authenticate_or_request_with_http_token do |token, _|

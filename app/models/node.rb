@@ -4,7 +4,6 @@ class Node < ActiveRecord::Base
   validates :network_id, presence: true
   validates :name, presence: true
   default_scope { order(created_at: :desc) }
-  # default_scope { order(:deleted_at, {created_at: :desc}) }
 
   def self.searchable
     searchable = {
@@ -77,7 +76,9 @@ class Node < ActiveRecord::Base
     vipnet_versions = Array.new
     self.vipnet_version.each { |_, v| vipnet_versions.push(v) unless v.nil? }
     uniq_vipnet_versions = vipnet_versions.uniq
-    vipnet_versions_summary = uniq_vipnet_versions.size == 1 ? uniq_vipnet_versions[0] : "?"
+    return "" if uniq_vipnet_versions.size == 0
+    return uniq_vipnet_versions[0] if uniq_vipnet_versions.size == 1
+    return "?" if uniq_vipnet_versions.size > 1
   end
 
 end
