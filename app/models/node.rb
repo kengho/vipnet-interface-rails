@@ -55,9 +55,9 @@ class Node < ActiveRecord::Base
       return response
     else
       accessips.each do |accessip|
-        request = Settings.checker.gsub("#\{ip}", accessip).gsub("#\{token}", ENV["CHECKER_TOKEN"])
-        response = HTTParty.get(request)
-        availability ||= response.parsed_response["availability"] if response.code == 200
+        http_request = Settings.checker.gsub("#\{ip}", accessip).gsub("#\{token}", ENV["CHECKER_TOKEN"])
+        http_response = HTTParty.get(http_request)
+        availability ||= http_response.parsed_response["availability"] if http_response.code == 200
         break if availability
       end
     end
