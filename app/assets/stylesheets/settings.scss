@@ -69,9 +69,6 @@ div.table {
 form.tr, div.tr {
   display: table-row;
   width: 100%;
-  &:hover {
-    background-color: $form-inside-bgcolor-hover;
-  }
 }
 
 div.tr:nth-of-type(1):hover {
