@@ -17,3 +17,57 @@ node_availability1:
     first:
       vipnet_id: "0x1a0e0200"
       accessip: "192.0.2.1"
+
+# iplirconf_parse
+iplirconf_parse1:
+  content:
+    "#comment\n\
+    #comment\n\
+    [id]\n\
+    id= 0x1a0e030a\n\
+    name= coordinator\n\
+    filterdefault= pass\n\
+    ip= 192.0.2.1\n\
+    ip= 192.0.2.2\n\
+    ip= 192.0.2.3\n\
+    tunnel= 192.0.2.100-192.0.2.100 to 192.0.2.100-192.0.2.100\n\
+    firewallip= 10.33.68.17\n\
+    port= 12345\n\
+    proxyid= 0xfffffffe\n\
+    accessip= 192.0.2.2\n\
+    firewallip= 192.0.2.3\n\
+    dynamic_timeout= 25\n\
+    usefirewall= on\n\
+    fixfirewall= off\n\
+    virtualip= 10.254.0.1\n\
+    version= 3.0-670\n\
+    \n\
+    [id]\n\
+    id= 0xffffffff\n\
+    \n\
+    [id]\n\
+    id= 0xfffffffe\n\
+    \n\
+    # comment\n\
+    [id]\n\
+    id= 0x1a0e0301\n\
+    name= client1\n\
+    filterdefault= pass\n\
+    ip= 192.0.2.11\n\
+    accessip= 192.0.2.12\n\
+    firewallip= 192.0.2.13\n\
+    port= 12345\n\
+    proxyid= 0xfffffffe\n\
+    dynamic_timeout= 25\n\
+    usefirewall= on\n\
+    virtualip= 192.0.2.14\n\
+    version= 3.2-672\n\
+    \n\
+    [adapter]\n\
+    name= eth0\n\
+    ip= 192.0.2.1\n\
+    allowtraffic= on\n\
+    type= internal\n"
+
+iplirconf_parse2:
+  content: ""
