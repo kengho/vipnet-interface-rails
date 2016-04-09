@@ -1,4 +1,4 @@
-class SettingsControllerTest < ActionController::TestCase
+class CoordinatorsControllerTest < ActionController::TestCase
   test "available by administrator role" do
     user_session1 = UserSession.create(users(:administrator))
     get :index

@@ -1,7 +1,6 @@
 class SettingsController < ApplicationController
 
   def index
-
     if params[:general]
       params.each do |param, value|
         next if param == "general"
@@ -42,7 +41,6 @@ class SettingsController < ApplicationController
 
     @settings = Settings.unscoped.where("thing_id is null").reorder("var ASC")
     @users = User.all.reorder("email ASC")
-
   end
 
 end
