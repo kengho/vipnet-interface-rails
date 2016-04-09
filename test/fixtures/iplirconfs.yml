@@ -1,11 +1,13 @@
 # node_accessips
 node_accessips1:
+  coordinator: coordinator1
   sections:
     first:
       vipnet_id: "0x1a0e0100"
       accessip: "192.0.2.1"
 
 node_accessips2:
+  coordinator: coordinator1
   sections:
     first:
       vipnet_id: "0x1a0e0100"
@@ -13,6 +15,7 @@ node_accessips2:
 
 # node_availability
 node_availability1:
+  coordinator: coordinator1
   sections:
     first:
       vipnet_id: "0x1a0e0200"
@@ -20,6 +23,7 @@ node_availability1:
 
 # iplirconf_parse
 iplirconf_parse1:
+  coordinator: coordinator1
   content:
     "#comment\n\
     #comment\n\
@@ -74,6 +78,7 @@ iplirconf_parse1:
       accessip: "192.0.2.1"
 
 iplirconf_parse2:
+  coordinator: coordinator1
   content: ""
   sections:
     first:
