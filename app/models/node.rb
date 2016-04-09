@@ -25,12 +25,15 @@ class Node < ActiveRecord::Base
     if vipnet_id =~ /[0-9A-F]{8}/
       return "0x" + vipnet_id.downcase
     end
-    "0x0123abcd"
+    false
   end
 
   def self.network(vipnet_id)
     # 0x|0123|abcd
-    vipnet_id[2..5].to_i(16).to_s(10)
+    if vipnet_id =~ /0x[0-9a-f]{8}/
+      return vipnet_id[2..5].to_i(16).to_s(10)
+    end
+    false
   end
 
   def accessips
@@ -50,26 +53,37 @@ class Node < ActiveRecord::Base
     response = Hash.new
     accessips = self.accessips
     if accessips.empty?
-      response["status"] = "error"
-      response["message"] = "no accessips"
+      response[:errors] = [{
+        title: "internal",
+        detail: "no accessips"
+      }]
       return response
     else
-      accessips.each do |accessip|
-        http_request = Settings.checker.gsub("#\{ip}", accessip).gsub("#\{token}", ENV["CHECKER_TOKEN"])
-        http_response = HTTParty.get(http_request)
-        availability ||= http_response.parsed_response["availability"] if http_response.code == 200
-        break if availability
+      if Rails.env.test?
+        availability = true
+      else
+        accessips.each do |accessip|
+          http_request = Settings.checker.gsub("#\{ip}", accessip).gsub("#\{token}", ENV["CHECKER_TOKEN"])
+          http_response = HTTParty.get(http_request)
+          availability ||= http_response.parsed_response["data"]["availability"] if http_response.code == 200
+          break if availability
+        end
       end
     end
-    response["status"] = "success"
-    response["availability"] = availability
+    response[:data] = { availability: availability }
     response
   end
 
   def ips_summary
     ips_summary = Array.new
-    self.ips.each { |_, ips_array| ips_summary += ips_array }
+    self.ips.each do |_, ips_array|
+      if ips_array =~ /\[.*\]/
+        ips_array_eval = eval(ips_array)
+        ips_summary += ips_array_eval if ips_array_eval.class == Array
+      end
+    end
     ips_summary = ips_summary.uniq.join(", ")
+    ips_summary
   end
 
   def vipnet_versions_summary

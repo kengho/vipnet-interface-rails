@@ -63,11 +63,11 @@ class NodesController < ApplicationController
       @response[:reason] = "no accessips"
     else
       availability = @node.availability
-      if availability["status"] == "error"
+      if availability[:errors]
         @response[:status] = false
-        @response[:reason] = availability["message"]
+        @response[:reason] = availability[:errors][0][:detail]
       else
-        @response[:status] = availability["availability"]
+        @response[:status] = availability[:data][:availability]
       end
     end
     respond_with(@response, template: "nodes/row/remote_status_button") and return

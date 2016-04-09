@@ -1,0 +1,23 @@
+# node_ips_summary1
+node_ips_summary1:
+  ips:
+    summary: "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4"
+    0x1a0e000a: "[\"192.0.2.1\", \"192.0.2.2\"]"
+    0x1a0e000b: "[\"192.0.2.3\", \"192.0.2.4\"]"
+
+node_ips_summary2:
+  ips: {}
+
+# node_vipnet_versions_summary
+vipnet_versions_summary1:
+  vipnet_version:
+    0x1a0e000a: "1.1"
+    0x1a0e000b: "1.1"
+
+vipnet_versions_summary2:
+  vipnet_version:
+    0x1a0e000a: "1.1"
+    0x1a0e000b: "1.2"
+
+vipnet_versions_summary3:
+  vipnet_version: {}
