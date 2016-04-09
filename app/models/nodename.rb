@@ -14,9 +14,14 @@ class Nodename < ActiveRecord::Base
       (?<abonent_number>[0-9A-F]{4})\s
       (?<vipnet_id>[0-9A-F]{8})
     $/x
-    # (...{50}) 1 A 00000639000100D3 063911E2
+    # (...{50}) 1 A 00001A0E000100D3 1A0E1111
     networks_to_ignore = Settings.networks_to_ignore.split(",")
-    content.split("\r\n").each do |line|
+    lines = content.split("\r\n")
+    if lines.size == 0
+      Rails.logger.error("Error parsing nodename")
+      return false
+    end
+    lines.each do |line|
       match = record_regexp.match(line)
       if match
         tmp_record = Hash.new
@@ -29,9 +34,9 @@ class Nodename < ActiveRecord::Base
         next if networks_to_ignore.include?(tmp_record["vipnet_network_id"])
         # drop nodes in networks we admin, that also are internetworking nodes
         # (networks we admin - networks, for which we have nodenames)
-        next if ( Nodename.joins(:network).where("vipnet_network_id = '#{tmp_record["vipnet_network_id"]}'").size > 0 &&
+        next if ( Nodename.joins(:network).where("vipnet_network_id = ?", tmp_record["vipnet_network_id"]).size > 0 &&
                   tmp_record["vipnet_network_id"] != vipnet_network_id )
-        tmp_record["content"] = line
+        # tmp_record["content"] = line
         tmp_record["name"] = match["name"].rstrip
         tmp_record["enabled"] = match["enabled"] == "1" ? true : false
         tmp_record["server_number"] = match["server_number"]
@@ -42,19 +47,7 @@ class Nodename < ActiveRecord::Base
         return false
       end
     end
-    networks = Network.where("vipnet_network_id = '#{vipnet_network_id}'")
-    if networks.size == 0
-      network = Network.new(vipnet_network_id: vipnet_network_id)
-      unless network.save
-        Rails.logger.error("Unable to save network '#{vipnet_network_id}'")
-        return false
-      end
-    elsif networks.size == 1
-      network = networks.first
-    elsif networks.size > 1
-      Rails.logger.error("More than one network found '#{vipnet_network_id}'")
-      return false
-    end
+    network = Network.find_or_create_network(vipnet_network_id)
     self.network_id = network.id
     true
   end
