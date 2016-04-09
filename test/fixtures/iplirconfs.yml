@@ -2,18 +2,18 @@
 node_accessips1:
   sections:
     first:
-      vipnet_id: "0x1a0e1234"
+      vipnet_id: "0x1a0e0100"
       accessip: "192.0.2.1"
 
 node_accessips2:
   sections:
     first:
-      vipnet_id: "0x1a0e1234"
+      vipnet_id: "0x1a0e0100"
       accessip: "192.0.2.2"
 
 # node_availability
 node_availability1:
   sections:
     first:
-      vipnet_id: "0x1a0e1234"
+      vipnet_id: "0x1a0e0200"
       accessip: "192.0.2.1"

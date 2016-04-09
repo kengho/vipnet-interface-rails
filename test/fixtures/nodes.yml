@@ -1,3 +1,6 @@
+empty_node:
+  vipnet_id: "0xffffffff"
+
 # node_ips_summary1
 node_ips_summary1:
   ips:
