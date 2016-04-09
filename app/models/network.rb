@@ -16,9 +16,6 @@ class Network < ActiveRecord::Base
       end
     elsif networks.size == 1
       network = networks.first
-    elsif networks.size > 1
-      Rails.logger.error("More than one network found")
-      return false
     end
     network
   end
