@@ -2,7 +2,7 @@ require "test_helper"
 
 class IplirconfsTest < ActiveSupport::TestCase
 
-  test "presence" do
+  test "validations" do
     coordinator = coordinators(:coordinator1)
     iplirconf1 = Iplirconf.new(coordinator_id: nil)
     iplirconf2 = Iplirconf.new(coordinator_id: coordinator.id)

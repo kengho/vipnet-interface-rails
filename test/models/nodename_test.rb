@@ -2,7 +2,7 @@ require "test_helper"
 
 class NodenamesTest < ActiveSupport::TestCase
 
-  test "presence" do
+  test "validations" do
     nodename1 = Nodename.new(network_id: nil)
     assert_not nodename1.save
   end

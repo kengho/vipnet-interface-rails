@@ -1,6 +1,7 @@
 class Node < ActiveRecord::Base
   belongs_to :network
-  validates :vipnet_id, presence: true
+  validates :vipnet_id, presence: true,
+                        format: { with: /\A0x[0-9a-f]{8}\z/, message: "vipnet_id should be like \"0x1a0e0100\"" }
   validates :network_id, presence: true
   validates :name, presence: true
   default_scope { order(created_at: :desc) }

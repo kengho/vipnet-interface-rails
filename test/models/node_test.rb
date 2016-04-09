@@ -2,14 +2,16 @@ require "test_helper"
 
 class NodesTest < ActiveSupport::TestCase
 
-  test "presence" do
+  test "validations" do
     network = networks(:network1)
     node1 = Node.new(vipnet_id: nil, network_id: network.id, name: "name")
-    node2 = Node.new(vipnet_id: "vipnet_id", network_id: nil, name: "name")
-    node3 = Node.new(vipnet_id: "vipnet_id", network_id: network.id, name: nil)
+    node2 = Node.new(vipnet_id: "0x1a0e0100", network_id: nil, name: "name")
+    node3 = Node.new(vipnet_id: "0x1a0e0100", network_id: network.id, name: nil)
+    node4 = Node.new(vipnet_id: "1A0E0100", network_id: network.id, name: "name")
     assert_not node1.save
     assert_not node2.save
     assert_not node3.save
+    assert_not node4.save
   end
 
   test "normalize_vipnet_id" do
