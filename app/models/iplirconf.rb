@@ -1,6 +1,8 @@
 class Iplirconf < ActiveRecord::Base
   belongs_to :coordinator
-  validates :coordinator_id, presence: true
+  validates :coordinator_id,  presence: true,
+                              uniqueness: true
+  validates :sections, presence: true
 
   def parse
     # remove comments

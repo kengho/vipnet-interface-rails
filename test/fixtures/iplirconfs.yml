@@ -68,6 +68,14 @@ iplirconf_parse1:
     ip= 192.0.2.1\n\
     allowtraffic= on\n\
     type= internal\n"
+  sections:
+    first:
+      vipnet_id: "0x1a0e0200"
+      accessip: "192.0.2.1"
 
 iplirconf_parse2:
   content: ""
+  sections:
+    first:
+      vipnet_id: "0x1a0e0200"
+      accessip: "192.0.2.1"

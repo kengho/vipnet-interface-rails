@@ -1,5 +1,6 @@
 class NodesController < ApplicationController
   skip_before_action :check_administrator_role
+  before_action :check_if_node_exist, only: [:availability, :history]
 
   def index
     # params:
@@ -53,33 +54,26 @@ class NodesController < ApplicationController
   respond_to :html
 
   def availability
-    @node = Node.find_by_id(params[:node_id])
     @response = {
       node: @node,
       div_suffix: "check-availability",
     }
-    if Iplirconf.all.size == 0
+    availability = @node.availability
+    if availability[:errors]
       @response[:status] = false
-      @response[:reason] = "no accessips"
+      @response[:reason] = availability[:errors][0][:detail]
     else
-      availability = @node.availability
-      if availability[:errors]
-        @response[:status] = false
-        @response[:reason] = availability[:errors][0][:detail]
-      else
-        @response[:status] = availability[:data][:availability]
-      end
+      @response[:status] = availability[:data][:availability]
     end
     respond_with(@response, template: "nodes/row/remote_status_button") and return
   end
 
   def history
-    @node = Node.find_by_id(params[:node_id])
     @response = {
       node: @node,
       div_suffix: "history"
     }
-    @response[:args] = Node.where("vipnet_id = '#{@node.vipnet_id}' AND history = '#{!@node.history}'").reorder("updated_at ASC")
+    @response[:args] = Node.where("vipnet_id = ? AND history = ?", @node.vipnet_id, !@node.history).reorder("updated_at ASC")
     if @node.history
       @response[:status] = @response[:args].size == 1
       @response[:place] = "before"
@@ -91,7 +85,9 @@ class NodesController < ApplicationController
   end
 
   private
-    def node_params
-      params.require(:node).permit(:vipnet_id, :name)
+    def check_if_node_exist
+      @node = Node.find_by_id(params[:node_id])
+      render nothing: true, status: 400, content_type: "text/html" and return if !@node
     end
+
 end
