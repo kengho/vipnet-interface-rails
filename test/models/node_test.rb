@@ -3,9 +3,11 @@ require "test_helper"
 class NodesTest < ActiveSupport::TestCase
 
   test "presence" do
-    node1 = Node.new(vipnet_id: nil, network_id: "network_id", name: "name")
+    network = Network.new
+    network.save(:validate => false)
+    node1 = Node.new(vipnet_id: nil, network_id: network.id, name: "name")
     node2 = Node.new(vipnet_id: "vipnet_id", network_id: nil, name: "name")
-    node3 = Node.new(vipnet_id: "vipnet_id", network_id: "network_id", name: nil)
+    node3 = Node.new(vipnet_id: "vipnet_id", network_id: network.id, name: nil)
     assert_not node1.save
     assert_not node2.save
     assert_not node3.save
@@ -54,4 +56,5 @@ class NodesTest < ActiveSupport::TestCase
     assert_equal("?", node2.vipnet_versions_summary)
     assert_equal("", node3.vipnet_versions_summary)
   end
+
 end
