@@ -3,8 +3,7 @@ require "test_helper"
 class NodesTest < ActiveSupport::TestCase
 
   test "presence" do
-    network = Network.new
-    network.save(:validate => false)
+    network = networks(:network1)
     node1 = Node.new(vipnet_id: nil, network_id: network.id, name: "name")
     node2 = Node.new(vipnet_id: "vipnet_id", network_id: nil, name: "name")
     node3 = Node.new(vipnet_id: "vipnet_id", network_id: network.id, name: nil)

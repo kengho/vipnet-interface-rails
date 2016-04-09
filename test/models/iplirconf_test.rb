@@ -3,8 +3,7 @@ require "test_helper"
 class IplirconfsTest < ActiveSupport::TestCase
 
   test "presence" do
-    coordinator = Coordinator.new
-    coordinator.save(:validate => false)
+    coordinator = coordinators(:coordinator1)
     iplirconf1 = Iplirconf.new(coordinator_id: nil)
     iplirconf2 = Iplirconf.new(coordinator_id: coordinator.id)
     assert_not iplirconf1.save
@@ -18,7 +17,7 @@ class IplirconfsTest < ActiveSupport::TestCase
     assert_equal("0x1a0e030a", iplirconf1.sections["self"]["vipnet_id"])
     # 3 sections: "self", "0x1a0e030a" and "0x1a0e0301"
     assert_equal(3, iplirconf1.sections.size)
-    
+
     iplirconf1.sections.each do |_, section|
       assert_instance_of(Hash, section)
       case section["vipnet_id"]

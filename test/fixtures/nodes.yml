@@ -24,3 +24,28 @@ vipnet_versions_summary2:
 
 vipnet_versions_summary3:
   vipnet_version: {}
+
+# message_decode#delete
+message_decode1:
+  vipnet_id: "0x1a0e0400"
+  name: "client1"
+  network: network1
+  history: false
+
+message_decode2:
+  vipnet_id: "0x1a0e0400"
+  name: "client1"
+  network: network1
+  history: true
+
+message_decode3:
+  vipnet_id: "0x1a0e0400"
+  name: "client1"
+  network: network1
+  history: true
+
+# message_decode#create
+message_decode4:
+  vipnet_id: "0x1a0e0401"
+  name: "client1"
+  network: network1
