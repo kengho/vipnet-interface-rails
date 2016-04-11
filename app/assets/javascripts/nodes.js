@@ -133,7 +133,6 @@ $(document).ready(function() {
       if(spinner_visibility == "visible") {
         // http://stackoverflow.com/a/10610347
         vipnetInterface.remoteStatus.renderStatus({ parentId: "#" + id, status: "false", tooltipText: I18n["ajax_error"] });
-        // vipnetInterface.remoteStatus.renderError({ parentId: "#" + id, tooltipText: I18n["ajax_error"], fullscreenTooltipKey: "node-deleted" });
       }
     }, vipnetInterface.remoteStatus.ajaxTimeout, id)
   });

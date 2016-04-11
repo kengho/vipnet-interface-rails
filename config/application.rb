@@ -22,5 +22,7 @@ module Vi
 
     # Do not swallow errors in after_commit/after_rollback callbacks.
     config.active_record.raise_in_transactional_callbacks = true
+    # http://stackoverflow.com/a/22933820
+    config.generators.javascript_engine :js
   end
 end

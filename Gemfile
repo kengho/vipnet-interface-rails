@@ -11,6 +11,7 @@ gem "sdoc", "~> 0.4.0", group: :doc
 group :development do
   gem "web-console", "~> 2.0"
   gem "spring"
+  gem "coffee-rails"
 end
 
 gem "material_design_lite-rails"
