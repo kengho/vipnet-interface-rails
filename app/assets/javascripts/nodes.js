@@ -1,6 +1,7 @@
 var vipnetInterface = {
   remoteStatus: {
     showStatusTime: 5000,
+    showStatusBeforeUndoTime: 1000,
     ajaxTimeout: 15000,
 
     renderDefault: function(parentId) {
@@ -76,7 +77,7 @@ var vipnetInterface = {
       }
       if(args.undo && args.status === "true") {
         setTimeout( vipnetInterface.remoteStatus.renderUndoButton,
-                    vipnetInterface.remoteStatus.showStatusTime,
+                    vipnetInterface.remoteStatus.showStatusBeforeUndoTime,
                     { parentId: args.parentId, row_ids: args.row_ids });
       } else {
         setTimeout( vipnetInterface.remoteStatus.renderDefault,
