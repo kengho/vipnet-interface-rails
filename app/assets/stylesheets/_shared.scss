@@ -18,7 +18,7 @@ $gray-icon-color: #666;
   z-index: 500;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
   transition-property: transform;
-  // ripoff mdl-tooltip
+  // mdl-tooltip ripoff
   transform: scale(0);
   transform-origin: center top 0px;
   background: rgba(97, 97, 97, 0.9) none repeat scroll 0% 0%;
@@ -30,4 +30,5 @@ $gray-icon-color: #666;
   line-height: 14px;
   padding: 8px;
   text-align: center;
+  white-space: normal;
 }

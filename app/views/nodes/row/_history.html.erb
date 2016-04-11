@@ -3,22 +3,14 @@
     <%
       if node["history"]
         button_icon = "update"
-        button_tooltip_text = t(".update_button_tooltip_text").html_safe
-        true_tooltip_text = t(".update_true_tooltip_text").html_safe
-        false_tooltip_text = t(".update_false_tooltip_text").html_safe
+        button_tooltip_text = t(".update_button")
       else
         button_icon = "history"
-        button_tooltip_text = t(".history_button_tooltip_text").html_safe
-        true_tooltip_text = t(".history_true_tooltip_text").html_safe
-        false_tooltip_text = t(".history_false_tooltip_text").html_safe
+        button_tooltip_text = t(".history_button")
       end
     %>
-    <a data-remote="true" data-replace-link-by-spinner="true" href="nodes/history/<%= node["id"] %>">
-      <%= render "nodes/row/remote_status/button", icon: button_icon, disabled: false, tooltip_text: button_tooltip_text %>
+    <a data-remote="true" data-replace-link-by-spinner="true" href="/nodes/history/<%= node["id"] %>">
+      <%= render "nodes/row/remote_status/button", icon: button_icon, tooltip_text: button_tooltip_text %>
     </a>
-    <%= render "nodes/row/remote_status/spinner" %>
-    <%= render "nodes/row/remote_status/result_true", icon: "check_circle", tooltip_text: true_tooltip_text %>
-    <%= render "nodes/row/remote_status/result_false", icon: "error", tooltip_text: false_tooltip_text %>
-    <%= render "nodes/row/remote_status/button_undo", icon: "undo", tooltip_text: t(".undo_label") %>
   </div>
 </td>

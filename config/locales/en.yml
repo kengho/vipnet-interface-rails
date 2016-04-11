@@ -44,31 +44,32 @@ en:
   nodes:
     row:
       remote_status:
-        result_false:
+        status_false:
           more: "More"
         spinner:
-          wait: "Please, wait" # html_safe
+          wait: "Please, wait"
+        button_undo:
+          tooltip_text: "Cancel"
       availability:
-        button_label: "Check<br>availability" # html_safe
+        button_label: "Check availability"
         node_deleted: "Node deleted"
         more: "More"
         dated_data: "Dated data"
         from: "from"
         to: "to"
         node_disabled: "Node disabled"
-        node_available: "Node available"
-        node_unavailable: "Node unavailable"
+        status_true: "Node available"
+        status_false: "Node unavailable"
       datetime:
         before: "b."
-        unknown_date: "It is impossible to know for sure<br>creation date of this node" # html_safe
+        unknown_date: "It is difficult to discover creation date of this node"
       history:
-        update_button_tooltip_text: "Load last data" # html_safe
-        update_true_tooltip_text: "Last data loaded" # html_safe
-        update_false_tooltip_text: "Error" # html_safe
-        history_button_tooltip_text: "Load history" # html_safe
-        history_true_tooltip_text: "History loaded" # html_safe
-        history_false_tooltip_text: "History not found" # html_safe
-        undo_label: "Cancel"
+        update_button: "Load last data"
+        update_true: "Last data loaded"
+        update_false: "Error"
+        history_button: "Load history"
+        history_true: "History loaded"
+        history_false: "History not found"
       remote_status_button:
         last_data: "Last data"
         history: "History"
@@ -186,3 +187,5 @@ en:
     previous_label: "<i class='material-icons'>chevron_left</i>"
     next_label: "<i class='material-icons'>chevron_right</i>"
     page_gap: "..."
+  js:
+    ajax_error: "Server timeout"

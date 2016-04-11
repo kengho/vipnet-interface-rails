@@ -1,8 +1,10 @@
 <div name="button">
-  <label class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary remote-status__button nodes__hover-for-tooltip" <%= disabled ? "disabled" : "" %>>
+  <label class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary remote-status__button nodes__hover-for-tooltip">
     <i class="material-icons"><%= icon %></i>
   </label>
   <div class="nodes__tooltip remote-status__tooltip">
-    <%= tooltip_text.html_safe %>
+    <div name="tooltip_text">
+      <%= tooltip_text %>
+    </div>
   </div>
 </div>

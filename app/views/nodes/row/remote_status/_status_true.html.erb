@@ -1,6 +1,8 @@
 <div name="status--true">
   <label class="mdl-button mdl-button--icon mdl-button--primary remote-status__status--true nodes__hover-for-tooltip" disabled>
-    <i class="material-icons"><%= icon %></i>
+    <i class="material-icons">check_circle</i>
   </label>
-  <div class="nodes__tooltip remote-status__tooltip"><%= tooltip_text.html_safe %></div>
+  <div class="nodes__tooltip remote-status__tooltip">
+    <div name="tooltip_text"></div>
+  </div>
 </div>

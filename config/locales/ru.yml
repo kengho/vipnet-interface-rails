@@ -23,31 +23,32 @@ ru:
   nodes:
     row:
       remote_status:
-        result_false:
+        status_false:
           more: "Больше"
         spinner:
-          wait: "Пожалуйста,<br>подождите" # html_safe
+          wait: "Пожалуйста, подождите"
+        button_undo:
+          tooltip_text: "Отменить"
       availability:
-        button_label: "Проверить<br>доступность" # html_safe
+        button_label: "Проверить доступность"
         node_deleted: "Узел удален"
         more: "Больше"
         dated_data: "Данные из истории"
         from: "с"
         to: "по"
         node_disabled: "Узел отключен"
-        node_available: "Узел доступен"
-        node_unavailable: "Узел недоступен"
+        status_true: "Узел доступен"
+        status_false: "Узел недоступен"
       datetime:
         before: "до"
-        unknown_date: "Узнать точную дату<br>создания узла затруднительно" # html_safe
+        unknown_date: "Узнать точную дату создания узла затруднительно"
       history:
-        update_button_tooltip_text: "Загрузить<br>последние данные" # html_safe
-        update_true_tooltip_text: "Последние данные<br>загружены" # html_safe
-        update_false_tooltip_text: "Ошибка" # html_safe
-        history_button_tooltip_text: "Загрузить историю" # html_safe
-        history_true_tooltip_text: "История загружена" # html_safe
-        history_false_tooltip_text: "История не найдена" # html_safe
-        undo_label: "Отменить"
+        update_button: "Загрузить последние данные"
+        update_true: "Последние данные загружены"
+        update_false: "Ошибка"
+        history_button: "Загрузить историю"
+        history_true: "История загружена"
+        history_false: "История не найдена"
       remote_status_button:
         last_data: "Последние данные"
         history: "История"
@@ -57,7 +58,7 @@ ru:
         unavailable: "недоступен"
         enable_js: "Включите JavaScript дял большего удобства."
         back: "назад"
-    fullscreen_tooltip: # html_safe
+    fullscreen_tooltip:
       node-deleted:
         short: "Узел удален"
         long: >
@@ -68,7 +69,7 @@ ru:
           <li>узел был создан для тестовых целей и эти цели выполнены.</li></ol>
           <span>Если узел не должен быть удален, обратитесь к администраторам ViPNet.</span>
       no-accessips:
-        short: "Нет адресов<br>доступа"
+        short: "Нет адресов доступа"
         long: >
           <span>Доступность узла в данный момент можно выяснить с помощью программ проверки соединений с узла ViPNet (в данном случае с ViPNet координатора) по определенному <a href='https://ru.wikipedia.org/wiki/%D0%9F%D0%BE%D1%80%D1%82_%28%D0%BA%D0%BE%D0%BC%D0%BF%D1%8C%D1%8E%D1%82%D0%B5%D1%80%D0%BD%D1%8B%D0%B5_%D1%81%D0%B5%D1%82%D0%B8%29'>порту</a> и <a href='https://ru.wikipedia.org/wiki/IP-%D0%B0%D0%B4%D1%80%D0%B5%D1%81'>IP-адресу</a>, в терминологии ViPNet называющемуся «адрес доступа».</span>
           <span>Данный сервис собирает информацию об адресах доступа с ViPNet координаторов. Узел получает адрес доступа по отношению к координатору в момент первого обращения к нему и обновляется с течением времени при изменении настроек соединения (например, при перемещении узла из дома в сеть предприятия).</span>
@@ -165,3 +166,5 @@ ru:
     previous_label: "<i class='material-icons'>chevron_left</i>"
     next_label: "<i class='material-icons'>chevron_right</i>"
     page_gap: "..."
+  js:
+    ajax_error: "Истекло время ожидания сервера"

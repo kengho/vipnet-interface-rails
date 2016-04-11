@@ -55,31 +55,36 @@ class NodesController < ApplicationController
 
   def availability
     @response = {
-      node: @node,
-      div_suffix: "check-availability",
+      parent_id: "#node-#{@node.id}__check-availability"
     }
     availability = @node.availability
     if availability[:errors]
       @response[:status] = false
-      @response[:reason] = availability[:errors][0][:detail]
+      @response[:tooltip_text] = t("nodes.fullscreen_tooltip.#{availability[:errors][0][:detail]}.short")
+      @response[:fullscreen_tooltip_key] = availability[:errors][0][:detail]
     else
       @response[:status] = availability[:data][:availability]
+      @response[:tooltip_text] = t("nodes.row.availability.status_#{availability[:data][:availability]}")
+      @response[:fullscreen_tooltip_key] = "node-unavailable" if @response[:status] == false
     end
     respond_with(@response, template: "nodes/row/remote_status_button") and return
   end
 
   def history
     @response = {
-      node: @node,
-      div_suffix: "history"
+      parent_id: "#node-#{@node.id}__history",
+      row_id: "#node-#{@node.id}__row",
+      history: true,
     }
-    @response[:args] = Node.where("vipnet_id = ? AND history = ?", @node.vipnet_id, !@node.history).reorder("updated_at ASC")
+    @response[:nodes] = Node.where("vipnet_id = ? AND history = ?", @node.vipnet_id, !@node.history).reorder("updated_at ASC")
     if @node.history
-      @response[:status] = @response[:args].size == 1
+      @response[:status] = @response[:nodes].size == 1
       @response[:place] = "before"
+      @response[:tooltip_text] = t("nodes.row.history.update_#{@response[:status]}")
     else
-      @response[:status] = @response[:args].size > 0
+      @response[:status] = @response[:nodes].size > 0
       @response[:place] = "after"
+      @response[:tooltip_text] = t("nodes.row.history.history_#{@response[:status]}")
     end
     respond_with(@response, template: "nodes/row/remote_status_button") and return
   end

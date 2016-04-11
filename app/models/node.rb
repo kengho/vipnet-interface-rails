@@ -56,7 +56,7 @@ class Node < ActiveRecord::Base
     if accessips.empty?
       response[:errors] = [{
         title: "internal",
-        detail: "no accessips"
+        detail: "no-accessips"
       }]
       return response
     else
