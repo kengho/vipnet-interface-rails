@@ -3,14 +3,14 @@ var vipnetInterface = {
     showStatusTime: 5000,
     ajaxTimeout: 15000,
 
-    renderDefault(parentId) {
-      vipnetInterface.remoteStatus.show  ({ parentId, div: "button" });
-      vipnetInterface.remoteStatus.remove({ parentId, div: "status--false" });
-      vipnetInterface.remoteStatus.remove({ parentId, div: "status--true" });
-      vipnetInterface.remoteStatus.remove({ parentId, div: "button--undo" });
+    renderDefault: function(parentId) {
+      vipnetInterface.remoteStatus.show  ({ parentId: parentId, div: "button" });
+      vipnetInterface.remoteStatus.remove({ parentId: parentId, div: "status--false" });
+      vipnetInterface.remoteStatus.remove({ parentId: parentId, div: "status--true" });
+      vipnetInterface.remoteStatus.remove({ parentId: parentId, div: "button--undo" });
     },
 
-    renderUndoButton(args) {
+    renderUndoButton: function(args) {
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "status--false" });
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "status--true" });
       undoButtonHTML = $("#nodes__button-undo-template").html();
@@ -24,8 +24,8 @@ var vipnetInterface = {
       })
     },
 
-    show(args) {
-      $div = $(`${args.parentId} div[name='${args.div}']`)
+    show: function(args) {
+      $div = $(args.parentId + " div[name='" + args.div + "']")
       $div.css({
         "opacity" : "1",
         "visibility" : "visible",
@@ -34,8 +34,8 @@ var vipnetInterface = {
       return $div;
     },
 
-    hide(args) {
-      $div = $(`${args.parentId} div[name='${args.div}']`)
+    hide: function(args) {
+      $div = $(args.parentId + " div[name='" + args.div + "']")
       $div.css({
         "opacity" : "0",
         "visibility" : "hidden",
@@ -44,24 +44,24 @@ var vipnetInterface = {
       return $div;
     },
 
-    remove(args) {
-      $div = $(`${args.parentId} div[name='${args.div}']`)
+    remove: function(args) {
+      $div = $(args.parentId + " div[name='" + args.div + "']")
       $div.remove();
       return $div;
     },
 
-    renderSpinner(parentId) {
+    renderSpinner: function(parentId) {
       spinnerHTML = $("#nodes__spinner-template").html();
-      $hiddenButton = vipnetInterface.remoteStatus.hide({ parentId, div: "button" });
+      $hiddenButton = vipnetInterface.remoteStatus.hide({ parentId: parentId, div: "button" });
       $hiddenButton.parent().append(spinnerHTML);
-      $shownSpinner = vipnetInterface.remoteStatus.show({ parentId, div: "spinner" });
+      $shownSpinner = vipnetInterface.remoteStatus.show({ parentId: parentId, div: "spinner" });
       return $shownSpinner;
     },
 
-    renderStatus(args) {
-      statusHTML = $(`#nodes__status-${args.status}-template`).html();
+    renderStatus: function(args) {
+      statusHTML = $("#nodes__status-" + args.status + "-template").html();
       $(args.parentId).append(statusHTML);
-      $shownStatus = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: `status--${args.status}` });
+      $shownStatus = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "status--" + args.status });
       $shownStatus.find("div[name='tooltip_text']").html(args.tooltipText);
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "spinner" });
       $fullscreenTooltipTrigger = $shownStatus.find("span[name='fullscreen_tooltip_trigger']");
@@ -85,15 +85,15 @@ var vipnetInterface = {
       }
     },
 
-    showHistory(args) {
+    showHistory: function(args) {
       args.rows.forEach(function(row) {
         $(args.parentId)[args.place](row);
       });
     }
   },
 
-  showFullscreenTooltip(fullscreenTooltipKey) {
-    $(`#fullscreen-tooltip__${fullscreenTooltipKey}`)
+  showFullscreenTooltip: function(fullscreenTooltipKey) {
+    $("#fullscreen-tooltip__" + fullscreenTooltipKey)
       .css("z-index", "1000")
       .css("display", "table-cell")
 
@@ -117,8 +117,8 @@ var vipnetInterface = {
     });
   },
 
-  closeFullscreenTooltip(fullscreenTooltipKey) {
-    $(`#fullscreen-tooltip__${fullscreenTooltipKey}`)
+  closeFullscreenTooltip: function(fullscreenTooltipKey) {
+    $("#fullscreen-tooltip__" + fullscreenTooltipKey)
       .css("z-index", "0")
       .css("display", "none")
   },
