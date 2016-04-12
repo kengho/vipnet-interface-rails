@@ -11,7 +11,7 @@ class Api::V1::NodesController < Api::V1::BaseController
         detail: "Expected vipnet_id as param",
         links: {
           related: {
-            href: "/nodes/api"
+            href: "/api/v1/doc"
           }
         }
       }]

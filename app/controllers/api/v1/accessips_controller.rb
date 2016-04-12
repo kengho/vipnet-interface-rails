@@ -13,7 +13,7 @@ class Api::V1::AccessipsController < Api::V1::BaseController
         detail: "Expected accessip as param",
         links: {
           related: {
-            href: "/nodes/api"
+            href: "/api/v1/doc"
           }
         }
       }]
