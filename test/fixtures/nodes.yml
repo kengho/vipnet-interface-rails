@@ -13,7 +13,7 @@ accessips1:
 availability1:
   vipnet_id: "0x1a0e0200"
   history: false
-  
+
 availability2:
   vipnet_id: "0x1a0e0201"
 
@@ -96,4 +96,28 @@ search4:
 search5:
   vipnet_id: "0x1a0e0603"
   name: "client1"
+  history: false
+
+# Api::V1::NodesController#nodes
+node1:
+  vipnet_id: "0x1a0e0701"
+  name: "client0x1a0e0701"
+  category: "client"
+  history: false
+  enabled: true
+  ips:
+    summary: "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4"
+
+node2:
+  vipnet_id: "0x1a0e0701"
+  name: "client0x1a0e0701--old"
+  history: true
+  enabled: false
+
+node3:
+  vipnet_id: "0x1a0e0702"
+  history: false
+
+node4:
+  vipnet_id: "0x1a0e0702"
   history: false
