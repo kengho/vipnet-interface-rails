@@ -1,15 +1,25 @@
 empty_node:
   vipnet_id: "0xffffffff"
 
+# NodesTest#accessips
+# Api::V1::AccessipsControllerTest#accessips
+accessips1:
+  vipnet_id: "0x1a0e0100"
+  enabled: true
+
 # NodesTest#availability
 # NodesControllerTest#availability
+# Api::V1::AccessipsControllerTest#accessips
 availability1:
   vipnet_id: "0x1a0e0200"
-  name: "client1"
-
+  history: false
+  
 availability2:
   vipnet_id: "0x1a0e0201"
-  name: "client2"
+
+availability3:
+  vipnet_id: "0x1a0e0200"
+  history: false
 
 # NodesTest#ips_summary
 node_ips_summary1:

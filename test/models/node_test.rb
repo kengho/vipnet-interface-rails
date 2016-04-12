@@ -29,7 +29,7 @@ class NodesTest < ActiveSupport::TestCase
   end
 
   test "accessips" do
-    node1 = Node.new(vipnet_id: "0x1a0e0100")
+    node1 = nodes(:accessips1)
     node2 = nodes(:empty_node)
     assert_equal(["192.0.2.1", "192.0.2.2"], node1.accessips)
     assert_equal([], node2.accessips)
