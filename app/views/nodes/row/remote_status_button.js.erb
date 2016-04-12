@@ -1,5 +1,5 @@
 (function() {
-  <% if @response[:history] %>
+  <% if @response[:history] && @response[:status] == true %>
   <%
   row_ids = Array.new
   @response[:nodes].each do |node|
@@ -27,7 +27,7 @@
     status: "<%= @response[:status] %>",
     tooltipText: "<%= @response[:tooltip_text] %>",
     fullscreenTooltipKey: "<%= @response[:fullscreen_tooltip_key] %>",
-    <% if @response[:history] %>
+    <% if @response[:history] && @response[:status] == true %>
     undo: "true",
     row_ids,
     <% end %>

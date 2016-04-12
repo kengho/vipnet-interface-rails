@@ -3,6 +3,7 @@ var vipnetInterface = {
     showStatusTime: 5000,
     showStatusBeforeUndoTime: 1000,
     ajaxTimeout: 15000,
+    ajaxTimeoutHandlers: {},
 
     renderDefault: function(parentId) {
       vipnetInterface.remoteStatus.show  ({ parentId: parentId, div: "button" });
@@ -60,6 +61,8 @@ var vipnetInterface = {
     },
 
     renderStatus: function(args) {
+      // http://stackoverflow.com/a/1472717
+      window.clearTimeout(vipnetInterface.remoteStatus.ajaxTimeoutHandlers[args.parentId]);
       statusHTML = $("#nodes__status-" + args.status + "-template").html();
       $(args.parentId).append(statusHTML);
       $shownStatus = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "status--" + args.status });
@@ -72,10 +75,10 @@ var vipnetInterface = {
             vipnetInterface.showFullscreenTooltip(args.fullscreenTooltipKey);
           })
         } else {
-          $fullscreenTooltipKey.remove();
+          $fullscreenTooltipTrigger.remove();
         }
       }
-      if(args.undo && args.status === "true") {
+      if(args.undo) {
         setTimeout( vipnetInterface.remoteStatus.renderUndoButton,
                     vipnetInterface.remoteStatus.showStatusBeforeUndoTime,
                     { parentId: args.parentId, row_ids: args.row_ids });
@@ -129,7 +132,7 @@ $(document).ready(function() {
   $("a[data-replace-link-by-spinner]").click(function() {
     id = $(this).parent().attr("id");
     vipnetInterface.remoteStatus.renderSpinner("#" + id);
-    setTimeout(function() {
+    vipnetInterface.remoteStatus.ajaxTimeoutHandlers["#" + id] = setTimeout(function() {
       spinner_visibility = $("#" + id).parent().find("div[name='spinner']").css("visibility");
       if(spinner_visibility == "visible") {
         // http://stackoverflow.com/a/10610347
