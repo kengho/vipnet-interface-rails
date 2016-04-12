@@ -17,7 +17,7 @@ class NodenamesTest < ActiveSupport::TestCase
     "group2                                             1 G 00001A0E00020000 1A0E050F\r\n" \
     ""
     nodename1 = Nodename.new
-    response1 = nodename1.read_content(content1, networks(:network1).id)
+    response1 = nodename1.read_content(content1, networks(:network1).vipnet_network_id)
     assert response1
 
     # 2 coordinators + 2 clients, ignoring groups

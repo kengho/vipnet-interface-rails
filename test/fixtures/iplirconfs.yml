@@ -1,4 +1,4 @@
-# node_accessips
+# NodesTest#accessips
 node_accessips1:
   coordinator: coordinator1
   sections:
@@ -13,7 +13,8 @@ node_accessips2:
       vipnet_id: "0x1a0e0100"
       accessip: "192.0.2.2"
 
-# node_availability
+# NodesTest#availability
+# NodesControllerTest#availability
 node_availability1:
   coordinator: coordinator1
   sections:
@@ -21,7 +22,7 @@ node_availability1:
       vipnet_id: "0x1a0e0200"
       accessip: "192.0.2.1"
 
-# iplirconf_parse
+# IplirconfsTest#parse
 iplirconf_parse1:
   coordinator: coordinator1
   content:

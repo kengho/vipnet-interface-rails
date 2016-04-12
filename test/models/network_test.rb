@@ -1,6 +1,6 @@
 require "test_helper"
 
-class NodesTest < ActiveSupport::TestCase
+class NetworksTest < ActiveSupport::TestCase
 
   test "validations" do
     network1 = Network.new(vipnet_network_id: nil)

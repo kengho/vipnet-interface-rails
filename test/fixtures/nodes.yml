@@ -1,7 +1,17 @@
 empty_node:
   vipnet_id: "0xffffffff"
 
-# node_ips_summary1
+# NodesTest#availability
+# NodesControllerTest#availability
+availability1:
+  vipnet_id: "0x1a0e0200"
+  name: "client1"
+
+availability2:
+  vipnet_id: "0x1a0e0201"
+  name: "client2"
+
+# NodesTest#ips_summary
 node_ips_summary1:
   ips:
     summary: "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4"
@@ -11,7 +21,7 @@ node_ips_summary1:
 node_ips_summary2:
   ips: {}
 
-# node_vipnet_versions_summary
+# NodesTest#vipnet_versions_summary
 vipnet_versions_summary1:
   vipnet_version:
     0x1a0e000a: "1.1"
@@ -25,7 +35,7 @@ vipnet_versions_summary2:
 vipnet_versions_summary3:
   vipnet_version: {}
 
-# message_decode#delete
+# MessagesTest#decode (delete)
 message_decode1:
   vipnet_id: "0x1a0e0400"
   name: "client1"
@@ -44,8 +54,36 @@ message_decode3:
   network: network1
   history: true
 
-# message_decode#create
+# MessagesTest#decode (create)
 message_decode4:
   vipnet_id: "0x1a0e0401"
   name: "client1"
   network: network1
+
+# NodesControllerTest#search, history
+search1:
+  vipnet_id: "0x1a0e0601"
+  name: "client0x1a0e0601--new"
+  network: network1
+  history: false
+
+search2:
+  vipnet_id: "0x1a0e0601"
+  name: "client0x1a0e0601--old1_1"
+  history: true
+
+search3:
+  vipnet_id: "0x1a0e0601"
+  name: "client0x1a0e0601--old1_2"
+  history: true
+
+search4:
+  vipnet_id: "0x1a0e0602"
+  name: "client0x1a0e0602--new"
+  history: true
+  deleted_at: <%= DateTime.now %>
+
+search5:
+  vipnet_id: "0x1a0e0603"
+  name: "client1"
+  history: false

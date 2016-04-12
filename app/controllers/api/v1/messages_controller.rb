@@ -9,18 +9,8 @@ class Api::V1::MessagesController < Api::V1::BaseController
     incoming_message = incoming_message.force_encoding("cp866").encode("utf-8", replace: nil)
     message = Message.new
     message.content = incoming_message
-    networks = Network.where("vipnet_network_id = ?", params[:vipnet_network_id])
-    if networks.size == 0
-      network = Network.new(vipnet_network_id: params[:vipnet_network_id])
-      if network.save
-        message.network_id = network.id
-      else
-        Rails.logger.error("Unable to save network")
-        render plain: "error" and return
-      end
-    else
-      message.network_id = networks.first.id
-    end
+    network = Network.find_or_create_network(params[:vipnet_network_id])
+    message.network_id = network.id
     message.source = params[:source]
     if message.save
       render json: message.decode and return

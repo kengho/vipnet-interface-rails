@@ -47,7 +47,6 @@ class NodesController < ApplicationController
       @nodes = @nodes.paginate(page: params[:page], per_page: Settings.nodes_per_page)
       @search = true
     end
-
   end
 
   respond_to :js
@@ -92,7 +91,7 @@ class NodesController < ApplicationController
   private
     def check_if_node_exist
       @node = Node.find_by_id(params[:node_id])
-      render nothing: true, status: 400, content_type: "text/html" and return if !@node
+      render nothing: true, status: 400, content_type: "text/html" and return unless @node
     end
 
 end

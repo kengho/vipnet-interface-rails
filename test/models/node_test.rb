@@ -36,10 +36,10 @@ class NodesTest < ActiveSupport::TestCase
   end
 
   test "availability" do
-    node1 = Node.new(vipnet_id: "0x1a0e0200")
+    node1 = nodes(:availability1)
     node2 = nodes(:empty_node)
     assert_equal({ :data => { :availability => true }}, node1.availability)
-    assert_equal({ :errors => [{ :title => "internal", :detail => "no accessips" }]}, node2.availability)
+    assert_equal({ :errors => [{ :title => "internal", :detail => "no-accessips" }]}, node2.availability)
   end
 
   test "ips_summary" do
