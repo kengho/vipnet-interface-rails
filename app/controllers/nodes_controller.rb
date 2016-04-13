@@ -42,9 +42,8 @@ class NodesController < ApplicationController
       @search = false
     else
       @nodes = Node.where(query_sql, *query_params)
-      nodes_no_history = @nodes.where("history = 'false'")
       @size_all = @nodes.size
-      @size_no_history = nodes_no_history.size
+      @size_no_history = @nodes.where("history = 'false'").size
       @nodes = @nodes.paginate(page: params[:page], per_page: Settings.nodes_per_page)
       @dont_show_history = @size_no_history > 0 ? true : false
       @search = true
