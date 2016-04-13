@@ -4,6 +4,7 @@ empty_node:
 # NodesTest#accessips
 # Api::V1::AccessipsControllerTest#accessips
 accessips1:
+  name: "client0x1a0e0100"
   vipnet_id: "0x1a0e0100"
   enabled: true
 

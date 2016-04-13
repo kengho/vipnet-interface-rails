@@ -6,6 +6,9 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
     get(:index, { vipnet_id: "0x1a0e0701", only: ["ips", "category"], token: "GET_INFORMATION_TOKEN" })
     assert_equal({ data: { "ips" => { "summary" => "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4" }, "category" => "client" }}, assigns["response"])
 
+    get(:index, { vipnet_id: "0x1a0e0100", availability: "true", token: "GET_INFORMATION_TOKEN" })
+    assert_equal({ data: { "name" => "client0x1a0e0100", "enabled" => true, "available" => true }}, assigns["response"])
+
     get(:index, { vipnet_id: "unmatched id", token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
@@ -19,5 +22,8 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
     assert_routing(assigns["response"][:errors][0][:links][:related][:href], { controller: "api/v1/doc", action: "index" })
+
+    get(:index, { token: "not a valid token" })
+    assert_response :unauthorized
   end
 end

@@ -26,10 +26,10 @@ class Api::V1::NodesController < Api::V1::BaseController
       @response[:data] = @response.merge(node.attributes.slice(*only))
       if params[:availability] == "true"
         availability = node.availability
-        if availability["status"] == "success"
-          @response[:data][:available] = availability["availability"]
+        if availability[:data]
+          @response[:data]["available"] = availability[:data][:availability]
         else
-          @response[:data][:available] = false
+          @response[:data]["available"] = false
         end
       end
       render json: @response and return

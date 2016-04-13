@@ -1,5 +1,6 @@
 # NodesTest#accessips
 # Api::V1::AccessipsControllerTest#accessips
+# Api::V1::NodesControllerTest#nodes (availability)
 node_accessips1:
   coordinator: coordinator1
   sections:
