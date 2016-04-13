@@ -162,9 +162,7 @@ ru:
     flash:
       error_saving_user_settings: "Не удалось сохранить настройки пользователя"
       user_settings_saved: "Настройки пользователя сохранены"
-  pagination:
-    previous_label: "<i class='material-icons'>chevron_left</i>"
-    next_label: "<i class='material-icons'>chevron_right</i>"
+  will_paginate:
     page_gap: "..."
   js:
     ajax_error: "Истекло время ожидания сервера"

@@ -30,7 +30,7 @@ class Api::V1::AccessipsController < Api::V1::BaseController
       end
     end
     if nodes.size == 0
-      @response[:errors] = [{title: "external", detail: "Node not found"}]
+      @response[:errors] = [{ title: "external", detail: "Node not found" }]
       render json: @response and return
     elsif nodes.size == 1
       node = nodes.first

@@ -34,7 +34,7 @@
               </tbody>
             <% end %>
           </table>
-          <%= will_paginate @nodes, class: "pagination", previous_label: t("pagination.previous_label"), next_label: t("pagination.next_label"), page_gap: t("pagination.page_gap") %>
+          <%= will_paginate @nodes, previous_label: "<i class='material-icons'>chevron_left</i>", next_label: "<i class='material-icons'>chevron_right</i>", inner_window: 1 %>
         </form>
       </div>
     </div>
