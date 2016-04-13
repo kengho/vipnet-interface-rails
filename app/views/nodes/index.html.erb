@@ -15,8 +15,6 @@
   <% end %>
 <% end %>
 
-<% @dont_show_history = @nodes.where("history = 'false'").size > 0 ? true : false %>
-
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <%= render "header" %>
   <main class="mdl-layout__content">
