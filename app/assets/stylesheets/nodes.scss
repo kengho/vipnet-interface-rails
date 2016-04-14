@@ -4,6 +4,8 @@ $nodes-max-width: 90%;
 $announcements-max-width: 500px;
 $row-ajax-color: #ffa;
 $row-ajax-color-hover: #ff8;
+$nodes-per-page: #aaa;
+$nodes-per-page-bgcolor: #ddd;
 
 * {
   transition-duration: 0.1s !important;
@@ -40,7 +42,7 @@ $row-ajax-color-hover: #ff8;
 
 .nodes {
   z-index: 100;
-  padding: 20px;
+  padding: 20px 20px 0px 20px;
   max-width: $nodes-max-width;
   margin: 0 auto;
   & table {
@@ -260,4 +262,32 @@ div[name="button--undo"] {
 .pagination em.current {
   background: $primary-color;
   color: $reversed-text-color;
+}
+
+.nodes-per-page {
+  text-align: center;
+  margin: 10px 0;
+  & label {
+    display: inline-block;
+    padding: 0 6px;
+    cursor: pointer;
+    font-size: 8px;
+    background: white;
+    color: $nodes-per-page;
+    height: 20px;
+    vertical-align: top;
+  }
+  & > input {
+    display: none;
+  }
+}
+
+.nodes-per-page input[type="radio"]:checked + label {
+  background: $nodes-per-page-bgcolor;
+  color: white;
+}
+
+.nodes-per-page i {
+  height: 20px;
+  color: $nodes-per-page;
 }

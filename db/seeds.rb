@@ -45,7 +45,7 @@ support_email = Settings.new(var: "support_email", value: "")
 support_email.save
 checker = Settings.new(var: "checker", value: "http://localhost:8080/?ip=#\{ip}&token=#\{token}")
 checker.save
-nodes_per_page = Settings.new(var: "nodes_per_page", value: "10")
+nodes_per_page = Settings.new(var: "nodes_per_page", value: "20")
 nodes_per_page.save
 networks_to_ignore = Settings.new(var: "networks_to_ignore", value: "6670,6671")
 networks_to_ignore.save

@@ -14,3 +14,9 @@
 //= require jquery_ujs
 //= require_tree .
 //= require material
+
+$(document).ready(function() {
+  $('input[type=radio]').change(function() {
+    $(this).closest("form").submit();
+  });
+});

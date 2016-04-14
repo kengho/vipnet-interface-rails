@@ -1,24 +1,25 @@
 <div class="auth__form--outside">
   <div class="auth__form mdl-shadow--2dp">
     <%= render "shared/header", render_back_button: true, text: t(".label") %>
+    <%# locale user settings %>
     <%= form_for @user, method: :patch do |f| %>
       <div class="locale">
         <% available_locales = (I18n.available_locales - [:"zh-CN"] - [:"zh-TW"]).map(&:to_s) %>
-        <% available_locales.each do |available_locale| %>
-          <% checked = false %>
+        <% User.settings[:locale][:accepted_values].each do |available_locale| %>
+          <% checked_locale = false %>
           <% if current_user.settings.locale %>
-            <% checked = true if available_locale == current_user.settings.locale %>
+            <% checked_locale = true if available_locale == current_user.settings.locale %>
           <% else %>
-            <% checked = true if available_locale == I18n.default_locale.to_s %>
+            <% checked_locale = true if available_locale == I18n.default_locale.to_s %>
           <% end %>
-          <input id="<%= available_locale %>" <% if checked %>checked<% end %> type="radio" name="locale" value="<%= available_locale %>">
+          <input id="<%= available_locale %>" <% if checked_locale %>checked<% end %> type="radio" name="locale" value="<%= available_locale %>">
             <label for="<%= available_locale %>">
               <%= available_locale %>
             </label>
           </input>
         <% end %>
         <noscript>
-          <button type="submit" class="mdl-button mdl-js-button mdl-button--icon mdl-button--colored">
+          <button type="submit" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
             <i class="material-icons">save</i>
           </button>
         </noscript>

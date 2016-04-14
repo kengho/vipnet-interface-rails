@@ -16,31 +16,45 @@ class UsersController < ApplicationController
   end
 
   def update
+    # user additional settings
     params.each do |param, value|
-      if User.settings.include?(param)
-        current_user.settings[param] = value
+      # save settings if there are no accepted values or if passed value is in it
+      corresponding_settings = User.settings[param.to_sym]
+      if corresponding_settings
+        accepted_values = corresponding_settings[:accepted_values]
+        if !accepted_values
+          current_user.settings[param] = value
+        elsif accepted_values.include?(value)
+          current_user.settings[param] = value
+        end
       end
     end
-    unless current_user.save
-      flash[:notice] = "error saving user settings"
-    else
+    if current_user.save
       flash[:notice] = "user settings saved"
+    else
+      flash[:notice] = "error saving user settings"
     end
+    # user auth settings
     if params["user_session"]
       if current_user.valid_password?(params["user_session"]["current_password"])
         current_user.password = params["user_session"]["password"]
         current_user.password_confirmation = params["user_session"]["password_confirmation"]
-        unless current_user.save
-          flash[:error] = "error confirmation passwords"
-        else
+        if current_user.save
           flash[:success] = "password successfully changed"
           redirect_to "/nodes"
+        else
+          flash[:error] = "error confirmation password"
         end
       else
         flash[:error] = "error validating password"
       end
     end
-    redirect_to edit_user_path(current_user)
+
+    if params["redirect_to"]
+      redirect_to params["redirect_to"]
+    else
+      redirect_to edit_user_path(current_user)
+    end
   end
 
   private

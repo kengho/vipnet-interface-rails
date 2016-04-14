@@ -32,9 +32,10 @@
               </tbody>
             <% end %>
           </table>
-          <%= will_paginate @nodes, previous_label: "<i class='material-icons'>chevron_left</i>", next_label: "<i class='material-icons'>chevron_right</i>", inner_window: 1 %>
         </form>
       </div>
+      <%= will_paginate @nodes, previous_label: "<i class='material-icons'>chevron_left</i>", next_label: "<i class='material-icons'>chevron_right</i>", inner_window: 1 %>
+      <%= render "per_page" %>
     </div>
   </main>
 </div>

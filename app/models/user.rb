@@ -6,11 +6,18 @@ class User < ActiveRecord::Base
   include RailsSettings::Extend
 
   def self.roles
-    roles = [ "administrator", "user", "editor" ]
+    roles = ["administrator", "user", "editor"]
   end
 
   def self.settings
-    settings = ["locale"]
+    settings = {
+      :locale => {
+        accepted_values: (I18n.available_locales - [:"zh-CN"] - [:"zh-TW"]).map(&:to_s),
+      },
+      :nodes_per_page => {
+        accepted_values: ["10", "20", "50", "100"],
+      }
+    }
   end
 
 end

@@ -1,0 +1,24 @@
+<%= form_for current_user, method: :patch, :html => { :class => "nodes-per-page" } do |f| %>
+  <% redirect_to_params = params.reject { |k, v| k == "controller" || k == "action" || v == "" } %>
+  <%# http://stackoverflow.com/a/21393313 %>
+  <input type="hidden" name="redirect_to" value="/nodes?<%= redirect_to_params.to_param %>" />
+  <% User.settings[:nodes_per_page][:accepted_values].each do |available_node_per_page| %>
+    <% checked_nodes_per_page = false %>
+    <% if current_user.settings.nodes_per_page %>
+      <% checked_nodes_per_page = true if available_node_per_page == current_user.settings.nodes_per_page %>
+    <% else %>
+      <% checked_nodes_per_page = true if available_node_per_page == Settings.nodes_per_page %>
+    <% end %>
+    <input id="<%= available_node_per_page %>" <% if checked_nodes_per_page %>checked<% end %> type="radio" name="nodes_per_page" value="<%= available_node_per_page %>">
+      <label for="<%= available_node_per_page %>">
+        <%= available_node_per_page %>
+      </label>
+    </input>
+  <% end %>
+  <i class="material-icons">list</i>
+  <noscript>
+    <button type="submit" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
+      <i class="material-icons">save</i>
+    </button>
+  </noscript>
+<% end %>
