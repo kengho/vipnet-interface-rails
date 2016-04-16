@@ -31,7 +31,7 @@ class Node < ActiveRecord::Base
       regexps.push(search_regexp) if view =~ Regexp.new(Regexp.escape(str))
     end
     return regexps unless regexps.empty?
-    str
+    false
   end
 
   def self.pg_regexp_adoptation(regexp)
