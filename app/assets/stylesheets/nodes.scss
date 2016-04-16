@@ -66,6 +66,13 @@ $nodes-per-page-bgcolor: #ddd;
   color: $main-text-color;
 }
 
+.nodes__td--dontoverflow span {
+  display: inline-block;
+  text-overflow: ellipsis;
+  overflow:hidden !important;
+  width: 200px;
+}
+
 .nodes__th {
   padding-bottom: 8px;
 }

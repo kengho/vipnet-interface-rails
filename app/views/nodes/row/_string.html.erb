@@ -1,5 +1,14 @@
-<td class="mdl-data-table__cell--non-numeric nodes__td">
+<%
+  if defined?(td_class)
+    td_class = "nodes__td #{td_class}"
+  else
+    td_class = "nodes__td"
+  end
+%>
+<td class="mdl-data-table__cell--non-numeric <%= td_class %>">
   <% unless value == nil %>
-    <%= value.html_safe %>
+    <span title="<%= value.html_safe %>">
+      <%= value.html_safe %>
+    </span>
   <% end %>
 </td>
