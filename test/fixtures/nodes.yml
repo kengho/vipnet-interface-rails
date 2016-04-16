@@ -166,3 +166,9 @@ version_substitution7:
   name: "client0x1a0e0807"
   vipnet_version:
     summary: ""
+
+version_substitution8:
+  vipnet_id: "0x1a0e0808"
+  name: "client0x1a0e0808"
+  vipnet_version:
+    summary: "3.0-671"
