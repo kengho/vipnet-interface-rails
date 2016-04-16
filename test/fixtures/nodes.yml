@@ -122,3 +122,41 @@ node3:
 node4:
   vipnet_id: "0x1a0e0702"
   history: false
+
+# NodesControllerTest#vipnet version substitution
+# ViewsNodesIndexTest#vipnet version substitution
+version_substitution1:
+  vipnet_id: "0x1a0e0801"
+  name: "client0x1a0e0801"
+  vipnet_version:
+    summary: "3.0-670"
+
+version_substitution2:
+  vipnet_id: "0x1a0e0802"
+  name: "client0x1a0e0802"
+  vipnet_version:
+    summary: "3.2-672"
+
+version_substitution3:
+  vipnet_id: "0x1a0e0803"
+  name: "client0x1a0e0803"
+  vipnet_version:
+    summary: "0.3-2"
+
+version_substitution4:
+  vipnet_id: "0x1a0e0804"
+  name: "client0x1a0e0804"
+  vipnet_version:
+    summary: "4.20-0"
+
+version_substitution5:
+  vipnet_id: "0x1a0e0805"
+  name: "client0x1a0e0805"
+  vipnet_version:
+    summary: "4.20-1"
+
+version_substitution6:
+  vipnet_id: "0x1a0e0806"
+  name: "client0x1a0e0806"
+  vipnet_version:
+    summary: "3.2-673"

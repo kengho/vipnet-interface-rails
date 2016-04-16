@@ -100,4 +100,24 @@ class NodesControllerTest < ActionController::TestCase
     assert_not assigns["response"][:status]
   end
 
+  test "vipnet version substitution" do
+    user_session1 = UserSession.create(users(:user1))
+
+    get(:index, { vipnet_id: "0x1a0e08", vipnet_version: "3.1" })
+    assert_equal(1, assigns["size_all"])
+    assert_equal("0x1a0e0801", assigns["nodes"].first.vipnet_id)
+
+    get(:index, { vipnet_id: "0x1a0e08", vipnet_version: "3.2" })
+    assert_equal(3, assigns["size_all"])
+
+    get(:index, { vipnet_id: "0x1a0e08", vipnet_version: "4" })
+    assert_equal(2, assigns["size_all"])
+
+    get(:index, { vipnet_id: "0x1a0e08", vipnet_version: "11" })
+    assert_equal(1, assigns["size_all"])
+
+    get(:index, { vipnet_id: "0x1a0e08", vipnet_version: "3" })
+    assert_equal(4, assigns["size_all"])
+  end
+
 end

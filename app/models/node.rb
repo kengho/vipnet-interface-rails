@@ -17,6 +17,48 @@ class Node < ActiveRecord::Base
     }
   end
 
+  def self.vipnet_versions_substitute(str)
+    substitution_list = {
+      /^3\.0\-670$/ => "3.1",
+      /^3\.2\-.*/ => "3.2",
+      /^0\.3\-2$/ => "3.2 (11.19855)",
+      /^4\.2.*/ => "4.2",
+    }
+    regexps = Array.new
+    substitution_list.each do |search_regexp, view|
+      return view if str =~ search_regexp
+      regexps.push(search_regexp) if view =~ Regexp.new(Regexp.escape(str))
+    end
+    return regexps unless regexps.empty?
+    str
+  end
+
+  def self.pg_regexp_adoptation(regexp)
+    substitution_list = {
+      "_" => "\\_",
+      ".*" => "%",
+      "\\-" => "-",
+      "\\." => "DOT",
+      "." => "_",
+      "DOT" => ".",
+    }
+    pg_regexp = regexp.source
+    if pg_regexp[0] == "^"
+      pg_regexp = pg_regexp[1..-1]
+    else
+      pg_regexp = "%#{pg_regexp}"
+    end
+    if pg_regexp[-1] == "$"
+      pg_regexp = pg_regexp[0..-2]
+    else
+      pg_regexp = "#{pg_regexp}%"
+    end
+    substitution_list.each do |ruby_regexp_pattern, pg_regexp_pattern|
+      pg_regexp = pg_regexp.gsub(ruby_regexp_pattern, pg_regexp_pattern)
+    end
+    return pg_regexp
+  end
+
   def self.categories
     categories = { "A" => "client", "S" => "server", "G" => "group" }
   end

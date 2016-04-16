@@ -1,0 +1,5 @@
+<td class="mdl-data-table__cell--non-numeric nodes__td">
+  <% unless value == nil %>
+    <span id="node-<%= node.id %>__vipnet-version"><%= Node.vipnet_versions_substitute(value) %></span>
+  <% end %>
+</td>

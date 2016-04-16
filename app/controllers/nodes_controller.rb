@@ -3,39 +3,38 @@ class NodesController < ApplicationController
   before_action :check_if_node_exist, only: [:availability, :history]
 
   def index
-    # params:
-    # {"name"=>"co", "vipnet_version"=>"3.0-671"}
-    # query_sql:
-    # "name ILIKE ? AND vipnet_version -> 'summary' ILIKE ?"
-    # query_params:
-    # ["%co%", "%3.0-671%"]
     searchable_by = Node.searchable
-    query_sql = String.new
+    query_sql = "("
     query_params = Array.new
     params.each do |key, param|
       if (searchable_by.key?(key) && param != "" && param)
-        # _ => \_ (search exactly "_")
-        param = param.gsub("_","\\_")
-        # .* => % (like regexp)
-        param = param.gsub(".*","%")
-        # . => _ (like regexp)
-        param = param.gsub(".","_")
         prop = searchable_by[key]
-        query_sql += " AND " if query_sql.size > 0
-        if prop.class == String
-          query_sql += "#{prop} ILIKE ?"
+        if key == "vipnet_version"
+          regexps = Node.vipnet_versions_substitute(param)
+          if regexps.class == Array
+            query_sql += "("
+            regexps.each do |regexp|
+              query_sql += "vipnet_version -> 'summary' ILIKE ? OR "
+              query_params.push(Node.pg_regexp_adoptation(regexp))
+            end
+            query_sql += "false) AND "
+            next
+          end
         end
-        if prop.class == Hash
+        if prop.class == String
+          query_sql += "#{prop} ILIKE ? AND "
+        elsif prop.class == Hash
           hash_prop = prop.keys[0]
           key = prop[hash_prop]
-          query_sql += "#{hash_prop} -> '#{key}' ILIKE ?"
+          query_sql += "#{hash_prop} -> '#{key}' ILIKE ? AND "
         end
-        query_params.push("%" + param + "%")
+        query_params.push(Node.pg_regexp_adoptation(Regexp.new(param)))
       end
     end
+    query_sql += "true)"
 
     Node.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
-    if query_sql.empty?
+    if query_sql == "(true)"
       @nodes = Node.where("history = 'false'")
       @size_all = @nodes.size
       @nodes = @nodes.paginate(page: params[:page])

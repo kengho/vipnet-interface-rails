@@ -16,7 +16,7 @@
   <%= render "nodes/row/availability", node: node %>
   <%= render "nodes/row/string", value: node["name"], node: node %>
   <%= render "nodes/row/string", value: node["ips"]["summary"], node: node %>
-  <%= render "nodes/row/string", value: node["vipnet_version"]["summary"], node: node %>
+  <%= render "nodes/row/vipnet_version", value: node["vipnet_version"]["summary"], node: node %>
   <% if defined?(row_id) %>
     <%# then this line is loaded by NodesController#history %>
     <%= render "nodes/row/space" %>
