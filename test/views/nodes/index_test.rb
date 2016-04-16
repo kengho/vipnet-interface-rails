@@ -20,6 +20,7 @@ class NodesControllerIndexTest < ActionController::TestCase
     assert_equal("3.2 (11.19855)", css_select("#node-#{id3}__vipnet-version").children.text)
     assert_equal("4.2", css_select("#node-#{id4}__vipnet-version").children.text)
     assert_equal("4.2", css_select("#node-#{id5}__vipnet-version").children.text)
+    assert_equal("3.2", css_select("#node-#{id6}__vipnet-version").children.text)
     assert_equal("", css_select("#node-#{id7}__vipnet-version").children.text)
   end
 
