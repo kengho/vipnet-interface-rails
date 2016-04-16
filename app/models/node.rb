@@ -19,6 +19,7 @@ class Node < ActiveRecord::Base
 
   def self.vipnet_versions_substitute(str)
     substitution_list = {
+      /^$/ => "",
       /^3\.0\-670$/ => "3.1",
       /^3\.2\-.*/ => "3.2",
       /^0\.3\-2$/ => "3.2 (11.19855)",

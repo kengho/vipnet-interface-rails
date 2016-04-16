@@ -1,5 +1,6 @@
 <td class="mdl-data-table__cell--non-numeric nodes__td">
   <% unless value == nil %>
+    <%# id for valid appearence tests %>
     <span id="node-<%= node.id %>__vipnet-version"><%= Node.vipnet_versions_substitute(value) %></span>
   <% end %>
 </td>
