@@ -108,7 +108,7 @@ ru:
         label: "Искать"
       id_label: "ID"
       name_label: "Имя"
-      ip_label: "IP-адрес"
+      ip_label: "IP-адреса"
       software_label: "Версия ПО"
       created_label: "Создан"
       deleted_label: "Удален"

@@ -28,7 +28,7 @@
           </label><%= t(".settings") %>
         </a>
       <% end %>
-      <% unless Settings.support_email == "" %>
+      <% unless Settings.support_email.empty? %>
         <a class="mdl-navigation__link" href="mailto:<%= Settings.support_email %>">
           <label class="mdl-button mdl-js-button mdl-button--icon">
             <i class="material-icons">feedback</i>

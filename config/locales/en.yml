@@ -129,7 +129,7 @@ en:
         label: "Search"
       id_label: "ID"
       name_label: "Name"
-      ip_label: "IP address"
+      ip_label: "IP addresses"
       software_label: "Software version"
       created_label: "Created at"
       deleted_label: "Deleted at"

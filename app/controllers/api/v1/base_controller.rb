@@ -43,10 +43,10 @@ class Api::V1::BaseController < ActionController::Base
       if actions_post.key?(params[:controller])
         if actions_post[params[:controller]][:actions].include?(params[:action])
           authenticate_or_request_with_http_token do |token, _|
-            unless ActiveSupport::SecurityUtils.secure_compare(token, ENV[actions_post[params[:controller]][:token_name]])
-              render nothing: true, status: 401, content_type: "text/html"
-            else
+            if ActiveSupport::SecurityUtils.secure_compare(token, ENV[actions_post[params[:controller]][:token_name]])
               true
+            else
+              render nothing: true, status: 401, content_type: "text/html"
             end
           end
         end
