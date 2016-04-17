@@ -1,0 +1,19 @@
+(function() {
+  vipnetInterface.remoteStatus.renderStatus({
+    parentId: "<%= @response[:parent_id] %>",
+    status: "true",
+    tooltipText: "<%= @response[:tooltip_text] %>",
+    undo: "true",
+    ids: ["<%= @response[:parent_id] %> div[name='info']"],
+  });
+
+  vipnetInterface.remoteStatus.renderInfo({
+    parentId: "<%= @response[:parent_id] %>",
+    name: "<%= @response[:name] %>",
+    category: "<%= @response[:category] %>",
+    network: "<%= @response[:network] %>",
+    ips: "<%= @response[:ips] %>",
+    vipnetVersionHW: "<%= @response[:vipnet_version_hw] %>",
+  });
+
+})();
