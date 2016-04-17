@@ -1,6 +1,7 @@
 @import "_shared";
 
 $nodes-max-width: 90%;
+$body-bgcolor: #efefef;
 $announcements-max-width: 500px;
 $row-ajax-color: #ffa;
 $row-ajax-color-hover: #ff8;
@@ -9,6 +10,10 @@ $nodes-per-page-bgcolor: #ddd;
 
 * {
   transition-duration: 0.1s !important;
+}
+
+body {
+  background-color: $body-bgcolor;
 }
 
 .nodes__sub-title {
@@ -279,7 +284,7 @@ div[name="button--undo"] {
     padding: 0 6px;
     cursor: pointer;
     font-size: 8px;
-    background: white;
+    background: $body-bgcolor;
     color: $nodes-per-page;
     height: 20px;
     vertical-align: top;
