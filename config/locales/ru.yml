@@ -42,6 +42,17 @@ ru:
       datetime:
         before: "до"
         unknown_date: "Узнать точную дату создания узла затруднительно"
+      info:
+        button_label: "Подробности"
+        loaded: "Подробности загружены"
+        category: "Категория"
+        network: "Сеть"
+        ips: "IP-адреса"
+        vipnet_version_hw: "Версия ПО (на HW)"
+        mftp: "MFTP-сервер"
+        ncc: "Путь в NCC"
+        client: "клиент"
+        server: "координатор"
       history:
         update_button: "Загрузить последние данные"
         update_true: "Последние данные загружены"

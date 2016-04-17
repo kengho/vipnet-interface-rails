@@ -19,19 +19,20 @@ var vipnetInterface = {
       $(args.parentId).append(undoButtonHTML);
       $shownUndoButton = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "button--undo" });
       $shownUndoButton.click(function() {
-        args.row_ids.forEach(function(row_id) {
-          $(row_id).remove();
-          vipnetInterface.remoteStatus.renderDefault(args.parentId);
-        });
-      })
+        if(args.ids) {
+          args.ids.forEach(function(id) {
+            $(id).remove();
+          });
+        }
+        vipnetInterface.remoteStatus.renderDefault(args.parentId);
+      });
     },
 
     show: function(args) {
       $div = $(args.parentId + " div[name='" + args.div + "']")
       $div.css({
-        "opacity" : "1",
-        "visibility" : "visible",
-        "z-index" : "400",
+        "opacity": "1",
+        "z-index": "400",
       });
       return $div;
     },
@@ -39,9 +40,8 @@ var vipnetInterface = {
     hide: function(args) {
       $div = $(args.parentId + " div[name='" + args.div + "']")
       $div.css({
-        "opacity" : "0",
-        "visibility" : "hidden",
-        "z-index" : "200",
+        "opacity": "0",
+        "z-index": "0",
       });
       return $div;
     },
@@ -73,7 +73,7 @@ var vipnetInterface = {
         if(args.fullscreenTooltipKey) {
           $fullscreenTooltipTrigger.click(function() {
             vipnetInterface.showFullscreenTooltip(args.fullscreenTooltipKey);
-          })
+          });
         } else {
           $fullscreenTooltipTrigger.remove();
         }
@@ -81,7 +81,7 @@ var vipnetInterface = {
       if(args.undo) {
         setTimeout( vipnetInterface.remoteStatus.renderUndoButton,
                     vipnetInterface.remoteStatus.showStatusBeforeUndoTime,
-                    { parentId: args.parentId, row_ids: args.row_ids });
+                    { parentId: args.parentId, ids: args.ids });
       } else {
         setTimeout( vipnetInterface.remoteStatus.renderDefault,
                     vipnetInterface.remoteStatus.showStatusTime,
@@ -93,7 +93,36 @@ var vipnetInterface = {
       args.rows.forEach(function(row) {
         $(args.parentId)[args.place](row);
       });
-    }
+    },
+
+    renderInfo: function(args) {
+      infoHTML = $("#nodes__info-block-template").html();
+      // alert(infoHTML);
+      // alert(args.name);
+      // $hiddenButton = vipnetInterface.remoteStatus.hide({ parentId: parentId, div: "button" });
+      // html(args.tooltipText);
+      $(args.parentId).append(infoHTML);
+          // Category: <span name="category"></span>
+          // Network: <span name="network"></span>
+          // IP-addresses: <span name="ips"></span>
+          // Software version (HW): <span name="vipnet-version-hw"></span>
+          // MFTP server: <span name="mftp"></span>
+          // NCC location: <span name="ncc"></span>
+      $infoBlock = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "info" });
+      $infoBlock.find("div[name='close']").click(function() {
+        $(args.parentId).find("div[name='info']").remove();
+        vipnetInterface.remoteStatus.renderDefault(args.parentId);
+      })
+
+      $infoBlock.find("span[name='name']").html(args.name);
+      $infoBlock.find("span[name='category']").html(args.category);
+      $infoBlock.find("span[name='network']").html(args.network);
+      $infoBlock.find("span[name='ips']").html(args.ips);
+      $infoBlock.find("span[name='vipnet-version-hw']").html(args.vipnetVersionHW);
+
+
+      // return $shownSpinner;
+    },
   },
 
   showFullscreenTooltip: function(fullscreenTooltipKey) {

@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   resources :nodes, only: [:index]
   get 'nodes/availability/:node_id', to: 'nodes#availability'
   get 'nodes/history/:node_id', to: 'nodes#history'
+  get 'nodes/info/:node_id', to: 'nodes#info'
 
   #api
   namespace :api do

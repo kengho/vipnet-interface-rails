@@ -1,6 +1,6 @@
 class NodesController < ApplicationController
   skip_before_action :check_administrator_role
-  before_action :check_if_node_exist, only: [:availability, :history]
+  before_action :check_if_node_exist, only: [:availability, :history, :info]
 
   def index
     searchable_by = Node.searchable
@@ -88,6 +88,27 @@ class NodesController < ApplicationController
       @response[:tooltip_text] = t("nodes.row.history.history_#{@response[:status]}")
     end
     respond_with(@response, template: "nodes/row/remote_status_button") and return
+  end
+
+  def info
+    @response = {
+      parent_id: "#node-#{@node.id}__info",
+      name: @node.name,
+      category: t("nodes.row.info.#{@node.category}"),
+      network: Node.network(@node.vipnet_id),
+      ips: @node.ips["summary"] ? @node.ips["summary"] : "?",
+      vipnet_version_hw: @node.vipnet_version["summary"] ? @node.vipnet_version["summary"] : "?",
+      tooltip_text: t("nodes.row.info.loaded"),
+    }
+    network = Network.find_by_id(@node.network_id)
+    if network
+      if network.name
+        @response[:network] = "#{@response[:network]} (#{network.name})"
+      end
+    else
+      Rails.logger.error("Unable to find network '#{@node.network_id}'")
+    end
+    respond_with(@response, template: "nodes/row/info") and return
   end
 
   private

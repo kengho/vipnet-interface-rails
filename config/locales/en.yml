@@ -63,6 +63,17 @@ en:
       datetime:
         before: "b."
         unknown_date: "It is difficult to discover creation date of this node"
+      info:
+        button_label: "Information"
+        loaded: "Information loaded"
+        category: "Category"
+        network: "Network"
+        ips: "IP addresses"
+        vipnet_version_hw: "Software version (HW)"
+        mftp: "MFTP server"
+        ncc: "NCC location"        
+        client: "client"
+        server: "coordinator"
       history:
         update_button: "Load last data"
         update_true: "Last data loaded"

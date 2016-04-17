@@ -1,9 +1,11 @@
 <thead>
   <tr>
     <%= render "nodes/thead/string", id: "vipnet_id", value: params[:vipnet_id], tabindex: 1, label: t(".id_label") %>
+    <%# show info %>
     <%= render "nodes/thead/space" %>
     <%= render "nodes/thead/string", id: "name", value: params[:name], tabindex: 2, label: t(".name_label") %>
     <%# check availability %>
+    <%= render "nodes/thead/space" %>
     <%= render "nodes/thead/string", id: "ips", value: params[:ips], tabindex: 3, label: t(".ip_label") %>
     <%= render "nodes/thead/string", id: "vipnet_version", value: params[:vipnet_version], tabindex: 4, label: t(".software_label") %>
     <%# history %>

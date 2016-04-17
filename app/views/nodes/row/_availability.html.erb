@@ -2,7 +2,7 @@
   <% if !node["history"] && node["enabled"] && !node["deleted_at"] %>
     <div id="node-<%= node["id"] %>__check-availability">
       <a data-remote="true" data-replace-link-by-spinner="true" href="/nodes/availability/<%= node["id"] %>">
-        <%= render "nodes/row/remote_status/button", icon: "help", tooltip_text: t(".button_label") %>
+        <%= render "nodes/row/remote_status/button", icon: "help_outline", tooltip_text: t(".button_label") %>
       </a>
     </div>
   <% else %>

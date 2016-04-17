@@ -5,6 +5,8 @@ $body-bgcolor: #efefef;
 $announcements-max-width: 500px;
 $row-ajax-color: #ffa;
 $row-ajax-color-hover: #ff8;
+$info-block-bgcolor: #f7f7f7;
+$info-block-bgcolor-hover: #eee;
 $nodes-per-page: #aaa;
 $nodes-per-page-bgcolor: #ccc;
 
@@ -74,7 +76,7 @@ body {
 .nodes__td--dontoverflow span {
   display: inline-block;
   text-overflow: ellipsis;
-  overflow:hidden !important;
+  overflow: hidden !important;
   width: 200px;
 }
 
@@ -210,7 +212,7 @@ div[name="button--undo"] {
 }
 
 .nodes__link--same-page {
-  border-bottom: 1px dashed #adf;
+  border-bottom: 1px dashed $reversed-link-color;
   text-decoration: none;
   cursor: pointer;
   color: $reversed-link-color;
@@ -301,4 +303,36 @@ div[name="button--undo"] {
 .nodes-per-page i {
   font-size: 20px;
   color: $nodes-per-page-bgcolor;
+}
+
+.info-block {
+  min-width: 300px;
+  position: absolute;
+  z-index: 0;
+  opacity: 0;
+  background-color: $info-block-bgcolor;
+  color: $main-text-color;
+  margin-top: 20px;
+  left: 40px;
+  top: -20px;
+  &__title {
+    padding: 20px 60px 0 16px;
+    font-size: 20px;
+  }
+  &__close-button {
+    position: absolute;
+    right: 16px;
+    top: 16px;
+    color: $primary-color;
+  }
+  &__text {
+    padding: 16px;
+    white-space: pre-line;
+    & span {
+      font-weight: 600;
+    }
+  }
+  &:hover {
+    background-color: $info-block-bgcolor-hover;
+  }
 }

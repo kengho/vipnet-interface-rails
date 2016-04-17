@@ -29,7 +29,7 @@
     fullscreenTooltipKey: "<%= @response[:fullscreen_tooltip_key] %>",
   <% if @response[:history] && @response[:status] %>
     undo: "true",
-    row_ids,
+    ids: row_ids,
   <% end %>
   });
 })();
