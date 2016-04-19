@@ -98,8 +98,6 @@ class NodesController < ApplicationController
       category: @node.category ? t("nodes.row.info.#{@node.category}") : "",
       network: Node.network(@node.vipnet_id),
       ips: @node.ips["summary"] ? @node.ips["summary"] : "",
-      # accessips: @node.accessips != {} ? @node.accessips : "",
-      # accessips: @node.accessips(Hash),
       vipnet_version: @node.vipnet_version["summary"] ? Node.vipnet_versions_substitute(@node.vipnet_version["summary"]) : "",
       vipnet_version_hw: @node.vipnet_version["summary"] ? @node.vipnet_version["summary"] : "",
       created_first_at: @node.created_first_at,
