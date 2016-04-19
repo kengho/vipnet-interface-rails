@@ -113,6 +113,9 @@ class NodesController < ApplicationController
     unless @node.created_first_at_accuracy
       @response[:created_first_at] = "#{t('nodes.row.datetime.before')} #{@response[:created_first_at]}"
     end
+    if @node.server_number && @node.abonent_number
+      @response[:ncc] = "#{sprintf("%05d", @node.server_number.to_i(16))}/#{sprintf("%05d", @node.abonent_number.to_i(16))}"
+    end
     respond_with(@response, template: "nodes/row/info") and return
   end
 

@@ -118,6 +118,7 @@ var vipnetInterface = {
       $infoBlock.find("span[name='vipnet-version-hw']").html(args.vipnetVersionHW);
       $infoBlock.find("span[name='created-at']").html(args.createdAt);
       $infoBlock.find("span[name='deleted-at']").html(args.deletedAt);
+      $infoBlock.find("span[name='ncc']").html(args.ncc);
     },
 
     initAjax: function(parent) {
