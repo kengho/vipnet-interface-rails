@@ -80,14 +80,26 @@ class Node < ActiveRecord::Base
     false
   end
 
-  def accessips
-    accessips = Array.new
-    Iplirconf.all.each do |iplirconf|
-      iplirconf.sections.each do |_, section|
-        accessips.push(eval(section)["accessip"]) if eval(section)["vipnet_id"] == self.vipnet_id
+  def accessips(output = Array)
+    if output == Array
+      accessips = Array.new
+      Iplirconf.all.each do |iplirconf|
+        iplirconf.sections.each do |_, section|
+          accessips.push(eval(section)["accessip"]) if eval(section)["vipnet_id"] == self.vipnet_id
+        end
+      end
+      accessips.reject!{ |a| a.nil? }
+    elsif output == Hash
+      accessips = Hash.new
+      Iplirconf.all.each do |iplirconf|
+        if iplirconf.sections["self"]
+          coordinator_vipnet_id = eval(iplirconf.sections["self"])["vipnet_id"]
+          iplirconf.sections.each do |_, section|
+            accessips[coordinator_vipnet_id] = eval(section)["accessip"] if eval(section)["vipnet_id"] == self.vipnet_id
+          end
+        end
       end
     end
-    accessips.reject!{ |a| a.nil? }
     accessips
   end
 
@@ -137,6 +149,29 @@ class Node < ActiveRecord::Base
     return "" if uniq_vipnet_versions.size == 0
     return uniq_vipnet_versions[0] if uniq_vipnet_versions.size == 1
     return "?" if uniq_vipnet_versions.size > 1
+  end
+
+  def mftp_server
+    return false if self.category == "server"
+    return nil unless self.server_number && self.abonent_number
+    mftp_servers = Node.where(
+      "category = 'server' AND "\
+      "server_number = ? AND "\
+      "network_id = ? AND "\
+      "history = 'false'"\
+      "",
+      self.server_number,
+      self.network_id)
+    return mftp_servers.first if mftp_servers.size == 1
+    if mftp_servers.size == 0
+      Rails.logger.error("No mftp servers found '#{self.id}'")
+      return nil
+    elsif mftp_servers.size == 1
+      return mftp_servers.first
+    elsif mftp_servers.size > 0
+      Rails.logger.error("Multiple mftp servers found '#{self.id}'")
+      return nil
+    end
   end
 
 end

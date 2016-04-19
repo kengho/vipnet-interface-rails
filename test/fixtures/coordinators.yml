@@ -1,3 +1,8 @@
+# NodesTest#accessips
 coordinator1:
-  vipnet_id: "6670"
+  vipnet_id: "0x1a0e000a"
+  network: network1
+
+coordinator2:
+  vipnet_id: "0x1a0e000b"
   network: network1

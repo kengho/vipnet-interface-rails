@@ -54,7 +54,7 @@ ru:
         vipnet_version_hw: "Версия ПО (HW)"
         created_at: "Создан"
         deleted_at: "Удален"
-        mftp: "MFTP-сервер"
+        mftp_server: "MFTP-сервер"
         ncc: "Путь в NCC"
         client: "клиент"
         server: "координатор"

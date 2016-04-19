@@ -98,6 +98,8 @@ class NodesController < ApplicationController
       category: @node.category ? t("nodes.row.info.#{@node.category}") : "",
       network: Node.network(@node.vipnet_id),
       ips: @node.ips["summary"] ? @node.ips["summary"] : "",
+      # accessips: @node.accessips != {} ? @node.accessips : "",
+      # accessips: @node.accessips(Hash),
       vipnet_version: @node.vipnet_version["summary"] ? Node.vipnet_versions_substitute(@node.vipnet_version["summary"]) : "",
       vipnet_version_hw: @node.vipnet_version["summary"] ? @node.vipnet_version["summary"] : "",
       created_first_at: @node.created_first_at,
@@ -110,11 +112,23 @@ class NodesController < ApplicationController
     else
       Rails.logger.error("Unable to find network '#{@node.network_id}'")
     end
+    accessips = @node.accessips(Hash)
+    unless accessips.empty?
+      tmp_array = Array.new
+      @response[:accessips] = String.new
+      accessips.each do |vipnet_id, accessip|
+        tmp_array.push("#{vipnet_id}→#{accessip}")
+      end
+      @response[:accessips] = tmp_array.join(", ")
+    end
     unless @node.created_first_at_accuracy
       @response[:created_first_at] = "#{t('nodes.row.datetime.before')} #{@response[:created_first_at]}"
     end
     if @node.server_number && @node.abonent_number
-      @response[:ncc] = "#{sprintf("%05d", @node.server_number.to_i(16))}/#{sprintf("%05d", @node.abonent_number.to_i(16))}"
+      @response[:ncc] = "#{sprintf("%05d", @node.server_number.to_i(16))}→#{sprintf("%05d", @node.abonent_number.to_i(16))}"
+    end
+    if @node.mftp_server
+      @response[:mftp_server] = "#{@node.mftp_server.name} (#{@node.mftp_server.vipnet_id})"
     end
     respond_with(@response, template: "nodes/row/info") and return
   end

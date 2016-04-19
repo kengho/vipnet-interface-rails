@@ -4,13 +4,17 @@
 node_accessips1:
   coordinator: coordinator1
   sections:
+    self:
+      vipnet_id: "0x1a0e000a"
     first:
       vipnet_id: "0x1a0e0100"
       accessip: "192.0.2.1"
 
 node_accessips2:
-  coordinator: coordinator1
+  coordinator: coordinator2
   sections:
+    self:
+      vipnet_id: "0x1a0e000b"
     first:
       vipnet_id: "0x1a0e0100"
       accessip: "192.0.2.2"

@@ -75,7 +75,7 @@ en:
         vipnet_version_hw: "Software version (HW)"
         created_at: "Created at"
         deleted_at: "Deleted at"
-        mftp: "MFTP server"
+        mftp_server: "MFTP server"
         ncc: "NCC location"
         client: "client"
         server: "coordinator"

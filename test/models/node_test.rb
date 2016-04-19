@@ -32,6 +32,7 @@ class NodesTest < ActiveSupport::TestCase
     node1 = nodes(:accessips1)
     node2 = nodes(:empty_node)
     assert_equal(["192.0.2.1", "192.0.2.2"], node1.accessips)
+    assert_equal({ "0x1a0e000a" => "192.0.2.1", "0x1a0e000b" => "192.0.2.2" }, node1.accessips(Hash))
     assert_equal([], node2.accessips)
   end
 
@@ -56,6 +57,17 @@ class NodesTest < ActiveSupport::TestCase
     assert_equal("1.1", node1.vipnet_versions_summary)
     assert_equal("?", node2.vipnet_versions_summary)
     assert_equal("", node3.vipnet_versions_summary)
+  end
+
+  test "mftp_server" do
+    node1 = nodes(:mftp_client1)
+    node2 = nodes(:mftp_client2)
+    node3 = nodes(:mftp_client3)
+    server1 = nodes(:mftp_server1)
+    assert_equal(server1, node1.mftp_server)
+    assert_equal(server1, node2.mftp_server)
+    assert_equal(nil, node3.mftp_server)
+    assert_equal(false, server1.mftp_server)
   end
 
 end

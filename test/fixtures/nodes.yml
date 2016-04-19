@@ -172,3 +172,47 @@ version_substitution8:
   name: "client0x1a0e0808"
   vipnet_version:
     summary: "3.0-671"
+
+# NodesControllerTest#mtft_server
+mftp_server0:
+  vipnet_id: "0x1a0f090a"
+  name: "serverx0x1a0f090a"
+  abonent_number: "0000"
+  server_number: "0001"
+  category: "server"
+
+mftp_server1:
+  vipnet_id: "0x1a0e090a"
+  name: "serverx0x1a0e090a"
+  abonent_number: "0000"
+  server_number: "0001"
+  category: "server"
+  network: network1
+
+mftp_server2:
+  vipnet_id: "0x1a0e090b"
+  name: "serverx0x1a0e090b"
+  abonent_number: "0000"
+  server_number: "0002"
+  category: "server"
+  network: network1
+
+mftp_client1:
+  vipnet_id: "0x1a0e0901"
+  name: "client0x0x1a0e0901"
+  abonent_number: "0001"
+  server_number: "0001"
+  network: network1
+
+mftp_client2:
+  vipnet_id: "0x1a0e0902"
+  name: "client0x0x1a0e0901"
+  abonent_number: "0002"
+  server_number: "0001"
+  network: network1
+
+mftp_client3:
+  vipnet_id: "0x1a0e0903"
+  name: "client0x0x1a0e0903"
+  abonent_number: "0002"
+  network: network1
