@@ -52,6 +52,8 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         n.name = record["name"]
         n.enabled = record["enabled"]
         n.category = record["category"]
+        n.abonent_number = record["abonent_number"]
+        n.server_number = record["server_number"]
         n.created_first_at_accuracy = created_first_at_accuracy if created_first_at_accuracy != nil
       end
       # set "created_first_at" and other fields for new node, update "history" for old nodes
@@ -68,7 +70,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         # just in case
         node.deleted_by_message_id = node_to_history.deleted_by_message_id
         node.deleted_at = node_to_history.deleted_at
-        #
+        # copy data that comes from iplirconf
         node.created_by_message_id = node_to_history.created_by_message_id
         node.ips = node_to_history.ips
         node.vipnet_version = node_to_history.vipnet_version
