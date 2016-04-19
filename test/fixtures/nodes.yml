@@ -99,6 +99,11 @@ search5:
   name: "client1"
   history: false
 
+search6:
+  vipnet_id: "0x1a0e0604"
+  name: "()client0x1a0e0604"
+  history: false
+
 # Api::V1::NodesController#nodes
 node1:
   vipnet_id: "0x1a0e0701"

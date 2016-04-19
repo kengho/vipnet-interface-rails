@@ -34,16 +34,17 @@ class Node < ActiveRecord::Base
     false
   end
 
-  def self.pg_regexp_adoptation(regexp)
+  def self.pg_regexp_adoptation(pg_regexp)
     substitution_list = {
       "_" => "\\_",
-      ".*" => "%",
+      "_" => "\\_",
+      "\.\*" => "%",
       "\\-" => "-",
       "\\." => "DOT",
-      "." => "_",
+      "\." => "_",
       "DOT" => ".",
     }
-    pg_regexp = regexp.source
+    # pg_regexp = regexp.source
     if pg_regexp[0] == "^"
       pg_regexp = pg_regexp[1..-1]
     else

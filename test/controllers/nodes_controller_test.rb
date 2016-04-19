@@ -36,6 +36,9 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(2, assigns["size_all"])
     assert_equal(0, assigns["size_no_history"])
 
+    get(:index, { name: ")client" })
+    assert_equal(1, assigns["size_all"])
+
     get(:index, { vipnet_id: ".*0601" })
     assert_equal(3, assigns["size_all"])
 

@@ -16,7 +16,7 @@ class NodesController < ApplicationController
             query_sql += "("
             regexps.each do |regexp|
               query_sql += "vipnet_version -> 'summary' ILIKE ? OR "
-              query_params.push(Node.pg_regexp_adoptation(regexp))
+              query_params.push(Node.pg_regexp_adoptation(regexp.source))
             end
             query_sql += "false) AND "
           end
@@ -29,7 +29,7 @@ class NodesController < ApplicationController
           key = prop[hash_prop]
           query_sql += "#{hash_prop} -> '#{key}' ILIKE ? AND "
         end
-        query_params.push(Node.pg_regexp_adoptation(Regexp.new(param)))
+        query_params.push(Node.pg_regexp_adoptation(param))
       end
     end
     query_sql += "true)"
