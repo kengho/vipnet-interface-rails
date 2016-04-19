@@ -94,19 +94,24 @@ class NodesController < ApplicationController
     @response = {
       parent_id: "#node-#{@node.id}__info",
       name: @node.name,
-      category: t("nodes.row.info.#{@node.category}"),
+      vipnet_id: @node.vipnet_id,
+      category: @node.category ? t("nodes.row.info.#{@node.category}") : "",
       network: Node.network(@node.vipnet_id),
-      ips: @node.ips["summary"] ? @node.ips["summary"] : "?",
-      vipnet_version_hw: @node.vipnet_version["summary"] ? @node.vipnet_version["summary"] : "?",
+      ips: @node.ips["summary"] ? @node.ips["summary"] : "",
+      vipnet_version: @node.vipnet_version["summary"] ? Node.vipnet_versions_substitute(@node.vipnet_version["summary"]) : "",
+      vipnet_version_hw: @node.vipnet_version["summary"] ? @node.vipnet_version["summary"] : "",
+      created_first_at: @node.created_first_at,
+      deleted_at: @node.deleted_at ? @node.deleted_at : "",
       tooltip_text: t("nodes.row.info.loaded"),
     }
     network = Network.find_by_id(@node.network_id)
     if network
-      if network.name
-        @response[:network] = "#{@response[:network]} (#{network.name})"
-      end
+      @response[:network] = "#{@response[:network]} (#{network.name})" if network.name
     else
       Rails.logger.error("Unable to find network '#{@node.network_id}'")
+    end
+    unless @node.created_first_at_accuracy
+      @response[:created_first_at] = "#{t('nodes.row.datetime.before')} #{@response[:created_first_at]}"
     end
     respond_with(@response, template: "nodes/row/info") and return
   end

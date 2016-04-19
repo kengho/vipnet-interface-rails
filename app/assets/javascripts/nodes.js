@@ -93,35 +93,43 @@ var vipnetInterface = {
       args.rows.forEach(function(row) {
         $(args.parentId)[args.place](row);
       });
+
+      // http://stackoverflow.com/a/5462921
+      $(document).delegate("a[data-replace-link-by-spinner]", "click", function() {
+        vipnetInterface.remoteStatus.initAjax(this);
+      });
     },
 
     renderInfo: function(args) {
       infoHTML = $("#nodes__info-block-template").html();
-      // alert(infoHTML);
-      // alert(args.name);
-      // $hiddenButton = vipnetInterface.remoteStatus.hide({ parentId: parentId, div: "button" });
-      // html(args.tooltipText);
       $(args.parentId).append(infoHTML);
-          // Category: <span name="category"></span>
-          // Network: <span name="network"></span>
-          // IP-addresses: <span name="ips"></span>
-          // Software version (HW): <span name="vipnet-version-hw"></span>
-          // MFTP server: <span name="mftp"></span>
-          // NCC location: <span name="ncc"></span>
       $infoBlock = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "info" });
       $infoBlock.find("div[name='close']").click(function() {
         $(args.parentId).find("div[name='info']").remove();
         vipnetInterface.remoteStatus.renderDefault(args.parentId);
-      })
-
+      });
       $infoBlock.find("span[name='name']").html(args.name);
+      $infoBlock.find("span[name='vipnet-id']").html(args.vipnetId);
       $infoBlock.find("span[name='category']").html(args.category);
       $infoBlock.find("span[name='network']").html(args.network);
       $infoBlock.find("span[name='ips']").html(args.ips);
+      $infoBlock.find("span[name='accessips']").html(args.accessips);
+      $infoBlock.find("span[name='vipnet-version']").html(args.vipnetVersion);
       $infoBlock.find("span[name='vipnet-version-hw']").html(args.vipnetVersionHW);
+      $infoBlock.find("span[name='created-at']").html(args.createdAt);
+      $infoBlock.find("span[name='deleted-at']").html(args.deletedAt);
+    },
 
-
-      // return $shownSpinner;
+    initAjax: function(parent) {
+      id = $(parent).parent().attr("id");
+      vipnetInterface.remoteStatus.renderSpinner("#" + id);
+      vipnetInterface.remoteStatus.ajaxTimeoutHandlers["#" + id] = setTimeout(function() {
+        spinner_visibility = $("#" + id).parent().find("div[name='spinner']").css("visibility");
+        if(spinner_visibility == "visible") {
+          // http://stackoverflow.com/a/10610347
+          vipnetInterface.remoteStatus.renderStatus({ parentId: "#" + id, status: "false", tooltipText: I18n["ajax_error"] });
+        }
+      }, vipnetInterface.remoteStatus.ajaxTimeout, id)
     },
   },
 
@@ -159,17 +167,8 @@ var vipnetInterface = {
 
 $(document).ready(function() {
   $("a[data-replace-link-by-spinner]").click(function() {
-    id = $(this).parent().attr("id");
-    vipnetInterface.remoteStatus.renderSpinner("#" + id);
-    vipnetInterface.remoteStatus.ajaxTimeoutHandlers["#" + id] = setTimeout(function() {
-      spinner_visibility = $("#" + id).parent().find("div[name='spinner']").css("visibility");
-      if(spinner_visibility == "visible") {
-        // http://stackoverflow.com/a/10610347
-        vipnetInterface.remoteStatus.renderStatus({ parentId: "#" + id, status: "false", tooltipText: I18n["ajax_error"] });
-      }
-    }, vipnetInterface.remoteStatus.ajaxTimeout, id)
+    vipnetInterface.remoteStatus.initAjax(this);
   });
-
   $("span[data-fullscreen-tooltip-key]").click(function() {
     fullscreenTooltipKey = $(this).data("fullscreen-tooltip-key");
     vipnetInterface.showFullscreenTooltip(fullscreenTooltipKey);

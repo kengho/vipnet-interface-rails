@@ -6,14 +6,17 @@
     undo: "true",
     ids: ["<%= @response[:parent_id] %> div[name='info']"],
   });
-
   vipnetInterface.remoteStatus.renderInfo({
     parentId: "<%= @response[:parent_id] %>",
     name: "<%= @response[:name] %>",
+    vipnetId: "<%= @response[:vipnet_id] %>",
     category: "<%= @response[:category] %>",
     network: "<%= @response[:network] %>",
     ips: "<%= @response[:ips] %>",
+    accessips: "<%= @response[:accessips] %>",
+    vipnetVersion: "<%= @response[:vipnet_version] %>",
     vipnetVersionHW: "<%= @response[:vipnet_version_hw] %>",
+    createdAt: "<%= @response[:created_first_at] %>",
+    deletedAt: "<%= @response[:deleted_at] %>",
   });
-
 })();

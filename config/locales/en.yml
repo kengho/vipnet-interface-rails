@@ -66,12 +66,17 @@ en:
       info:
         button_label: "Information"
         loaded: "Information loaded"
+        vipnet_id: "ID"
         category: "Category"
         network: "Network"
         ips: "IP addresses"
+        accessips: "Accessips"
+        vipnet_version: "Software version"
         vipnet_version_hw: "Software version (HW)"
+        created_at: "Created at"
+        deleted_at: "Deleted at"
         mftp: "MFTP server"
-        ncc: "NCC location"        
+        ncc: "NCC location"
         client: "client"
         server: "coordinator"
       history:

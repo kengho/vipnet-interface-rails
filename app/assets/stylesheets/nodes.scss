@@ -306,9 +306,9 @@ div[name="button--undo"] {
 }
 
 .info-block {
+  z-index: 0; // should be 0 until there are #nodes__info-block-template
   min-width: 300px;
   position: absolute;
-  z-index: 0;
   opacity: 0;
   background-color: $info-block-bgcolor;
   color: $main-text-color;
@@ -324,6 +324,7 @@ div[name="button--undo"] {
     right: 16px;
     top: 16px;
     color: $primary-color;
+    opacity: 0;
   }
   &__text {
     padding: 16px;
@@ -334,5 +335,8 @@ div[name="button--undo"] {
   }
   &:hover {
     background-color: $info-block-bgcolor-hover;
+  }
+  &:hover .info-block__close-button{
+    opacity: 1;
   }
 }
