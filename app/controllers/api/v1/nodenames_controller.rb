@@ -18,12 +18,10 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     created_first_at_accuracy = true
     if existing_nodenames.size == 0
       created_first_at_accuracy = false
-      existing_nodename = Nodename.new
-      existing_nodename.content = Hash.new
       network = Network.find_or_create_network(vipnet_network_id)
-      # error logged in find_or_create_network
       render plain: "error" and return unless network
-      existing_nodename.network_id = network.id
+      existing_nodename = Nodename.new(network_id: network.id)
+      existing_nodename.content = Hash.new
       # clean existing nodes which belongs to incoming nodename's networks
       nodes_to_destroy = Node.joins(:network).where("networks.id = ?", existing_nodename.network_id)
       nodes_to_destroy.destroy_all
