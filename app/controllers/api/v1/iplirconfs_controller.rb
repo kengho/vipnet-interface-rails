@@ -68,6 +68,8 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
         n.created_first_at = existing_node.created_first_at
         n.created_by_message_id = existing_node.created_by_message_id
         n.deleted_by_message_id = existing_node.deleted_by_message_id
+        n.abonent_number = existing_node.abonent_number
+        n.server_number = existing_node.server_number
         n.ips[coordinator_vipnet_id] = section["ips"]
         n.vipnet_version[coordinator_vipnet_id] = section["vipnet_version"]
       end
