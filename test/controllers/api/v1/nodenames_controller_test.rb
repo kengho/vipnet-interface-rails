@@ -6,7 +6,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
 
     # vipnet_network_id should be provided
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
-    post(:create, { content: nil, vipnet_network_id: "6670" })
+    post(:create)
     assert_equal("error", @response.body)
 
     # content should be provided
@@ -27,7 +27,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     post(:create, { content: initial_nodename, vipnet_network_id: "6670" })
     # created 2 nodes: administrator, coordintor
     node_size = Node.all.size
-    assert_equal(node_size, Node.all.size)
+    assert_equal(2, node_size)
     coordintor = Node.where("vipnet_id = '0x1a0e000a'").first
     assert_equal("coordinator1", coordintor.name)
     assert_equal(false, coordintor.history)

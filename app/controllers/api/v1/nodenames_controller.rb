@@ -39,8 +39,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       render plain: "error" and return unless network
       nodes_to_history = Node.where("vipnet_id = ? AND history = 'false'", record["vipnet_id"])
       if nodes_to_history.size == 0
-        node = Node.new
-        node.created_first_at = DateTime.now
+        node = Node.new(created_first_at: DateTime.now)
       elsif nodes_to_history.size == 1
         node_to_history = nodes_to_history.first
         node = node_to_history.dup
@@ -57,6 +56,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       node.save!
     end
 
+    # rewrite nodename
     existing_nodename.content = new_nodename.content
     existing_nodename.save!
     render plain: "ok"
