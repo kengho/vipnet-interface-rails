@@ -133,9 +133,12 @@ class Node < ActiveRecord::Base
   def ips_summary
     ips_summary = Array.new
     self.ips.each do |_, ips_array|
+      # before saving ips_array is Array, after saving it's String
       if ips_array =~ /\[.*\]/
         ips_array_eval = eval(ips_array)
         ips_summary += ips_array_eval if ips_array_eval.class == Array
+      elsif ips_array.class == Array
+        ips_summary += ips_array
       end
     end
     ips_summary = ips_summary.uniq.join(", ")
@@ -144,8 +147,15 @@ class Node < ActiveRecord::Base
 
   def vipnet_versions_summary
     vipnet_versions = Array.new
-    self.vipnet_version.each { |_, v| vipnet_versions.push(v) unless v.nil? }
+    self.vipnet_version.each do |key, vipnet_version|
+      if !vipnet_version.nil? && key != "summary"
+        vipnet_versions.push(vipnet_version) unless vipnet_version.nil?
+      end
+    end
     uniq_vipnet_versions = vipnet_versions.uniq
+# p self.id
+# Rails.logger.error uniq_vipnet_versions
+# Rails.logger.error uniq_vipnet_versions.size
     return "" if uniq_vipnet_versions.size == 0
     return uniq_vipnet_versions[0] if uniq_vipnet_versions.size == 1
     return "?" if uniq_vipnet_versions.size > 1

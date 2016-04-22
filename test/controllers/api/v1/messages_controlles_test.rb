@@ -56,6 +56,5 @@ class Api::V1::MessagesControllerTest < ActionController::TestCase
     assert client1_actual
     assert client1_actual.deleted_by_message_id
     assert client1_actual.deleted_at
-
   end
 end

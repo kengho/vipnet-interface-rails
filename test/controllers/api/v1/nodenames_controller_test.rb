@@ -1,15 +1,15 @@
 class Api::V1::NodenamesControllerTest < ActionController::TestCase
   test "validations" do
     # correct token should be provided
-    post(:create, { content: nil, vipnet_network_id: "6670" })
+    post(:create)
     assert_response :unauthorized
 
-    # vipnet_network_id should be provided
+    # content should be provided
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
-    post(:create)
+    post(:create, { content: nil, vipnet_network_id: "6670" })
     assert_equal("error", @response.body)
 
-    # content should be provided
+    # vipnet_network_id should be provided
     nodename_empty = fixture_file_upload("nodenames/empty.doc", "application/octet-stream")
     post(:create, { content: nodename_empty, vipnet_network_id: nil })
     assert_equal("error", @response.body)
@@ -25,6 +25,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     # 00_initial
     initial_nodename = fixture_file_upload("nodenames/00_initial.doc", "application/octet-stream")
     post(:create, { content: initial_nodename, vipnet_network_id: "6670" })
+    assert_equal("ok", @response.body)
     # created 2 nodes: administrator, coordintor
     node_size = Node.all.size
     assert_equal(2, node_size)

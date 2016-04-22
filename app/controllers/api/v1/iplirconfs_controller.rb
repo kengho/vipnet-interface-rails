@@ -12,23 +12,15 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
 
     new_iplirconf = Iplirconf.new
     new_iplirconf.content = uploaded_file_content
-    unless new_iplirconf.parse
-      # error logged in iplirconf.rb
-      render plain: "error" and return
-    end
+    render plain: "error" and return unless new_iplirconf.parse
     coordinators = Coordinator.where("vipnet_id = ?", coordinator_vipnet_id)
     if coordinators.size == 0
       name = new_iplirconf.sections["self"]["name"]
       coordinator_vipnet_network_id = Node.network(coordinator_vipnet_id)
       coordinator_network = Network.find_or_create_network(coordinator_vipnet_network_id)
-      unless coordinator_network
-        render plain: "error" and return
-      end
+      render plain: "error" and return unless coordinator_network
       coordinator = Coordinator.new(vipnet_id: coordinator_vipnet_id, name: name, network_id: coordinator_network.id)
-      unless coordinator.save
-        Rails.logger.error("Unable to save coordinator '#{coordinator_vipnet_id}'")
-        render plain: "error" and return
-      end
+      render plain: "error" and return unless coordinator.save!
     elsif coordinators.size == 1
       coordinator = coordinators.first
     elsif coordinators.size > 1
@@ -53,6 +45,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     new_iplirconf.sections.each do |key, section|
       # http://stackoverflow.com/questions/15265328/finding-differences-between-two-files-in-rails
       next if existing_iplirconf.sections.key?(key)
+      next if key == "self"
       existing_nodes = Node.where("vipnet_id = ? AND history = 'false'", section['vipnet_id'])
       if existing_nodes.size == 0
         Rails.logger.error("Unable to find existing_nodes '#{section['vipnet_id']}',"\
@@ -60,39 +53,19 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
         next
       end
       existing_node = existing_nodes.first
-      new_node = Node.new do |n|
-        n.vipnet_id = existing_node.vipnet_id
-        n.network_id = existing_node.network_id
-        n.name = existing_node.name
-        n.enabled = existing_node.enabled
-        n.created_first_at = existing_node.created_first_at
-        n.created_by_message_id = existing_node.created_by_message_id
-        n.deleted_by_message_id = existing_node.deleted_by_message_id
-        n.abonent_number = existing_node.abonent_number
-        n.server_number = existing_node.server_number
-        n.ips[coordinator_vipnet_id] = section["ips"]
-        n.vipnet_version[coordinator_vipnet_id] = section["vipnet_version"]
-      end
+      new_node = existing_node.dup
+      new_node.ips[coordinator_vipnet_id] = section["ips"]
+      new_node.vipnet_version[coordinator_vipnet_id] = section["vipnet_version"]
       new_node.ips["summary"] = new_node.ips_summary
       new_node.vipnet_version["summary"] = new_node.vipnet_versions_summary
-      unless new_node.save
-        Rails.logger.error("Unable to save new_node '#{new_node.vipnet_id}'")
-        render plain: "error" and return
-      end
+      new_node.save!
       existing_node.history = true
-      unless existing_node.save
-        Rails.logger.error("Unable to save existing_node '#{existing_node.vipnet_id}'")
-        render plain: "error" and return
-      end
+      existing_node.save!
     end
 
     existing_iplirconf.sections = new_iplirconf.sections
     existing_iplirconf.content = new_iplirconf.content
-    unless existing_iplirconf.save
-      Rails.logger.error("Unable to save existing_iplirconf")
-      render plain: "error" and return
-    end
-
+    existing_iplirconf.save!
     render plain: "ok"
   end
 
