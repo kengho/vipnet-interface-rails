@@ -100,7 +100,7 @@ class Node < ActiveRecord::Base
         end
       end
     end
-    accessips
+    accessips.reject { |a| a == "0.0.0.0" }
   end
 
   def availability
@@ -153,9 +153,6 @@ class Node < ActiveRecord::Base
       end
     end
     uniq_vipnet_versions = vipnet_versions.uniq
-# p self.id
-# Rails.logger.error uniq_vipnet_versions
-# Rails.logger.error uniq_vipnet_versions.size
     return "" if uniq_vipnet_versions.size == 0
     return uniq_vipnet_versions[0] if uniq_vipnet_versions.size == 1
     return "?" if uniq_vipnet_versions.size > 1

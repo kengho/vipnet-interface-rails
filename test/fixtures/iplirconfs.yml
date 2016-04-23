@@ -29,6 +29,20 @@ node_availability1:
       vipnet_id: "0x1a0e0200"
       accessip: "192.0.2.3"
 
+node_availability2:
+  coordinator: coordinator1
+  sections:
+    first:
+      vipnet_id: "0x1a0e0200"
+      accessip: "192.0.2.3"
+
+c:
+  coordinator: coordinator1
+  sections:
+    first:
+      vipnet_id: "0x1a0e0202"
+      accessip: "0.0.0.0"
+
 # IplirconfsTest#parse
 iplirconf_parse1:
   coordinator: coordinator1

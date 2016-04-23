@@ -19,8 +19,7 @@ availability2:
   vipnet_id: "0x1a0e0201"
 
 availability3:
-  vipnet_id: "0x1a0e0200"
-  history: false
+  vipnet_id: "0x1a0e0202"
 
 # NodesTest#ips_summary
 node_ips_summary1:

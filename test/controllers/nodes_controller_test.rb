@@ -68,7 +68,12 @@ class NodesControllerTest < ActionController::TestCase
     get(:availability, { node_id: node2.id })
     assert_not assigns["response"][:status]
     assert_no_match(/translation missing/, assigns["response"][:tooltip_text])
-    assert assigns["response"][:fullscreen_tooltip_key]
+
+    node3 = nodes(:availability3)
+    get(:availability, { node_id: node3.id })
+    assert_not assigns["response"][:status]
+    assert_no_match(/translation missing/, assigns["response"][:tooltip_text])
+    assert_equal("no-accessips", assigns["response"][:fullscreen_tooltip_key])
   end
 
   test "history" do
