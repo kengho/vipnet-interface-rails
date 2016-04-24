@@ -40,4 +40,7 @@ class Iplirconf < ActiveRecord::Base
     true
   end
 
+  def self.fields_from_section
+    ["ips", "vipnet_version"]
+  end
 end

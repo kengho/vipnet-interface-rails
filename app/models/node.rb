@@ -145,7 +145,7 @@ class Node < ActiveRecord::Base
     ips_summary
   end
 
-  def vipnet_versions_summary
+  def vipnet_version_summary
     vipnet_versions = Array.new
     self.vipnet_version.each do |key, vipnet_version|
       if !vipnet_version.nil? && key != "summary"
@@ -178,6 +178,36 @@ class Node < ActiveRecord::Base
     elsif mftp_servers.size > 0
       Rails.logger.error("Multiple mftp servers found '#{self.id}'")
       return nil
+    end
+  end
+
+  def self.update_all
+    Nodename.all.each do |nodename|
+      nodename.content.each do |_, record|
+        nodes = Node.where("vipnet_id = ? AND history = 'false'", eval(record)["vipnet_id"])
+        if nodes.size == 1
+          node = nodes.first
+          Nodename.fields_from_record.each { |field| node[field] = eval(record)[field] }
+          node.save!
+        end
+      end
+    end
+    Iplirconf.all.each do |iplirconf|
+      coordinator_vipnet_id = eval(iplirconf.sections["self"])["vipnet_id"]
+      iplirconf.sections.each do |key, section|
+        next if key == "self"
+        nodes = Node.where("vipnet_id = ? AND history = 'false'", eval(section)["vipnet_id"])
+        if nodes.size == 1
+          node = nodes.first
+          Iplirconf.fields_from_section.each { |field| node[field][coordinator_vipnet_id] = eval(section)[field] }
+          Iplirconf.fields_from_section.each do |field|
+            # http://stackoverflow.com/a/5349874
+            method_name = "#{field}_summary"
+            node[field]["summary"] = node.public_send(method_name) if node.respond_to?(method_name)
+          end
+          node.save!
+        end
+      end
     end
   end
 

@@ -69,5 +69,4 @@ class NodesTest < ActiveSupport::TestCase
     assert_equal(nil, node3.mftp_server)
     assert_equal(false, server1.mftp_server)
   end
-
 end

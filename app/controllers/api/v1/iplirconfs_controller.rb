@@ -54,10 +54,12 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
       end
       existing_node = existing_nodes.first
       new_node = existing_node.dup
-      new_node.ips[coordinator_vipnet_id] = section["ips"]
-      new_node.vipnet_version[coordinator_vipnet_id] = section["vipnet_version"]
-      new_node.ips["summary"] = new_node.ips_summary
-      new_node.vipnet_version["summary"] = new_node.vipnet_versions_summary
+      Iplirconf.fields_from_section.each { |field| new_node[field][coordinator_vipnet_id] = section[field] }
+      Iplirconf.fields_from_section.each do |field|
+        # http://stackoverflow.com/a/5349874
+        method_name = "#{field}_summary"
+        new_node[field]["summary"] = new_node.public_send(method_name) if new_node.respond_to?(method_name)
+      end
       new_node.save!
       existing_node.history = true
       existing_node.save!

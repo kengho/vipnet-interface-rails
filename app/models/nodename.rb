@@ -51,4 +51,8 @@ class Nodename < ActiveRecord::Base
     self.network_id = network.id
     true
   end
+
+  def self.fields_from_record
+    ["vipnet_id", "name", "enabled", "category", "abonent_number", "server_number"]
+  end
 end

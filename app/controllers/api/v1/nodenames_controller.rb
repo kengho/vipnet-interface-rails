@@ -49,8 +49,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         Rails.logger.error("More than one non-history nodes found '#{record["vipnet_id"]}'")
         render plain: "error" and return
       end
-      fields_from_record = ["vipnet_id", "name", "enabled", "category", "abonent_number", "server_number"]
-      fields_from_record.each { |field| node[field] = record[field] }
+      Nodename.fields_from_record.each { |field| node[field] = record[field] }
       node.network_id = network.id
       node.created_first_at_accuracy = created_first_at_accuracy
       node.save!
