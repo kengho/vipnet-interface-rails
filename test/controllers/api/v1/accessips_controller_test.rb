@@ -9,6 +9,7 @@ class Api::V1::AccessipsControllerTest < ActionController::TestCase
 
     # multiple nodes found
     get(:index, { accessip: "192.0.2.3", token: "GET_INFORMATION_TOKEN" })
+    p assigns["response"]
     assert assigns["response"][:errors]
     assert_equal("internal", assigns["response"][:errors][0][:title])
 

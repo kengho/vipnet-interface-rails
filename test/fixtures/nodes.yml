@@ -21,6 +21,10 @@ availability2:
 availability3:
   vipnet_id: "0x1a0e0202"
 
+availability4:
+  vipnet_id: "0x1a0e0200"
+  history: false
+
 # NodesTest#ips_summary
 node_ips_summary1:
   ips:
@@ -176,6 +180,12 @@ version_substitution8:
   name: "client0x1a0e0808"
   vipnet_version:
     summary: "3.0-671"
+
+version_substitution9:
+  vipnet_id: "0x1a0e0809"
+  name: "client0x1a0e0809"
+  vipnet_version:
+    summary: "4.30-0"
 
 # NodesControllerTest#mtft_server
 mftp_server0:

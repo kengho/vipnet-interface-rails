@@ -30,13 +30,13 @@ node_availability1:
       accessip: "192.0.2.3"
 
 node_availability2:
-  coordinator: coordinator1
+  coordinator: coordinator2
   sections:
     first:
       vipnet_id: "0x1a0e0200"
       accessip: "192.0.2.3"
 
-c:
+node_availability3:
   coordinator: coordinator1
   sections:
     first:

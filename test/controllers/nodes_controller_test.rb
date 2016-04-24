@@ -119,7 +119,7 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(3, assigns["size_all"])
 
     get(:index, { vipnet_id: "0x1a0e08", vipnet_version: "4" })
-    assert_equal(2, assigns["size_all"])
+    assert_equal(3, assigns["size_all"])
 
     get(:index, { vipnet_id: "0x1a0e08", vipnet_version: "11" })
     assert_equal(1, assigns["size_all"])

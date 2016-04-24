@@ -23,7 +23,7 @@ class Node < ActiveRecord::Base
       /^3\.0\-.*/ => "3.1",
       /^3\.2\-.*/ => "3.2",
       /^0\.3\-2$/ => "3.2 (11.19855)",
-      /^4\.2.*/ => "4.2",
+      /^4\..*/ => "4",
     }
     regexps = Array.new
     substitution_list.each do |search_regexp, view|
@@ -31,7 +31,7 @@ class Node < ActiveRecord::Base
       regexps.push(search_regexp) if view =~ Regexp.new(Regexp.escape(str))
     end
     return regexps unless regexps.empty?
-    false
+    ""
   end
 
   def self.pg_regexp_adoptation(pg_regexp)

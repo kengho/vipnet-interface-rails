@@ -11,7 +11,6 @@ class NodesController < ApplicationController
         prop = searchable_by[key]
         if key == "vipnet_version"
           regexps = Node.vipnet_versions_substitute(param)
-          query_sql += "false AND " unless regexps
           if regexps.class == Array
             query_sql += "("
             regexps.each do |regexp|
@@ -19,6 +18,8 @@ class NodesController < ApplicationController
               query_params.push(Node.pg_regexp_adoptation(regexp.source))
             end
             query_sql += "false) AND "
+          else
+            query_sql += "false AND "
           end
           next
         end
@@ -33,7 +34,8 @@ class NodesController < ApplicationController
       end
     end
     query_sql += "true)"
-
+Rails.logger.error query_sql
+Rails.logger.error query_params
     Node.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if query_sql == "(true)"
       @nodes = Node.where("history = 'false'")

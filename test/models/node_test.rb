@@ -54,9 +54,9 @@ class NodesTest < ActiveSupport::TestCase
     node1 = nodes(:vipnet_versions_summary1)
     node2 = nodes(:vipnet_versions_summary2)
     node3 = nodes(:vipnet_versions_summary3)
-    assert_equal("1.1", node1.vipnet_versions_summary)
-    assert_equal("?", node2.vipnet_versions_summary)
-    assert_equal("", node3.vipnet_versions_summary)
+    assert_equal("1.1", node1.vipnet_version_summary)
+    assert_equal("?", node2.vipnet_version_summary)
+    assert_equal("", node3.vipnet_version_summary)
   end
 
   test "mftp_server" do
