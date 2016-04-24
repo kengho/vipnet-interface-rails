@@ -128,6 +128,16 @@ class NodesController < ApplicationController
     if @node.mftp_server
       @response[:mftp_server] = "#{@node.mftp_server.name} (#{@node.mftp_server.vipnet_id})"
     end
+    if @node.history
+      @response[:history] =
+        "#{t('nodes.row.availability.from')} "\
+        "#{@node['created_at'].strftime('%Y-%m-%d %H:%M UTC')} "\
+        "#{t('nodes.row.availability.to')} "\
+        "#{@node['updated_at'].strftime('%Y-%m-%d %H:%M UTC')} "\
+        ""
+    else
+      @response[:history] = t("nodes.row.info.history_actual_data")
+    end
     respond_with(@response, template: "nodes/row/info") and return
   end
 

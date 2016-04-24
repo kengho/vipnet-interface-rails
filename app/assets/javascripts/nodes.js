@@ -110,6 +110,7 @@ var vipnetInterface = {
       });
       $infoBlock.find("span[name='name']").html(args.name);
       $infoBlock.find("span[name='vipnet-id']").html(args.vipnetId);
+      $infoBlock.find("span[name='history']").html(args.history);
       $infoBlock.find("span[name='category']").html(args.category);
       $infoBlock.find("span[name='network']").html(args.network);
       $infoBlock.find("span[name='ips']").html(args.ips);

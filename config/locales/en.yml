@@ -69,6 +69,8 @@ en:
         button_label: "Information"
         loaded: "Information loaded"
         vipnet_id: "ID"
+        history: "Relevance"
+        history_actual_data: "the actual data"
         category: "Category"
         network: "Network"
         ips: "IP addresses"

@@ -46,6 +46,8 @@ ru:
         button_label: "Подробности"
         loaded: "Подробности загружены"
         vipnet_id: "ID"
+        history: "Актуальность"
+        history_actual_data: "актуальные данные"
         category: "Тип"
         network: "Сеть"
         ips: "IP-адреса"
