@@ -167,7 +167,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     assert_equal("3.2-672", administrator.vipnet_version["0x1a0e000d"])
     assert_equal("?", administrator.vipnet_version["summary"])
 
-    # test update_all at the same time, as long as everything is already prepared
+    # test Node#update_all at the same time, as long as everything is already prepared
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
     administrator_before = administrator.dup
     administrator_attributes_before = administrator_before.attributes.reject do |key, _|
