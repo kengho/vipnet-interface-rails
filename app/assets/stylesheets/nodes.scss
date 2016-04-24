@@ -9,7 +9,7 @@ $info-block-bgcolor: white;
 $info-block-bgcolor-hover: #eee;
 $nodes-per-page: #aaa;
 $nodes-per-page-bgcolor: #ccc;
-$light-gray-button-color: #999;
+$light-gray-button-color: #777;
 
 * {
   transition-duration: 0.1s !important;
@@ -110,11 +110,12 @@ body {
 }
 
 .nodes__search-button--clear {
-  z-index: 100;
+  z-index: 300;
   position: absolute;
-  right: -15px;
-  top: 45px;
+  right: -30px;
+  top: -5px;
   & label {
+    // color: $accent-color !important;
     color: $light-gray-button-color !important;
   }
 }
