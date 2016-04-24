@@ -43,3 +43,7 @@
     color: $primary-color !important;
   }
 }
+
+.mdl-layout__content {
+  overflow: auto !important;
+}
