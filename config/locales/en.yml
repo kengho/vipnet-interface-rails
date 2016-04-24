@@ -146,7 +146,8 @@ en:
       exit: "Exit"
     thead:
       search_button:
-        label: "Search"
+        label_search: "Search"
+        label_clear: "Clear fields"
       id_label: "ID"
       name_label: "Name"
       ip_label: "IP addresses"

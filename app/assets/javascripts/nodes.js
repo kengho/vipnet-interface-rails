@@ -176,4 +176,13 @@ $(document).ready(function() {
     fullscreenTooltipKey = $(this).data("fullscreen-tooltip-key");
     vipnetInterface.showFullscreenTooltip(fullscreenTooltipKey);
   });
+  $("#nodes__search-button--clear").click(function() {
+    $thead_row = $(this).parent().parent().parent();
+    $inputs = $thead_row.find("input");
+    $inputs.each(function(_, input) {
+      $(input)
+        .val("")
+        .parent().removeClass('is-dirty')
+    });
+  });
 });

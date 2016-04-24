@@ -123,7 +123,8 @@ ru:
       exit: "Выход"
     thead:
       search_button:
-        label: "Искать"
+        label_search: "Искать"
+        label_clear: "Очистить ввод"
       id_label: "ID"
       name_label: "Имя"
       ip_label: "IP-адреса"
