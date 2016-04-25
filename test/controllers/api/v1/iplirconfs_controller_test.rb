@@ -166,13 +166,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
     assert_equal("3.2-672", administrator.vipnet_version["0x1a0e000d"])
     assert_equal("?", administrator.vipnet_version["summary"])
-
+    
     # test Node#update_all at the same time, as long as everything is already prepared
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
-    administrator_before = administrator.dup
-    administrator_attributes_before = administrator_before.attributes.reject do |key, _|
-      ["id", "created_at", "updated_at"].include?(key)
-    end
+    administrator_attributes_before = administrator.attributes.reject { |key, _| key == "id" }
     # start messing with administrator
     administrator.ips = {}
     administrator.vipnet_version = {}
@@ -180,18 +177,15 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     administrator.category = ""
     administrator.abonent_number = ""
     administrator.server_number = ""
+    Node.record_timestamps = false
     administrator.save!
     administrator_after_messing = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
-    administrator_attributes_after_messing = administrator_after_messing.attributes.reject do |key, _|
-      ["id", "created_at", "updated_at"].include?(key)
-    end
+    administrator_attributes_after_messing = administrator_after_messing.attributes.reject { |key, _| key == "id" }
     # check if messing was successful
     assert_not_equal(administrator_attributes_after_messing, administrator_attributes_before)
     Node.update_all
     administrator_after_update_all = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
-    administrator_attributes_after_update_all = administrator_after_update_all.attributes.reject do |key, _|
-      ["id", "created_at", "updated_at"].include?(key)
-    end
+    administrator_attributes_after_update_all = administrator_after_update_all.attributes.reject { |key, _| key == "id" }
     # check if everything is back to normal
     assert_equal(administrator_attributes_after_update_all, administrator_attributes_before)
   end

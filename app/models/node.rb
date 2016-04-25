@@ -182,6 +182,7 @@ class Node < ActiveRecord::Base
   end
 
   def self.update_all
+    Node.record_timestamps = false
     Nodename.all.each do |nodename|
       nodename.content.each do |_, record|
         nodes = Node.where("vipnet_id = ? AND history = 'false'", eval(record)["vipnet_id"])
@@ -209,6 +210,28 @@ class Node < ActiveRecord::Base
         end
       end
     end
+    Node.record_timestamps = true
   end
+
+  # WARNING! UNTESTED!
+  def self.fix_created_first_at_accuracy
+    Node.record_timestamps = false
+    nodes_no_history = Node.where("history = 'false'")
+    nodes_no_history.each do |node_no_history|
+      vipnet_id = node_no_history.vipnet_id
+      nodes = Node.where("vipnet_id = ?", vipnet_id).reorder("created_at ASC")
+      created_first_at_accuracy_first = nodes.first.created_first_at_accuracy
+      created_first_at_accuracy_last = nodes.last.created_first_at_accuracy
+      unless created_first_at_accuracy_first == created_first_at_accuracy_last
+        nodes.each do |node|
+          node.created_first_at_accuracy = created_first_at_accuracy_first
+          node.save!
+        end
+      end
+    end
+    Node.record_timestamps = true
+  end
+
+
 
 end
