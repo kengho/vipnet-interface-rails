@@ -97,15 +97,16 @@ search4:
   history: true
   deleted_at: <%= DateTime.now %>
 
+search6:
+  vipnet_id: "0x1a0e0604"
+  name: "()client0x1a0e0604"
+  history: false
+
 search5:
   vipnet_id: "0x1a0e0603"
   name: "client1"
   history: false
 
-search6:
-  vipnet_id: "0x1a0e0604"
-  name: "()client0x1a0e0604"
-  history: false
 
 # Api::V1::NodesController#nodes
 node1:

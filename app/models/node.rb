@@ -219,7 +219,7 @@ class Node < ActiveRecord::Base
     nodes_no_history = Node.where("history = 'false'")
     nodes_no_history.each do |node_no_history|
       vipnet_id = node_no_history.vipnet_id
-      nodes = Node.where("vipnet_id = ?", vipnet_id).reorder("created_at ASC")
+      nodes = Node.where("vipnet_id = ?", vipnet_id).reorder(created_at: :asc)
       created_first_at_accuracy_first = nodes.first.created_first_at_accuracy
       created_first_at_accuracy_last = nodes.last.created_first_at_accuracy
       unless created_first_at_accuracy_first == created_first_at_accuracy_last

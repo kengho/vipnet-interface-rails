@@ -34,8 +34,7 @@ class NodesController < ApplicationController
       end
     end
     query_sql += "true)"
-Rails.logger.error query_sql
-Rails.logger.error query_params
+
     Node.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if query_sql == "(true)"
       @nodes = Node.where("history = 'false'")
@@ -44,7 +43,7 @@ Rails.logger.error query_params
       @dont_show_history = true
       @search = false
     else
-      @nodes = Node.where(query_sql, *query_params)
+      @nodes = Node.where(query_sql, *query_params).reorder(vipnet_id: :asc)
       @size_all = @nodes.size
       @size_no_history = @nodes.where("history = 'false'").size
       @nodes = @nodes.paginate(page: params[:page])
@@ -79,7 +78,7 @@ Rails.logger.error query_params
       row_id: "#node-#{@node.id}__row",
       history: true,
     }
-    @response[:nodes] = Node.where("vipnet_id = ? AND history = ?", @node.vipnet_id, !@node.history).reorder("updated_at ASC")
+    @response[:nodes] = Node.where("vipnet_id = ? AND history = ?", @node.vipnet_id, !@node.history).reorder(updated_at: :asc)
     if @node.history
       @response[:status] = @response[:nodes].size == 1
       @response[:place] = "before"

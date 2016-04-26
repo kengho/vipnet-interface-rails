@@ -39,8 +39,8 @@ class SettingsController < ApplicationController
       end
     end
 
-    @settings = Settings.unscoped.where("thing_id is null").reorder("var ASC")
-    @users = User.all.reorder("email ASC")
+    @settings = Settings.unscoped.where("thing_id is null").reorder(var: :asc)
+    @users = User.all.reorder(email: :asc)
   end
 
 end

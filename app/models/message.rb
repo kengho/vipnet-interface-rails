@@ -1,6 +1,6 @@
 class Message < ActiveRecord::Base
   belongs_to :network
-  default_scope { order("created_at DESC") }
+  default_scope { order(created_at: :desc) }
 
   # UNPROCESSED MEANINGFUL MESSAGES
 

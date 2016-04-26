@@ -50,6 +50,10 @@ class NodesControllerTest < ActionController::TestCase
 
     get(:index, { deleted_at: DateTime.now.strftime("%Y") })
     assert_equal(1, assigns["size_all"])
+
+    # order
+    get(:index, { vipnet_id: "0x1a0e06.*" })
+    assert_equal("0x1a0e0604", assigns["nodes"].last.vipnet_id)
   end
 
   test "availability" do
