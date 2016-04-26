@@ -19,14 +19,20 @@ body {
   background-color: $body-bgcolor;
 }
 
-.nodes__sub-title {
+.nodes__sub-title, .nodes__navigation-link {
   font-weight: 500;
   font-size: 13px;
 }
 
-.nodes__header a {
-  color: white !important;
-  text-decoration: none;
+.nodes__header {
+  min-height: 50px !important;
+  & a {
+    color: white !important;
+    text-decoration: none;
+  }
+  & > div {
+    height: 50px;
+  }
 }
 
 .header__back-icon {
@@ -55,6 +61,24 @@ body {
   margin: 0 auto;
   & table {
     width: 100%;
+  }
+}
+
+.nodes__search {
+  text-align: center;
+  position: absolute;
+  // http://stackoverflow.com/a/252872
+  width: 600px;
+  margin-left: -300px;
+  left: 50%;
+  top: 14px;
+  & input {
+    color: $main-text-color !important;
+    width: 80%;
+    border: none;
+    background-color: $body-bgcolor;
+    padding: 4px;
+    border-radius: 2px;
   }
 }
 

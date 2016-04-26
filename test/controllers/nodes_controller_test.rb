@@ -54,6 +54,10 @@ class NodesControllerTest < ActionController::TestCase
     # order
     get(:index, { vipnet_id: "0x1a0e06.*" })
     assert_equal("0x1a0e0604", assigns["nodes"].last.vipnet_id)
+
+    # quick search
+    get(:index, { search: "0x1a0e06" })
+    assert_equal(6, assigns["size_all"])
   end
 
   test "availability" do

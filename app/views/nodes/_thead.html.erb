@@ -1,17 +1,17 @@
 <thead>
   <tr>
-    <%= render "nodes/thead/string", id: "vipnet_id", value: params[:vipnet_id], tabindex: 1, label: t(".id_label") %>
-    <%# show info %>
+    <%= render "nodes/thead/string", id: "vipnet_id", value: params[:vipnet_id], tabindex: 2, label: t(".id_label") %>
+    <%# info %>
     <%= render "nodes/thead/space" %>
-    <%= render "nodes/thead/string", id: "name", value: params[:name], tabindex: 2, label: t(".name_label") %>
-    <%# check availability %>
+    <%= render "nodes/thead/string", id: "name", value: params[:name], tabindex: 3, label: t(".name_label") %>
+    <%# availability %>
     <%= render "nodes/thead/space" %>
-    <%= render "nodes/thead/string", id: "ips", value: params[:ips], tabindex: 3, label: t(".ip_label") %>
-    <%= render "nodes/thead/string", id: "vipnet_version", value: params[:vipnet_version], tabindex: 4, label: t(".software_label") %>
+    <%= render "nodes/thead/string", id: "ips", value: params[:ips], tabindex: 4, label: t(".ip_label") %>
+    <%= render "nodes/thead/string", id: "vipnet_version", value: params[:vipnet_version], tabindex: 5, label: t(".software_label") %>
     <%# history %>
     <%= render "nodes/thead/space" %>
-    <%= render "nodes/thead/string", id: "created_first_at", value: params[:created_first_at], tabindex: 5, label: t(".created_label") %>
-    <%= render "nodes/thead/string", id: "deleted_at", value: params[:deleted_at], tabindex: 6, label: t(".deleted_label") %>
-    <%= render "nodes/thead/search_button", tabindex: 7 %>
+    <%= render "nodes/thead/string", id: "created_first_at", value: params[:created_first_at], tabindex: 6, label: t(".created_label") %>
+    <%= render "nodes/thead/string", id: "deleted_at", value: params[:deleted_at], tabindex: 7, label: t(".deleted_label") %>
+    <%= render "nodes/thead/search_button", tabindex: 8 %>
   </tr>
 </thead>

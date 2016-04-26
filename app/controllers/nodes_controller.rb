@@ -6,7 +6,18 @@ class NodesController < ApplicationController
     searchable_by = Node.searchable
     query_sql = "("
     query_params = Array.new
-    params.each do |key, param|
+    # prepare params for quick search
+    if params.key?("search")
+      logic = "OR"
+      ending = "false"
+      params_expanded = Hash.new
+      searchable_by.keys.each { |key| params_expanded[key] = params["search"] }
+    else
+      logic = "AND"
+      ending = "true"
+      params_expanded = params
+    end
+    params_expanded.each do |key, param|
       if (searchable_by.key?(key) && param != "" && param)
         prop = searchable_by[key]
         if key == "vipnet_version"
@@ -17,23 +28,23 @@ class NodesController < ApplicationController
               query_sql += "vipnet_version -> 'summary' ILIKE ? OR "
               query_params.push(Node.pg_regexp_adoptation(regexp.source))
             end
-            query_sql += "false) AND "
+            query_sql += "false) #{logic} "
           else
-            query_sql += "false AND "
+            query_sql += "false #{logic} "
           end
           next
         end
         if prop.class == String
-          query_sql += "#{prop} ILIKE ? AND "
+          query_sql += "#{prop} ILIKE ? #{logic} "
         elsif prop.class == Hash
           hash_prop = prop.keys[0]
           key = prop[hash_prop]
-          query_sql += "#{hash_prop} -> '#{key}' ILIKE ? AND "
+          query_sql += "#{hash_prop} -> '#{key}' ILIKE ? #{logic} "
         end
         query_params.push(Node.pg_regexp_adoptation(param))
       end
     end
-    query_sql += "true)"
+    query_sql += "#{ending})"
 
     Node.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if query_sql == "(true)"
