@@ -101,8 +101,7 @@ var vipnetInterface = {
     },
 
     renderInfo: function(args) {
-      infoHTML = $("#nodes__info-block-template").html();
-      $(args.parentId).append(infoHTML);
+      $(args.parentId).append(args.html);
       $infoBlock = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "info" });
       $infoBlock.find("div[name='close']").click(function() {
         $(args.parentId).find("div[name='info']").remove();

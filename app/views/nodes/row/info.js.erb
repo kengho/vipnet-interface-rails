@@ -8,6 +8,7 @@
   });
   vipnetInterface.remoteStatus.renderInfo({
     parentId: "<%= @response[:parent_id] %>",
+    html: "<%= j render 'nodes/row/info_block' %>",
     name: "<%= @response[:name] %>",
     vipnetId: "<%= @response[:vipnet_id] %>",
     history: "<%= @response[:history] %>",
