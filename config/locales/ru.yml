@@ -124,7 +124,7 @@ ru:
       exit: "Выход"
     thead:
       search_button:
-        label_search: "Искать"
+        label_search: "Расширенный поиск"
         label_clear: "Очистить ввод"
       id_label: "ID"
       name_label: "Имя"

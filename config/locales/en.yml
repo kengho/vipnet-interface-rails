@@ -147,7 +147,7 @@ en:
       exit: "Exit"
     thead:
       search_button:
-        label_search: "Search"
+        label_search: "Advanced search"
         label_clear: "Clear fields"
       id_label: "ID"
       name_label: "Name"

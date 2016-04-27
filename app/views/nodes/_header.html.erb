@@ -19,9 +19,7 @@
     </span>
     <i class="material-icons">chevron_right</i>
     <span class="mdl-layout-title nodes__sub-title"><%= @sub_title %></span>
-    <div class="mdl-layout-spacer">
-    </div>
-    <div class="nodes__search">
+    <div class="mdl-layout-spacer nodes__search">
       <form action="/nodes" method="get">
         <input name="search" type="text" tabindex="1" autofocus placeholder="<%= t(".quick_search") %>" value="<%= params[:search] %>" />
       </form>

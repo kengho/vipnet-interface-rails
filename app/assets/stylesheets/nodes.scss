@@ -66,12 +66,7 @@ body {
 
 .nodes__search {
   text-align: center;
-  position: absolute;
-  // http://stackoverflow.com/a/252872
-  width: 600px;
-  margin-left: -300px;
-  left: 50%;
-  top: 14px;
+  min-width: 400px;
   & input {
     color: $main-text-color !important;
     width: 80%;
