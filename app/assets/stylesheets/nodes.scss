@@ -4,12 +4,16 @@ $nodes-max-width: 90%;
 $body-bgcolor: #f0f0f0;
 $announcements-max-width: 500px;
 $row-ajax-color: #ffa;
+$row-selected-color: #eee;
 $row-ajax-color-hover: #ff8;
 $info-block-bgcolor: white;
 $info-block-bgcolor-hover: #eee;
 $nodes-per-page: #aaa;
 $nodes-per-page-bgcolor: #ccc;
 $light-gray-button-color: #999;
+$nodes-padding-top: 20px;
+$nodes-padding-side: 10px;
+$header-height: 60px;
 
 * {
   transition-duration: 0.1s !important;
@@ -25,13 +29,13 @@ body {
 }
 
 .nodes__header {
-  min-height: 50px !important;
+  min-height: $header-height !important;
   & a {
     color: white !important;
     text-decoration: none;
   }
   & > div {
-    height: 50px;
+    height: $header-height;
   }
 }
 
@@ -55,8 +59,9 @@ body {
 }
 
 .nodes {
+  position: relative;
   z-index: 100;
-  padding: 20px 20px 0px 20px;
+  padding: $nodes-padding-top $nodes-padding-side 0px $nodes-padding-side;
   max-width: $nodes-max-width;
   margin: 0 auto;
   & table {
@@ -64,8 +69,50 @@ body {
   }
 }
 
-.nodes__search {
+.nodes__menu {
+  position: absolute;
+  left: -40px;
+  width: 40px;
+  top: calc(#{$nodes-padding-top} + #{$nodes-padding-side});
+  border: 1px solid rgba(black, 0.1);
+  background: rgba(white, 0.5);
+  border-radius: 4px;
   text-align: center;
+  padding-top: 2px;
+  padding-bottom: 2px;
+  &--button {
+    color: $primary-color;
+  }
+}
+
+.nodes__actions {
+  margin-left: 50px;
+  width: 50px;
+}
+
+.nodes__actions div label[disabled="disabled"] {
+  display: none;
+}
+
+#nodes__export-selected {
+  width: 24px;
+}
+
+#nodes__export-selected textarea {
+  position: absolute;
+  top: -999px;
+  // if I don't show textarea, I don't need this
+  // top: 0px;
+  // visibility: hidden;
+  // border: none;
+  // width: 400px;
+  // left: 0;
+  // color: $main-text-color;
+}
+
+.nodes__search {
+  margin-left: 20px;
+  text-align: left;
   min-width: 400px;
   & input {
     color: $main-text-color !important;
@@ -82,10 +129,17 @@ body {
   color: $main-text-color !important;
 }
 
-.nodes__row--ajax {
-  background-color: $row-ajax-color;
-  &:hover {
-    background-color: $row-ajax-color-hover !important;
+.nodes__row {
+  cursor: pointer;
+  &--ajax {
+    background-color: $row-ajax-color;
+    &:hover {
+      background-color: $row-ajax-color-hover !important;
+      cursor: auto !important;
+    }
+  }
+  &--selected {
+    background-color: $row-selected-color;
   }
 }
 

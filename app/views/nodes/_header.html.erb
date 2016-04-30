@@ -19,6 +19,17 @@
     </span>
     <i class="material-icons">chevron_right</i>
     <span class="mdl-layout-title nodes__sub-title"><%= @sub_title %></span>
+    <div class="nodes__actions">
+      <div id="nodes__export-selected" class="mdl-badge">
+        <label disabled="disabled" class="mdl-button mdl-js-button mdl-button--icon">
+          <i class="material-icons">content_copy</i>
+        </label>
+        <textarea class="mdl-shadow--2dp" rows="10"></textarea>
+      </div>
+      <div class="mdl-tooltip" for="nodes__export-selected">
+        <%= t(".export_selected") %>
+      </div>
+    </div>
     <div class="mdl-layout-spacer nodes__search">
       <form action="/nodes" method="get">
         <input name="search" type="text" tabindex="1" autofocus placeholder="<%= t(".quick_search") %>" value="<%= params[:search] %>" />

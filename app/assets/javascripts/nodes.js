@@ -19,6 +19,8 @@ var vipnetInterface = {
       $(args.parentId).append(undoButtonHTML);
       $shownUndoButton = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "button--undo" });
       $shownUndoButton.click(function() {
+        // unselect row
+        vipnetInterface.selectRow($(args.parentId).parent().parent()[0]);
         if(args.ids) {
           args.ids.forEach(function(id) {
             $(id).remove();
@@ -165,23 +167,80 @@ var vipnetInterface = {
       .css("z-index", "0")
       .css("display", "none")
   },
+
+  selectedRows: [],
+  selectRow: function(row) {
+    $(row).toggleClass("nodes__row--selected");
+    rowIdPosition = vipnetInterface.selectedRows.indexOf(row.id);
+    if(rowIdPosition == -1) {
+      vipnetInterface.selectedRows.push(row.id);
+    } else {
+      vipnetInterface.selectedRows.splice(rowIdPosition, 1);
+    }
+    $("#nodes__export-selected textarea").val("");
+    // fill textarea
+    vipnetInterface.selectedRows.forEach(function(selectedRow) {
+      var vipnetId = $("#" + selectedRow).find("span[name='vipnet-id']").text();
+      var name = $("#" + selectedRow).find("span[name='name']").text();
+      $("#nodes__export-selected textarea").val($("#nodes__export-selected textarea").val() + vipnetId + " " + name + "\n");
+    });
+    // update badge and button
+    selectedRowsLength = vipnetInterface.selectedRows.length;
+    if(selectedRowsLength > 0) {
+      $("#nodes__export-selected").attr("data-badge", selectedRowsLength);
+      $("#nodes__export-selected label").removeAttr("disabled");
+    } else {
+      $("#nodes__export-selected").removeAttr("data-badge");
+      $("#nodes__export-selected label").attr("disabled", "disabled");
+    }
+  },
 };
 
 $(document).ready(function() {
-  $("a[data-replace-link-by-spinner]").click(function() {
+  $("a[data-replace-link-by-spinner]").click(function(e) {
     vipnetInterface.remoteStatus.initAjax(this);
+    // unselect row
+    vipnetInterface.selectRow($(this).parent().parent().parent()[0]);
   });
+
   $("span[data-fullscreen-tooltip-key]").click(function() {
     fullscreenTooltipKey = $(this).data("fullscreen-tooltip-key");
     vipnetInterface.showFullscreenTooltip(fullscreenTooltipKey);
   });
+
   $("#nodes__search-button--clear").click(function() {
-    $thead_row = $(this).parent().parent().parent();
-    $inputs = $thead_row.find("input");
+    $theadRow = $(this).parent().parent().parent();
+    $inputs = $theadRow.find("input");
     $inputs.each(function(_, input) {
       $(input)
         .val("")
         .parent().removeClass('is-dirty')
     });
+  });
+
+  $(".nodes__row").click(function(e) {
+    vipnetInterface.selectRow(this);
+  });
+
+  // if I don't show textarea, I don't need this
+  // $("#nodes__export-selected").mouseenter(function() {
+  //   if(!$("#nodes__export-selected label").attr("disabled")) {
+  //     $("#nodes__export-selected textarea").css("visibility", "visible");
+  //   }
+  // });
+  // $("#nodes__export-selected").mouseleave(function() {
+  //   if(!$("#nodes__export-selected label").attr("disabled")) {
+  //     $("#nodes__export-selected textarea").css("visibility", "hidden");
+  //   }
+  // });
+  $("#nodes__export-selected").click(function() {
+    if(!$("#nodes__export-selected label").attr("disabled")) {
+      // http://stackoverflow.com/a/30810322
+      var copyTextarea = $("#nodes__export-selected textarea");
+      copyTextarea.select();
+      document.execCommand('copy');
+        // if I don't show textarea, I don't need this
+      // $("#nodes__export-selected textarea").css("visibility", "hidden");
+    }
   });
 });
