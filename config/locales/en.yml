@@ -139,7 +139,7 @@ en:
     header:
       title: "ViPNet Nodes"
       search_results_subtitle: "Searh results"
-      last_changed_nodes_subtitle: "Last changes"
+      default_nodes_subtitle: "New"
       export_selected: "Copy ID and name from selected rows"
       quick_search: "Quick search"
       settings: "Settings"

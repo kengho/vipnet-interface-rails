@@ -8,6 +8,6 @@
 
 <td class="mdl-data-table__cell--non-numeric <%= td_class %>">
   <% unless value == nil %>
-    <span <% if defined?(name) %>name="<%= name %>"<% end %> title="<%= value.html_safe %>"><%= value.html_safe %></span>
+    <span title="<%= value.html_safe %>"><%= value.html_safe %></span>
   <% end %>
 </td>

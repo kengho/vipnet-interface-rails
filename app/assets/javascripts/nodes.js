@@ -179,10 +179,9 @@ var vipnetInterface = {
     }
     $("#nodes__export-selected textarea").val("");
     // fill textarea
-    собирался сделать массив объектов и сортировать его перед записью в текстареа
     vipnetInterface.selectedRows.forEach(function(selectedRow) {
-      var vipnetId = $("#" + selectedRow).find("span[name='vipnet-id']").text();
-      var name = $("#" + selectedRow).find("span[name='name']").text();
+      var vipnetId = vipnetInterface.nodesData[selectedRow].vipnetId;
+      var name = vipnetInterface.nodesData[selectedRow].name;
       $("#nodes__export-selected textarea").val($("#nodes__export-selected textarea").val() + vipnetId + " " + name + "\n");
     });
     // update badge and button

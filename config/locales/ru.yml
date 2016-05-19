@@ -116,7 +116,7 @@ ru:
     header:
       title: "Узлы ViPNet"
       search_results_subtitle: "Результаты поиска"
-      last_changed_nodes_subtitle: "Последние изменения"
+      default_nodes_subtitle: "Новые"
       export_selected: "Копировать ID и имя узла из выбранных строк"
       quick_search: "Быстрый поиск"
       settings: "Настройки"

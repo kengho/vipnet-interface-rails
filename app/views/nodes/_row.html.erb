@@ -11,11 +11,23 @@
   end
 %>
 
-<tr id="node-<%= id %>__row" class="<%= row_classes %>">
+<script type="text/javascript">
+  vipnetInterface.nodesData["node-<%= id %>__row"] = {
+    vipnetId: "<%= node["vipnet_id"] %>",
+    name: "<%= node["name"] %>",
+    history: "<%= node["history"] %>",
+    category: "<%= node["category"] %>",
+    ips: "<%= node["ips"]["summary"] %>",
+    createdAt: "<%= node["created_first_at"] %>",
+    deletedAt: "<%= node["deleted_at"] %>",
+  }
+</script>
+
+<tr id="node-<%= id   %>__row" class="<%= row_classes %>">
   <%#= render "nodes/row/select", id: id %>
-  <%= render "nodes/row/string", value: node["vipnet_id"], node: node, name: "vipnet-id" %>
+  <%= render "nodes/row/string", value: node["vipnet_id"], node: node %>
   <%= render "nodes/row/info", node: node %>
-  <%= render "nodes/row/string", value: node["name"], node: node, name: "name" %>
+  <%= render "nodes/row/string", value: node["name"], node: node %>
   <%= render "nodes/row/availability", node: node %>
   <%= render "nodes/row/string", value: node["ips"]["summary"], td_class: "nodes__td--dontoverflow", node: node %>
   <%= render "nodes/row/vipnet_version", value: node["vipnet_version"]["summary"], node: node %>

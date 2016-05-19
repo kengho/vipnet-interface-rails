@@ -6,6 +6,7 @@
 <%# http://stackoverflow.com/a/10610347 %>
 <script type="text/javascript">
   window.I18n = <%= current_translations[:js].to_json.html_safe %>
+  vipnetInterface.nodesData = {}
 </script>
 
 <% t("nodes.fullscreen_tooltip").each do |key, value| %>
