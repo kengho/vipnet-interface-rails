@@ -182,7 +182,8 @@ var vipnetInterface = {
     vipnetInterface.selectedRows.forEach(function(selectedRow) {
       var vipnetId = vipnetInterface.nodesData[selectedRow].vipnetId;
       var name = vipnetInterface.nodesData[selectedRow].name;
-      $("#nodes__export-selected textarea").val($("#nodes__export-selected textarea").val() + vipnetId + " " + name + "\n");
+      var $copyTextarea = $("#nodes__export-selected textarea");
+      $copyTextarea.val($copyTextarea.val() + vipnetId + " " + name + "\n");
     });
     // update badge and button
     selectedRowsLength = vipnetInterface.selectedRows.length;
@@ -236,10 +237,10 @@ $(document).ready(function() {
   $("#nodes__export-selected").click(function() {
     if(!$("#nodes__export-selected label").attr("disabled")) {
       // http://stackoverflow.com/a/30810322
-      var copyTextarea = $("#nodes__export-selected textarea");
-      copyTextarea.select();
-      document.execCommand('copy');
-        // if I don't show textarea, I don't need this
+      var $copyTextarea = $("#nodes__export-selected textarea");
+      $copyTextarea.select();
+      document.execCommand("copy");
+      // if I don't show textarea, I don't need this
       // $("#nodes__export-selected textarea").css("visibility", "hidden");
     }
   });
