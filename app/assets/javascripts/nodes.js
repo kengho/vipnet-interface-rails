@@ -177,12 +177,15 @@ var vipnetInterface = {
     } else {
       vipnetInterface.selectedRows.splice(rowIdPosition, 1);
     }
-    $("#nodes__export-selected textarea").val("");
     // fill textarea
+    var $copyTextarea = $("#nodes__export-selected textarea");
+    $copyTextarea.val("");
+    vipnetInterface.selectedRows.sort(function(a,b) {
+      return vipnetInterface.nodesData[a].vipnetId.localeCompare(vipnetInterface.nodesData[b].vipnetId)
+    });
     vipnetInterface.selectedRows.forEach(function(selectedRow) {
       var vipnetId = vipnetInterface.nodesData[selectedRow].vipnetId;
       var name = vipnetInterface.nodesData[selectedRow].name;
-      var $copyTextarea = $("#nodes__export-selected textarea");
       $copyTextarea.val($copyTextarea.val() + vipnetId + " " + name + "\n");
     });
     // update badge and button
