@@ -11,7 +11,8 @@
   end
 %>
 
-<script type="text/javascript">
+<tr id="node-<%= id   %>__row" class="<%= row_classes %>">
+  <script type="text/javascript">
   vipnetInterface.nodesData["node-<%= id %>__row"] = {
     vipnetId: "<%= node["vipnet_id"] %>",
     name: "<%= node["name"] %>",
@@ -21,9 +22,7 @@
     createdAt: "<%= node["created_first_at"] %>",
     deletedAt: "<%= node["deleted_at"] %>",
   }
-</script>
-
-<tr id="node-<%= id   %>__row" class="<%= row_classes %>">
+  </script>
   <%#= render "nodes/row/select", id: id %>
   <%= render "nodes/row/string", value: node["vipnet_id"], node: node %>
   <%= render "nodes/row/info", node: node %>
