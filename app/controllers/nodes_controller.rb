@@ -47,14 +47,14 @@ class NodesController < ApplicationController
     query_sql += "#{ending})"
 
     Node.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
-    if query_sql == "(true)"
-      @nodes = Node.where("history = 'false'")
+    if query_sql == "(true)" || query_sql == "(false)"
+      @nodes = Node.where("history = 'false'").order(created_first_at: :desc)
       @size_all = @nodes.size
       @nodes = @nodes.paginate(page: params[:page])
       @dont_show_history = true
       @search = false
     else
-      @nodes = Node.where(query_sql, *query_params).reorder(vipnet_id: :asc)
+      @nodes = Node.where(query_sql, *query_params).order(vipnet_id: :asc)
       @size_all = @nodes.size
       @size_no_history = @nodes.where("history = 'false'").size
       @nodes = @nodes.paginate(page: params[:page])
@@ -89,7 +89,7 @@ class NodesController < ApplicationController
       row_id: "#node-#{@node.id}__row",
       history: true,
     }
-    @response[:nodes] = Node.where("vipnet_id = ? AND history = ?", @node.vipnet_id, !@node.history).reorder(updated_at: :asc)
+    @response[:nodes] = Node.where("vipnet_id = ? AND history = ?", @node.vipnet_id, !@node.history).order(updated_at: :asc)
     if @node.history
       @response[:status] = @response[:nodes].size == 1
       @response[:place] = "before"
