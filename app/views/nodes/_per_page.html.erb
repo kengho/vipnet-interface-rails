@@ -1,5 +1,5 @@
 <%= form_for current_user, method: :patch, :html => { :class => "nodes-per-page" } do |f| %>
-  <% redirect_to_params = params.reject { |k, v| k == "controller" || k == "action" || v == "" } %>
+  <% redirect_to_params = params.reject { |k, v| ["controller", "action", "page"].include?(k) || v == "" } %>
   <%# http://stackoverflow.com/a/21393313 %>
   <input type="hidden" name="redirect_to" value="/nodes?<%= redirect_to_params.to_param %>" />
   <% User.settings[:nodes_per_page][:accepted_values].each do |available_node_per_page| %>
