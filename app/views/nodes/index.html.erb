@@ -28,7 +28,6 @@
             <% unless @nodes.empty? %>
               <tbody>
                 <% @nodes.each do |node| %>
-                  <% next if (@dont_show_history && node.history) %>
                   <%= render "row", node: node, search: @search %>
                 <% end %>
               </tbody>

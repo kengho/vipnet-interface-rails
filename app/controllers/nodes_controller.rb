@@ -49,16 +49,14 @@ class NodesController < ApplicationController
     Node.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if query_sql == "(true)" || query_sql == "(false)"
       @nodes = Node.where("history = 'false'").order(created_first_at: :desc)
-      @size_all = @nodes.size
       @nodes = @nodes.paginate(page: params[:page])
-      @dont_show_history = true
       @search = false
     else
       @nodes = Node.where(query_sql, *query_params).order(vipnet_id: :asc)
-      @size_all = @nodes.size
-      @size_no_history = @nodes.where("history = 'false'").size
+      @nodes_no_history = @nodes.where("history = 'false'")
+      @nodes = @nodes_no_history if @nodes_no_history.size > 0
+      @size = @nodes.size
       @nodes = @nodes.paginate(page: params[:page])
-      @dont_show_history = @size_no_history > 0 ? true : false
       @search = true
     end
   end

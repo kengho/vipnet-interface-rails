@@ -1,12 +1,7 @@
 <%
   title = t(".title")
   if @search
-    if @dont_show_history
-      size = @size_no_history
-    else
-      size = @size_all
-    end
-    @sub_title = "#{t('.search_results_subtitle')} (#{size})"
+    @sub_title = "#{t('.search_results_subtitle')} (#{@size})"
   else
     @sub_title = t(".default_nodes_subtitle")
   end
