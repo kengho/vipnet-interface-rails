@@ -173,5 +173,4 @@ class NodesController < ApplicationController
       @node = Node.find_by_id(params[:node_id])
       render nothing: true, status: 400, content_type: "text/html" and return unless @node
     end
-
 end

@@ -210,7 +210,11 @@ $(document).ready(function() {
   });
 
   $(".nodes__row").click(function() {
-    vipnetInterface.selectRow(this);
+    // http://stackoverflow.com/a/10390097/6376451
+    var selection = getSelection().toString();
+    if(!selection){
+      vipnetInterface.selectRow(this);
+    }
   });
 
   // if I don't show textarea, I don't need this
