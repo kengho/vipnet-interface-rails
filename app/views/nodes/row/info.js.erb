@@ -8,19 +8,6 @@
   });
   vipnetInterface.remoteStatus.renderInfo({
     parentId: "<%= @response[:parent_id] %>",
-    html: "<%= j render 'nodes/row/info_block' %>",
-    name: "<%= @response[:name] %>",
-    vipnetId: "<%= @response[:vipnet_id] %>",
-    history: "<%= @response[:history] %>",
-    category: "<%= @response[:category] %>",
-    network: "<%= @response[:network] %>",
-    ips: "<%= @response[:ips] %>",
-    accessips: "<%= @response[:accessips] %>",
-    vipnetVersion: "<%= @response[:vipnet_version] %>",
-    vipnetVersionHW: "<%= @response[:vipnet_version_hw] %>",
-    createdAt: "<%= @response[:created_first_at] %>",
-    deletedAt: "<%= @response[:deleted_at] %>",
-    mftpServer: "<%= @response[:mftp_server] %>",
-    ncc: "<%= @response[:ncc] %>",
+    html: "<%= j render 'nodes/row/info_block', data: @response[:data], order: @response[:order] %>",
   });
 })();

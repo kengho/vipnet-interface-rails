@@ -109,19 +109,6 @@ var vipnetInterface = {
         $(args.parentId).find("div[name='info']").remove();
         vipnetInterface.remoteStatus.renderDefault(args.parentId);
       });
-      $infoBlock.find("span[name='name']").html(args.name);
-      $infoBlock.find("span[name='vipnet-id']").html(args.vipnetId);
-      $infoBlock.find("span[name='history']").html(args.history);
-      $infoBlock.find("span[name='category']").html(args.category);
-      $infoBlock.find("span[name='network']").html(args.network);
-      $infoBlock.find("span[name='ips']").html(args.ips);
-      $infoBlock.find("span[name='accessips']").html(args.accessips);
-      $infoBlock.find("span[name='vipnet-version']").html(args.vipnetVersion);
-      $infoBlock.find("span[name='vipnet-version-hw']").html(args.vipnetVersionHW);
-      $infoBlock.find("span[name='created-at']").html(args.createdAt);
-      $infoBlock.find("span[name='deleted-at']").html(args.deletedAt);
-      $infoBlock.find("span[name='mftp-server']").html(args.mftpServer);
-      $infoBlock.find("span[name='ncc']").html(args.ncc);
     },
 
     initAjax: function(parent) {
@@ -218,11 +205,11 @@ $(document).ready(function() {
     $inputs.each(function(_, input) {
       $(input)
         .val("")
-        .parent().removeClass('is-dirty')
+        .parent().removeClass("is-dirty")
     });
   });
 
-  $(".nodes__row").click(function(e) {
+  $(".nodes__row").click(function() {
     vipnetInterface.selectRow(this);
   });
 

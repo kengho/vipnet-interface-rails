@@ -54,7 +54,7 @@ ru:
         accessips: "Адреса доступа"
         vipnet_version: "Версия ПО"
         vipnet_version_hw: "Версия ПО (HW)"
-        created_at: "Создан"
+        created_first_at: "Создан"
         deleted_at: "Удален"
         mftp_server: "MFTP-сервер"
         ncc: "Путь в NCC"

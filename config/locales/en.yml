@@ -77,7 +77,7 @@ en:
         accessips: "Accessips"
         vipnet_version: "Software version"
         vipnet_version_hw: "Software version (HW)"
-        created_at: "Created at"
+        created_first_at: "Created at"
         deleted_at: "Deleted at"
         mftp_server: "MFTP server"
         ncc: "NCC location"

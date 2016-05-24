@@ -103,50 +103,66 @@ class NodesController < ApplicationController
   def info
     @response = {
       parent_id: "#node-#{@node.id}__info",
-      name: @node.name,
-      vipnet_id: @node.vipnet_id,
-      category: @node.category ? t("nodes.row.info.#{@node.category}") : "",
-      network: Node.network(@node.vipnet_id),
-      ips: @node.ips["summary"] ? @node.ips["summary"] : "",
-      vipnet_version: @node.vipnet_version["summary"] ? Node.vipnet_versions_substitute(@node.vipnet_version["summary"]) : "",
-      vipnet_version_hw: @node.vipnet_version["summary"] ? @node.vipnet_version["summary"] : "",
-      created_first_at: @node.created_first_at,
-      deleted_at: @node.deleted_at ? @node.deleted_at : "",
       tooltip_text: t("nodes.row.info.loaded"),
+      data: {
+        name: @node.name,
+        vipnet_id: @node.vipnet_id,
+        category: @node.category ? t("nodes.row.info.#{@node.category}") : "",
+        network: Node.network(@node.vipnet_id),
+        ips: @node.ips["summary"] ? @node.ips["summary"] : "",
+        vipnet_version: @node.vipnet_version["summary"] ? Node.vipnet_versions_substitute(@node.vipnet_version["summary"]) : "",
+        vipnet_version_hw: @node.vipnet_version["summary"] ? @node.vipnet_version["summary"] : "",
+        created_first_at: @node.created_first_at,
+        deleted_at: @node.deleted_at ? @node.deleted_at : "",
+      },
+      order: [
+        :history,
+        :vipnet_id,
+        :category,
+        :network,
+        :ips,
+        :accessips,
+        :vipnet_version,
+        :vipnet_version_hw,
+        :created_first_at,
+        :deleted_at,
+        :mftp_server,
+        :ncc,
+      ],
     }
     network = Network.find_by_id(@node.network_id)
     if network
-      @response[:network] = "#{@response[:network]} (#{network.name})" if network.name
+      @response[:data][:network] = "#{@response[:network]} (#{network.name})" if network.name
     else
       Rails.logger.error("Unable to find network '#{@node.network_id}'")
     end
     accessips = @node.accessips(Hash)
     unless accessips.empty?
       tmp_array = Array.new
-      @response[:accessips] = String.new
+      @response[:data][:accessips] = String.new
       accessips.each do |vipnet_id, accessip|
         tmp_array.push("#{vipnet_id}→#{accessip}")
       end
-      @response[:accessips] = tmp_array.join(", ")
+      @response[:data][:accessips] = tmp_array.join(", ")
     end
     unless @node.created_first_at_accuracy
-      @response[:created_first_at] = "#{t('nodes.row.datetime.before')} #{@response[:created_first_at]}"
+      @response[:data][:created_first_at] = "#{t('nodes.row.datetime.before')} #{@response[:data][:created_first_at]}"
     end
     if @node.server_number && @node.abonent_number
-      @response[:ncc] = "#{sprintf("%05d", @node.server_number.to_i(16))}→#{sprintf("%05d", @node.abonent_number.to_i(16))}"
+      @response[:data][:ncc] = "#{sprintf("%05d", @node.server_number.to_i(16))}→#{sprintf("%05d", @node.abonent_number.to_i(16))}"
     end
     if @node.mftp_server
-      @response[:mftp_server] = "#{@node.mftp_server.name} (#{@node.mftp_server.vipnet_id})"
+      @response[:data][:mftp_server] = "#{@node.mftp_server.name} (#{@node.mftp_server.vipnet_id})"
     end
     if @node.history
-      @response[:history] =
+      @response[:data][:history] =
         "#{t('nodes.row.availability.from')} "\
         "#{@node['created_at'].strftime('%Y-%m-%d %H:%M UTC')} "\
         "#{t('nodes.row.availability.to')} "\
         "#{@node['updated_at'].strftime('%Y-%m-%d %H:%M UTC')} "\
         ""
     else
-      @response[:history] = t("nodes.row.info.history_actual_data")
+      @response[:data][:history] = t("nodes.row.info.history_actual_data")
     end
     respond_with(@response, template: "nodes/row/info") and return
   end
