@@ -103,6 +103,7 @@ class NodesController < ApplicationController
   def info
     @response = {
       parent_id: "#node-#{@node.id}__info",
+      row_id: "#node-#{@node.id}__row",
       tooltip_text: t("nodes.row.info.loaded"),
       data: {
         name: @node.name,

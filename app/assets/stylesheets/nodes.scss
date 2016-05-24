@@ -420,6 +420,7 @@ div[name="button--undo"] {
     background-color: $info-block-bgcolor-hover;
   }
   &:hover .info-block__close-button{
-    opacity: 1;
+    opacity: 0;
+    // opacity: 1;
   }
 }

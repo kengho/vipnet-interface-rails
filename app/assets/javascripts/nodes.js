@@ -10,6 +10,7 @@ var vipnetInterface = {
       vipnetInterface.remoteStatus.remove({ parentId: parentId, div: "status--false" });
       vipnetInterface.remoteStatus.remove({ parentId: parentId, div: "status--true" });
       vipnetInterface.remoteStatus.remove({ parentId: parentId, div: "button--undo" });
+      // $(parentId).find("div[name='info']").remove();
     },
 
     renderUndoButton: function(args) {
@@ -20,7 +21,7 @@ var vipnetInterface = {
       $shownUndoButton = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "button--undo" });
       $shownUndoButton.click(function() {
         // unselect row
-        vipnetInterface.selectRow($(args.parentId).parent().parent()[0]);
+        vipnetInterface.selectRow("#" + $(args.parentId).parent().parent()[0].id);
         if(args.ids) {
           args.ids.forEach(function(id) {
             $(id).remove();
@@ -105,10 +106,9 @@ var vipnetInterface = {
     renderInfo: function(args) {
       $(args.parentId).append(args.html);
       $infoBlock = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "info" });
-      $infoBlock.find("div[name='close']").click(function() {
-        $(args.parentId).find("div[name='info']").remove();
-        vipnetInterface.remoteStatus.renderDefault(args.parentId);
-      });
+      // $infoBlock.find("div[name='close']").click(function() {
+      //   vipnetInterface.remoteStatus.renderDefault(args.parentId);
+      // });
     },
 
     initAjax: function(parent) {
@@ -156,11 +156,12 @@ var vipnetInterface = {
   },
 
   selectedRows: [],
-  selectRow: function(row) {
-    $(row).toggleClass("nodes__row--selected");
-    rowIdPosition = vipnetInterface.selectedRows.indexOf(row.id);
+  selectRow: function(rowId) {
+    $row = $(rowId);
+    $row.toggleClass("nodes__row--selected");
+    rowIdPosition = vipnetInterface.selectedRows.indexOf(rowId);
     if(rowIdPosition == -1) {
-      vipnetInterface.selectedRows.push(row.id);
+      vipnetInterface.selectedRows.push(rowId);
     } else {
       vipnetInterface.selectedRows.splice(rowIdPosition, 1);
     }
@@ -191,7 +192,7 @@ $(document).ready(function() {
   $("a[data-replace-link-by-spinner]").click(function(e) {
     vipnetInterface.remoteStatus.initAjax(this);
     // unselect row
-    vipnetInterface.selectRow($(this).parent().parent().parent()[0]);
+    vipnetInterface.selectRow("#" + $(this).parent().parent().parent()[0].id);
   });
 
   $("span[data-fullscreen-tooltip-key]").click(function() {
@@ -213,7 +214,7 @@ $(document).ready(function() {
     // http://stackoverflow.com/a/10390097/6376451
     var selection = getSelection().toString();
     if(!selection){
-      vipnetInterface.selectRow(this);
+      vipnetInterface.selectRow("#" + this.id);
     }
   });
 
