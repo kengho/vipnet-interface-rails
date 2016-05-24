@@ -137,13 +137,14 @@ class NodesController < ApplicationController
       Rails.logger.error("Unable to find network '#{@node.network_id}'")
     end
     accessips = @node.accessips(Hash)
-    unless accessips.empty?
+    if !accessips.empty?
       tmp_array = Array.new
-      @response[:data][:accessips] = String.new
       accessips.each do |vipnet_id, accessip|
         tmp_array.push("#{vipnet_id}→#{accessip}")
       end
       @response[:data][:accessips] = tmp_array.join(", ")
+    else
+      @response[:data][:accessips] = ""
     end
     unless @node.created_first_at_accuracy
       @response[:data][:created_first_at] = "#{t('nodes.row.datetime.before')} #{@response[:data][:created_first_at]}"
