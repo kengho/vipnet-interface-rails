@@ -30,6 +30,10 @@ class Api::V1::BaseController < ActionController::Base
           :actions => ["create"],
           :token_name => "POST_ADMINISTRATOR_TOKEN"
         },
+        "api/v1/tickets" => {
+          :actions => ["create"],
+          :token_name => "POST_TICKETS_TOKEN"
+        },
       }
 
       if actions_get.key?(params[:controller])

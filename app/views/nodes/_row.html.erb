@@ -38,5 +38,6 @@
   <% end %>
   <%= render "nodes/row/datetime", value: node["created_first_at"], node: node %>
   <%= render "nodes/row/datetime", value: node["deleted_at"] %>
+  <%= render "nodes/row/tickets", tickets: node["tickets"] %>
   <%= render "nodes/row/space" %>
 </tr>

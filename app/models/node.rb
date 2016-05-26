@@ -13,7 +13,8 @@ class Node < ActiveRecord::Base
       "ips" => { "ips" => "summary" },
       "vipnet_version" => { "vipnet_version" => "summary" },
       "deleted_at" => "deleted_at::text",
-      "created_first_at" => "created_first_at::text"
+      "created_first_at" => "created_first_at::text",
+      "ticket_id" => { "tickets" => "ids_summary" },
     }
   end
 

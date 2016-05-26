@@ -26,6 +26,7 @@ Rails.application.routes.draw do
       resources :iplirconfs, only: [:create]
       resources :messages, only: [:create]
       resources :nodenames, only: [:create]
+      resources :tickets, only: [:create]
       # data output
       resources :nodes, only: [:index]
       resources :accessips, only: [:index]

@@ -11,6 +11,7 @@ class ActiveSupport::TestCase
   ENV["CHECKER_TOKEN"] = "CHECKER_TOKEN"
   ENV["DEFAULT_LOCALE"] = "DEFAULT_LOCALE"
   ENV["POST_HW_TOKEN"] = "POST_HW_TOKEN"
+  ENV["POST_TICKETS_TOKEN"] = "POST_TICKETS_TOKEN"
 end
 
 class ActionController::TestCase

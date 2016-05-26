@@ -1,0 +1,13 @@
+<td class="mdl-data-table__cell--non-numeric nodes__tickets">
+  <% unless tickets == {} %>
+    <% tickets.each do |key, ids| %>
+      <% next if key == "ids_summary" %>
+      <% value = Array.new %>
+      <% eval(ids).each do |id| %>
+        <% href = key.gsub("#\{id}", id.to_s) %>
+        <% value.push("<a href=#{href}>#{id.to_s}</a>") %>
+      <% end %>
+      <%= value.join(", ").html_safe %>
+    <% end %>
+  <% end %>
+</td>

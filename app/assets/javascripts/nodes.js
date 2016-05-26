@@ -210,10 +210,11 @@ $(document).ready(function() {
     });
   });
 
-  $(".nodes__row").click(function() {
+  $(".nodes__row").click(function(e) {
     // http://stackoverflow.com/a/10390097/6376451
+    // e.button == 1 for middle button
     var selection = getSelection().toString();
-    if(!selection){
+    if(!selection && e.button != 1){
       vipnetInterface.selectRow("#" + this.id);
     }
   });
