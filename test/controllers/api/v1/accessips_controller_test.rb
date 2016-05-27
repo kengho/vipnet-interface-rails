@@ -1,3 +1,5 @@
+require "test_helper"
+
 class Api::V1::AccessipsControllerTest < ActionController::TestCase
   test "accessips" do
     Node.destroy_all

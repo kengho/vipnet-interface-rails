@@ -1,7 +1,6 @@
 require "test_helper"
 
 class NetworksTest < ActiveSupport::TestCase
-
   test "validations" do
     network1 = Network.new(vipnet_network_id: nil)
     network2 = Network.new(vipnet_network_id: "6671")
@@ -19,5 +18,4 @@ class NetworksTest < ActiveSupport::TestCase
     assert_equal("existing_network", network1.name)
     assert network1
   end
-
 end

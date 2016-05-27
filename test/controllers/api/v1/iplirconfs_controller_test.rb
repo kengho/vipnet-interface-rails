@@ -1,3 +1,5 @@
+require "test_helper"
+
 class Api::V1::IplirconfsControllerTest < ActionController::TestCase
   test "validations" do
     # correct token should be provided
@@ -166,7 +168,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
     assert_equal("3.2-672", administrator.vipnet_version["0x1a0e000d"])
     assert_equal("?", administrator.vipnet_version["summary"])
-    
+
     # test Node#update_all at the same time, as long as everything is already prepared
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
     administrator_attributes_before = administrator.attributes.reject { |key, _| key == "id" }

@@ -1,5 +1,6 @@
-class NodesControllerIndexTest < ActionController::TestCase
+require "test_helper"
 
+class NodesControllerIndexTest < ActionController::TestCase
   def setup
     @controller = NodesController.new
   end
@@ -82,5 +83,4 @@ class NodesControllerIndexTest < ActionController::TestCase
     assert_equal("3.1", css_select("#node-#{node8.id}__vipnet-version").children.text)
     assert_equal("4", css_select("#node-#{node9.id}__vipnet-version").children.text)
   end
-
 end

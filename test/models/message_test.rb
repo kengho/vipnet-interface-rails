@@ -1,7 +1,6 @@
 require "test_helper"
 
 class MessagesTest < ActiveSupport::TestCase
-
   test "decode" do
     Node.destroy_all
     Node.new(
@@ -50,5 +49,4 @@ class MessagesTest < ActiveSupport::TestCase
     assert_equal("ok", message4.decode)
     assert Node.where("vipnet_id = '0x1a0e0002'").first.created_by_message_id
   end
-
 end

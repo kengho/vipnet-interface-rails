@@ -1,3 +1,5 @@
+require "test_helper"
+
 class NodesTest < ActiveSupport::TestCase
   test "validations" do
     network = networks(:network1)

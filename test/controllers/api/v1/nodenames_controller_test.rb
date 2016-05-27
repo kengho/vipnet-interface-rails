@@ -1,3 +1,5 @@
+require "test_helper"
+
 class Api::V1::NodenamesControllerTest < ActionController::TestCase
   test "validations" do
     # correct token should be provided
