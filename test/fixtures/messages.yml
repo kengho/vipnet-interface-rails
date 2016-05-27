@@ -6,7 +6,7 @@ create_db:
 
 delete_node:
   created_at: <%= DateTime.now %>
-  content: "15.02.16 22:41:12 DelUN: test2 UG=1A0E02BA NO=1A0E0400"
+  content: "15.02.16 22:41:12 DelUN: test2 UG=1A0E02BA NO=1A0E0001"
 
 create_node:
-  content: "15.02.16 17:47:12 AddUN: test2 ID=1A0E02BA NO=1A0E0401"
+  content: "15.02.16 17:47:12 AddUN: test2 ID=1A0E02BA NO=1A0E0002"

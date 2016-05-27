@@ -1,5 +1,4 @@
 class Api::V1::AccessipsController < Api::V1::BaseController
-
   def index
     @response = Hash.new
     if params[:accessip]
@@ -46,5 +45,4 @@ class Api::V1::AccessipsController < Api::V1::BaseController
       render json: @response and return
     end
   end
-
 end

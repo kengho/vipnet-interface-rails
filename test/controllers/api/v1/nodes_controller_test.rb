@@ -1,20 +1,66 @@
 class Api::V1::NodesControllerTest < ActionController::TestCase
   test "nodes" do
-    get(:index, { vipnet_id: "0x1a0e0701", token: "GET_INFORMATION_TOKEN" })
-    assert_equal({ data: { "name" => "client0x1a0e0701", "enabled" => true }}, assigns["response"])
+    Node.destroy_all
+    Node.new(
+      vipnet_id: "0x1a0e0001",
+      name: "client-0x1a0e0001",
+      network_id: networks(:network1).id,
+      category: "client",
+      history: false,
+      enabled: true,
+      ips: {
+        "summary" => "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4",
+      }
+    ).save!
+    Node.new(
+      vipnet_id: "0x1a0e0001",
+      name: "client-0x1a0e0001--old",
+      network_id: networks(:network1).id,
+      category: "client",
+      history: true,
+      enabled: false,
+    ).save!
+    Node.new(
+      vipnet_id: "0x1a0e0002",
+      name: "client-0x1a0e0002",
+      network_id: networks(:network1).id,
+      history: false,
+    ).save!
+    Node.new(
+      vipnet_id: "0x1a0e0002",
+      name: "client-0x1a0e0002",
+      network_id: networks(:network1).id,
+      history: false,
+    ).save(validations: false)
+    Iplirconf.destroy_all
+    Iplirconf.new(
+      coordinator_id: coordinators(:coordinator1).id,
+      sections: {
+        "self" => {
+          "vipnet_id" => "0x1a0e000a",
+        },
+        "client" => {
+          "vipnet_id" => "0x1a0e0001",
+          "accessip" => "192.0.2.1",
+        },
+      },
+    ).save!
 
-    get(:index, { vipnet_id: "0x1a0e0701", only: ["ips", "category"], token: "GET_INFORMATION_TOKEN" })
+    get(:index, { vipnet_id: "0x1a0e0001", token: "GET_INFORMATION_TOKEN" })
+    assert_equal({ data: { "name" => "client-0x1a0e0001", "enabled" => true }}, assigns["response"])
+
+    get(:index, { vipnet_id: "0x1a0e0001", only: ["ips", "category"], token: "GET_INFORMATION_TOKEN" })
     assert_equal({ data: { "ips" => { "summary" => "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4" }, "category" => "client" }}, assigns["response"])
 
-    get(:index, { vipnet_id: "0x1a0e0100", availability: "true", token: "GET_INFORMATION_TOKEN" })
-    assert_equal({ data: { "name" => "client0x1a0e0100", "enabled" => true, "available" => true }}, assigns["response"])
+    get(:index, { vipnet_id: "0x1a0e0001", availability: "true", token: "GET_INFORMATION_TOKEN" })
+    assert_equal({ data: { "name" => "client-0x1a0e0001", "enabled" => true, "available" => true }}, assigns["response"])
 
     get(:index, { vipnet_id: "unmatched id", token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
 
     # multiple nodes found
-    get(:index, { vipnet_id: "0x1a0e0702", token: "GET_INFORMATION_TOKEN" })
+    get(:index, { vipnet_id: "0x1a0e0002", token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("internal", assigns["response"][:errors][0][:title])
 

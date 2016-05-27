@@ -89,7 +89,7 @@ class Node < ActiveRecord::Base
           accessips.push(eval(section)["accessip"]) if eval(section)["vipnet_id"] == self.vipnet_id
         end
       end
-      accessips.reject!{ |a| a.nil? }
+      accessips.reject! { |a| a.nil? }
     elsif output == Hash
       accessips = Hash.new
       Iplirconf.all.each do |iplirconf|
