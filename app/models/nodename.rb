@@ -25,9 +25,9 @@ class Nodename < ActiveRecord::Base
         diff[1] =~ /(.*)\.(.*)/
         id = VipnetParser::id(Regexp.last_match(1))[0]
         prop_name = Regexp.last_match(2)
-        new_prop_value = diff[3]
+        new_value = diff[3]
         changed_records[id] = Hash.new unless changed_records[id]
-        changed_records[id][prop_name.to_sym] = new_prop_value
+        changed_records[id][prop_name.to_sym] = new_value
       elsif change == "-"
         # do nothing
       end

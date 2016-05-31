@@ -9,7 +9,7 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
       category: "client",
       history: false,
       enabled: true,
-      ips: {
+      ip: {
         "summary" => "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4",
       }
     ).save!
@@ -36,12 +36,8 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {
-        "self" => {
-          "vipnet_id" => "0x1a0e000a",
-        },
-        "client" => {
-          "vipnet_id" => "0x1a0e0001",
-          "accessip" => "192.0.2.1",
+        "0x1a0e0001" => {
+          :accessip => "192.0.2.1",
         },
       },
     ).save!
@@ -49,8 +45,8 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
     get(:index, { vipnet_id: "0x1a0e0001", token: "GET_INFORMATION_TOKEN" })
     assert_equal({ data: { "name" => "client-0x1a0e0001", "enabled" => true }}, assigns["response"])
 
-    get(:index, { vipnet_id: "0x1a0e0001", only: ["ips", "category"], token: "GET_INFORMATION_TOKEN" })
-    assert_equal({ data: { "ips" => { "summary" => "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4" }, "category" => "client" }}, assigns["response"])
+    get(:index, { vipnet_id: "0x1a0e0001", only: ["ip", "category"], token: "GET_INFORMATION_TOKEN" })
+    assert_equal({ data: { "ip" => { "summary" => "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4" }, "category" => "client" }}, assigns["response"])
 
     get(:index, { vipnet_id: "0x1a0e0001", availability: "true", token: "GET_INFORMATION_TOKEN" })
     assert_equal({ data: { "name" => "client-0x1a0e0001", "enabled" => true, "available" => true }}, assigns["response"])

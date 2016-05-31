@@ -10,8 +10,8 @@ class Node < ActiveRecord::Base
     searchable = {
       "vipnet_id" => "vipnet_id",
       "name" => "name",
-      "ips" => { "ips" => "summary" },
-      "vipnet_version" => { "vipnet_version" => "summary" },
+      "ip" => { "ip" => "summary" },
+      "version" => { "version" => "summary" },
       "deleted_at" => "deleted_at::text",
       "created_first_at" => "created_first_at::text",
       "ticket_id" => { "tickets" => "ids_summary" },
@@ -69,19 +69,18 @@ class Node < ActiveRecord::Base
     if output == Array
       accessips = Array.new
       Iplirconf.all.each do |iplirconf|
-        iplirconf.sections.each do |_, section|
-          accessips.push(eval(section)["accessip"]) if eval(section)["vipnet_id"] == self.vipnet_id
+        iplirconf.sections.each do |vipnet_id, section|
+          accessips.push(eval(section)[:accessip]) if vipnet_id == self.vipnet_id
         end
       end
       accessips.reject! { |a| a.nil? }
     elsif output == Hash
       accessips = Hash.new
       Iplirconf.all.each do |iplirconf|
-        if iplirconf.sections["self"]
-          coordinator_vipnet_id = eval(iplirconf.sections["self"])["vipnet_id"]
-          iplirconf.sections.each do |_, section|
-            accessips[coordinator_vipnet_id] = eval(section)["accessip"] if eval(section)["vipnet_id"] == self.vipnet_id
-          end
+        coordinator = Coordinator.find_by_id(iplirconf.coordinator_id)
+        coordinator_vipnet_id = coordinator.vipnet_id
+        iplirconf.sections.each do |vipnet_id, section|
+          accessips[coordinator_vipnet_id] = eval(section)[:accessip] if vipnet_id == self.vipnet_id
         end
       end
     end
@@ -89,7 +88,6 @@ class Node < ActiveRecord::Base
   end
 
   def availability
-    require "httparty"
     availability = false
     response = Hash.new
     accessips = self.accessips
@@ -115,32 +113,32 @@ class Node < ActiveRecord::Base
     response
   end
 
-  def ips_summary
-    ips_summary = Array.new
-    self.ips.each do |_, ips_array|
+  def ip_summary
+    ip_summary = Array.new
+    self.ip.each do |_, ip_array|
       # before saving ips_array is Array, after saving it's String
-      if ips_array =~ /\[.*\]/
-        ips_array_eval = eval(ips_array)
-        ips_summary += ips_array_eval if ips_array_eval.class == Array
-      elsif ips_array.class == Array
-        ips_summary += ips_array
+      if ip_array =~ /\[.*\]/
+        ip_array_eval = eval(ip_array)
+        ip_summary += ip_array_eval if ip_array_eval.class == Array
+      elsif ip_array.class == Array
+        ip_summary += ip_array
       end
     end
-    ips_summary = ips_summary.uniq.join(", ")
-    ips_summary
+    ip_summary = ip_summary.uniq.join(", ")
+    ip_summary
   end
 
-  def vipnet_version_summary
-    vipnet_versions = Array.new
-    self.vipnet_version.each do |key, vipnet_version|
-      if !vipnet_version.nil? && key != "summary"
-        vipnet_versions.push(vipnet_version) unless vipnet_version.nil?
+  def version_summary
+    version_summary = Array.new
+    self.version.each do |key, version|
+      if !version.nil? && key != "summary"
+        version_summary.push(version) unless version.nil?
       end
     end
-    uniq_vipnet_versions = vipnet_versions.uniq
-    return "" if uniq_vipnet_versions.size == 0
-    return uniq_vipnet_versions[0] if uniq_vipnet_versions.size == 1
-    return "?" if uniq_vipnet_versions.size > 1
+    uniq_version = version_summary.uniq
+    return "" if uniq_version.size == 0
+    return uniq_version[0] if uniq_version.size == 1
+    return "?" if uniq_version.size > 1
   end
 
   def mftp_server
@@ -182,17 +180,17 @@ class Node < ActiveRecord::Base
       end
     end
     Iplirconf.all.each do |iplirconf|
-      coordinator_vipnet_id = eval(iplirconf.sections["self"])["vipnet_id"]
-      iplirconf.sections.each do |key, section|
-        next if key == "self"
-        nodes = Node.where("vipnet_id = ? AND history = 'false'", eval(section)["vipnet_id"])
+      coordinator = Coordinator.find_by_id(iplirconf.coordinator_id)
+      coordinator_vipnet_id = coordinator.vipnet_id
+      iplirconf.sections.each do |vipnet_id, section|
+        nodes = Node.where("vipnet_id = ? AND history = 'false'", vipnet_id)
         if nodes.size == 1
           node = nodes.first
-          Iplirconf.fields_from_section.each { |field| node[field][coordinator_vipnet_id] = eval(section)[field] }
-          Iplirconf.fields_from_section.each do |field|
+          Iplirconf.props_from_section.each { |prop_name| node[prop_name][coordinator_vipnet_id] = eval(section)[prop_name] }
+          Iplirconf.props_from_section.each do |prop_name|
             # http://stackoverflow.com/a/5349874
-            method_name = "#{field}_summary"
-            node[field]["summary"] = node.public_send(method_name) if node.respond_to?(method_name)
+            method_name = "#{prop_name}_summary"
+            node[prop_name]["summary"] = node.public_send(method_name) if node.respond_to?(method_name)
           end
           node.save!
         end
@@ -219,5 +217,4 @@ class Node < ActiveRecord::Base
     end
     Node.record_timestamps = true
   end
-
 end

@@ -11,8 +11,8 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
     new_nodename = Nodename.new
     parsed_nodename = VipnetParser::Nodename.new(uploaded_file_content)
+    render plain: "error" and return unless parsed_nodename
     new_nodename.records = parsed_nodename.records
-    render plain: "error" and return unless response
     existing_nodenames = Nodename.joins(:network).where("networks.vipnet_network_id = ?", nodename_vipnet_network_id)
     new_records = Hash.new
     created_first_at_accuracy = true
@@ -38,11 +38,11 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       next if record[:category] == :group
       record_vipnet_network_id = VipnetParser::network(vipnet_id)
       network = Network.find_or_create_network(record_vipnet_network_id)
+      render plain: "error" and return unless network
       we_admin_this_network = Nodename.joins(:network).where("vipnet_network_id = ?", record_vipnet_network_id).size > 0
       it_is_internetworking_node = nodename_vipnet_network_id != record_vipnet_network_id
       next if we_admin_this_network && it_is_internetworking_node
       next if networks_to_ignore.include?(network.vipnet_network_id)
-      render plain: "error" and return unless network
       nodes_to_history = Node.where("vipnet_id = ? AND history = 'false'", vipnet_id)
       if nodes_to_history.size == 0
         node = Node.new(created_first_at: DateTime.now)
@@ -52,7 +52,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         node_to_history.history = true
         node_to_history.save!
       elsif nodes_to_history.size > 1
-        Rails.logger.error("More than one non-history nodes found '#{record["vipnet_id"]}'")
+        Rails.logger.error("More than one non-history nodes found '#{vipnet_id}'")
         render plain: "error" and return
       end
       Nodename.props_from_record.each do |prop_name|

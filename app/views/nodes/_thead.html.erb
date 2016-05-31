@@ -6,8 +6,8 @@
     <%= render "nodes/thead/string", id: "name", value: params[:name], tabindex: 3, label: t(".name_label") %>
     <%# availability %>
     <%= render "nodes/thead/space" %>
-    <%= render "nodes/thead/string", id: "ips", value: params[:ips], tabindex: 4, label: t(".ip_label") %>
-    <%= render "nodes/thead/string", id: "vipnet_version", value: params[:vipnet_version], tabindex: 5, label: t(".software_label") %>
+    <%= render "nodes/thead/string", id: "ip", value: params[:ip], tabindex: 4, label: t(".ip_label") %>
+    <%= render "nodes/thead/string", id: "version", value: params[:version], tabindex: 5, label: t(".software_label") %>
     <%# history %>
     <%= render "nodes/thead/space" %>
     <%= render "nodes/thead/string", id: "created_first_at", value: params[:created_first_at], tabindex: 6, label: t(".created_label") %>

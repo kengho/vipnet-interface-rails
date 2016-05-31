@@ -116,12 +116,8 @@ class NodesControllerTest < ActionController::TestCase
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {
-        "self" => {
-          "vipnet_id" => "0x1a0e000a",
-        },
-        "client" => {
-          "vipnet_id" => "0x1a0e0001",
-          "accessip" => "192.0.2.1",
+        "0x1a0e0001" => {
+          :accessip => "192.0.2.1",
         },
       },
     ).save!

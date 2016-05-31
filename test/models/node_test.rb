@@ -29,24 +29,16 @@ class NodesTest < ActiveSupport::TestCase
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {
-        "self" => {
-          "vipnet_id" => "0x1a0e000a",
-        },
-        "client" => {
-          "vipnet_id" => "0x1a0e0001",
-          "accessip" => "192.0.2.1",
+        "0x1a0e0001" => {
+          :accessip => "192.0.2.1",
         },
       },
     ).save!
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator2).id,
       sections: {
-        "self" => {
-          "vipnet_id" => "0x1a0e000b",
-        },
-        "client" => {
-          "vipnet_id" => "0x1a0e0001",
-          "accessip" => "192.0.2.2",
+        "0x1a0e0001" => {
+          :accessip => "192.0.2.2",
         },
       },
     ).save!
@@ -72,12 +64,8 @@ class NodesTest < ActiveSupport::TestCase
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {
-        "self" => {
-          "vipnet_id" => "0x1a0e000a",
-        },
-        "client" => {
-          "vipnet_id" => "0x1a0e0001",
-          "accessip" => "192.0.2.1",
+        "0x1a0e0001" => {
+          :accessip => "192.0.2.1",
         },
       },
     ).save!
@@ -86,12 +74,12 @@ class NodesTest < ActiveSupport::TestCase
     assert_equal({ :errors => [{ :title => "internal", :detail => "no-accessips" }]}, node2.availability)
   end
 
-  test "ips_summary" do
+  test "ip_summary" do
     node1 = Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client",
       network_id: networks(:network1).id,
-      ips: {
+      ip: {
         "0x1a0e000a" => "[\"192.0.2.1\", \"192.0.2.2\"]",
         "0x1a0e000b" => "[\"192.0.2.3\", \"192.0.2.4\"]",
       }
@@ -100,21 +88,21 @@ class NodesTest < ActiveSupport::TestCase
       vipnet_id: "0x1a0e0002",
       name: "client",
       network_id: networks(:network1).id,
-      ips: {}
+      ip: {}
     )
     node1.save!
     node2.save!
 
-    assert_equal("192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4", node1.ips_summary)
-    assert_equal("", node2.ips_summary)
+    assert_equal("192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4", node1.ip_summary)
+    assert_equal("", node2.ip_summary)
   end
 
-  test "vipnet_versions_summary" do
+  test "version_summary" do
     node1 = Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client",
       network_id: networks(:network1).id,
-      vipnet_version: {
+      version: {
         "0x1a0e000a" => "1.1",
         "0x1a0e000b" => "1.1",
       },
@@ -123,7 +111,7 @@ class NodesTest < ActiveSupport::TestCase
       vipnet_id: "0x1a0e0002",
       name: "client",
       network_id: networks(:network1).id,
-      vipnet_version: {
+      version: {
         "0x1a0e000a" => "1.1",
         "0x1a0e000b" => "1.2",
       },
@@ -132,15 +120,15 @@ class NodesTest < ActiveSupport::TestCase
       vipnet_id: "0x1a0e0002",
       name: "client",
       network_id: networks(:network1).id,
-      vipnet_version: {},
+      version: {},
     )
     node1.save!
     node2.save!
     node3.save!
 
-    assert_equal("1.1", node1.vipnet_version_summary)
-    assert_equal("?", node2.vipnet_version_summary)
-    assert_equal("", node3.vipnet_version_summary)
+    assert_equal("1.1", node1.version_summary)
+    assert_equal("?", node2.version_summary)
+    assert_equal("", node3.version_summary)
   end
 
   test "mftp_server" do

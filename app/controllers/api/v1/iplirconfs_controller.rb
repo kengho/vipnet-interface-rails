@@ -11,11 +11,13 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     uploaded_file_content = File.read(uploaded_file).force_encoding("cp866").encode("utf-8", replace: nil)
 
     new_iplirconf = Iplirconf.new
-    new_iplirconf.content = uploaded_file_content
-    render plain: "error" and return unless new_iplirconf.parse
+    parsed_iplirconf = VipnetParser::Iplirconf.new({ content: uploaded_file_content, arrays_to_s: true })
+    render plain: "error" and return unless parsed_iplirconf
+    new_iplirconf.sections = parsed_iplirconf.sections
+
     coordinators = Coordinator.where("vipnet_id = ?", coordinator_vipnet_id)
     if coordinators.size == 0
-      name = new_iplirconf.sections["self"]["name"]
+      name = eval(new_iplirconf.sections[coordinator_vipnet_id])[:name]
       coordinator_vipnet_network_id = VipnetParser::network(coordinator_vipnet_id)
       coordinator_network = Network.find_or_create_network(coordinator_vipnet_network_id)
       render plain: "error" and return unless coordinator_network
@@ -33,7 +35,6 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     if existing_iplirconfs.size == 0
       # for cmp
       existing_iplirconf = Iplirconf.new
-      existing_iplirconf.sections = Hash.new
       existing_iplirconf.coordinator_id = new_iplirconf.coordinator_id
     elsif existing_iplirconfs.size == 1
       existing_iplirconf = existing_iplirconfs.first
@@ -42,27 +43,28 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
       render plain: "error" and return
     end
 
-    new_iplirconf.sections.each do |key, section|
-      # http://stackoverflow.com/questions/15265328/finding-differences-between-two-files-in-rails
-      next if existing_iplirconf.sections.key?(key)
-      next if key == "self"
-      existing_nodes = Node.where("vipnet_id = ? AND history = 'false'", section['vipnet_id'])
-      if existing_nodes.size == 0
-        Rails.logger.error("Unable to find existing_nodes '#{section['vipnet_id']}',"\
+    changed_sections = existing_iplirconf.changed_sections(new_iplirconf)
+    changed_sections.each do |vipnet_id, section|
+      nodes_to_history = Node.where("vipnet_id = ? AND history = 'false'", vipnet_id)
+      if nodes_to_history.size == 0
+        Rails.logger.error("Unable to find nodes_to_history '#{vipnet_id}',"\
           "coordinator_vipnet_id '#{new_iplirconf.coordinator_id}'")
         next
+      elsif nodes_to_history.size == 1
+        node_to_history = nodes_to_history.first
+        node = node_to_history.dup
+        node_to_history.history = true
+        node_to_history.save!
+        Iplirconf.props_from_section.each do |prop_name|
+          node[prop_name][coordinator_vipnet_id] = section[prop_name] if section.key?(prop_name)
+          method_name = "#{prop_name.to_sym}_summary"
+          node[prop_name]["summary"] = node.public_send(method_name) if node.respond_to?(method_name)
+        end
+        node.save!
+      elsif nodes_to_history.size > 1
+        Rails.logger.error("More than one non-history nodes found '#{vipnet_id}'")
+        render plain: "error" and return
       end
-      existing_node = existing_nodes.first
-      new_node = existing_node.dup
-      Iplirconf.fields_from_section.each { |field| new_node[field][coordinator_vipnet_id] = section[field] }
-      Iplirconf.fields_from_section.each do |field|
-        # http://stackoverflow.com/a/5349874
-        method_name = "#{field}_summary"
-        new_node[field]["summary"] = new_node.public_send(method_name) if new_node.respond_to?(method_name)
-      end
-      new_node.save!
-      existing_node.history = true
-      existing_node.save!
     end
 
     existing_iplirconf.sections = new_iplirconf.sections

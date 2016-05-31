@@ -43,23 +43,24 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     assert_equal(7, node_size)
     # coordinator1
     coordinator1 = Node.where("vipnet_id = '0x1a0e000a' AND history = 'false'").first
-    assert_equal(["192.0.2.1", "192.0.2.3"], eval(coordinator1.ips["0x1a0e000a"]))
-    assert_equal("192.0.2.1, 192.0.2.3", coordinator1.ips["summary"])
-    assert_equal("3.0-670", coordinator1.vipnet_version["0x1a0e000a"])
-    assert_equal("3.0-670", coordinator1.vipnet_version["summary"])
+    assert_equal(["192.0.2.1", "192.0.2.3"], eval(coordinator1.ip["0x1a0e000a"]))
+    assert_equal("192.0.2.1, 192.0.2.3", coordinator1.ip["summary"])
+    assert_equal("3.0-670", coordinator1.version["0x1a0e000a"])
+    assert_equal("3.0-670", coordinator1.version["summary"])
     # administrator
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
-    assert_equal(["192.0.2.5",], eval(administrator.ips["0x1a0e000a"]))
-    assert_equal("192.0.2.5", administrator.ips["summary"])
-    assert_equal("3.2-672", administrator.vipnet_version["0x1a0e000a"])
-    assert_equal("3.2-672", administrator.vipnet_version["summary"])
+    assert_equal(["192.0.2.5",], eval(administrator.ip["0x1a0e000a"]))
+    assert_equal("192.0.2.5", administrator.ip["summary"])
+    assert_equal("3.2-672", administrator.version["0x1a0e000a"])
+    assert_equal("3.2-672", administrator.version["summary"])
     assert_equal(["198.51.100.2"], administrator.accessips)
+    assert_equal({ "0x1a0e000a" => "198.51.100.2" }, administrator.accessips(Hash))
     # client1
     client1 = Node.where("vipnet_id = '0x1a0e000c' AND history = 'false'").first
-    assert_equal(["192.0.2.7",], eval(client1.ips["0x1a0e000a"]))
-    assert_equal("192.0.2.7", client1.ips["summary"])
-    assert_equal("0.3-2", client1.vipnet_version["0x1a0e000a"])
-    assert_equal("0.3-2", client1.vipnet_version["summary"])
+    assert_equal(["192.0.2.7",], eval(client1.ip["0x1a0e000a"]))
+    assert_equal("192.0.2.7", client1.ip["summary"])
+    assert_equal("0.3-2", client1.version["0x1a0e000a"])
+    assert_equal("0.3-2", client1.version["summary"])
     assert_equal(["198.51.100.3"], client1.accessips)
 
     # nothing changed
@@ -82,10 +83,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     node_size += 1
     # coordinator2
     coordinator2 = Node.where("vipnet_id = '0x1a0e000d' AND history = 'false'").first
-    assert_equal(["192.0.2.9", "192.0.2.10"], eval(coordinator2.ips["0x1a0e000a"]))
-    assert_equal("192.0.2.9, 192.0.2.10", coordinator2.ips["summary"])
-    assert_equal("3.0-670", coordinator2.vipnet_version["0x1a0e000a"])
-    assert_equal("3.0-670", coordinator2.vipnet_version["summary"])
+    assert_equal(["192.0.2.9", "192.0.2.10"], eval(coordinator2.ip["0x1a0e000a"]))
+    assert_equal("192.0.2.9, 192.0.2.10", coordinator2.ip["summary"])
+    assert_equal("3.0-670", coordinator2.version["0x1a0e000a"])
+    assert_equal("3.0-670", coordinator2.version["summary"])
     assert_equal(["198.51.100.4"], coordinator2.accessips)
 
     # 02_changed_client1_and_administrator
@@ -99,10 +100,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     client1 = Node.where("vipnet_id = '0x1a0e000c' AND history = 'false'").first
     assert_equal(["192.0.2.7"], client1.accessips)
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
-    assert_equal(["192.0.2.55",], eval(administrator.ips["0x1a0e000a"]))
-    assert_equal("192.0.2.55", administrator.ips["summary"])
-    assert_equal("3.2-673", administrator.vipnet_version["0x1a0e000a"])
-    assert_equal("3.2-673", administrator.vipnet_version["summary"])
+    assert_equal(["192.0.2.55",], eval(administrator.ip["0x1a0e000a"]))
+    assert_equal("192.0.2.55", administrator.ip["summary"])
+    assert_equal("3.2-673", administrator.version["0x1a0e000a"])
+    assert_equal("3.2-673", administrator.version["summary"])
 
     # 03_0x1a0e000d_initial
     coordinator2_initial_iplirconf = fixture_file_upload("iplirconfs/03_0x1a0e000d_initial.conf", "application/octet-stream")
@@ -111,45 +112,45 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     node_size += 4
     # coordinator1
     coordinator1 = Node.where("vipnet_id = '0x1a0e000a' AND history = 'false'").first
-    assert coordinator1.ips["0x1a0e000a"]
-    assert_equal(["192.0.2.1", "192.0.2.3"], eval(coordinator1.ips["0x1a0e000a"]))
-    assert_equal(["192.0.2.1", "192.0.2.3"], eval(coordinator1.ips["0x1a0e000d"]))
-    assert_equal("192.0.2.1, 192.0.2.3", coordinator1.ips["summary"])
-    assert coordinator1.vipnet_version["0x1a0e000a"]
-    assert_equal("3.0-670", coordinator1.vipnet_version["0x1a0e000a"])
-    assert_equal("3.0-670", coordinator1.vipnet_version["0x1a0e000d"])
-    assert_equal("3.0-670", coordinator1.vipnet_version["summary"])
+    assert coordinator1.ip["0x1a0e000a"]
+    assert_equal(["192.0.2.1", "192.0.2.3"], eval(coordinator1.ip["0x1a0e000a"]))
+    assert_equal(["192.0.2.1", "192.0.2.3"], eval(coordinator1.ip["0x1a0e000d"]))
+    assert_equal("192.0.2.1, 192.0.2.3", coordinator1.ip["summary"])
+    assert coordinator1.version["0x1a0e000a"]
+    assert_equal("3.0-670", coordinator1.version["0x1a0e000a"])
+    assert_equal("3.0-670", coordinator1.version["0x1a0e000d"])
+    assert_equal("3.0-670", coordinator1.version["summary"])
     # administrator
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
-    assert administrator.ips["0x1a0e000a"]
-    assert_equal(["192.0.2.55",], eval(administrator.ips["0x1a0e000a"]))
-    assert_equal(["192.0.2.55",], eval(administrator.ips["0x1a0e000d"]))
-    assert_equal("192.0.2.55", administrator.ips["summary"])
-    assert administrator.vipnet_version["0x1a0e000a"]
-    assert_equal("3.2-673", administrator.vipnet_version["0x1a0e000a"])
-    assert_equal("3.2-673", administrator.vipnet_version["0x1a0e000d"])
-    assert_equal("3.2-673", administrator.vipnet_version["summary"])
-    assert_equal(["198.51.100.2", "203.0.113.2"], administrator.accessips)
+    assert administrator.ip["0x1a0e000a"]
+    assert_equal(["192.0.2.55",], eval(administrator.ip["0x1a0e000a"]))
+    assert_equal(["192.0.2.55",], eval(administrator.ip["0x1a0e000d"]))
+    assert_equal("192.0.2.55", administrator.ip["summary"])
+    assert administrator.version["0x1a0e000a"]
+    assert_equal("3.2-673", administrator.version["0x1a0e000a"])
+    assert_equal("3.2-673", administrator.version["0x1a0e000d"])
+    assert_equal("3.2-673", administrator.version["summary"])
+    assert_equal(["198.51.100.2", "203.0.113.2"].sort, administrator.accessips)
     # client1
     client1 = Node.where("vipnet_id = '0x1a0e000c' AND history = 'false'").first
-    assert client1.ips["0x1a0e000d"]
-    assert_equal(["192.0.2.7",], eval(client1.ips["0x1a0e000a"]))
-    assert_equal(["192.0.2.7",], eval(client1.ips["0x1a0e000d"]))
-    assert_equal("192.0.2.7", client1.ips["summary"])
-    assert client1.vipnet_version["0x1a0e000d"]
-    assert_equal("0.3-2", client1.vipnet_version["0x1a0e000a"])
-    assert_equal("0.3-2", client1.vipnet_version["0x1a0e000d"])
-    assert_equal("0.3-2", client1.vipnet_version["summary"])
+    assert client1.ip["0x1a0e000d"]
+    assert_equal(["192.0.2.7",], eval(client1.ip["0x1a0e000a"]))
+    assert_equal(["192.0.2.7",], eval(client1.ip["0x1a0e000d"]))
+    assert_equal("192.0.2.7", client1.ip["summary"])
+    assert client1.version["0x1a0e000d"]
+    assert_equal("0.3-2", client1.version["0x1a0e000a"])
+    assert_equal("0.3-2", client1.version["0x1a0e000d"])
+    assert_equal("0.3-2", client1.version["summary"])
     assert_equal(["192.0.2.7", "203.0.113.3"], client1.accessips)
     # coordinator2
     coordinator2 = Node.where("vipnet_id = '0x1a0e000d' AND history = 'false'").first
-    assert coordinator2.ips["0x1a0e000d"]
-    assert_equal(["192.0.2.9", "192.0.2.10"], eval(coordinator2.ips["0x1a0e000a"]))
-    assert_equal(["192.0.2.9", "192.0.2.10"], eval(coordinator2.ips["0x1a0e000d"]))
-    assert_equal("192.0.2.9, 192.0.2.10", coordinator2.ips["summary"])
-    assert_equal("3.0-670", coordinator2.vipnet_version["0x1a0e000a"])
-    assert_equal("3.0-670", coordinator2.vipnet_version["0x1a0e000d"])
-    assert_equal("3.0-670", coordinator2.vipnet_version["summary"])
+    assert coordinator2.ip["0x1a0e000d"]
+    assert_equal(["192.0.2.9", "192.0.2.10"], eval(coordinator2.ip["0x1a0e000a"]))
+    assert_equal(["192.0.2.9", "192.0.2.10"], eval(coordinator2.ip["0x1a0e000d"]))
+    assert_equal("192.0.2.9, 192.0.2.10", coordinator2.ip["summary"])
+    assert_equal("3.0-670", coordinator2.version["0x1a0e000a"])
+    assert_equal("3.0-670", coordinator2.version["0x1a0e000d"])
+    assert_equal("3.0-670", coordinator2.version["summary"])
     assert_equal(["198.51.100.4"], coordinator2.accessips)
 
     # 04_0x1a0e000d_changed
@@ -161,19 +162,19 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     node_size += 2
     # coordinator1
     coordinator1 = Node.where("vipnet_id = '0x1a0e000a' AND history = 'false'").first
-    assert_equal(["192.0.2.51", "192.0.2.3"], eval(coordinator1.ips["0x1a0e000d"]))
-    assert_equal("192.0.2.1, 192.0.2.3, 192.0.2.51", coordinator1.ips["summary"])
+    assert_equal(["192.0.2.51", "192.0.2.3"], eval(coordinator1.ip["0x1a0e000d"]))
+    assert_equal("192.0.2.1, 192.0.2.3, 192.0.2.51", coordinator1.ip["summary"])
     # administrator
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
-    assert_equal("3.2-672", administrator.vipnet_version["0x1a0e000d"])
-    assert_equal("?", administrator.vipnet_version["summary"])
+    assert_equal("3.2-672", administrator.version["0x1a0e000d"])
+    assert_equal("?", administrator.version["summary"])
 
     # test Node#update_all at the same time, as long as everything is already prepared
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
     administrator_attributes_before = administrator.attributes.reject { |key, _| key == "id" }
     # start messing with administrator
-    administrator.ips = {}
-    administrator.vipnet_version = {}
+    administrator.ip = {}
+    administrator.version = {}
     administrator.enabled = ""
     administrator.category = ""
     administrator.abonent_number = ""
