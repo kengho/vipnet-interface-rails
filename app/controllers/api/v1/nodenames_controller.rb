@@ -55,10 +55,8 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         Rails.logger.error("More than one non-history nodes found '#{record["vipnet_id"]}'")
         render plain: "error" and return
       end
-      record.each do |prop_name, value|
-        if Nodename.props_from_record.include?(prop_name)
-          node[prop_name] = record[prop_name]
-        end
+      Nodename.props_from_record.each do |prop_name|
+        node[prop_name] = record[prop_name] if record.key?(prop_name)
       end
       node.vipnet_id = vipnet_id
       node.network_id = network.id

@@ -52,7 +52,7 @@ class NodesTest < ActiveSupport::TestCase
     ).save!
 
     assert_equal([], node1.accessips)
-    assert_equal(["192.0.2.1", "192.0.2.2"], node2.accessips)
+    assert_equal(["192.0.2.1", "192.0.2.2"].sort, node2.accessips)
     assert_equal({ "0x1a0e000a" => "192.0.2.1", "0x1a0e000b" => "192.0.2.2" }, node2.accessips(Hash))
   end
 

@@ -169,11 +169,14 @@ class Node < ActiveRecord::Base
   def self.update_all
     Node.record_timestamps = false
     Nodename.all.each do |nodename|
-      nodename.content.each do |_, record|
-        nodes = Node.where("vipnet_id = ? AND history = 'false'", eval(record)["vipnet_id"])
+      nodename.records.each do |vipnet_id, record|
+        record = eval(record)
+        nodes = Node.where("vipnet_id = ? AND history = 'false'", vipnet_id)
         if nodes.size == 1
           node = nodes.first
-          Nodename.fields_from_record.each { |field| node[field] = eval(record)[field] }
+          Nodename.props_from_record.each do |prop_name|
+            node[prop_name] = record[prop_name] if record[prop_name]
+          end
           node.save!
         end
       end
