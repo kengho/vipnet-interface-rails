@@ -65,22 +65,6 @@ class Node < ActiveRecord::Base
     categories = { "A" => "client", "S" => "server", "G" => "group" }
   end
 
-  def self.normalize_vipnet_id(vipnet_id)
-    # 0123ABCD
-    if vipnet_id =~ /[0-9A-F]{8}/
-      return "0x" + vipnet_id.downcase
-    end
-    false
-  end
-
-  def self.network(vipnet_id)
-    # 0x|0123|abcd
-    if vipnet_id =~ /0x[0-9a-f]{8}/
-      return vipnet_id[2..5].to_i(16).to_s(10)
-    end
-    false
-  end
-
   def accessips(output = Array)
     if output == Array
       accessips = Array.new

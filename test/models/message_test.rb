@@ -2,7 +2,6 @@ require "test_helper"
 
 class MessagesTest < ActiveSupport::TestCase
   test "decode" do
-    Node.destroy_all
     Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client",

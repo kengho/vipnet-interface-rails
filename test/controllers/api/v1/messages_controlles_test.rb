@@ -22,7 +22,6 @@ class Api::V1::MessagesControllerTest < ActionController::TestCase
 
   test "create" do
     Message.destroy_all
-    Node.destroy_all
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
 
     post(:create, { message: "meaningless message", source: "ncc", vipnet_network_id: "6670" })
@@ -34,7 +33,6 @@ class Api::V1::MessagesControllerTest < ActionController::TestCase
     assert_equal(message_size + 1, Message.all.size)
     message_size += 1
     assert_equal("post nodename.doc", @response.body)
-
 
     client1 = Node.new(vipnet_id: "0x1a0e000b", name: "client1", network_id: networks(:network1).id)
     client1.save!

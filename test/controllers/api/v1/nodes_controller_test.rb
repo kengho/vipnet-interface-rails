@@ -2,7 +2,6 @@ require "test_helper"
 
 class Api::V1::NodesControllerTest < ActionController::TestCase
   test "nodes" do
-    Node.destroy_all
     Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client-0x1a0e0001",
@@ -34,7 +33,6 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
       network_id: networks(:network1).id,
       history: false,
     ).save(validations: false)
-    Iplirconf.destroy_all
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {

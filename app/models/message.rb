@@ -53,7 +53,7 @@ class Message < ActiveRecord::Base
     match_delete_node = DELETE_NODE_MESSAGE.match(event)
     if match_delete_node
       vipnet_id = match_delete_node[:vipnet_id]
-      nodes_to_destroy = Node.where("vipnet_id = ?", Node.normalize_vipnet_id(vipnet_id))
+      nodes_to_destroy = Node.where("vipnet_id = ?", VipnetParser::id(vipnet_id))
       current_nodes = nodes_to_destroy.where("history = 'false'")
       if current_nodes.size == 0
         # could happen if internetworking node dissapears from export, but it's not in database yet
@@ -86,7 +86,7 @@ class Message < ActiveRecord::Base
     match_create_node = CREATE_NODE_MESSAGE.match(event)
     if match_create_node
       success = true
-      created_nodes = Node.where("vipnet_id = ?", Node.normalize_vipnet_id(match_create_node[:vipnet_id]))
+      created_nodes = Node.where("vipnet_id = ?", VipnetParser::id(match_create_node[:vipnet_id]))
       created_nodes.each do |created_node|
         created_node.created_by_message_id = self.id
         unless created_node.save!
@@ -101,5 +101,4 @@ class Message < ActiveRecord::Base
 
     OK_RESPONSE
   end
-
 end

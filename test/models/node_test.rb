@@ -13,22 +13,7 @@ class NodesTest < ActiveSupport::TestCase
     assert_not node4.save
   end
 
-  test "normalize_vipnet_id" do
-    vipnet_id1 = Node.normalize_vipnet_id("1A0E0100")
-    vipnet_id2 = Node.normalize_vipnet_id("not looks like id at all")
-    assert_equal("0x1a0e0100", vipnet_id1)
-    assert_equal(false, vipnet_id2)
-  end
-
-  test "network" do
-    network1 = Node.network("0x1a0e0100")
-    network2 = Node.network("not looks like id at all")
-    assert_equal("6670", network1)
-    assert_equal(false, network2)
-  end
-
   test "accessips" do
-    Node.destroy_all
     node1 = Node.new(
       vipnet_id: "0xffffffff",
       name: "test",
@@ -41,7 +26,6 @@ class NodesTest < ActiveSupport::TestCase
     )
     node1.save!
     node2.save!
-    Iplirconf.destroy_all
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {
@@ -85,7 +69,6 @@ class NodesTest < ActiveSupport::TestCase
     )
     node1.save!
     node2.save!
-    Iplirconf.destroy_all
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {
@@ -104,7 +87,6 @@ class NodesTest < ActiveSupport::TestCase
   end
 
   test "ips_summary" do
-    Node.destroy_all
     node1 = Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client",
@@ -128,7 +110,6 @@ class NodesTest < ActiveSupport::TestCase
   end
 
   test "vipnet_versions_summary" do
-    Node.destroy_all
     node1 = Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client",
@@ -163,7 +144,6 @@ class NodesTest < ActiveSupport::TestCase
   end
 
   test "mftp_server" do
-    Node.destroy_all
     server1 = Node.new(
       vipnet_id: "0x1a0f000a",
       name: "server1",

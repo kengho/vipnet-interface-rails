@@ -29,7 +29,6 @@ class NodesControllerTest < ActionController::TestCase
 
   test "search" do
     user_session1 = UserSession.create(users(:user1))
-    Node.destroy_all
     Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client0x1a0e0001--new",
@@ -102,7 +101,6 @@ class NodesControllerTest < ActionController::TestCase
 
   test "availability" do
     user_session1 = UserSession.create(users(:user1))
-    Node.destroy_all
     node1 = Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client",
@@ -115,7 +113,6 @@ class NodesControllerTest < ActionController::TestCase
     )
     node1.save!
     node2.save!
-    Iplirconf.destroy_all
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {
@@ -145,7 +142,6 @@ class NodesControllerTest < ActionController::TestCase
 
   test "history" do
     user_session1 = UserSession.create(users(:user1))
-    Node.destroy_all
     node1 = Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client0x1a0e0001--new",

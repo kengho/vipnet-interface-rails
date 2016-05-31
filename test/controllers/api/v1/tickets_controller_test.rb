@@ -15,7 +15,6 @@ class Api::V1::TicketsControllerTest < ActionController::TestCase
   test "post ticket" do
     # prepare
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_TICKETS_TOKEN\""
-    Node.destroy_all
     node1 = Node.new(
       vipnet_id: "0x1a0e0001",
       name: "test",

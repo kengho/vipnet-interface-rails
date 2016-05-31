@@ -23,7 +23,6 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     # 0x1a0e000b administrator,
     # 0x1a0e000c client1 (renamed),
     # 0x1a0e000d coordinator2
-    Node.destroy_all
     Nodename.destroy_all
     Iplirconf.destroy_all
     Network.destroy_all

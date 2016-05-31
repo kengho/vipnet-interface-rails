@@ -7,7 +7,6 @@ class NodesControllerIndexTest < ActionController::TestCase
 
   test "vipnet version substitution" do
     user_session1 = UserSession.create(users(:user1))
-    Node.destroy_all
     node1 = Node.new(
       vipnet_id: "0x1a0e0001",
       name: "client1",

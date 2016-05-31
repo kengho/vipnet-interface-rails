@@ -19,7 +19,6 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
 
   test "create" do
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
-    Node.destroy_all
     Nodename.destroy_all
     Network.destroy_all
     Settings.networks_to_ignore = ""
