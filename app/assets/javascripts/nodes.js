@@ -101,15 +101,20 @@ var vipnetInterface = {
       args.rows.forEach(function(row) {
         $(args.parentId)[args.place](row);
       });
-      var rowId;
       for(var id in args.data) {
-        rowId = "#node-" + id + "__row";
-        vipnetInterface.nodesData[rowId] = args.data[id];
-        $(rowId).click(function(e) {
-          if(vipnetInterface.singleClick(e)) {
-            vipnetInterface.selectRow("#" + this.id);
+        vipnetInterface.nodesData[id] = args.data[id];
+        $(id)
+          .addClass("nodes__row--ajax")
+          .click(function(e) {
+            if(vipnetInterface.singleClick(e)) {
+              vipnetInterface.selectRow("#" + this.id);
+            }
+          });
+        setTimeout(function() {
+          for(var id in args.data) {
+            $(id).removeClass("nodes__row--ajax");
           }
-        });
+        }, 300);
       }
 
       // http://stackoverflow.com/a/5462921

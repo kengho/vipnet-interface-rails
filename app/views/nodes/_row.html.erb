@@ -12,7 +12,6 @@
 %>
 
 <tr id="node-<%= id %>__row" class="<%= row_classes %>">
-  <%#= render "nodes/row/select", id: id %>
   <%= render "nodes/row/string", value: node["vipnet_id"], node: node %>
   <%= render "nodes/row/info", node: node %>
   <%= render "nodes/row/string", value: node["name"], node: node %>

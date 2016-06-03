@@ -8,7 +8,7 @@
   %>
   rows = [
   <% @response[:nodes].each_with_index do |node, i| %>
-    "<%= j render 'nodes/row', row_id: row_ids[i], node: node, row_class: 'nodes__row--ajax' %>",
+    "<%= j render 'nodes/row', row_id: row_ids[i], node: node, row_class: 'nodes__row--history' %>",
   <% end %>
   ];
   row_ids = [
@@ -22,7 +22,7 @@
     rows,
     data: {
     <% @response[:nodes].each_with_index do |node, i| %>
-      "<%= row_ids[i] %>": { <%= node.data_js.html_safe %> },
+      "#node-<%= row_ids[i] %>__row": { <%= node.data_js.html_safe %> },
     <% end %>
     }
   });

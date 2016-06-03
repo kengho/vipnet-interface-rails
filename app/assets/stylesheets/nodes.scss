@@ -3,7 +3,7 @@
 $nodes-max-width: 90%;
 $body-bgcolor: #f0f0f0;
 $announcements-max-width: 500px;
-$row-ajax-color: #ffa;
+$row-ajax-color: #ff7;
 $row-selected-color: #eee;
 $row-ajax-color-hover: #ff8;
 $info-block-bgcolor: white;
@@ -16,7 +16,7 @@ $nodes-padding-side: 10px;
 $header-height: 60px;
 
 * {
-  transition-duration: 0.1s !important;
+  // transition-duration: 0.1s !important;
 }
 
 body {
@@ -136,11 +136,17 @@ body {
 
 .nodes__row {
   cursor: pointer;
+  &--history {
+    & td:nth-of-type(1) {
+      // http://stackoverflow.com/a/29134770/6376451
+      box-shadow: 5px 0px 0px $accent-color inset;
+    }
+  }
   &--ajax {
-    // background-color: $row-ajax-color;
+    background-color: $row-ajax-color;
+    transition-duration: 0.3s !important;
     &:hover {
-      // background-color: $row-ajax-color-hover !important;
-      // cursor: auto !important;
+      background-color: $row-ajax-color-hover;
     }
   }
   &--selected {
