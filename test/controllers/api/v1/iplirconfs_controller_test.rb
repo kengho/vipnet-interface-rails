@@ -172,11 +172,9 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
 
     network = Network.where("vipnet_network_id = ?", "6670").first
     Node.new(vipnet_id: "0x1a0e000e", name: "new_client", network_id: network.id).save!
-    # p Node.where("vipnet_id = '0x1a0e000e'")
     node_size += 1
     added_new_client_iplirconf = fixture_file_upload("iplirconfs/05_0x1a0e000d_added_new_client.conf", "application/octet-stream")
     post(:create, { content: added_new_client_iplirconf, vipnet_id: "0x1a0e000d" })
-    # return
     assert_equal(node_size, Node.all.size)
 
     # test Node#update_all at the same time, as long as everything is already prepared

@@ -156,6 +156,9 @@ body {
 
 .nodes__td {
   color: $main-text-color;
+  & span {
+    white-space: pre;
+  }
 }
 
 .nodes__td--dontoverflow span {
