@@ -45,6 +45,14 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
 
     changed_sections = existing_iplirconf.changed_sections(new_iplirconf)
     changed_sections.each do |vipnet_id, section|
+      something_important_changed = false
+      Iplirconf.props_from_section.each do |prop_name|
+        if section[prop_name]
+          something_important_changed = true
+          break
+        end
+      end
+      next unless something_important_changed
       nodes_to_history = Node.where("vipnet_id = ? AND history = 'false'", vipnet_id)
       if nodes_to_history.size == 0
         Rails.logger.error("Unable to find nodes_to_history '#{vipnet_id}',"\

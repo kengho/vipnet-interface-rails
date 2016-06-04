@@ -93,10 +93,11 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     # administrator "ip= 192.0.2.55" => "ip= 192.0.2.5"
     # administrator "version= 3.2-672" => "version= 3.2-673"
     # client1 "accessip= 198.51.100.3" => "accessip= 192.0.2.7"
+    # (accessip doesn't matter, because iplirconf is updated anyway)
     changed_iplirconf = fixture_file_upload("iplirconfs/02_0x1a0e000a_changed.conf", "application/octet-stream")
     post(:create, { content: changed_iplirconf, vipnet_id: "0x1a0e000a" })
-    assert_equal(node_size + 2, Node.all.size)
-    node_size += 2
+    assert_equal(node_size + 1, Node.all.size)
+    node_size += 1
     client1 = Node.where("vipnet_id = '0x1a0e000c' AND history = 'false'").first
     assert_equal(["192.0.2.7"], client1.accessips)
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
@@ -168,6 +169,15 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
     assert_equal("3.2-672", administrator.version["0x1a0e000d"])
     assert_equal("?", administrator.version["summary"])
+
+    network = Network.where("vipnet_network_id = ?", "6670").first
+    Node.new(vipnet_id: "0x1a0e000e", name: "new_client", network_id: network.id).save!
+    # p Node.where("vipnet_id = '0x1a0e000e'")
+    node_size += 1
+    added_new_client_iplirconf = fixture_file_upload("iplirconfs/05_0x1a0e000d_added_new_client.conf", "application/octet-stream")
+    post(:create, { content: added_new_client_iplirconf, vipnet_id: "0x1a0e000d" })
+    # return
+    assert_equal(node_size, Node.all.size)
 
     # test Node#update_all at the same time, as long as everything is already prepared
     administrator = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
