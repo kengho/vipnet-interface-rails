@@ -157,6 +157,7 @@ en:
       software_label: "Software ver."
       created_label: "Created at"
       deleted_label: "Deleted at"
+      ticket_id_label: "Ticket"
   settings:
     flash:
       password: "Password"
