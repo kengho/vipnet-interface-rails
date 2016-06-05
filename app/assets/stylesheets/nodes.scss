@@ -137,10 +137,10 @@ body {
 .nodes__row {
   cursor: pointer;
   &--ajax {
-    background-color: $row-ajax-color;
+    // background-color: $row-ajax-color;
     &:hover {
-      background-color: $row-ajax-color-hover !important;
-      cursor: auto !important;
+      // background-color: $row-ajax-color-hover !important;
+      // cursor: auto !important;
     }
   }
   &--selected {

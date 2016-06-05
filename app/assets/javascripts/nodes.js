@@ -20,11 +20,16 @@ var vipnetInterface = {
       $(args.parentId).append(undoButtonHTML);
       $shownUndoButton = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "button--undo" });
       $shownUndoButton.click(function() {
-        // unselect row
+        // unselect current row
         vipnetInterface.selectRow("#" + $(args.parentId).parent().parent()[0].id);
+        // delete and unselect rows
         if(args.ids) {
           args.ids.forEach(function(id) {
             $(id).remove();
+            rowIdPosition = vipnetInterface.selectedRows.indexOf(id);
+            if(!(rowIdPosition == -1)) {
+              vipnetInterface.selectRow(id);
+            }
           });
         }
         vipnetInterface.remoteStatus.renderDefault(args.parentId);
@@ -96,6 +101,16 @@ var vipnetInterface = {
       args.rows.forEach(function(row) {
         $(args.parentId)[args.place](row);
       });
+      var rowId;
+      for(var id in args.data) {
+        rowId = "#node-" + id + "__row";
+        vipnetInterface.nodesData[rowId] = args.data[id];
+        $(rowId).click(function(e) {
+          if(vipnetInterface.singleClick(e)) {
+            vipnetInterface.selectRow("#" + this.id);
+          }
+        });
+      }
 
       // http://stackoverflow.com/a/5462921
       $(document).delegate("a[data-replace-link-by-spinner]", "click", function() {
@@ -118,7 +133,6 @@ var vipnetInterface = {
         vipnetInterface.remoteStatus.renderSpinner("#" + id);
         vipnetInterface.remoteStatus.ajaxTimeoutHandlers["#" + id] = setTimeout(function() {
           spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
-          console.log(spinner_visibility);
           if(spinner_visibility == "visible") {
             // http://stackoverflow.com/a/10610347
             vipnetInterface.remoteStatus.renderStatus({ parentId: "#" + id, status: "false", tooltipText: I18n["ajax_error"] });
@@ -202,6 +216,17 @@ var vipnetInterface = {
       vipnetInterface.selectRow(selectedRow);
     });
   },
+
+  singleClick: function(e) {
+    // http://stackoverflow.com/a/10390097/6376451
+    // e.button == 1 for middle button
+    var selection = getSelection().toString();
+    if(!selection && e.button != 1) {
+      return true;
+    } else {
+      return false;
+    }
+  },
 };
 
 $(document).ready(function() {
@@ -227,17 +252,13 @@ $(document).ready(function() {
   });
 
   $(".nodes__row").click(function(e) {
-    // http://stackoverflow.com/a/10390097/6376451
-    // e.button == 1 for middle button
-    var selection = getSelection().toString();
-    if(!selection && e.button != 1){
-      vipnetInterface.selectRow("#" + this.id);
+    if(vipnetInterface.singleClick(e)) {
+      vipnetInterface.selectRow("#"  + this.id);
     }
   });
 
   $("#nodes__unselect-all").click(function() {
     vipnetInterface.unselectAllRows();
-    // console.log("click");
   });
 
   // if I don't show textarea, I don't need this

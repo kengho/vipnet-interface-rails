@@ -217,4 +217,15 @@ class Node < ActiveRecord::Base
     end
     Node.record_timestamps = true
   end
+
+  def data_js
+    return ""\
+      "vipnetId: '#{self.vipnet_id}',"\
+      "name: '#{self.name}',"\
+      "history: '#{self.history}',"\
+      "category: '#{self.category}',"\
+      "ip: '#{self.ip["summary"]}',"\
+      "createdAt: '#{self.created_first_at}',"\
+      "deletedAt: '#{self.deleted_at}',"
+  end
 end

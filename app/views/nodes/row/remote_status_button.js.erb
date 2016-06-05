@@ -3,7 +3,7 @@
   <%
     row_ids = Array.new
     @response[:nodes].each do |node|
-    row_ids.push("#{node.id}-#{SecureRandom.hex}")
+      row_ids.push("#{node.id}-#{SecureRandom.hex}")
     end
   %>
   rows = [
@@ -20,6 +20,11 @@
     parentId: "<%= @response[:row_id] %>",
     place: "<%= @response[:place] %>",
     rows,
+    data: {
+    <% @response[:nodes].each_with_index do |node, i| %>
+      "<%= row_ids[i] %>": { <%= node.data_js.html_safe %> },
+    <% end %>
+    }
   });
 <% end %>
   vipnetInterface.remoteStatus.renderStatus({

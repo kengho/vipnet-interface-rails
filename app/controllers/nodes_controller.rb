@@ -59,6 +59,12 @@ class NodesController < ApplicationController
       @nodes = @nodes.paginate(page: params[:page])
       @search = true
     end
+    @js = "vipnetInterface.nodesData = {};"
+    @nodes.each do |node|
+      @js += "vipnetInterface.nodesData['#node-#{node.id}__row'] = {"
+      @js += node.data_js
+      @js += "};"
+    end
   end
 
   respond_to :js
