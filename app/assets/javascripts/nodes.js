@@ -113,15 +113,23 @@ var vipnetInterface = {
 
     initAjax: function(parent) {
       id = $(parent).parent().attr("id");
-      vipnetInterface.remoteStatus.renderSpinner("#" + id);
-      vipnetInterface.remoteStatus.ajaxTimeoutHandlers["#" + id] = setTimeout(function() {
-        spinner_visibility = $("#" + id).parent().find("div[name='spinner']").css("visibility");
-        if(spinner_visibility == "visible") {
-          // http://stackoverflow.com/a/10610347
-          vipnetInterface.remoteStatus.renderStatus({ parentId: "#" + id, status: "false", tooltipText: I18n["ajax_error"] });
-        }
-      }, vipnetInterface.remoteStatus.ajaxTimeout, id)
+      spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
+      if (!spinner_visibility) {
+        vipnetInterface.remoteStatus.renderSpinner("#" + id);
+        vipnetInterface.remoteStatus.ajaxTimeoutHandlers["#" + id] = setTimeout(function() {
+          spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
+          console.log(spinner_visibility);
+          if(spinner_visibility == "visible") {
+            // http://stackoverflow.com/a/10610347
+            vipnetInterface.remoteStatus.renderStatus({ parentId: "#" + id, status: "false", tooltipText: I18n["ajax_error"] });
+          }
+        }, vipnetInterface.remoteStatus.ajaxTimeout, id);
+      }
     },
+
+    spinnerVisibility: function(id) {
+      return $("#" + id).parent().find("div[name='spinner']").css("visibility");
+    }
   },
 
   showFullscreenTooltip: function(fullscreenTooltipKey) {
