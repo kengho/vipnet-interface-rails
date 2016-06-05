@@ -87,15 +87,20 @@ body {
 
 .nodes__actions {
   margin-left: 50px;
-  width: 50px;
+  width: 100px;
 }
 
-.nodes__actions div label[disabled="disabled"] {
-  display: none;
+.nodes__actions[disabled="disabled"] {
+  opacity: 0;
 }
 
 #nodes__export-selected {
+  display: inline-block;
   width: 24px;
+}
+
+#nodes__unselect-all {
+  display: inline-block;
 }
 
 #nodes__export-selected textarea {

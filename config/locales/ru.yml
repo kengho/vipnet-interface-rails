@@ -118,6 +118,7 @@ ru:
       search_results_subtitle: "Результаты поиска"
       default_nodes_subtitle: "Новые"
       export_selected: "Копировать ID и имя узла из выбранных строк"
+      unselect_all: "Снять выделение"
       quick_search: "Быстрый поиск"
       settings: "Настройки"
       support: "Поддержка"

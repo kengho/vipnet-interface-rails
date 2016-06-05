@@ -14,15 +14,23 @@
     </span>
     <i class="material-icons">chevron_right</i>
     <span class="mdl-layout-title nodes__sub-title"><%= @sub_title %></span>
-    <div class="nodes__actions">
+    <div class="nodes__actions" disabled="disabled">
       <div id="nodes__export-selected" class="mdl-badge">
-        <label disabled="disabled" class="mdl-button mdl-js-button mdl-button--icon">
+        <label class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">content_copy</i>
         </label>
         <textarea class="mdl-shadow--2dp" rows="10"></textarea>
       </div>
       <div class="mdl-tooltip" for="nodes__export-selected">
         <%= t(".export_selected") %>
+      </div>
+      <div id="nodes__unselect-all">
+        <button class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">close</i>
+        </button>
+      </div>
+      <div class="mdl-tooltip" for="nodes__unselect-all">
+        <%= t(".unselect_all") %>
       </div>
     </div>
     <div class="mdl-layout-spacer nodes__search">

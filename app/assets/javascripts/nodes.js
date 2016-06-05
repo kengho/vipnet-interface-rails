@@ -114,7 +114,7 @@ var vipnetInterface = {
     initAjax: function(parent) {
       id = $(parent).parent().attr("id");
       spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
-      if (!spinner_visibility) {
+      if(!spinner_visibility) {
         vipnetInterface.remoteStatus.renderSpinner("#" + id);
         vipnetInterface.remoteStatus.ajaxTimeoutHandlers["#" + id] = setTimeout(function() {
           spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
@@ -150,7 +150,7 @@ var vipnetInterface = {
 
     // hide fullscreen tooltip by pressing "ESC"
     $(document).keyup(fullscreenTooltipKey, function(e) {
-      if (e.which == 27) {
+      if(e.which == 27) {
         vipnetInterface.closeFullscreenTooltip(e.data);
         $(document).unbind("keyup");
       }
@@ -188,11 +188,19 @@ var vipnetInterface = {
     selectedRowsLength = vipnetInterface.selectedRows.length;
     if(selectedRowsLength > 0) {
       $("#nodes__export-selected").attr("data-badge", selectedRowsLength);
-      $("#nodes__export-selected label").removeAttr("disabled");
+      $(".nodes__actions").removeAttr("disabled");
     } else {
       $("#nodes__export-selected").removeAttr("data-badge");
-      $("#nodes__export-selected label").attr("disabled", "disabled");
+      $(".nodes__actions").attr("disabled", "disabled");
     }
+  },
+
+  unselectAllRows: function() {
+    // clone array to prevent errors causing by iterating changing object
+    var selectedRows = vipnetInterface.selectedRows.slice(0);
+    selectedRows.forEach(function(selectedRow) {
+      vipnetInterface.selectRow(selectedRow);
+    });
   },
 };
 
@@ -225,6 +233,11 @@ $(document).ready(function() {
     if(!selection && e.button != 1){
       vipnetInterface.selectRow("#" + this.id);
     }
+  });
+
+  $("#nodes__unselect-all").click(function() {
+    vipnetInterface.unselectAllRows();
+    // console.log("click");
   });
 
   // if I don't show textarea, I don't need this
