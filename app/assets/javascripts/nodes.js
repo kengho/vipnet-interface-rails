@@ -183,7 +183,13 @@ var vipnetInterface = {
   },
 
   selectedRows: [],
+  lastSelectedRow: "",
   selectRow: function(rowId) {
+    if(vipnetInterface.lastSelectedRow == rowId) {
+      vipnetInterface.lastSelectedRow = "";
+    } else {
+      vipnetInterface.lastSelectedRow = rowId;
+    }
     $row = $(rowId);
     $row.toggleClass("nodes__row--selected");
     rowIdPosition = vipnetInterface.selectedRows.indexOf(rowId);
@@ -214,6 +220,25 @@ var vipnetInterface = {
     }
   },
 
+  shiftSelectRow: function(rowId) {
+    var lastSelectedRowIndex = $(vipnetInterface.lastSelectedRow).index();
+    var rowIndex = $(rowId).index();
+    if(lastSelectedRowIndex == rowIndex) {
+      return;
+    }
+    var $table = $(".nodes table")
+    var $rows = $("tr", $table);
+    var upperRowIndex = Math.min(lastSelectedRowIndex, rowIndex);
+    var downRowIndex = Math.max(lastSelectedRowIndex, rowIndex);
+    for(var i = upperRowIndex; i <= downRowIndex; i++) {
+      if(i == lastSelectedRowIndex) {
+        continue;
+      }
+      vipnetInterface.selectRow("#" + $rows.eq(i+1)[0].id);
+    }
+    vipnetInterface.clearSelection();
+  },
+
   unselectAllRows: function() {
     // clone array to prevent errors causing by iterating changing object
     var selectedRows = vipnetInterface.selectedRows.slice(0);
@@ -230,6 +255,19 @@ var vipnetInterface = {
       return true;
     } else {
       return false;
+    }
+  },
+
+  // http://stackoverflow.com/a/3169849
+  clearSelection: function() {
+    if (window.getSelection) {
+      if (window.getSelection().empty) {
+        window.getSelection().empty();
+      } else if (window.getSelection().removeAllRanges) {
+        window.getSelection().removeAllRanges();
+      }
+    } else if (document.selection) {
+      document.selection.empty();
     }
   },
 };
@@ -257,8 +295,12 @@ $(document).ready(function() {
   });
 
   $(".nodes__row").click(function(e) {
-    if(vipnetInterface.singleClick(e)) {
-      vipnetInterface.selectRow("#"  + this.id);
+    if(e.shiftKey) {
+      vipnetInterface.shiftSelectRow("#"  + this.id);
+    } else {
+      if(vipnetInterface.singleClick(e)) {
+        vipnetInterface.selectRow("#"  + this.id);
+      }
     }
   });
 
