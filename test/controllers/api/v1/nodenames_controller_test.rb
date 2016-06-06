@@ -113,5 +113,10 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     node_size += 0
     another_network_we_admin.destroy
     another_network_we_admin_nodename.destroy
+
+    # 08_group_changed
+    group_changed_nodename = fixture_file_upload("nodenames/08_group_changed.doc", "application/octet-stream")
+    post(:create, { content: group_changed_nodename, vipnet_network_id: "6670" })
+    assert_equal(node_size, Node.all.size)
   end
 end

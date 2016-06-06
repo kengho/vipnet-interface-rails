@@ -57,4 +57,22 @@ class Api::V1::MessagesControllerTest < ActionController::TestCase
     assert client1_actual.deleted_by_message_id
     assert client1_actual.deleted_at
   end
+
+  test "not-deleting message should not change timestamp" do
+    # prepare
+    Message.destroy_all
+    request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
+    Node.record_timestamps = false
+    client1 = Node.new(vipnet_id: "0x1a0e000b", name: "client1", network_id: networks(:network1).id)
+    client1.updated_at = DateTime.new(2000, 1, 1, 0, 0, 0)
+    client1.created_at = DateTime.new(2000, 1, 1, 0, 0, 0)
+    client1.save!
+    Node.record_timestamps = true
+
+    post(:create, { message: "01.01.00 00:00:00 AddUN: client1 ID=1A0E1234 NO=1A0E000B", source: "ncc", vipnet_network_id: "6670" })
+
+    client1 = Node.find(client1.id)
+    assert_equal(DateTime.new(2000, 1, 1, 0, 0, 0), client1.updated_at)
+    assert_equal("ok", @response.body)
+  end
 end

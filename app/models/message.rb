@@ -45,6 +45,7 @@ class Message < ActiveRecord::Base
     if match
       event = match["event"]
     else
+      Node.record_timestamps = true
       return OK_RESPONSE
     end
 
@@ -90,7 +91,7 @@ class Message < ActiveRecord::Base
       created_nodes.each do |created_node|
         created_node.created_by_message_id = self.id
         unless created_node.save!
-          Rails.logger.error("Error saving one of created_node (message_id #{self.id})")
+          Rails.logger.error("Error saving one of created_nodes (message_id #{self.id})")
           success = false
           break
         end

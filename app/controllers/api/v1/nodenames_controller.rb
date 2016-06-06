@@ -35,7 +35,12 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     changed_records = existing_nodename.changed_records(new_nodename)
     networks_to_ignore = Settings.networks_to_ignore.split(",")
     changed_records.each do |vipnet_id, record|
-      next if record[:category] == :group
+      if existing_nodename.records[vipnet_id]
+        # p existing_nodename.records
+        next if eval(existing_nodename.records[vipnet_id])[:category] == :group
+      elsif record[:category]
+        next if record[:category] == :group
+      end
       record_vipnet_network_id = VipnetParser::network(vipnet_id)
       network = Network.find_or_create_network(record_vipnet_network_id)
       render plain: "error" and return unless network

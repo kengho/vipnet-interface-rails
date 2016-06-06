@@ -4,13 +4,18 @@ class Api::V1::TicketsController < Api::V1::BaseController
       Rails.logger.error("Incorrect params")
       render plain: "error" and return
     end
+    if params[:ticket].class == String
+      ticket = eval(params[:ticket])
+    elsif params[:ticket].class == ActionController::Parameters
+      ticket = params[:ticket]
+    end
 
-    nodes = Node.where("vipnet_id = ? AND history = 'false'", params[:ticket][:vipnet_id])
+    nodes = Node.where("vipnet_id = ? AND history = 'false'", ticket[:vipnet_id])
     if nodes.size == 0
       render plain: "ok" and return
     elsif nodes.size == 1
-      url_template = params[:ticket][:url_template]
-      id = params[:ticket][:id]
+      url_template = ticket[:url_template]
+      id = ticket[:id]
       old_node = nodes.first
       new_node = old_node.dup
       new_ids = new_node.tickets[url_template] || "\[\]"
@@ -30,7 +35,7 @@ class Api::V1::TicketsController < Api::V1::BaseController
         new_node.save!
       end
     elsif nodes.size > 1
-      Rails.logger.error("More than one nodename found '#{params[:ticket][:vipnet_id]}'")
+      Rails.logger.error("More than one nodename found '#{ticket[:vipnet_id]}'")
       render plain: "error" and return
     end
     render plain: "ok" and return
