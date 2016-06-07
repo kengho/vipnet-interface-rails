@@ -40,39 +40,18 @@ class Api::V1::MessagesControllerTest < ActionController::TestCase
     post(:create, { message: "01.01.00 00:00:00 AddUN: client1 ID=1A0E1234 NO=1A0E000B", source: "ncc", vipnet_network_id: "6670" })
     assert_equal(message_size + 1, Message.all.size)
     message_size += 1
-    client1 = Node.find_by_id(client1.id)
+    assert_equal(2, Node.all.size)
+    client1 = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
     assert client1.created_by_message_id
 
     post(:create, { message: "01.01.00 00:00:00 DelUN: client1 UG=1A0E1234 NO=1A0E000B", source: "ncc", vipnet_network_id: "6670" })
     assert_equal(message_size + 1, Message.all.size)
     message_size += 1
     # client1 should be marked as deleted, thus creating history
-    assert_equal(2, Node.all.size)
-    client1_old = Node.find_by_id(client1.id)
-    assert_equal(true, client1_old.history)
-    assert client1_old.deleted_by_message_id
-    assert client1_old.deleted_at
-    client1_actual = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
-    assert client1_actual
-    assert client1_actual.deleted_by_message_id
-    assert client1_actual.deleted_at
-  end
-
-  test "not-deleting message should not change timestamp" do
-    # prepare
-    Message.destroy_all
-    request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
-    Node.record_timestamps = false
-    client1 = Node.new(vipnet_id: "0x1a0e000b", name: "client1", network_id: networks(:network1).id)
-    client1.updated_at = DateTime.new(2000, 1, 1, 0, 0, 0)
-    client1.created_at = DateTime.new(2000, 1, 1, 0, 0, 0)
-    client1.save!
-    Node.record_timestamps = true
-
-    post(:create, { message: "01.01.00 00:00:00 AddUN: client1 ID=1A0E1234 NO=1A0E000B", source: "ncc", vipnet_network_id: "6670" })
-
-    client1 = Node.find(client1.id)
-    assert_equal(DateTime.new(2000, 1, 1, 0, 0, 0), client1.updated_at)
-    assert_equal("ok", @response.body)
+    assert_equal(3, Node.all.size)
+    client1 = Node.where("vipnet_id = '0x1a0e000b' AND history = 'false'").first
+    assert client1
+    assert client1.deleted_by_message_id
+    assert client1.deleted_at
   end
 end

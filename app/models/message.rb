@@ -54,8 +54,7 @@ class Message < ActiveRecord::Base
     match_delete_node = DELETE_NODE_MESSAGE.match(event)
     if match_delete_node
       vipnet_id = match_delete_node[:vipnet_id]
-      nodes_to_destroy = Node.where("vipnet_id = ?", VipnetParser::id(vipnet_id))
-      current_nodes = nodes_to_destroy.where("history = 'false'")
+      current_nodes = Node.where("vipnet_id = ? AND history = 'false'", VipnetParser::id(vipnet_id))
       if current_nodes.size == 0
         # could happen if internetworking node dissapears from export, but it's not in database yet
         Rails.logger.warn("No nodes found '#{vipnet_id}'")
@@ -64,39 +63,35 @@ class Message < ActiveRecord::Base
         current_node = current_nodes.first
         new_node = current_node.dup
         current_node.history = true
+        new_node.deleted_by_message_id = self.id
+        new_node.deleted_at = self.created_at
         return "error" unless new_node.save!
         return "error" unless current_node.save!
       elsif current_nodes.size > 1
         Rails.logger.error("Multiple nodes found '#{vipnet_id}'")
         return "error"
       end
-      success = true
-      nodes_to_destroy.each do |node_to_destroy|
-        node_to_destroy.deleted_by_message_id = self.id
-        node_to_destroy.deleted_at = self.created_at
-        unless node_to_destroy.save!
-          Rails.logger.error("Error saving one of node_to_destroy (message_id #{self.id})")
-          success = false
-          break
-        end
-      end
-      return "error" unless success
       return OK_RESPONSE
     end
 
     match_create_node = CREATE_NODE_MESSAGE.match(event)
     if match_create_node
-      success = true
-      created_nodes = Node.where("vipnet_id = ?", VipnetParser::id(match_create_node[:vipnet_id]))
-      created_nodes.each do |created_node|
-        created_node.created_by_message_id = self.id
-        unless created_node.save!
-          Rails.logger.error("Error saving one of created_nodes (message_id #{self.id})")
-          success = false
-          break
-        end
+      vipnet_id = match_create_node[:vipnet_id]
+      current_nodes = Node.where("vipnet_id = ? AND history = 'false'", VipnetParser::id(vipnet_id))
+      if current_nodes.size == 0
+        Rails.logger.warn("No nodes found '#{vipnet_id}'")
+        return OK_RESPONSE
+      elsif current_nodes.size == 1
+        current_node = current_nodes.first
+        new_node = current_node.dup
+        current_node.history = true
+        new_node.created_by_message_id = self.id
+        return "error" unless new_node.save!
+        return "error" unless current_node.save!
+      elsif current_nodes.size > 1
+        Rails.logger.error("Multiple nodes found '#{vipnet_id}'")
+        return "error"
       end
-      return "error" unless success
       return OK_RESPONSE
     end
 

@@ -36,7 +36,6 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     networks_to_ignore = Settings.networks_to_ignore.split(",")
     changed_records.each do |vipnet_id, record|
       if existing_nodename.records[vipnet_id]
-        # p existing_nodename.records
         next if eval(existing_nodename.records[vipnet_id])[:category] == :group
       elsif record[:category]
         next if record[:category] == :group

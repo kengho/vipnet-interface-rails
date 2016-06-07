@@ -73,7 +73,8 @@ class Node < ActiveRecord::Base
           accessips.push(eval(section)[:accessip]) if vipnet_id == self.vipnet_id
         end
       end
-      accessips.reject! { |a| a.nil? }
+      accessips.reject! { |a| a.nil? || a == "0.0.0.0" }
+      accessips.sort! if accessips 
     elsif output == Hash
       accessips = Hash.new
       Iplirconf.all.each do |iplirconf|
@@ -84,7 +85,7 @@ class Node < ActiveRecord::Base
         end
       end
     end
-    accessips.reject { |a| a == "0.0.0.0" }
+    accessips
   end
 
   def availability

@@ -1,5 +1,4 @@
 class Api::V1::MessagesController < Api::V1::BaseController
-
   def create
     unless (params[:message] && params[:source] && params[:vipnet_network_id])
       Rails.logger.error("Incorrect params")
@@ -16,5 +15,4 @@ class Api::V1::MessagesController < Api::V1::BaseController
       render plain: "error" and return
     end
   end
-
 end

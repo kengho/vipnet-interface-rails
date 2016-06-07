@@ -24,7 +24,7 @@ class Api::V1::TicketsController < Api::V1::BaseController
       new_ids = new_ids.uniq.sort
       new_node.tickets[url_template] = new_ids
       unless new_node.tickets[url_template] == old_node.tickets[url_template]
-        old_node.history = "true"
+        old_node.history = true
         old_node.save!
         ids_summary = Array.new
         new_node.tickets.each do |key, ids|
