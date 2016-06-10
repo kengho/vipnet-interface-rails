@@ -184,6 +184,7 @@ var vipnetInterface = {
 
   selectedRows: [],
   lastSelectedRow: "",
+  CSVSeparator: ";",
   selectRow: function(rowId) {
     if(vipnetInterface.lastSelectedRow == rowId) {
       vipnetInterface.lastSelectedRow = "";
@@ -198,26 +199,51 @@ var vipnetInterface = {
     } else {
       vipnetInterface.selectedRows.splice(rowIdPosition, 1);
     }
-    // fill textarea
+    // update badge and button
+    selectedRowsLength = vipnetInterface.selectedRows.length;
+    if(selectedRowsLength > 0) {
+      $("#nodes__actions").removeAttr("disabled");
+    } else {
+      $("#nodes__actions").attr("disabled", "disabled");
+    }
+    $("#nodes__unselect-all").attr("data-badge", selectedRowsLength);
+  },
+
+  fillExportTextarea: function() {
     var $copyTextarea = $("#nodes__export-selected textarea");
     $copyTextarea.val("");
     vipnetInterface.selectedRows.sort(function(a,b) {
       return vipnetInterface.nodesData[a].vipnetId.localeCompare(vipnetInterface.nodesData[b].vipnetId)
     });
+    var exportArray = [];
+    var variant = $("#export-selected__variants div[selected='selected']").attr("name");
+    if(variant == "csv") {
+      var rows = Object.keys(vipnetInterface.nodesData);
+      var someNodeData = vipnetInterface.nodesData[rows[0]];
+      exportArray.push(Object.keys(someNodeData).join(vipnetInterface.CSVSeparator));
+    }
     vipnetInterface.selectedRows.forEach(function(selectedRow) {
       var vipnetId = vipnetInterface.nodesData[selectedRow].vipnetId;
       var name = vipnetInterface.nodesData[selectedRow].name;
-      $copyTextarea.val($copyTextarea.val() + vipnetId + " " + name + "\n");
+      if(variant == "id_space_name_newline") {
+        exportArray.push(vipnetId + " " + name);
+      } else if(variant == "id_comma") {
+        exportArray.push(vipnetId);
+      } else if(variant == "csv") {
+        var CSVDataArray = [];
+        vipnetInterface.nodesData[selectedRow]
+        for(var prop in vipnetInterface.nodesData[selectedRow]) {
+          CSVDataArray.push(vipnetInterface.nodesData[selectedRow][prop]);
+        }
+        exportArray.push(CSVDataArray.join(vipnetInterface.CSVSeparator));
+      }
     });
-    // update badge and button
-    selectedRowsLength = vipnetInterface.selectedRows.length;
-    if(selectedRowsLength > 0) {
-      $("#nodes__export-selected").attr("data-badge", selectedRowsLength);
-      $(".nodes__actions").removeAttr("disabled");
-    } else {
-      $("#nodes__export-selected").removeAttr("data-badge");
-      $(".nodes__actions").attr("disabled", "disabled");
+    if(variant == "id_space_name_newline" || variant == "csv") {
+      $copyTextarea.val(exportArray.join("\n"));
+    } else if(variant == "id_comma") {
+      $copyTextarea.val(exportArray.join(","));
     }
+    return $copyTextarea;
   },
 
   shiftSelectRow: function(rowId) {
@@ -245,6 +271,13 @@ var vipnetInterface = {
     selectedRows.forEach(function(selectedRow) {
       vipnetInterface.selectRow(selectedRow);
     });
+  },
+
+  selectAllRows: function() {
+    vipnetInterface.unselectAllRows();
+    for(var id in vipnetInterface.nodesData) {
+      vipnetInterface.selectRow(id);
+    }
   },
 
   singleClick: function(e) {
@@ -308,25 +341,32 @@ $(document).ready(function() {
     vipnetInterface.unselectAllRows();
   });
 
-  // if I don't show textarea, I don't need this
-  // $("#nodes__export-selected").mouseenter(function() {
-  //   if(!$("#nodes__export-selected label").attr("disabled")) {
-  //     $("#nodes__export-selected textarea").css("visibility", "visible");
-  //   }
-  // });
-  // $("#nodes__export-selected").mouseleave(function() {
-  //   if(!$("#nodes__export-selected label").attr("disabled")) {
-  //     $("#nodes__export-selected textarea").css("visibility", "hidden");
-  //   }
-  // });
+  $("#nodes__select-all").click(function() {
+    vipnetInterface.selectAllRows();
+  });
+
   $("#nodes__export-selected").click(function() {
     if(!$("#nodes__export-selected label").attr("disabled")) {
       // http://stackoverflow.com/a/30810322
-      var $copyTextarea = $("#nodes__export-selected textarea");
+      var $copyTextarea = vipnetInterface.fillExportTextarea();
       $copyTextarea.select();
       document.execCommand("copy");
-      // if I don't show textarea, I don't need this
-      // $("#nodes__export-selected textarea").css("visibility", "hidden");
     }
+  });
+
+  $("a[data-variant]").click(function() {
+    this_variant = $(this).data("variant");
+    $variants = $(this).parent().find("a");
+    $variants.each(function(_, variant) {
+      var $div = $(variant).find("div");
+      var $a = $(variant);
+      if(this_variant != $a.data("variant")) {
+        $div.removeAttr("selected");
+        $a.css("pointer-events", "auto");
+      } else {
+        $div.attr("selected", "selected");
+        $a.css("pointer-events", "none");
+      }
+    });
   });
 });

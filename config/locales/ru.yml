@@ -31,14 +31,15 @@ ru:
           tooltip_text: "Отменить"
       availability:
         button_label: "Проверить доступность"
-        node_deleted: "Узел удален"
         more: "Больше"
-        dated_data: "Данные из истории"
-        from: "с"
-        to: "по"
-        node_disabled: "Узел отключен"
         status_true: "Узел доступен"
         status_false: "Узел недоступен"
+      warnings:
+        node_deleted: "Узел удален"
+        node_disabled: "Узел отключен"
+        to: "по"
+        from: "с"
+        dated_data: "Данные из истории"
       datetime:
         before: "до"
         unknown_date: "Узнать точную дату создания узла затруднительно"
@@ -57,6 +58,7 @@ ru:
         created_first_at: "Создан"
         deleted_at: "Удален"
         mftp_server: "MFTP-сервер"
+        clients_registred: "Зарегистрированные клиенты"
         ncc: "Путь в NCC"
         client: "клиент"
         server: "координатор"
@@ -117,7 +119,8 @@ ru:
       title: "Узлы ViPNet"
       search_results_subtitle: "Результаты поиска"
       default_nodes_subtitle: "Новые"
-      export_selected: "Копировать ID и имя узла из выбранных строк"
+      export_selected: "Копировать данные из выбранных строк"
+      select_all: "Выделить всё"
       unselect_all: "Снять выделение"
       quick_search: "Быстрый поиск"
       settings: "Настройки"
@@ -134,7 +137,7 @@ ru:
       software_label: "Версия ПО"
       created_label: "Создан"
       deleted_label: "Удален"
-      ticket_id_label: "Заявка"
+      ticket_id_label: "Заявки"
   settings:
     flash:
       password: "Пароль"
@@ -153,6 +156,7 @@ ru:
       support_email: "Email поддержки"
       networks_to_ignore: "Игнорируемые сети"
       nodes_per_page: "Узлов на странице"
+      export_selected_variant: "Формат экспорта выбранных строк"
       # end settings vars
       submit_label: "Сохранить"
       email: "Email"

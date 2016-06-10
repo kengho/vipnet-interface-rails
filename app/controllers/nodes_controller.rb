@@ -122,12 +122,14 @@ class NodesController < ApplicationController
         created_first_at: @node.created_first_at,
         deleted_at: @node.deleted_at ? @node.deleted_at : "",
         mftp_server: "",
+        clients_registred: "",
         ncc: "",
       },
       order: [
         :history,
         :vipnet_id,
         :category,
+        :clients_registred,
         :network,
         :ip,
         :accessips,
@@ -162,7 +164,19 @@ class NodesController < ApplicationController
       @response[:data][:ncc] = "#{sprintf("%05d", @node.server_number.to_i(16))}→#{sprintf("%05d", @node.abonent_number.to_i(16))}"
     end
     if @node.mftp_server
-      @response[:data][:mftp_server] = "#{@node.mftp_server.name} (#{@node.mftp_server.vipnet_id})"
+      vipnet_id = @node.mftp_server.vipnet_id
+      mftp_server_name = @node.mftp_server.name
+      @response[:data][:mftp_server] = "<a href='?vipnet_id=#{vipnet_id}'>#{vipnet_id} #{mftp_server_name}</a>"
+    elsif @node.mftp_server == false
+      criteria = { server_number: @node.server_number, category: "client", history: false }
+      query_sql = criteria.map { |prop, value| "#{prop.to_s} = '#{value}'" }.join(" AND ")
+      query_get = criteria.map { |prop, value| "#{prop.to_s}=#{value}" }.join("&")
+      clients_registred = Node.where("#{query_sql}")
+      if clients_registred.size > 0
+        @response[:data][:clients_registred] = "<a href='?#{query_get}'>#{clients_registred.size}</a>"
+      else
+        @response[:data][:clients_registred] = "0"
+      end
     end
     if @node.history
       @response[:data][:history] =

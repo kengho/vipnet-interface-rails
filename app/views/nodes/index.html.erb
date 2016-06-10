@@ -2,7 +2,6 @@
 <div id="nodes__status-false-template"><%= render "nodes/row/remote_status/status_false" %></div>
 <div id="nodes__status-true-template"><%= render "nodes/row/remote_status/status_true" %></div>
 <div id="nodes__button-undo-template"><%= render "nodes/row/remote_status/button_undo" %></div>
-
 <%# http://stackoverflow.com/a/10610347 %>
 <script type="text/javascript">
   window.I18n = <%= current_translations[:js].to_json.html_safe %>

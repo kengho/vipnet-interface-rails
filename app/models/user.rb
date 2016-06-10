@@ -11,13 +11,19 @@ class User < ActiveRecord::Base
 
   def self.settings
     settings = {
-      :locale => {
+      locale: {
         accepted_values: (I18n.available_locales - [:"zh-CN"] - [:"zh-TW"]).map(&:to_s),
       },
-      :nodes_per_page => {
+      nodes_per_page: {
         accepted_values: ["10", "20", "50", "100"],
-      }
+      },
+      export_selected_variant: {
+        accepted_values: {
+          "id_space_name_newline" => "#{I18n.t('nodes.thead.id_label')} #{I18n.t('nodes.thead.name_label')}<br>...",
+          "id_comma" => "#{I18n.t('nodes.thead.id_label')},...",
+          "csv" => "CSV",
+         },
+      },
     }
   end
-
 end

@@ -54,14 +54,15 @@ en:
           tooltip_text: "Cancel"
       availability:
         button_label: "Check availability"
-        node_deleted: "Node deleted"
         more: "More"
+        status_true: "Node available"
+        status_false: "Node unavailable"
+      warnings:
+        node_disabled: "Node disabled"
+        node_deleted: "Node deleted"
         dated_data: "Dated data"
         from: "from"
         to: "to"
-        node_disabled: "Node disabled"
-        status_true: "Node available"
-        status_false: "Node unavailable"
       datetime:
         before: "b."
         unknown_date: "It is difficult to discover creation date of this node"
@@ -80,6 +81,7 @@ en:
         created_first_at: "Created at"
         deleted_at: "Deleted at"
         mftp_server: "MFTP server"
+        clients_registred: "Clients registered"
         ncc: "NCC location"
         client: "client"
         server: "coordinator"
@@ -140,7 +142,8 @@ en:
       title: "ViPNet Nodes"
       search_results_subtitle: "Searh results"
       default_nodes_subtitle: "New"
-      export_selected: "Copy ID and name from selected rows"
+      export_selected: "Copy data from selected rows"
+      select_all: "Select all"
       unselect_all: "Clear selection"
       quick_search: "Quick search"
       settings: "Settings"
@@ -157,7 +160,7 @@ en:
       software_label: "Software ver."
       created_label: "Created at"
       deleted_label: "Deleted at"
-      ticket_id_label: "Ticket"
+      ticket_id_label: "Tickets"
   settings:
     flash:
       password: "Password"
@@ -176,6 +179,7 @@ en:
       support_email: "Support Email"
       networks_to_ignore: "Ignoring networks"
       nodes_per_page: "Nodes per page"
+      export_selected_variant: "Export selected format"
       # end settings vars
       submit_label: "Save"
       email: "Email"

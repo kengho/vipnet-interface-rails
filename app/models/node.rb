@@ -15,6 +15,9 @@ class Node < ActiveRecord::Base
       "deleted_at" => "deleted_at::text",
       "created_first_at" => "created_first_at::text",
       "ticket_id" => { "tickets" => "ids_summary" },
+      "server_number" => "server_number",
+      "category" => "category",
+      "history" => "history::text",
     }
   end
 
@@ -74,7 +77,7 @@ class Node < ActiveRecord::Base
         end
       end
       accessips.reject! { |a| a.nil? || a == "0.0.0.0" }
-      accessips.sort! if accessips 
+      accessips.sort! if accessips
     elsif output == Hash
       accessips = Hash.new
       Iplirconf.all.each do |iplirconf|
@@ -228,5 +231,9 @@ class Node < ActiveRecord::Base
       "ip: '#{self.ip["summary"]}',"\
       "createdAt: '#{self.created_first_at}',"\
       "deletedAt: '#{self.deleted_at}',"
+  end
+
+  def warnings?
+    !(!self.history && self.enabled && !self.deleted_at)
   end
 end

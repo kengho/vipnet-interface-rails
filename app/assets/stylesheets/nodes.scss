@@ -2,7 +2,6 @@
 
 $nodes-max-width: 90%;
 $body-bgcolor: #f0f0f0;
-$announcements-max-width: 500px;
 $row-ajax-color: #ff7;
 $row-selected-color: #eee;
 $row-ajax-color-hover: #ff8;
@@ -11,13 +10,11 @@ $info-block-bgcolor-hover: #eee;
 $nodes-per-page: #aaa;
 $nodes-per-page-bgcolor: #ccc;
 $light-gray-button-color: #999;
+$export-selected-variants-selected-bgcolor: rgba(white, 0.8);
+$export-selected-variants-hover-bgcolor: rgba(white, 0.4);
 $nodes-padding-top: 20px;
 $nodes-padding-side: 10px;
 $header-height: 60px;
-
-* {
-  // transition-duration: 0.1s !important;
-}
 
 body {
   background-color: $body-bgcolor;
@@ -85,38 +82,83 @@ body {
   }
 }
 
-.nodes__actions {
-  margin-left: 50px;
-  width: 100px;
+#nodes__actions, #export-selected__variants, #nodes__export-selected, #nodes__unselect-all {
+  transition-duration: 0.2s;
 }
 
-.nodes__actions[disabled="disabled"] {
+#nodes__actions {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  margin-left: 50px;
+  width: 150px;
+  &[disabled="disabled"] {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+#export-selected__variants {
+  order: 1;
   opacity: 0;
+  visibility: hidden;
+  display: inline-flex;
+  flex-direction: column;
+  & div {
+    border-radius: 2px;
+    font-size: 9px;
+    line-height: 8px;
+    margin: 2px;
+    padding: 2px;
+    white-space: nowrap;
+    text-align: left;
+    &[selected="selected"] {
+      background-color: $export-selected-variants-selected-bgcolor;
+      color: $main-text-color;
+      cursor: auto;
+    }
+    &:not([selected="selected"]):hover {
+      cursor: pointer;
+      background-color: $export-selected-variants-hover-bgcolor;
+      color: $main-text-color;
+    }
+  }
+  &:hover {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 #nodes__export-selected {
-  display: inline-block;
-  width: 24px;
+  order: 2;
+  & textarea {
+    position: absolute;
+    top: -999px;
+  }
+  &:hover + #export-selected__variants {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+#nodes__request-rename-selected {
+  order: 3;
+}
+
+#nodes__select-all {
+  // order: 999;
 }
 
 #nodes__unselect-all {
-  display: inline-block;
+  margin-left: 10px;
+  order: 1000;
 }
 
-#nodes__export-selected textarea {
-  position: absolute;
-  top: -999px;
-  // if I don't show textarea, I don't need this
-  // top: 0px;
-  // visibility: hidden;
-  // border: none;
-  // width: 400px;
-  // left: 0;
-  // color: $main-text-color;
+.disabled-link {
+  pointer-events: none;
 }
 
 .nodes__search {
-  margin-left: 20px;
   text-align: left;
   min-width: 400px;
   & input {
@@ -415,6 +457,7 @@ div[name="button--undo"] {
   &__title {
     padding: 20px 60px 0 16px;
     font-size: 20px;
+    white-space: pre;
   }
   &__close-button {
     position: absolute;
@@ -436,6 +479,13 @@ div[name="button--undo"] {
   &:hover .info-block__close-button{
     opacity: 0;
     // opacity: 1;
+  }
+  & a {
+    text-decoration: none;
+    color: $main-link-color;
+    &:hover {
+      color: $main-link-color-hover;
+    }
   }
 }
 

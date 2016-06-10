@@ -49,3 +49,4 @@ nodes_per_page = Settings.new(var: "nodes_per_page", value: "20")
 nodes_per_page.save
 networks_to_ignore = Settings.new(var: "networks_to_ignore", value: "6670,6671")
 networks_to_ignore.save
+Settings.new(var: "export_selected_variant", value: "id_space_name_newline").save!

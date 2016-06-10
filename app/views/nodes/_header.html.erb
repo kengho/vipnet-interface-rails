@@ -14,30 +14,56 @@
     </span>
     <i class="material-icons">chevron_right</i>
     <span class="mdl-layout-title nodes__sub-title"><%= @sub_title %></span>
-    <div class="nodes__actions" disabled="disabled">
-      <div id="nodes__export-selected" class="mdl-badge">
+
+    <div id="nodes__actions" disabled="disabled">
+      <div id="nodes__export-selected">
         <label class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">content_copy</i>
         </label>
         <textarea class="mdl-shadow--2dp" rows="10"></textarea>
       </div>
-      <div class="mdl-tooltip" for="nodes__export-selected">
-        <%= t(".export_selected") %>
+
+      <div id="export-selected__variants">
+        <% current_variant = current_user.settings[:export_selected_variant] || Settings.export_selected_variant %>
+        <% User.settings[:export_selected_variant][:accepted_values].each do |variant, mapping| %>
+          <%= link_to user_path(current_user, export_selected_variant: variant),
+            remote: true,
+            "data-variant": variant,
+            class: (variant == current_variant) ? "disabled-link" : "" do %>
+            <div name="<%= variant %>" <% if variant == current_variant %>selected="selected"<% end %>>
+              <%= mapping.html_safe %>
+            </div>
+          <% end %>
+        <% end %>
       </div>
-      <div id="nodes__unselect-all">
+
+      <div id="nodes__unselect-all" class="mdl-badge">
         <button class="mdl-button mdl-js-button mdl-button--icon">
-        <i class="material-icons">close</i>
+          <i class="material-icons">close</i>
         </button>
       </div>
+
       <div class="mdl-tooltip" for="nodes__unselect-all">
         <%= t(".unselect_all") %>
       </div>
     </div>
+
+    <div id="nodes__select-all">
+      <button class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">select_all</i>
+      </button>
+    </div>
+
+    <div class="mdl-tooltip" for="nodes__select-all">
+      <%= t(".select_all") %>
+    </div>
+
     <div class="mdl-layout-spacer nodes__search">
       <form action="/nodes" method="get">
         <input name="search" type="text" tabindex="1" autofocus placeholder="<%= t(".quick_search") %>" value="<%= params[:search] %>" />
       </form>
     </div>
+
     <nav class="mdl-navigation">
       <% if current_user.role == "administrator" %>
         <a class="mdl-navigation__link nodes__navigation-link" href="/settings#general">
