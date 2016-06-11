@@ -134,7 +134,7 @@ ru:
       software_label: "Версия ПО"
       created_label: "Создан"
       deleted_label: "Удален"
-      ticket_id_label: "Заявка"
+      ticket_id_label: "Заявки"
   settings:
     flash:
       password: "Пароль"
