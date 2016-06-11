@@ -26,7 +26,10 @@
       <div id="export-selected__variants">
         <% current_variant = current_user.settings[:export_selected_variant] || Settings.export_selected_variant %>
         <% User.settings[:export_selected_variant][:accepted_values].each do |variant, mapping| %>
-          <%= link_to user_path(current_user, export_selected_variant: variant), remote: true, "data-variant": variant do %>
+          <%= link_to user_path(current_user, export_selected_variant: variant),
+            remote: true,
+            "data-variant": variant,
+            class: (variant == current_variant) ? "disabled-link" : "" do %>
             <div name="<%= variant %>" <% if variant == current_variant %>selected="selected"<% end %>>
               <%= mapping.html_safe %>
             </div>
@@ -38,6 +41,7 @@
         <%= t(".export_selected") %>
       </div>
 
+
       <div id="nodes__unselect-all" class="mdl-badge">
         <button class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">close</i>
@@ -47,6 +51,16 @@
       <div class="mdl-tooltip" for="nodes__unselect-all">
         <%= t(".unselect_all") %>
       </div>
+    </div>
+
+    <div id="nodes__select-all">
+      <button class="mdl-button mdl-js-button mdl-button--icon">
+        <i class="material-icons">select_all</i>
+      </button>
+    </div>
+
+    <div class="mdl-tooltip" for="nodes__select-all">
+      <%= t(".select_all") %>
     </div>
 
     <div class="mdl-layout-spacer nodes__search">

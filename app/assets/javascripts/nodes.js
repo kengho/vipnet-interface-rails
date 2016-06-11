@@ -260,6 +260,13 @@ var vipnetInterface = {
     });
   },
 
+  selectAllRows: function() {
+    vipnetInterface.unselectAllRows();
+    for(var id in vipnetInterface.nodesData) {
+      vipnetInterface.selectRow(id);
+    }
+  },
+
   singleClick: function(e) {
     // http://stackoverflow.com/a/10390097/6376451
     // e.button == 1 for middle button
@@ -321,6 +328,10 @@ $(document).ready(function() {
     vipnetInterface.unselectAllRows();
   });
 
+  $("#nodes__select-all").click(function() {
+    vipnetInterface.selectAllRows();
+  });
+
   $("#nodes__export-selected").click(function() {
     if(!$("#nodes__export-selected label").attr("disabled")) {
       // http://stackoverflow.com/a/30810322
@@ -331,14 +342,18 @@ $(document).ready(function() {
   });
 
   $("a[data-variant]").click(function() {
-    variant = $(this).data("variant");
-    $parent = $(this).parent();
-    $variants = $parent.find("div");
-    // unselect all variants
+    this_variant = $(this).data("variant");
+    $variants = $(this).parent().find("a");
     $variants.each(function(_, variant) {
-      $(variant).removeAttr("selected");
+      var $div = $(variant).find("div");
+      var $a = $(variant);
+      if(this_variant != $a.data("variant")) {
+        $div.removeAttr("selected");
+        $a.css("pointer-events", "auto");
+      } else {
+        $div.attr("selected", "selected");
+        $a.css("pointer-events", "none");
+      }
     });
-    // select right one
-    $(this).find("div").attr("selected", "selected");
   });
 });

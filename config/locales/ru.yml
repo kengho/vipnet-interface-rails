@@ -118,6 +118,7 @@ ru:
       search_results_subtitle: "Результаты поиска"
       default_nodes_subtitle: "Новые"
       export_selected: "Копировать данные из выбранных строк"
+      select_all: "Выделить всё"
       unselect_all: "Снять выделение"
       quick_search: "Быстрый поиск"
       settings: "Настройки"

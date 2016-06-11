@@ -141,6 +141,7 @@ en:
       search_results_subtitle: "Searh results"
       default_nodes_subtitle: "New"
       export_selected: "Copy data from selected rows"
+      select_all: "Select all"
       unselect_all: "Clear selection"
       quick_search: "Quick search"
       settings: "Settings"
