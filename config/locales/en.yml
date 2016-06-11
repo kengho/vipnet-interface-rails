@@ -140,7 +140,7 @@ en:
       title: "ViPNet Nodes"
       search_results_subtitle: "Searh results"
       default_nodes_subtitle: "New"
-      export_selected: "Copy ID and name from selected rows"
+      export_selected: "Copy data from selected rows"
       unselect_all: "Clear selection"
       quick_search: "Quick search"
       settings: "Settings"
@@ -176,6 +176,7 @@ en:
       support_email: "Support Email"
       networks_to_ignore: "Ignoring networks"
       nodes_per_page: "Nodes per page"
+      export_selected_variant: "Export selected format"
       # end settings vars
       submit_label: "Save"
       email: "Email"

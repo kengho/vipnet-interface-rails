@@ -11,13 +11,11 @@ $info-block-bgcolor-hover: #eee;
 $nodes-per-page: #aaa;
 $nodes-per-page-bgcolor: #ccc;
 $light-gray-button-color: #999;
+$export-selected-variants-selected-bgcolor: rgba(white, 0.8);
+$export-selected-variants-hover-bgcolor: rgba(white, 0.4);
 $nodes-padding-top: 20px;
 $nodes-padding-side: 10px;
 $header-height: 60px;
-
-* {
-  // transition-duration: 0.1s !important;
-}
 
 body {
   background-color: $body-bgcolor;
@@ -85,34 +83,68 @@ body {
   }
 }
 
-.nodes__actions {
-  margin-left: 50px;
-  width: 100px;
+#nodes__actions, #export-selected__variants, #nodes__export-selected, #nodes__unselect-all {
+  transition-duration: 0.2s;
 }
 
-.nodes__actions[disabled="disabled"] {
+#nodes__actions {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 50px;
+  width: 150px;
+  &[disabled="disabled"] {
+    opacity: 0;
+    visibility: hidden;
+  }
+}
+
+#export-selected__variants {
+  order: 1;
   opacity: 0;
+  visibility: hidden;
+  display: inline-flex;
+  flex-direction: column;
+  & div {
+    border-radius: 2px;
+    font-size: 9px;
+    line-height: 8px;
+    margin: 4px;
+    padding: 4px;
+    white-space: nowrap;
+    text-align: left;
+    &[selected="selected"] {
+      background-color: $export-selected-variants-selected-bgcolor;
+      color: $main-text-color;
+    }
+    &:hover {
+      cursor: pointer;
+    }
+    &:not([selected="selected"]):hover {
+      background-color: $export-selected-variants-hover-bgcolor;
+      color: $main-text-color;
+    }
+  }
+  &:hover {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 #nodes__export-selected {
-  display: inline-block;
+  order: 2;
   width: 24px;
+  & textarea {
+    position: absolute;
+    top: -999px;
+  }
+  &:hover + #export-selected__variants {
+    opacity: 1;
+    visibility: visible;
+  }
 }
 
 #nodes__unselect-all {
-  display: inline-block;
-}
-
-#nodes__export-selected textarea {
-  position: absolute;
-  top: -999px;
-  // if I don't show textarea, I don't need this
-  // top: 0px;
-  // visibility: hidden;
-  // border: none;
-  // width: 400px;
-  // left: 0;
-  // color: $main-text-color;
+  order: 999;
 }
 
 .nodes__search {

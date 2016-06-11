@@ -117,7 +117,7 @@ ru:
       title: "Узлы ViPNet"
       search_results_subtitle: "Результаты поиска"
       default_nodes_subtitle: "Новые"
-      export_selected: "Копировать ID и имя узла из выбранных строк"
+      export_selected: "Копировать данные из выбранных строк"
       unselect_all: "Снять выделение"
       quick_search: "Быстрый поиск"
       settings: "Настройки"
@@ -153,6 +153,7 @@ ru:
       support_email: "Email поддержки"
       networks_to_ignore: "Игнорируемые сети"
       nodes_per_page: "Узлов на странице"
+      export_selected_variant: "Формат экспорта выбранных строк"
       # end settings vars
       submit_label: "Сохранить"
       email: "Email"
