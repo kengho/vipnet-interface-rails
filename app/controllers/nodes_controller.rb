@@ -168,10 +168,9 @@ class NodesController < ApplicationController
       mftp_server_name = @node.mftp_server.name
       @response[:data][:mftp_server] = "<a href='?vipnet_id=#{vipnet_id}'>#{vipnet_id} #{mftp_server_name}</a>"
     elsif @node.mftp_server == false
-      server_number = @node.server_number
-      criteria = { server_number: server_number, category: "client", history: false }
-      query_sql = criteria.map { |prop, value| "#{prop} = '#{value}'" }.join(" AND ")
-      query_get = criteria.map { |prop, value| "#{prop}=#{value}" }.join("&")
+      criteria = { server_number: @node.server_number, category: "client", history: false }
+      query_sql = criteria.map { |prop, value| "#{prop.to_s} = '#{value}'" }.join(" AND ")
+      query_get = criteria.map { |prop, value| "#{prop.to_s}=#{value}" }.join("&")
       clients_registred = Node.where("#{query_sql}")
       @response[:data][:clients_registred] = "<a href='?#{query_get}'>#{t('nodes.row.info.show')} (#{clients_registred.size})</a>"
     end
