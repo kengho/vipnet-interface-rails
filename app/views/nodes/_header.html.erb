@@ -37,10 +37,15 @@
         <% end %>
       </div>
 
-      <div class="mdl-tooltip" for="nodes__export-selected">
-        <%= t(".export_selected") %>
+      <div id="nodes__request-rename-selected">
+        <label class="mdl-button mdl-js-button mdl-button--icon">
+          <i class="material-icons">mode_edit</i>
+        </label>
       </div>
 
+      <div class="mdl-tooltip" for="nodes__request-rename-selected">
+        <%= t(".request_rename_selected") %>
+      </div>
 
       <div id="nodes__unselect-all" class="mdl-badge">
         <button class="mdl-button mdl-js-button mdl-button--icon">

@@ -232,4 +232,8 @@ class Node < ActiveRecord::Base
       "createdAt: '#{self.created_first_at}',"\
       "deletedAt: '#{self.deleted_at}',"
   end
+
+  def warnings?
+    !(!self.history && self.enabled && !self.deleted_at)
+  end
 end

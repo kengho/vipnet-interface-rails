@@ -54,14 +54,15 @@ en:
           tooltip_text: "Cancel"
       availability:
         button_label: "Check availability"
-        node_deleted: "Node deleted"
         more: "More"
+        status_true: "Node available"
+        status_false: "Node unavailable"
+      warnings:
+        node_disabled: "Node disabled"
+        node_deleted: "Node deleted"
         dated_data: "Dated data"
         from: "from"
         to: "to"
-        node_disabled: "Node disabled"
-        status_true: "Node available"
-        status_false: "Node unavailable"
       datetime:
         before: "b."
         unknown_date: "It is difficult to discover creation date of this node"

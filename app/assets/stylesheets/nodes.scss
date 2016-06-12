@@ -2,7 +2,6 @@
 
 $nodes-max-width: 90%;
 $body-bgcolor: #f0f0f0;
-$announcements-max-width: 500px;
 $row-ajax-color: #ff7;
 $row-selected-color: #eee;
 $row-ajax-color-hover: #ff8;
@@ -132,7 +131,6 @@ body {
 
 #nodes__export-selected {
   order: 2;
-  width: 24px;
   & textarea {
     position: absolute;
     top: -999px;
@@ -141,6 +139,10 @@ body {
     opacity: 1;
     visibility: visible;
   }
+}
+
+#nodes__request-rename-selected {
+  order: 3;
 }
 
 #nodes__select-all {

@@ -31,14 +31,15 @@ ru:
           tooltip_text: "Отменить"
       availability:
         button_label: "Проверить доступность"
-        node_deleted: "Узел удален"
         more: "Больше"
-        dated_data: "Данные из истории"
-        from: "с"
-        to: "по"
-        node_disabled: "Узел отключен"
         status_true: "Узел доступен"
         status_false: "Узел недоступен"
+      warnings:
+        node_deleted: "Узел удален"
+        node_disabled: "Узел отключен"
+        to: "по"
+        from: "с"
+        dated_data: "Данные из истории"
       datetime:
         before: "до"
         unknown_date: "Узнать точную дату создания узла затруднительно"
