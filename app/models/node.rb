@@ -17,6 +17,7 @@ class Node < ActiveRecord::Base
       "ticket_id" => { "tickets" => "ids_summary" },
       "server_number" => "server_number",
       "category" => "category",
+      "history" => "history::text",
     }
   end
 
