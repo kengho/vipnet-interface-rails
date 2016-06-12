@@ -162,7 +162,9 @@ class NodesController < ApplicationController
       @response[:data][:ncc] = "#{sprintf("%05d", @node.server_number.to_i(16))}→#{sprintf("%05d", @node.abonent_number.to_i(16))}"
     end
     if @node.mftp_server
-      @response[:data][:mftp_server] = "#{@node.mftp_server.name} (#{@node.mftp_server.vipnet_id})"
+      vipnet_id = @node.mftp_server.vipnet_id
+      mftp_server_name = @node.mftp_server.name
+      @response[:data][:mftp_server] = "<a href='nodes?vipnet_id=#{vipnet_id}'>#{vipnet_id} #{mftp_server_name}</a>"
     end
     if @node.history
       @response[:data][:history] =

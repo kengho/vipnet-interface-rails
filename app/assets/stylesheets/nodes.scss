@@ -477,6 +477,13 @@ div[name="button--undo"] {
     opacity: 0;
     // opacity: 1;
   }
+  & a {
+    text-decoration: none;
+    color: $main-link-color;
+    &:hover {
+      color: $main-link-color-hover;
+    }
+  }
 }
 
 .nodes__tickets a {
