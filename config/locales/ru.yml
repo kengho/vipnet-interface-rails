@@ -58,7 +58,6 @@ ru:
         deleted_at: "Удален"
         mftp_server: "MFTP-сервер"
         clients_registred: "Зарегистрированные клиенты"
-        show: "показать"
         ncc: "Путь в NCC"
         client: "клиент"
         server: "координатор"

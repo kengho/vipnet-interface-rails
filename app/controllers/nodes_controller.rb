@@ -173,7 +173,7 @@ class NodesController < ApplicationController
       query_get = criteria.map { |prop, value| "#{prop.to_s}=#{value}" }.join("&")
       clients_registred = Node.where("#{query_sql}")
       if clients_registred.size > 0
-        @response[:data][:clients_registred] = "#{clients_registred.size} <a href='?#{query_get}'>(#{t('nodes.row.info.show')})</a>"
+        @response[:data][:clients_registred] = "<a href='?#{query_get}'>#{clients_registred.size}</a>"
       else
         @response[:data][:clients_registred] = "0"
       end
