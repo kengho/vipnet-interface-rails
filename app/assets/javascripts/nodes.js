@@ -184,6 +184,7 @@ var vipnetInterface = {
 
   selectedRows: [],
   lastSelectedRow: "",
+  CSVSeparator: ";",
   selectRow: function(rowId) {
     if(vipnetInterface.lastSelectedRow == rowId) {
       vipnetInterface.lastSelectedRow = "";
@@ -216,6 +217,11 @@ var vipnetInterface = {
     });
     var exportArray = [];
     var variant = $("#export-selected__variants div[selected='selected']").attr("name");
+    if(variant == "csv") {
+      var rows = Object.keys(vipnetInterface.nodesData);
+      var someNodeData = vipnetInterface.nodesData[rows[0]];
+      exportArray.push(Object.keys(someNodeData).join(vipnetInterface.CSVSeparator));
+    }
     vipnetInterface.selectedRows.forEach(function(selectedRow) {
       var vipnetId = vipnetInterface.nodesData[selectedRow].vipnetId;
       var name = vipnetInterface.nodesData[selectedRow].name;
@@ -223,9 +229,16 @@ var vipnetInterface = {
         exportArray.push(vipnetId + " " + name);
       } else if(variant == "id_comma") {
         exportArray.push(vipnetId);
+      } else if(variant == "csv") {
+        var CSVDataArray = [];
+        vipnetInterface.nodesData[selectedRow]
+        for(var prop in vipnetInterface.nodesData[selectedRow]) {
+          CSVDataArray.push(vipnetInterface.nodesData[selectedRow][prop]);
+        }
+        exportArray.push(CSVDataArray.join(vipnetInterface.CSVSeparator));
       }
     });
-    if(variant == "id_space_name_newline") {
+    if(variant == "id_space_name_newline" || variant == "csv") {
       $copyTextarea.val(exportArray.join("\n"));
     } else if(variant == "id_comma") {
       $copyTextarea.val(exportArray.join(","));

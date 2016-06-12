@@ -21,6 +21,7 @@ class User < ActiveRecord::Base
         accepted_values: {
           "id_space_name_newline" => "#{I18n.t('nodes.thead.id_label')} #{I18n.t('nodes.thead.name_label')}<br>...",
           "id_comma" => "#{I18n.t('nodes.thead.id_label')},...",
+          "csv" => "CSV",
          },
       },
     }
