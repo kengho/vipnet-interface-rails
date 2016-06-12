@@ -80,6 +80,8 @@ en:
         created_first_at: "Created at"
         deleted_at: "Deleted at"
         mftp_server: "MFTP server"
+        clients_registred: "Registered clients"
+        show: "show"
         ncc: "NCC location"
         client: "client"
         server: "coordinator"

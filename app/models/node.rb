@@ -15,6 +15,8 @@ class Node < ActiveRecord::Base
       "deleted_at" => "deleted_at::text",
       "created_first_at" => "created_first_at::text",
       "ticket_id" => { "tickets" => "ids_summary" },
+      "server_number" => "server_number",
+      "category" => "category",
     }
   end
 
@@ -74,7 +76,7 @@ class Node < ActiveRecord::Base
         end
       end
       accessips.reject! { |a| a.nil? || a == "0.0.0.0" }
-      accessips.sort! if accessips 
+      accessips.sort! if accessips
     elsif output == Hash
       accessips = Hash.new
       Iplirconf.all.each do |iplirconf|
