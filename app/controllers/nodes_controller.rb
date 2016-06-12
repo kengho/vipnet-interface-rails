@@ -129,6 +129,7 @@ class NodesController < ApplicationController
         :history,
         :vipnet_id,
         :category,
+        :clients_registred,
         :network,
         :ip,
         :accessips,
@@ -137,7 +138,6 @@ class NodesController < ApplicationController
         :created_first_at,
         :deleted_at,
         :mftp_server,
-        :clients_registred,
         :ncc,
       ],
     }
