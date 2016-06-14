@@ -25,11 +25,13 @@ var vipnetInterface = {
         // delete and unselect rows
         if(args.ids) {
           args.ids.forEach(function(id) {
+            // remove row visually, from selectedRows, and from nodesData
             $(id).remove();
             rowIdPosition = vipnetInterface.selectedRows.indexOf(id);
             if(!(rowIdPosition == -1)) {
               vipnetInterface.selectRow(id);
             }
+            delete vipnetInterface.nodesData[id];
           });
         }
         vipnetInterface.remoteStatus.renderDefault(args.parentId);
