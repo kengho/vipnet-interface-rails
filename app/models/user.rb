@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
   def self.settings
     settings = {
       locale: {
-        accepted_values: (I18n.available_locales - [:"zh-CN"] - [:"zh-TW"]).map(&:to_s),
+        accepted_values: ApplicationHelper::available_locales,
       },
       nodes_per_page: {
         accepted_values: ["10", "20", "50", "100"],
