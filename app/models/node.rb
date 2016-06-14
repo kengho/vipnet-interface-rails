@@ -64,10 +64,6 @@ class Node < ActiveRecord::Base
     return pg_regexp
   end
 
-  def self.categories
-    categories = { "A" => "client", "S" => "server", "G" => "group" }
-  end
-
   def accessips(output = Array)
     if output == Array
       accessips = Array.new
