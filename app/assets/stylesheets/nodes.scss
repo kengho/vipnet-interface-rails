@@ -145,12 +145,14 @@ body {
   order: 3;
 }
 
+#nodes__separator {
+  order: 999;
+}
+
 #nodes__select-all {
-  // order: 999;
 }
 
 #nodes__unselect-all {
-  margin-left: 10px;
   order: 1000;
 }
 
