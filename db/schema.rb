@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160615141414) do
+ActiveRecord::Schema.define(version: 20160615195904) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,16 +36,6 @@ ActiveRecord::Schema.define(version: 20160615141414) do
   end
 
   add_index "iplirconfs", ["coordinator_id"], name: "index_iplirconfs_on_coordinator_id", using: :btree
-
-  create_table "messages", force: :cascade do |t|
-    t.string   "source"
-    t.string   "content"
-    t.integer  "network_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  add_index "messages", ["network_id"], name: "index_messages_on_network_id", using: :btree
 
   create_table "networks", force: :cascade do |t|
     t.string   "vipnet_network_id"
@@ -116,7 +106,6 @@ ActiveRecord::Schema.define(version: 20160615141414) do
   end
 
   add_foreign_key "coordinators", "networks"
-  add_foreign_key "messages", "networks"
   add_foreign_key "nodenames", "networks"
   add_foreign_key "nodes", "networks"
 end
