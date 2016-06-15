@@ -190,9 +190,9 @@ class NodesController < ApplicationController
     end
     if @node.history
       @response[:data][:history] =
-        "#{t('nodes.row.availability.from')} "\
+        "#{t('nodes.row.warnings.from')} "\
         "#{@node['created_at'].strftime('%Y-%m-%d %H:%M UTC')} "\
-        "#{t('nodes.row.availability.to')} "\
+        "#{t('nodes.row.warnings.to')} "\
         "#{@node['updated_at'].strftime('%Y-%m-%d %H:%M UTC')} "\
         ""
     else
