@@ -8,7 +8,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     uploaded_file = params[:content].tempfile
     nodename_vipnet_network_id = params[:vipnet_network_id]
     uploaded_file_content = File.read(uploaded_file)
-
+p uploaded_file_content
     new_nodename = Nodename.new
     parsed_nodename = VipnetParser::Nodename.new(uploaded_file_content)
     render plain: "error" and return unless parsed_nodename

@@ -33,7 +33,6 @@ Rails.application.routes.draw do
     end
   end
   resources :settings, only: [:index]
-  resources :messages, only: [:index]
   resources :coordinators, only: [:index]
   resources :networks, only: [:index]
   resources :iplirconfs, only: [:index, :show]

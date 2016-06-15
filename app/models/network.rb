@@ -1,5 +1,4 @@
 class Network < ActiveRecord::Base
-  has_many :messages, dependent: :destroy
   has_many :nodenames, dependent: :destroy
   has_many :coordinators, dependent: :destroy
   has_many :nodes, dependent: :destroy
