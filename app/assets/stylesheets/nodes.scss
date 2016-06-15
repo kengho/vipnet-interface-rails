@@ -3,8 +3,9 @@
 $nodes-max-width: 90%;
 $body-bgcolor: #f0f0f0;
 $row-ajax-color: #ff7;
-$row-selected-color: #eee;
 $row-ajax-color-hover: #ff8;
+$row-selected-color: #ddd;
+$row-selected-hover-color: #ccc;
 $info-block-bgcolor: white;
 $info-block-bgcolor-hover: #eee;
 $nodes-per-page: #aaa;
@@ -195,6 +196,9 @@ body {
   }
   &--selected {
     background-color: $row-selected-color;
+    &:hover {
+      background-color: $row-selected-hover-color !important;
+    }
   }
 }
 
