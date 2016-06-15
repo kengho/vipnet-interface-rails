@@ -1,7 +1,7 @@
 <td class="mdl-data-table__cell--non-numeric nodes__td center">
-  <div id="node-<%= node["id"] %>__history">
+  <div id="node-<%= node.id %>__history">
     <%
-      if node["history"]
+      if node.history
         button_icon = "update"
         button_tooltip_text = t(".update_button")
       else
@@ -9,7 +9,7 @@
         button_tooltip_text = t(".history_button")
       end
     %>
-    <a data-remote="true" data-replace-link-by-spinner="true" href="/nodes/history/<%= node["id"] %>">
+    <a data-remote="true" data-replace-link-by-spinner="true" href="/nodes/history/<%= node.id %>">
       <%= render "nodes/row/remote_status/button", icon: button_icon, tooltip_text: button_tooltip_text %>
     </a>
   </div>

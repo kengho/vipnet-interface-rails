@@ -1,9 +1,4 @@
 <%
-  if defined?(row_id)
-    id = row_id
-  else
-    id = node["id"]
-  end
   if defined?(row_class)
     row_classes = "nodes__row #{row_class}"
   else
@@ -11,25 +6,24 @@
   end
 %>
 
-<tr id="node-<%= id %>__row" class="<%= row_classes %>">
-  <%= render "nodes/row/string", value: node["vipnet_id"], node: node %>
+<tr id="node-<%= node.id %>__row" class="<%= row_classes %>">
+  <%= render "nodes/row/string", value: node.vipnet_id, node: node %>
   <%= render "nodes/row/info", node: node %>
-  <%= render "nodes/row/string", value: node["name"], node: node %>
+  <%= render "nodes/row/string", value: node.name, node: node %>
   <% if node.warnings? %>
     <%= render "nodes/row/warnings", node: node %>
   <% else %>
     <%= render "nodes/row/availability", node: node %>
   <% end %>
-  <%= render "nodes/row/string", value: node["ip"]["summary"], td_class: "nodes__td--dontoverflow", node: node %>
-  <%= render "nodes/row/vipnet_version", value: node["version"]["summary"], node: node %>
-  <% if defined?(row_id) %>
-    <%# then this line is loaded by NodesController#history %>
+  <%= render "nodes/row/string", value: node.ip["summary"], td_class: "nodes__td--dontoverflow", node: node %>
+  <%= render "nodes/row/vipnet_version", value: node.version["summary"], node: node %>
+  <% if defined?(history) %>
     <%= render "nodes/row/space" %>
   <% else %>
     <%= render "nodes/row/history", node: node %>
   <% end %>
-  <%= render "nodes/row/datetime", value: node["created_first_at"], node: node %>
-  <%= render "nodes/row/datetime", value: node["deleted_at"] %>
-  <%= render "nodes/row/tickets", tickets: node["tickets"] %>
+  <%= render "nodes/row/datetime", value: node.created_first_at, node: node %>
+  <%= render "nodes/row/datetime", value: node.deleted_at %>
+  <%= render "nodes/row/tickets", tickets: node.tickets %>
   <%= render "nodes/row/space" %>
 </tr>

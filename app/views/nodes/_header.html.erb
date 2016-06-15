@@ -20,7 +20,7 @@
         <label class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">content_copy</i>
         </label>
-        <textarea class="mdl-shadow--2dp" rows="10"></textarea>
+        <textarea></textarea>
       </div>
 
       <div id="export-selected__variants">
@@ -45,9 +45,7 @@
         </button>
       </div>
 
-      <div class="mdl-tooltip" for="nodes__unselect-all">
-        <%= t(".unselect_all") %>
-      </div>
+      <div class="mdl-tooltip" for="nodes__unselect-all"><%= t(".unselect_all") %></div>
     </div>
 
     <div id="nodes__select-all">
@@ -56,51 +54,46 @@
       </button>
     </div>
 
-    <div class="mdl-tooltip" for="nodes__select-all">
-      <%= t(".select_all") %>
-    </div>
+    <div class="mdl-tooltip" for="nodes__select-all"><%= t(".select_all") %></div>
 
     <div class="mdl-layout-spacer nodes__search">
       <form action="/nodes" method="get">
-        <input name="search" type="text" tabindex="1" autofocus placeholder="<%= t(".quick_search") %>" value="<%= params[:search] %>" />
+        <input class="mdl-shadow--1dp" name="search" type="text" tabindex="1" autofocus placeholder="<%= t(".quick_search") %>" value="<%= params[:search] %>" />
       </form>
     </div>
 
     <nav class="mdl-navigation">
       <% if current_user.role == "administrator" %>
         <a class="mdl-navigation__link nodes__navigation-link" href="/settings#general">
-          <label class="mdl-button mdl-js-button mdl-button--icon">
+          <label id="nodes__settings" class="mdl-button mdl-js-button mdl-button--icon">
             <i class="material-icons">settings</i>
-          </label><%= t(".settings") %>
+          </label>
         </a>
+        <div class="mdl-tooltip" for="nodes__settings"><%= t(".settings") %></div>
       <% end %>
+
       <% unless Settings.support_email.empty? %>
         <a class="mdl-navigation__link nodes__navigation-link" href="mailto:<%= Settings.support_email %>">
-          <label class="mdl-button mdl-js-button mdl-button--icon">
+          <label id="nodes__support" class="mdl-button mdl-js-button mdl-button--icon">
             <i class="material-icons">feedback</i>
-          </label><%= t(".support") %>
+          </label>
         </a>
+        <div class="mdl-tooltip" for="nodes__support"><%= t(".support") %></div>
       <% end %>
+
       <%= link_to edit_user_path(current_user), class: "mdl-navigation__link nodes__navigation-link" do %>
-        <label class="mdl-button mdl-js-button mdl-button--icon">
+        <label id="nodes__profile" class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">person</i>
-        </label><%= t(".profile") %>
+        </label>
+        <div class="mdl-tooltip" for="nodes__profile"><%= t(".profile") %></div>
       <% end %>
+      
       <%= link_to sign_out_path, class: "mdl-navigation__link nodes__navigation-link", method: :delete do %>
-        <label class="mdl-button mdl-js-button mdl-button--icon">
+        <label id="nodes__exit" class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">exit_to_app</i>
-        </label><%= t(".exit") %>
+        </label>
+        <div class="mdl-tooltip" for="nodes__exit"><%= t(".exit") %></div>
       <% end %>
     </nav>
   </div>
 </header>
-
-<% if false %>
-<% if @search %>
-  <div class="header__back-icon">
-    <a href="/nodes">
-      <i id="back-button" class="material-icons">arrow_back</i>
-    </a>
-  </div>
-<% end %>
-<% end %>

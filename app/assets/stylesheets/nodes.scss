@@ -163,12 +163,11 @@ body {
 
 .nodes__search {
   text-align: left;
-  min-width: 400px;
+  padding-right: 24px;
   & input {
     color: $main-text-color !important;
-    width: 80%;
+    width: 100%;
     border: none;
-    background-color: $body-bgcolor;
     padding: 4px;
     border-radius: 2px;
   }

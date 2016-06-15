@@ -1,19 +1,9 @@
 (function() {
-<% if @response[:history] && @response[:status] %>
-  <%
-    row_ids = Array.new
-    @response[:nodes].each do |node|
-      row_ids.push("#{node.id}-#{SecureRandom.hex}")
-    end
-  %>
+<% history = @response[:history] && @response[:status] %>
+<% if history %>
   rows = [
   <% @response[:nodes].each_with_index do |node, i| %>
-    "<%= j render 'nodes/row', row_id: row_ids[i], node: node, row_class: 'nodes__row--history' %>",
-  <% end %>
-  ];
-  row_ids = [
-  <% row_ids.each do |row_id| %>
-    "#node-<%= row_id %>__row",
+    "<%= j render 'nodes/row', history: true, node: node, row_class: 'nodes__row--history' %>",
   <% end %>
   ];
   vipnetInterface.remoteStatus.showHistory({
@@ -22,7 +12,7 @@
     rows,
     data: {
     <% @response[:nodes].each_with_index do |node, i| %>
-      "#node-<%= row_ids[i] %>__row": { <%= node.data_js.html_safe %> },
+      "#node-<%= node.id %>__row": { <%= node.data_js.html_safe %> },
     <% end %>
     }
   });
@@ -32,9 +22,13 @@
     status: "<%= @response[:status] %>",
     tooltipText: "<%= @response[:tooltip_text] %>",
     fullscreenTooltipKey: "<%= @response[:fullscreen_tooltip_key] %>",
-  <% if @response[:history] && @response[:status] %>
+  <% if history %>
     undo: "true",
-    ids: row_ids,
+    ids: [
+    <% @response[:nodes].each_with_index do |node, i| %>
+      "#node-<%= node.id %>__row",
+    <% end %>
+    ],
   <% end %>
   });
 })();

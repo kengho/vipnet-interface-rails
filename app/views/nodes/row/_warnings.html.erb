@@ -3,20 +3,20 @@
     <i class="material-icons">warning</i>
   </label>
   <div class="nodes__tooltip--hoverable alerts__tooltip">
-    <% if node["deleted_at"] %>
+    <% if node.deleted_at %>
       <div>
         <%= t(".node_deleted") %><br>
         <span data-fullscreen-tooltip-key="node-deleted" class="nodes__link--same-page"><%= t(".more") %></span>
       </div>
     <% end %>
-    <% if node["history"] %>
+    <% if node.history %>
       <div>
         <%= t(".dated_data") %><br>
-        <%= t(".from") %> <%= node["created_at"].strftime("%Y-%m-%d %H:%M UTC") %><br>
-        <%= t(".to") %> <%= node["updated_at"].strftime("%Y-%m-%d %H:%M UTC") %>
+        <%= t(".from") %> <%= node.created_at.strftime("%Y-%m-%d %H:%M UTC") %><br>
+        <%= t(".to") %> <%= node.updated_at.strftime("%Y-%m-%d %H:%M UTC") %>
       </div>
     <% end %>
-    <% unless node["enabled"] %>
+    <% unless node.enabled %>
       <div>
         <%= t(".node_disabled") %><br>
         <span data-fullscreen-tooltip-key="node-disabled" class="nodes__link--same-page"><%= t(".more") %></span>
