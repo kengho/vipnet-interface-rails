@@ -10,10 +10,10 @@
   <%= render "nodes/row/string", value: node.vipnet_id, node: node %>
   <%= render "nodes/row/info", node: node %>
   <%= render "nodes/row/string", value: node.name, node: node %>
-  <% if node.warnings? %>
-    <%= render "nodes/row/warnings", node: node %>
-  <% else %>
+  <% if node.testable? %>
     <%= render "nodes/row/availability", node: node %>
+  <% else %>
+    <%= render "nodes/row/warnings", node: node %>
   <% end %>
   <%= render "nodes/row/string", value: node.ip["summary"], td_class: "nodes__td--dontoverflow", node: node %>
   <%= render "nodes/row/vipnet_version", value: node.version["summary"], node: node %>

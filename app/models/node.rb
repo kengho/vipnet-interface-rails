@@ -230,7 +230,7 @@ class Node < ActiveRecord::Base
       "deletedAt: '#{self.deleted_at}',"
   end
 
-  def warnings?
-    !(!self.history && self.enabled && !self.deleted_at)
+  def testable?
+    !self.history && self.enabled && !self.deleted_at
   end
 end

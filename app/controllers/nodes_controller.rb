@@ -1,6 +1,7 @@
 class NodesController < ApplicationController
   skip_before_action :check_administrator_role
   before_action :check_if_node_exist, only: [:availability, :history, :info]
+  before_action :check_if_node_is_not_history, only: [:availability]
 
   def index
     searchable_by = Node.searchable
@@ -204,5 +205,10 @@ class NodesController < ApplicationController
     def check_if_node_exist
       @node = Node.find_by_id(params[:node_id])
       render nothing: true, status: 400, content_type: "text/html" and return unless @node
+    end
+
+    def check_if_node_is_not_history
+      @node = Node.find_by_id(params[:node_id])
+      render nothing: true, status: 400, content_type: "text/html" and return unless @node.testable?
     end
 end

@@ -111,8 +111,29 @@ class NodesControllerTest < ActionController::TestCase
       name: "client",
       network_id: networks(:network1).id,
     )
+    node3 = Node.new(
+      vipnet_id: "0x1a0e0003",
+      name: "client",
+      network_id: networks(:network1).id,
+      history: true, # <== not testable
+    )
+    node4 = Node.new(
+      vipnet_id: "0x1a0e0004",
+      name: "client",
+      network_id: networks(:network1).id,
+      enabled: false, # <== not testable
+    )
+    node5 = Node.new(
+      vipnet_id: "0x1a0e0005",
+      name: "client",
+      network_id: networks(:network1).id,
+      deleted_at: DateTime.now, # <== not testable
+    )
     node1.save!
     node2.save!
+    node3.save!
+    node4.save!
+    node5.save!
     Iplirconf.new(
       coordinator_id: coordinators(:coordinator1).id,
       sections: {
@@ -128,6 +149,15 @@ class NodesControllerTest < ActionController::TestCase
     assert_no_match(/translation missing/, assigns["response"][:tooltip_text])
 
     get(:availability, { node_id: "not an id" })
+    assert_response :bad_request
+
+    get(:availability, { node_id: node3.id })
+    assert_response :bad_request
+
+    get(:availability, { node_id: node4.id })
+    assert_response :bad_request
+
+    get(:availability, { node_id: node5.id })
     assert_response :bad_request
 
     get(:availability, { node_id: node2.id })

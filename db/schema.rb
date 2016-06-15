@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160615195904) do
+ActiveRecord::Schema.define(version: 20160615210408) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -65,7 +65,7 @@ ActiveRecord::Schema.define(version: 20160615195904) do
     t.datetime "created_first_at"
     t.datetime "deleted_at"
     t.integer  "network_id"
-    t.boolean  "enabled"
+    t.boolean  "enabled",                   default: true
     t.string   "category"
     t.boolean  "created_first_at_accuracy", default: true
     t.string   "abonent_number"
