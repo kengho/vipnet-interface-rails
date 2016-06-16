@@ -18,7 +18,7 @@ class Node < ActiveRecord::Base
       "server_number" => "server_number",
       "category" => "category",
       "history" => "history::text",
-      "network_id" => "network_id::text",
+      "network_id" => "network_id",
     }
   end
 

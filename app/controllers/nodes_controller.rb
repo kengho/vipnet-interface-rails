@@ -34,18 +34,21 @@ class NodesController < ApplicationController
           end
           next
         end
+        compare_func = "ILIKE"
+        compare_func = "=" if Node.columns_hash[key].type == :integer
         if prop.class == String
-          query_sql += "#{prop} ILIKE ? #{logic} "
+          query_sql += "#{prop} #{compare_func} ? #{logic} "
         elsif prop.class == Hash
           hash_prop = prop.keys[0]
           key = prop[hash_prop]
-          query_sql += "#{hash_prop} -> '#{key}' ILIKE ? #{logic} "
+          query_sql += "#{hash_prop} -> '#{key}' #{compare_func} ? #{logic} "
         end
-        query_params.push(Node.pg_regexp_adoptation(param))
+        param = Node.pg_regexp_adoptation(param) unless Node.columns_hash[key].type == :integer
+        query_params.push(param)
       end
     end
     query_sql += "#{ending})"
-
+    
     Node.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if query_sql == "(true)" || query_sql == "(false)"
       @nodes = Node.where("history = 'false'").order(created_first_at: :desc)
