@@ -11,7 +11,11 @@ class NodesController < ApplicationController
       logic = "OR"
       ending = "false"
       params_expanded = Hash.new
-      searchable_by.keys.each { |key| params_expanded[key] = params["search"] }
+      searchable_by.keys.each do |key|
+        if Node.columns_hash[key]
+          params_expanded[key] = params["search"] if Node.columns_hash[key].type == :string
+        end
+      end
     else
       logic = "AND"
       ending = "true"
@@ -35,7 +39,10 @@ class NodesController < ApplicationController
           next
         end
         compare_func = "ILIKE"
-        compare_func = "=" if Node.columns_hash[key].type == :integer
+        if Node.columns_hash[key]
+          compare_func = "=" if Node.columns_hash[key].type == :integer
+          param = Node.pg_regexp_adoptation(param) unless Node.columns_hash[key].type == :integer
+        end
         if prop.class == String
           query_sql += "#{prop} #{compare_func} ? #{logic} "
         elsif prop.class == Hash
@@ -43,12 +50,11 @@ class NodesController < ApplicationController
           key = prop[hash_prop]
           query_sql += "#{hash_prop} -> '#{key}' #{compare_func} ? #{logic} "
         end
-        param = Node.pg_regexp_adoptation(param) unless Node.columns_hash[key].type == :integer
         query_params.push(param)
       end
     end
     query_sql += "#{ending})"
-    
+
     Node.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if query_sql == "(true)" || query_sql == "(false)"
       @nodes = Node.where("history = 'false'").order(created_first_at: :desc)
