@@ -23,6 +23,8 @@
         <textarea></textarea>
       </div>
 
+      <div class="mdl-tooltip" for="nodes__export-selected"><%= t(".export_selected") %></div>
+
       <div id="export-selected__variants">
         <% current_variant = current_user.settings[:export_selected_variant] || Settings.export_selected_variant %>
         <% User.settings[:export_selected_variant][:accepted_values].each do |variant, mapping| %>
@@ -87,7 +89,7 @@
         </label>
         <div class="mdl-tooltip" for="nodes__profile"><%= t(".profile") %></div>
       <% end %>
-      
+
       <%= link_to sign_out_path, class: "mdl-navigation__link nodes__navigation-link", method: :delete do %>
         <label id="nodes__exit" class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">exit_to_app</i>
