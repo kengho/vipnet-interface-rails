@@ -223,11 +223,16 @@ class Node < ActiveRecord::Base
     return ""\
       "vipnetId: '#{self.vipnet_id}',"\
       "name: '#{self.name}',"\
+      "enabled: '#{self.enabled}',"\
       "history: '#{self.history}',"\
       "category: '#{self.category}',"\
       "ip: '#{self.ip["summary"]}',"\
       "createdAt: '#{self.created_first_at}',"\
-      "deletedAt: '#{self.deleted_at}',"
+      "deletedAt: '#{self.deleted_at}',"\
+      "abonentNumber: '#{self.abonent_number}',"\
+      "serverNumber: '#{self.server_number}',"\
+      "tickets: '#{self.tickets["ids_summary"]}',"\
+      ""
   end
 
   def testable?
