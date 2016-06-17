@@ -157,6 +157,7 @@ ru:
       networks_to_ignore: "Игнорируемые сети"
       nodes_per_page: "Узлов на странице"
       export_selected_variant: "Формат экспорта выбранных строк"
+      disable_api: "Отключить API"
       # end settings vars
       submit_label: "Сохранить"
       email: "Email"

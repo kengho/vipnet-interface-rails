@@ -180,6 +180,7 @@ en:
       networks_to_ignore: "Ignoring networks"
       nodes_per_page: "Nodes per page"
       export_selected_variant: "Export selected format"
+      disable_api: "Disable API"
       # end settings vars
       submit_label: "Save"
       email: "Email"

@@ -6,10 +6,15 @@ class Api::V1::BaseController < ActionController::Base
   # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :null_session
 
+  before_action :check_if_api_enabled
   before_action :destroy_session
   before_action :authenticate
 
   private
+    def check_if_api_enabled
+      render nothing: true, status: 503, content_type: "text/html" if Settings.disable_api
+    end
+
     def destroy_session
       request.session_options[:skip] = true
     end
@@ -57,7 +62,5 @@ class Api::V1::BaseController < ActionController::Base
           end
         end
       end
-
     end
-
 end
