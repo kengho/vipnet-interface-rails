@@ -171,4 +171,164 @@ class NodesTest < ActiveSupport::TestCase
     assert_equal(nil, client2.mftp_server)
     assert_equal(false, server1.mftp_server)
   end
+
+  test "clean" do
+    # history, enabled, ip, version, tickets have defaults
+    # 0x1a0e0001
+    Node.new( # 1
+      vipnet_id: "0x1a0e0001",
+      name: "client",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    Node.new( # 2
+      vipnet_id: "0x1a0e0001",
+      name: "client",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    Node.new( # 3
+      vipnet_id: "0x1a0e0001",
+      name: "client",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    node14 = Node.new( # 4
+      vipnet_id: "0x1a0e0001",
+      name: "client",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    )
+    node14.save!
+    Node.new( # 5
+      vipnet_id: "0x1a0e0001",
+      name: "client-renamed",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    Node.new( # 6
+      vipnet_id: "0x1a0e0001",
+      name: "client-renamed",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    Node.new( # 7
+      vipnet_id: "0x1a0e0001",
+      name: "client-renamed",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    # 0x1a0e0002 #1
+    Node.new(
+      vipnet_id: "0x1a0e0002",
+      name: "client",
+      network_id: networks(:network1).id,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    Node.new( # 8
+      vipnet_id: "0x1a0e0001",
+      name: "client-renamed",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    Node.new( # 9
+      vipnet_id: "0x1a0e0001",
+      name: "client-renamed",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    node110 = Node.new( # 10
+      vipnet_id: "0x1a0e0001",
+      name: "client-renamed",
+      network_id: networks(:network1).id,
+      history: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    )
+    node110.save!
+    node111 = Node.new( # 11
+      vipnet_id: "0x1a0e0001",
+      name: "client-renamed",
+      network_id: networks(:network1).id,
+      history: true,
+      version: { "summary" => "4"},
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    )
+    node111.save!
+    node112 = Node.new( # 12
+      vipnet_id: "0x1a0e0001",
+      name: "client-renamed",
+      network_id: networks(:network1).id,
+      history: true,
+      version: { "summary" => "4"},
+      deleted_at: DateTime.now,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    )
+    node112.save!
+    # 0x1a0e0002 #2
+    node22 = Node.new(
+      vipnet_id: "0x1a0e0002",
+      name: "client",
+      network_id: networks(:network1).id,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    )
+    node22.save!
+    Settings.networks_to_ignore = "6671"
+    Node.new(
+      vipnet_id: "0x1a0f0003",
+      name: "client",
+      network_id: networks(:network2).id,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+    ).save!
+    # after cleaning
+    # 0x1a0e0001 should be only 12 (112), 11 (111), 10 (110), 4 (14) (overall 4)
+    # 0x1a0e0002 should be only 2 (22) (overall 1)
+    # 0x1a0f0003 should disappear
+    assert_equal(12 + 2 + 1, Node.all.size)
+    Node.clean
+    assert_equal(4 + 1, Node.all.size)
+    assert Node.find_by_id(node112.id)
+    assert Node.find_by_id(node111.id)
+    assert Node.find_by_id(node110.id)
+    assert Node.find_by_id(node14.id)
+    assert Node.find_by_id(node22.id)
+  end
 end

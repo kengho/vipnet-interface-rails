@@ -233,4 +233,40 @@ class Node < ActiveRecord::Base
   def testable?
     !self.history && self.enabled && !self.deleted_at
   end
+
+  def self.clean
+    # remove nodes from ignoring networks
+    Settings.networks_to_ignore.split(",").each do |network_to_ignore|
+      network = Network.find_by_vipnet_network_id(network_to_ignore)
+      Node.where("network_id = ?", network.id).destroy_all
+    end
+
+    # delete duplicates
+    # break nodes by vipnet_id, sort by id
+    # move from first to last
+    # if nothing important changes, delete node
+    # if changes, make it current and compare next
+    important_props = Nodename.props_from_record + Iplirconf.props_from_section + [:deleted_at]
+    nodes = Node.all.order(vipnet_id: :asc).order(id: :desc)
+    current_node = nodes.first
+    nodes.each do |node|
+      next if node == nodes.first
+      if node.vipnet_id != current_node.vipnet_id
+        current_node = node
+        next
+      end
+      it_differs = false
+      important_props.each do |prop|
+        if node[prop] != current_node[prop]
+          it_differs = true
+          break
+        end
+      end
+      if it_differs
+        current_node = node
+      else
+        node.destroy
+      end
+    end
+  end
 end
