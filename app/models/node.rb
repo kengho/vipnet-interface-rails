@@ -257,8 +257,10 @@ class Node < ActiveRecord::Base
       end
       it_differs = false
       important_props.each do |prop|
-        if node[prop].class == Hash
-          node[prop] = Hash.new if node[prop]["summary"] == ""
+        [node, current_node].each do |node|
+          if node[prop].class == Hash
+            node[prop] = Hash.new if node[prop]["summary"] == ""
+          end
         end
         if node[prop] != current_node[prop]
           it_differs = true
