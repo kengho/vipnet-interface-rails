@@ -244,7 +244,7 @@ class Node < ActiveRecord::Base
     # delete duplicates
     # break nodes by vipnet_id, sort by id
     # move from first to last
-    # if nothing important changes, delete node
+    # if nothing important changes (including empty summary in "ip" and "version"), delete node
     # if changes, make it current and compare next
     important_props = Nodename.props_from_record + Iplirconf.props_from_section + [:deleted_at]
     nodes = Node.all.order(vipnet_id: :asc).order(id: :desc)
@@ -257,6 +257,9 @@ class Node < ActiveRecord::Base
       end
       it_differs = false
       important_props.each do |prop|
+        if node[prop].class == Hash
+          node[prop] = Hash.new if node[prop]["summary"] == ""
+        end
         if node[prop] != current_node[prop]
           it_differs = true
           break

@@ -189,6 +189,8 @@ class NodesTest < ActiveSupport::TestCase
       name: "client",
       network_id: networks(:network1).id,
       history: true,
+      ip: { "summary" => "", "0x1a0e000a" => "[]" },
+      version: { "summary" => "", "0x1a0e000a" => nil },
       category: "client",
       abonent_number: "0001",
       server_number: "0001",
