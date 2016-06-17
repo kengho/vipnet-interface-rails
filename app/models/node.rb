@@ -238,7 +238,7 @@ class Node < ActiveRecord::Base
     # remove nodes from ignoring networks
     Settings.networks_to_ignore.split(",").each do |network_to_ignore|
       network = Network.find_by_vipnet_network_id(network_to_ignore)
-      Node.where("network_id = ?", network.id).destroy_all
+      Node.where("network_id = ?", network.id).destroy_all if network
     end
 
     # delete duplicates

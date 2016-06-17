@@ -309,7 +309,7 @@ class NodesTest < ActiveSupport::TestCase
       server_number: "0001",
     )
     node22.save!
-    Settings.networks_to_ignore = "6671"
+    Settings.networks_to_ignore = "6671,1234"
     Node.new(
       vipnet_id: "0x1a0f0003",
       name: "client",
