@@ -77,6 +77,7 @@ var vipnetInterface = {
       $(args.parentId).append(statusHTML);
       $shownStatus = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "status--" + args.status });
       $shownStatus.find("div[name='tooltip_text']").html(args.tooltipText);
+      vipnetInterface.showSnackbar(args.tooltipText);
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "spinner" });
       $fullscreenTooltipTrigger = $shownStatus.find("span[name='fullscreen_tooltip_trigger']");
       if($fullscreenTooltipTrigger.length) {
@@ -128,9 +129,6 @@ var vipnetInterface = {
     renderInfo: function(args) {
       $(args.parentId).append(args.html);
       $infoBlock = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "info" });
-      // $infoBlock.find("div[name='close']").click(function() {
-      //   vipnetInterface.remoteStatus.renderDefault(args.parentId);
-      // });
     },
 
     initAjax: function(parent) {
@@ -150,7 +148,7 @@ var vipnetInterface = {
 
     spinnerVisibility: function(id) {
       return $("#" + id).parent().find("div[name='spinner']").css("visibility");
-    }
+    },
   },
 
   showFullscreenTooltip: function(fullscreenTooltipKey) {
@@ -187,7 +185,7 @@ var vipnetInterface = {
   selectedRows: [],
   lastSelectedRow: "",
   CSVSeparator: ";",
-  selectRow: function(rowId) {
+    selectRow: function(rowId) {
     if(vipnetInterface.lastSelectedRow == rowId) {
       vipnetInterface.lastSelectedRow = "";
     } else {
@@ -305,6 +303,12 @@ var vipnetInterface = {
       document.selection.empty();
     }
   },
+
+  showSnackbar: function(msg) {
+    snackbarContainer = $("#nodes__snackbar")[0];
+    var msgToShow = I18n["snackbar"][msg] || msg;
+    snackbarContainer.MaterialSnackbar.showSnackbar({ message: msgToShow });
+  },
 };
 
 $(document).ready(function() {
@@ -353,6 +357,7 @@ $(document).ready(function() {
       var $copyTextarea = vipnetInterface.fillExportTextarea();
       $copyTextarea.select();
       document.execCommand("copy");
+      vipnetInterface.showSnackbar("copied");
     }
   });
 

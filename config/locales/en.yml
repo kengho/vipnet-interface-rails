@@ -215,3 +215,5 @@ en:
       user_settings_saved: "User settings successfully saved"
   js:
     ajax_error: "Server timeout"
+    snackbar:
+      copied: "Data copied to clipboard"
