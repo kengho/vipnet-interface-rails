@@ -38,7 +38,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       record_vipnet_network_id = VipnetParser::network(vipnet_id)
       network = Network.find_or_create_by(vipnet_network_id: record_vipnet_network_id)
       render plain: ERROR_RESPONSE and return unless network
-      we_admin_this_network = Nodename.joins(:network).where("vipnet_network_id = ?", record_vipnet_network_id).size > 0
+      we_admin_this_network = !!Nodename.joins(:network).find_by("networks.vipnet_network_id": record_vipnet_network_id)
       it_is_internetworking_node = nodename_vipnet_network_id != record_vipnet_network_id
       next if we_admin_this_network && it_is_internetworking_node
       next if networks_to_ignore.include?(network.vipnet_network_id)

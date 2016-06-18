@@ -170,9 +170,8 @@ class Node < ActiveRecord::Base
     Nodename.all.each do |nodename|
       nodename.records.each do |vipnet_id, record|
         record = eval(record)
-        nodes = Node.where("vipnet_id = ? AND history = 'false'", vipnet_id)
-        if nodes.size == 1
-          node = nodes.first
+        node = Node.find_by(vipnet_id: vipnet_id, history: false)
+        if node
           Nodename.props_from_record.each do |prop_name|
             node[prop_name] = record[prop_name] if record[prop_name]
           end
@@ -184,9 +183,8 @@ class Node < ActiveRecord::Base
       coordinator = Coordinator.find_by_id(iplirconf.coordinator_id)
       coordinator_vipnet_id = coordinator.vipnet_id
       iplirconf.sections.each do |vipnet_id, section|
-        nodes = Node.where("vipnet_id = ? AND history = 'false'", vipnet_id)
-        if nodes.size == 1
-          node = nodes.first
+        node = Node.find_by(vipnet_id: vipnet_id, history: false)
+        if node
           Iplirconf.props_from_section.each { |prop_name| node[prop_name][coordinator_vipnet_id] = eval(section)[prop_name] }
           Iplirconf.props_from_section.each do |prop_name|
             # http://stackoverflow.com/a/5349874
