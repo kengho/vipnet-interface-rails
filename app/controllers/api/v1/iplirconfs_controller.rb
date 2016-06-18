@@ -1,5 +1,4 @@
 class Api::V1::IplirconfsController < Api::V1::BaseController
-
   def create
     unless (params[:content] && params[:vipnet_id])
       Rails.logger.error("Incorrect params")
@@ -19,7 +18,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     if coordinators.size == 0
       name = eval(new_iplirconf.sections[coordinator_vipnet_id])[:name]
       coordinator_vipnet_network_id = VipnetParser::network(coordinator_vipnet_id)
-      coordinator_network = Network.find_or_create_network(coordinator_vipnet_network_id)
+      coordinator_network = Network.find_or_create_by(vipnet_network_id: coordinator_vipnet_network_id)
       render plain: "error" and return unless coordinator_network
       coordinator = Coordinator.new(vipnet_id: coordinator_vipnet_id, name: name, network_id: coordinator_network.id)
       render plain: "error" and return unless coordinator.save!
@@ -80,5 +79,4 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     existing_iplirconf.save!
     render plain: "ok"
   end
-
 end

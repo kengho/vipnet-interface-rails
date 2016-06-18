@@ -18,7 +18,7 @@ p uploaded_file_content
     created_first_at_accuracy = true
     if existing_nodenames.size == 0
       created_first_at_accuracy = false
-      network = Network.find_or_create_network(nodename_vipnet_network_id)
+      network = Network.find_or_create_by(vipnet_network_id: nodename_vipnet_network_id)
       render plain: "error" and return unless network
       existing_nodename = Nodename.new(network_id: network.id)
       existing_nodename.records = Hash.new
@@ -41,7 +41,7 @@ p uploaded_file_content
         next if record[:category] == :group
       end
       record_vipnet_network_id = VipnetParser::network(vipnet_id)
-      network = Network.find_or_create_network(record_vipnet_network_id)
+      network = Network.find_or_create_by(vipnet_network_id: record_vipnet_network_id)
       render plain: "error" and return unless network
       we_admin_this_network = Nodename.joins(:network).where("vipnet_network_id = ?", record_vipnet_network_id).size > 0
       it_is_internetworking_node = nodename_vipnet_network_id != record_vipnet_network_id
