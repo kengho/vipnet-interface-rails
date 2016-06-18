@@ -15,19 +15,12 @@ class Api::V1::MessagesController < Api::V1::BaseController
 
     if params[:event_name] == "DelUN"
       vipnet_id = VipnetParser::id(params[:vipnet_id])
-      current_nodes = Node.where("vipnet_id = ? AND history = 'false'", vipnet_id)
-      if current_nodes.size == 0
-        # could happen if internetworking node dissapears from export, but it's not in database yet
-        Rails.logger.warn("No nodes found '#{vipnet_id}'")
-      elsif current_nodes.size == 1
-        current_node = current_nodes.first
+      current_node = Node.find_by(vipnet_id: vipnet_id, history: false)
+      if current_node
         new_node = current_node.dup
         current_node.history = true
         new_node.deleted_at = datetime
-        render plain: ERROR_RESPONSE and return unless new_node.save! && current_node.save!
-      elsif current_nodes.size > 1
-        Rails.logger.error("Multiple nodes found '#{vipnet_id}'")
-        render plain: ERROR_RESPONSE and return
+        render plain: ERROR_RESPONSE and return unless current_node.save! && new_node.save!
       end
     end
 

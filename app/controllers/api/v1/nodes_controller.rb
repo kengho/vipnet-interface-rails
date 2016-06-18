@@ -1,10 +1,9 @@
 class Api::V1::NodesController < Api::V1::BaseController
-
   def index
     @response = Hash.new
     if params[:vipnet_id]
       only = params[:only] || ["name", "enabled"]
-      nodes = Node.where("vipnet_id = ? AND history = 'false' AND deleted_at is null", params[:vipnet_id])
+      node = Node.find_by(vipnet_id: params[:vipnet_id], history: false, deleted_at: nil)
     else
       @response[:errors] = [{
         title: "external",
@@ -18,11 +17,7 @@ class Api::V1::NodesController < Api::V1::BaseController
       render json: @response and return
     end
 
-    if nodes.size == 0
-      @response[:errors] = [{title: "external", detail: "Node not found"}]
-      render json: @response and return
-    elsif nodes.size == 1
-      node = nodes.first
+    if node
       @response[:data] = @response.merge(node.attributes.slice(*only))
       if params[:availability] == "true"
         availability = node.availability
@@ -32,16 +27,9 @@ class Api::V1::NodesController < Api::V1::BaseController
           @response[:data]["available"] = false
         end
       end
-      render json: @response and return
-    elsif nodes.size > 1
-      @response[:errors] = [{
-          title: "internal",
-          detail: "Please report to developer. "\
-                  "Multiple nodes found. "\
-                  "Params: #{params.except(:token)}"
-      }]
-      render json: @response and return
+    else
+      @response[:errors] = [{ title: "external", detail: "Node not found" }]
     end
+    render json: @response and return
   end
-
 end

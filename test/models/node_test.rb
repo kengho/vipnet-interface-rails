@@ -4,17 +4,19 @@ class NodesTest < ActiveSupport::TestCase
   test "validations" do
     network = networks(:network1)
     node1 = Node.new(vipnet_id: nil, network_id: network.id, name: "name")
-    node2 = Node.new(vipnet_id: "0x1a0e0100", network_id: nil, name: "name")
-    node3 = Node.new(vipnet_id: "0x1a0e0100", network_id: network.id, name: nil)
+    node2 = Node.new(vipnet_id: "0x1a0e0001", network_id: nil, name: "name")
+    node3 = Node.new(vipnet_id: "0x1a0e0001", network_id: network.id, name: nil)
     node4 = Node.new(vipnet_id: "1A0E0100", network_id: network.id, name: "name")
     assert_not node1.save
     assert_not node2.save
     assert_not node3.save
     assert_not node4.save
-    node5 = Node.new(vipnet_id: "0x1a0e0100", network_id: network.id, name: "name", history: false)
-    node6 = Node.new(vipnet_id: "0x1a0e0100", network_id: network.id, name: "name", history: false)
+    node5 = Node.new(vipnet_id: "0x1a0e0001", network_id: network.id, name: "name", history: false)
+    node6 = Node.new(vipnet_id: "0x1a0e0001", network_id: network.id, name: "name", history: true)
+    node7 = Node.new(vipnet_id: "0x1a0e0001", network_id: network.id, name: "name", history: false)
     assert node5.save
-    assert_not node6.save
+    assert node6.save
+    assert_not node7.save
   end
 
   test "accessips" do
@@ -121,7 +123,7 @@ class NodesTest < ActiveSupport::TestCase
       },
     )
     node3 = Node.new(
-      vipnet_id: "0x1a0e0002",
+      vipnet_id: "0x1a0e0003",
       name: "client",
       network_id: networks(:network1).id,
       version: {},
@@ -310,6 +312,7 @@ class NodesTest < ActiveSupport::TestCase
       vipnet_id: "0x1a0e0002",
       name: "client",
       network_id: networks(:network1).id,
+      history: true,
       category: "client",
       abonent_number: "0001",
       server_number: "0001",

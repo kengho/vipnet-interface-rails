@@ -2,7 +2,7 @@ class Node < ActiveRecord::Base
   belongs_to :network
   validates :vipnet_id, presence: true,
                         format: { with: /\A0x[0-9a-f]{8}\z/, message: "vipnet_id should be like \"0x1a0e0100\"" }
-  validates_uniqueness_of :vipnet_id, conditions: -> { where(history: false) }
+  validates_uniqueness_of :vipnet_id, scope: :history, conditions: -> { where(history: false) }
   validates :network_id, presence: true
   validates :name, presence: true
 
@@ -237,7 +237,7 @@ class Node < ActiveRecord::Base
   def self.clean
     # remove nodes from ignoring networks
     Settings.networks_to_ignore.split(",").each do |network_to_ignore|
-      network = Network.find_by_vipnet_network_id(network_to_ignore)
+      network = Network.find_by(vipnet_network_id: network_to_ignore)
       Node.where("network_id = ?", network.id).destroy_all if network
     end
 
