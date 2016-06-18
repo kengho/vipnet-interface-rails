@@ -16,8 +16,7 @@ var vipnetInterface = {
     renderUndoButton: function(args) {
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "status--false" });
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "status--true" });
-      undoButtonHTML = $("#nodes__button-undo-template").html();
-      $(args.parentId).append(undoButtonHTML);
+      $(args.parentId).append(args.html);
       $shownUndoButton = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "button--undo" });
       $shownUndoButton.click(function() {
         // unselect current row
@@ -92,7 +91,7 @@ var vipnetInterface = {
       if(args.undo) {
         setTimeout( vipnetInterface.remoteStatus.renderUndoButton,
                     vipnetInterface.remoteStatus.showStatusBeforeUndoTime,
-                    { parentId: args.parentId, ids: args.ids });
+                    { parentId: args.parentId, ids: args.ids, html: args.html });
       } else {
         setTimeout( vipnetInterface.remoteStatus.renderDefault,
                     vipnetInterface.remoteStatus.showStatusTime,
