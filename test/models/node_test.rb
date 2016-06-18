@@ -11,6 +11,10 @@ class NodesTest < ActiveSupport::TestCase
     assert_not node2.save
     assert_not node3.save
     assert_not node4.save
+    node5 = Node.new(vipnet_id: "0x1a0e0100", network_id: network.id, name: "name", history: false)
+    node6 = Node.new(vipnet_id: "0x1a0e0100", network_id: network.id, name: "name", history: false)
+    assert node5.save
+    assert_not node6.save
   end
 
   test "accessips" do

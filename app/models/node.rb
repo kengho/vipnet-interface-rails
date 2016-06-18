@@ -2,9 +2,9 @@ class Node < ActiveRecord::Base
   belongs_to :network
   validates :vipnet_id, presence: true,
                         format: { with: /\A0x[0-9a-f]{8}\z/, message: "vipnet_id should be like \"0x1a0e0100\"" }
+  validates_uniqueness_of :vipnet_id, conditions: -> { where(history: false) }
   validates :network_id, presence: true
   validates :name, presence: true
-  # default_scope { order(created_first_at: :desc) }
 
   def self.searchable
     searchable = {
