@@ -40,7 +40,7 @@ ru:
         to: "по"
         from: "с"
         dated_data: "Данные из истории"
-      datetime:
+      created_at:
         before: "до"
         unknown_date: "Узнать точную дату создания узла затруднительно"
       info:

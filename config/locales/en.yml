@@ -63,7 +63,7 @@ en:
         dated_data: "Dated data"
         from: "from"
         to: "to"
-      datetime:
+      created_at:
         before: "b."
         unknown_date: "It is difficult to discover creation date of this node"
       info:
