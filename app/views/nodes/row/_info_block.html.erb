@@ -10,7 +10,8 @@
       <% next if prop == :name %>
       <% value = data[prop] %>
       <% if value != "" %>
-        <%= t("nodes.row.info.#{prop}") %>:&nbsp;<span><%= value.to_s.html_safe %></span>
+        <span name="prop"><%= t("nodes.row.info.#{prop}") %></span>:&nbsp;
+        <span name="value"><%= value.to_s.html_safe %></span>
       <% end %>
     <% end %>
   </div>
