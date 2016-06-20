@@ -16,14 +16,14 @@
     <span class="mdl-layout-title nodes__sub-title"><%= @sub_title %></span>
 
     <div id="nodes__actions" disabled="disabled">
+      <div class="mdl-tooltip" for="nodes__export-selected"><%= t(".export_selected") %></div>
+
       <div id="nodes__export-selected">
         <label class="mdl-button mdl-js-button mdl-button--icon">
           <i class="material-icons">content_copy</i>
         </label>
         <textarea></textarea>
       </div>
-
-      <div class="mdl-tooltip" for="nodes__export-selected"><%= t(".export_selected") %></div>
 
       <div id="export-selected__variants">
         <% current_variant = current_user.settings[:export_selected_variant] || Settings.export_selected_variant %>
