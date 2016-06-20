@@ -1,6 +1,7 @@
 @import "_shared";
 
 $auth-textfield-width: 350px;
+$error-color: #c30;
 
 .auth__textfield {
   padding: 20px 0px 0px 0px;
@@ -38,6 +39,9 @@ $auth-textfield-width: 350px;
   }
   & h3 {
     color: $main-text-color;
+  }
+  & span.error {
+    color: $error-color;
   }
 }
 

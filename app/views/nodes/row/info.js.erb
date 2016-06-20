@@ -4,6 +4,7 @@
     status: "true",
     tooltipText: "<%= @response[:tooltip_text] %>",
     undo: "true",
+    html: "<%= j render 'nodes/row/remote_status/button_undo' %>",
     ids: ["<%= @response[:parent_id] %> div[name='info']"],
   });
   vipnetInterface.remoteStatus.renderInfo({

@@ -40,7 +40,7 @@ ru:
         to: "по"
         from: "с"
         dated_data: "Данные из истории"
-      datetime:
+      created_at:
         before: "до"
         unknown_date: "Узнать точную дату создания узла затруднительно"
       info:
@@ -194,3 +194,29 @@ ru:
     page_gap: "..."
   js:
     ajax_error: "Истекло время ожидания сервера"
+    snackbar:
+      copied: "Данные скопированы в буфер обмена"
+  authlogic:
+    error_messages:
+      login_blank: не может быть пустым
+      login_not_found: неверен
+      login_invalid: может содержать только буквы, цифры, пробелы, и .-_@+
+      consecutive_failed_logins_limit_exceeded: Превышено количество неудачных попыток входа, учетная запись заблокирована
+      email_invalid: должен выглядеть как адрес электронной почты
+      email_invalid_international: должен выглядеть как интернациональный адрес электронной почты
+      password_blank: не может быть пустым
+      password_invalid: неверен
+      not_active: Ваша учетная запись неактивна
+      not_confirmed: Ваша учетная запись не подтверждена
+      not_approved: Ваша учетная запись не утверждена
+      no_authentication_details: Не введены email и пароль
+      general_credentials_error: Комбинация логина и пароля неверна
+    models:
+      user_session: UserSession
+    attributes:
+      user_session:
+        base:
+        login: Логин
+        email: Email
+        password: Пароль
+        remember_me: Запомнить

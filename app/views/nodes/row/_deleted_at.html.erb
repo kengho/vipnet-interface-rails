@@ -1,0 +1,5 @@
+<td class="mdl-data-table__cell--non-numeric nodes__td">
+  <% if node.deleted_at.class == ActiveSupport::TimeWithZone %>
+    <%= node.deleted_at.strftime("%Y-%m-%d") %>
+  <% end %>
+</td>

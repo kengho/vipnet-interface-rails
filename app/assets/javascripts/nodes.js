@@ -16,8 +16,7 @@ var vipnetInterface = {
     renderUndoButton: function(args) {
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "status--false" });
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "status--true" });
-      undoButtonHTML = $("#nodes__button-undo-template").html();
-      $(args.parentId).append(undoButtonHTML);
+      $(args.parentId).append(args.html);
       $shownUndoButton = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "button--undo" });
       $shownUndoButton.click(function() {
         // unselect current row
@@ -77,6 +76,7 @@ var vipnetInterface = {
       $(args.parentId).append(statusHTML);
       $shownStatus = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "status--" + args.status });
       $shownStatus.find("div[name='tooltip_text']").html(args.tooltipText);
+      vipnetInterface.showSnackbar(args.tooltipText);
       vipnetInterface.remoteStatus.remove({ parentId: args.parentId, div: "spinner" });
       $fullscreenTooltipTrigger = $shownStatus.find("span[name='fullscreen_tooltip_trigger']");
       if($fullscreenTooltipTrigger.length) {
@@ -91,7 +91,7 @@ var vipnetInterface = {
       if(args.undo) {
         setTimeout( vipnetInterface.remoteStatus.renderUndoButton,
                     vipnetInterface.remoteStatus.showStatusBeforeUndoTime,
-                    { parentId: args.parentId, ids: args.ids });
+                    { parentId: args.parentId, ids: args.ids, html: args.html });
       } else {
         setTimeout( vipnetInterface.remoteStatus.renderDefault,
                     vipnetInterface.remoteStatus.showStatusTime,
@@ -128,9 +128,6 @@ var vipnetInterface = {
     renderInfo: function(args) {
       $(args.parentId).append(args.html);
       $infoBlock = vipnetInterface.remoteStatus.show({ parentId: args.parentId, div: "info" });
-      // $infoBlock.find("div[name='close']").click(function() {
-      //   vipnetInterface.remoteStatus.renderDefault(args.parentId);
-      // });
     },
 
     initAjax: function(parent) {
@@ -150,7 +147,7 @@ var vipnetInterface = {
 
     spinnerVisibility: function(id) {
       return $("#" + id).parent().find("div[name='spinner']").css("visibility");
-    }
+    },
   },
 
   showFullscreenTooltip: function(fullscreenTooltipKey) {
@@ -187,7 +184,7 @@ var vipnetInterface = {
   selectedRows: [],
   lastSelectedRow: "",
   CSVSeparator: ";",
-  selectRow: function(rowId) {
+    selectRow: function(rowId) {
     if(vipnetInterface.lastSelectedRow == rowId) {
       vipnetInterface.lastSelectedRow = "";
     } else {
@@ -305,6 +302,12 @@ var vipnetInterface = {
       document.selection.empty();
     }
   },
+
+  showSnackbar: function(msg) {
+    snackbarContainer = $("#nodes__snackbar")[0];
+    var msgToShow = I18n["snackbar"][msg] || msg;
+    snackbarContainer.MaterialSnackbar.showSnackbar({ message: msgToShow });
+  },
 };
 
 $(document).ready(function() {
@@ -353,6 +356,7 @@ $(document).ready(function() {
       var $copyTextarea = vipnetInterface.fillExportTextarea();
       $copyTextarea.select();
       document.execCommand("copy");
+      vipnetInterface.showSnackbar("copied");
     }
   });
 

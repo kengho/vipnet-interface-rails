@@ -11,7 +11,7 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
       enabled: true,
       ip: {
         "summary" => "192.0.2.1, 192.0.2.2, 192.0.2.3, 192.0.2.4",
-      }
+      },
     ).save!
     Node.new(
       vipnet_id: "0x1a0e0001",
@@ -54,11 +54,6 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
     get(:index, { vipnet_id: "unmatched id", token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
-
-    # multiple nodes found
-    get(:index, { vipnet_id: "0x1a0e0002", token: "GET_INFORMATION_TOKEN" })
-    assert assigns["response"][:errors]
-    assert_equal("internal", assigns["response"][:errors][0][:title])
 
     get(:index, { not_vipnet_id_param: "true", token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]

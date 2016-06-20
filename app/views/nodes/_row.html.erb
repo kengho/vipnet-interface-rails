@@ -22,8 +22,8 @@
   <% else %>
     <%= render "nodes/row/history", node: node %>
   <% end %>
-  <%= render "nodes/row/datetime", value: node.created_first_at, node: node %>
-  <%= render "nodes/row/datetime", value: node.deleted_at %>
+  <%= render "nodes/row/created_at", node: node %>
+  <%= render "nodes/row/deleted_at", node: node %>
   <%= render "nodes/row/tickets", tickets: node.tickets %>
   <%= render "nodes/row/space" %>
 </tr>

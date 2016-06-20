@@ -24,6 +24,7 @@
     fullscreenTooltipKey: "<%= @response[:fullscreen_tooltip_key] %>",
   <% if history %>
     undo: "true",
+    html: "<%= j render 'nodes/row/remote_status/button_undo' %>",
     ids: [
     <% @response[:nodes].each_with_index do |node, i| %>
       "#node-<%= node.id %>__row",

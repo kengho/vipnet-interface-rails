@@ -1,6 +1,7 @@
 <div class="auth__form--outside">
   <div class="auth__form mdl-shadow--2dp">
     <%= render "shared/header", text: t(".label") %>
+    <%= render "errors" %>
     <%= form_for @user_session do |f| %>
       <%= render "shared/email" %>
       <%= render "shared/password", type: "password" %>
