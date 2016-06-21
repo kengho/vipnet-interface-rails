@@ -1,11 +1,11 @@
 ru:
   default:
-    title: "Узлы ViPNet"
+    title: "VI"
   api:
     v1:
       doc:
         index:
-          title: "Документация API"
+          title: "VI → Документация API"
           overall_label: "Общие данные"
           request: "Запрос"
           response: "Ответ"
@@ -116,9 +116,9 @@ ru:
           <span>Если узел не должен быть отключен, обратитесь к администраторам ViPNet.</span>
       close: "(Для возврата нажмите Esc или кликните мышкой вне этого поля.)"
     header:
-      title: "Узлы ViPNet"
+      title: "ViPNet Interface"
       search_results_subtitle: "Результаты поиска"
-      default_nodes_subtitle: "Новые"
+      default_nodes_subtitle: "Новые узлы"
       export_selected: "Копировать данные из выбранных строк"
       select_all: "Выделить всё"
       unselect_all: "Снять выделение"
@@ -147,7 +147,7 @@ ru:
       error_destroying_user: "Ошибка при удалении пользователя"
       settings_saved: "Настройки сохранены"
     index:
-      title: "Настройки"
+      title: "VI → Настройки"
       label: "Настройки"
       general: "Основные"
       users: "Пользователи"
@@ -178,13 +178,13 @@ ru:
       new_password_label: "Новый пароль"
   user_sessions:
     new:
-      title: "Войти"
+      title: "VI → Войти"
       label: "Войти"
       submit_label: "Войти"
       remember_me: "Запомнить"
   users:
     edit:
-      title: "Профиль"
+      title: "VI → Профиль"
       label: "Профиль"
       submit_label: "Сохранить"
     flash:

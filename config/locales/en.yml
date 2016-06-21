@@ -23,12 +23,12 @@
 
 en:
   default:
-    title: "ViPNet Nodes"
+    title: "VI"
   api:
     v1:
       doc:
         index:
-          title: "API documentation"
+          title: "VI → API documentation"
           overall_label: "Overall"
           request: "Request"
           response: "Repsonse"
@@ -139,9 +139,9 @@ en:
           <span>If node shouldn't be disabled, contact ViPNet administrator.</span>
       close: "(Press Esc or click outside this field to exit.)"
     header:
-      title: "ViPNet Nodes"
+      title: "ViPNet Interface"
       search_results_subtitle: "Searh results"
-      default_nodes_subtitle: "New"
+      default_nodes_subtitle: "New nodes"
       export_selected: "Copy data from selected rows"
       select_all: "Select all"
       unselect_all: "Clear selection"
@@ -170,7 +170,7 @@ en:
       error_destroying_user: "Error deleting user"
       settings_saved: "Settings saved"
     index:
-      title: "Settings"
+      title: "VI → Settings"
       label: "Settings"
       general: "General"
       users: "Users"
@@ -201,13 +201,13 @@ en:
       new_password_label: "New password"
   user_sessions:
     new:
-      title: "Sign in"
+      title: "VI → Sign in"
       label: "Sign in"
       submit_label: "Sign in"
       remember_me: "Remember me"
   users:
     edit:
-      title: "Profile"
+      title: "VI → Profile"
       label: "Profile"
       submit_label: "Save"
     flash:
