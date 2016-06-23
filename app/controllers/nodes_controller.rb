@@ -204,11 +204,11 @@ class NodesController < ApplicationController
   private
     def check_if_node_exist
       @node = Node.find_by_id(params[:node_id])
-      render nothing: true, status: 400, content_type: "text/html" and return unless @node
+      render nothing: true, status: :bad_request, content_type: "text/html" and return unless @node
     end
 
     def check_if_node_testable
       @node = Node.find_by_id(params[:node_id])
-      render nothing: true, status: 400, content_type: "text/html" and return unless @node.testable?
+      render nothing: true, status: :bad_request, content_type: "text/html" and return unless @node.testable?
     end
 end

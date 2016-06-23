@@ -1,5 +1,4 @@
 class SettingsController < ApplicationController
-
   def index
     if params[:general]
       params.each do |param, value|
@@ -21,7 +20,7 @@ class SettingsController < ApplicationController
         flash[:notice] = "user saved"
         redirect_to "/settings#users"
       else
-        render nothing: true, status: 500, content_type: "text/html"
+        render nothing: true, status: :internal_server_error, content_type: "text/html"
       end
     elsif params[:add_user]
       user = User.new(  email: params[:email],
@@ -42,5 +41,4 @@ class SettingsController < ApplicationController
     @settings = Settings.unscoped.where("thing_id is null").reorder(var: :asc)
     @users = User.all.reorder(email: :asc)
   end
-
 end

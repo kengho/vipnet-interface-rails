@@ -12,7 +12,7 @@ class Api::V1::BaseController < ActionController::Base
 
   private
     def check_if_api_enabled
-      render nothing: true, status: 503, content_type: "text/html" if Settings.disable_api
+      render nothing: true, status: :service_unavailable, content_type: "text/html" if Settings.disable_api
     end
 
     def destroy_session
@@ -47,7 +47,7 @@ class Api::V1::BaseController < ActionController::Base
       if actions_get.key?(params[:controller])
         if actions_get[params[:controller]].include?(params[:action])
           unless ActiveSupport::SecurityUtils.secure_compare(params[:token], ENV["GET_INFORMATION_TOKEN"])
-            render nothing: true, status: 401, content_type: "text/html"
+            render nothing: true, status: :unauthorized, content_type: "text/html"
           end
         end
       end
@@ -57,7 +57,7 @@ class Api::V1::BaseController < ActionController::Base
             if ActiveSupport::SecurityUtils.secure_compare(token, ENV[actions_post[params[:controller]][:token_name]])
               true
             else
-              render nothing: true, status: 401, content_type: "text/html"
+              render nothing: true, status: :unauthorized, content_type: "text/html"
             end
           end
         end
