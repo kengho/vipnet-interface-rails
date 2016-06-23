@@ -1,6 +1,6 @@
 ru:
   default:
-    title: "VI"
+    title: "ViPNet Interface"
   api:
     v1:
       doc:
