@@ -505,6 +505,47 @@ div[name="button--undo"] {
   }
 }
 
+.nodes__tickets div[name="multi--hover"] {
+  z-index: 500;
+  top: 12px;
+  &::after {
+    content: "...";
+    display: block;
+    text-align: center;
+    line-height: 0px;
+  }
+}
+
+.nodes__tickets div[name="multi--list"] {
+  z-index: 600;
+  opacity: 0;
+  visibility: hidden;
+  background: white;
+  overflow: hidden;
+  top: 36px;
+  @extend %half-shadow;
+  border-radius: 2px;
+}
+
+.nodes__tickets div[name="multi--hover"],
+.nodes__tickets div[name="multi--list"] {
+  text-align: center;
+  position: absolute;
+  padding: 6px;
+}
+
+.nodes__tickets div[name="multi--hover"]:hover + div[name="multi--list"],
+div[name="multi--list"]:hover {
+  opacity: 1;
+  visibility: visible;
+}
+
+.nodes__tickets div[name="multi--hover"]:hover + .nodes__tickets div[name="multi--hover"]::after,
+.nodes__tickets div[name="multi--hover"]:hover::after {
+  opacity: 0;
+  visibility: hidden;
+}
+
 #nodes__snackbar {
   z-index: 1000;
 }
