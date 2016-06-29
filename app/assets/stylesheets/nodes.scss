@@ -507,7 +507,7 @@ div[name="button--undo"] {
 
 .nodes__tickets div[name="multi--hover"] {
   z-index: 500;
-  top: 12px;
+  top: 8px;
   &::after {
     content: "...";
     display: block;
