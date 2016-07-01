@@ -168,7 +168,7 @@ class NodesController < ApplicationController
       @response[:data][:accessips] = ""
     end
     unless @node.created_first_at_accuracy
-      @response[:data][:created_first_at] = "#{t('nodes.row.datetime.before')} #{@response[:data][:created_first_at]}"
+      @response[:data][:created_first_at] = "#{t('nodes.row.created_at.before')} #{@response[:data][:created_first_at]}"
     end
     if @node.server_number && @node.abonent_number
       @response[:data][:ncc] = "#{sprintf("%05d", @node.server_number.to_i(16))}→#{sprintf("%05d", @node.abonent_number.to_i(16))}"

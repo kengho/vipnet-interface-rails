@@ -473,10 +473,6 @@ div[name="button--undo"] {
   }
   &__text {
     padding: 16px;
-    white-space: pre-line;
-    & span[name="prop"] {
-      white-space: pre;
-    }
     & span[name="value"] {
       font-weight: 600;
     }

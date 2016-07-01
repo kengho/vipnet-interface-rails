@@ -11,7 +11,7 @@
       <% value = data[prop] %>
       <% if value != "" %>
         <span name="prop"><%= t("nodes.row.info.#{prop}") %></span>:&nbsp;
-        <span name="value"><%= value.to_s.html_safe %></span>
+        <span name="value"><%= value.to_s.html_safe %></span><br>
       <% end %>
     <% end %>
   </div>
