@@ -70,6 +70,10 @@ class NodesControllerTest < ActionController::TestCase
     get(:index, { vipnet_id: "0x1a0e0001" })
     assert_equal(1, assigns["size"])
     assert assigns["search"]
+    # with spaces
+    get(:index, { vipnet_id: "  0x1a0e0001   " })
+    assert_equal(1, assigns["size"])
+    assert assigns["search"]
 
     get(:index, { wrong_search_param: "something" })
     assert_not assigns["search"]
@@ -96,6 +100,9 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal("0x1a0e0004", assigns["nodes"].last.vipnet_id)
     # quick search
     get(:index, { search: "0x1a0e00" })
+    assert_equal(3, assigns["size"])
+    # quick search (with spaces)
+    get(:index, { search: " 0x1a0e00  " })
     assert_equal(3, assigns["size"])
   end
 

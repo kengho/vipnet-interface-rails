@@ -14,13 +14,13 @@ class NodesController < ApplicationController
       params_expanded = Hash.new
       searchable_by.keys.each do |key|
         if Node.columns_hash[key]
-          params_expanded[key] = params["search"] if Node.columns_hash[key].type == :string
+          params_expanded[key] = params["search"].strip if Node.columns_hash[key].type == :string
         end
       end
     else
       logic = "AND"
       ending = "true"
-      params_expanded = params
+      params_expanded = params.each{ |_, value| value.strip! }
     end
     params_expanded.each do |key, param|
       if (searchable_by.key?(key) && param != "" && param)
