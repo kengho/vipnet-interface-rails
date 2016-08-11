@@ -1,7 +1,7 @@
-class Nodename < ActiveRecord::Base
-  belongs_to :network
-  validates :network_id,  presence: true,
-                          uniqueness: true
+class Nodename < Garland
+  belongs_to :network, foreign_key: "belongs_to_id"
+  validates :belongs_to_id, presence: true,
+                            uniqueness: true
 
   def changed_records(new_nodename)
     # make hashes out of nested hstore

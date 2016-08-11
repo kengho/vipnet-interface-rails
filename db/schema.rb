@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160615210408) do
+ActiveRecord::Schema.define(version: 20160811093610) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -26,6 +26,17 @@ ActiveRecord::Schema.define(version: 20160615210408) do
   end
 
   add_index "coordinators", ["network_id"], name: "index_coordinators_on_network_id", using: :btree
+
+  create_table "garlands", force: :cascade do |t|
+    t.string  "name"
+    t.text    "entity"
+    t.boolean "entity_type"
+    t.string  "type"
+    t.integer "next"
+    t.integer "previous"
+    t.integer "belongs_to_id"
+    t.string  "belongs_to_type"
+  end
 
   create_table "iplirconfs", force: :cascade do |t|
     t.integer  "coordinator_id"
