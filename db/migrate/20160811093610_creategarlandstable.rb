@@ -5,8 +5,8 @@ class Creategarlandstable < ActiveRecord::Migration
       t.text :entity
       t.boolean :entity_type
       t.string :type
-      t.integer :next
       t.integer :previous
+      t.integer :next
       t.integer :belongs_to_id
     end
   end

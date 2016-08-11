@@ -1,9 +1,12 @@
 require "test_helper"
 
-class GarlsndsTest < ActiveSupport::TestCase
+class GarlandsTest < ActiveSupport::TestCase
   setup do
     class Storage < Garland
     end
+    @h1 = { a: "a1", b: "b1" }
+    @h2 = { a: "a2", b: "b1" }
+    @h3 = { a: "a3", b: "b1" }
   end
 
   test "validations" do
@@ -13,5 +16,44 @@ class GarlsndsTest < ActiveSupport::TestCase
     assert_not s1.save
     assert_not s2.save
     assert s3.save
+  end
+
+  test "push" do
+    s0 = Storage.push("not hash")
+    assert_not s0
+
+    s1 = Storage.push(@h1)
+    assert s1
+    last = Storage.last
+    s1_id = last.id
+    assert_equal(@h1.to_s, last.entity)
+    assert_equal(Garland::SNAPSHOT, last.entity_type)
+    assert_equal(nil, last.previous)
+    assert_equal(nil, last.next)
+
+    s2 = Storage.push(@h2)
+    assert s2
+    last = Storage.last
+    s2_id = last.id
+    assert_equal(HashDiffSym.diff(@h1, @h2).to_s, last.entity)
+    assert_equal(s1_id, last.previous)
+    assert_equal(nil, last.next)
+    assert_equal(Garland::DIFF, last.entity_type)
+    assert_equal(s1_id, Storage.find_by(next: s2_id).id)
+    assert_equal(s2_id, Storage.find_by(previous: s1_id).id)
+
+    s3 = Storage.push(@h3)
+    assert s3
+    last = Storage.last
+    s3_id = last.id
+    assert_equal(HashDiffSym.diff(@h2, @h3).to_s, last.entity)
+  end
+
+  test "snapshot" do
+    Storage.push(@h1)
+    Storage.push(@h2)
+    assert_equal(@h2, eval(Storage.snapshot.entity))
+    Storage.push(@h3)
+    assert_equal(@h3, eval(Storage.snapshot.entity))
   end
 end
