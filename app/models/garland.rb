@@ -1,6 +1,7 @@
 class Garland < ActiveRecord::Base
   validates :entity, presence: true
   validates_inclusion_of :entity_type, in: [true, false]
+  validates_uniqueness_of :type, scope: [:belongs_to_id, :next], conditions: -> { where(next: nil) }
 
   SNAPSHOT = false
   DIFF = true

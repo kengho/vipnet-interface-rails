@@ -20,9 +20,20 @@ class GarlandsTest < ActiveSupport::TestCase
     s1 = Storage.new(entity: "{}", entity_type: nil)
     s2 = Storage.new(entity: nil, entity_type: Garland::SNAPSHOT)
     s3 = Storage.new(entity: "{}", entity_type: Garland::DIFF)
+    s4 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: nil)
+    s5 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: 1)
     assert_not s1.save
     assert_not s2.save
     assert s3.save
+    assert_not s4.save
+    assert s5.save
+
+    s4 = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, next: nil)
+    s5 = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, next: nil)
+    s6 = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, next: 1)
+    assert s4.save
+    assert_not s5.save
+    assert s6.save
   end
 
   test "push" do
