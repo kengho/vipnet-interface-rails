@@ -4,6 +4,13 @@ class GarlandsTest < ActiveSupport::TestCase
   setup do
     class Storage < Garland
     end
+
+    class StorageBelongs < Garland
+      belongs_to :network, foreign_key: "belongs_to_id"
+      validates :belongs_to_id, presence: true
+    end
+
+    @network1 = networks(:network1)
     @h1 = { a: "a1", b: "b1" }
     @h2 = { a: "a2", b: "b1" }
     @h3 = { a: "a3", b: "b1" }
@@ -47,6 +54,14 @@ class GarlandsTest < ActiveSupport::TestCase
     last = Storage.last
     s3_id = last.id
     assert_equal(HashDiffSym.diff(@h2, @h3).to_s, last.entity)
+  end
+
+  test "push belongs" do
+    s0 = StorageBelongs.push(@h1)
+    assert_not s0
+
+    s1 = StorageBelongs.push(hash: @h1, belongs_to: @network1)
+    assert s1
   end
 
   test "snapshot" do
