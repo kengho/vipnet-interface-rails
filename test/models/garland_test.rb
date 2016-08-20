@@ -58,7 +58,7 @@ class GarlandsTest < ActiveSupport::TestCase
 
   test "should push hashes" do
     s1 = Storage.push(@h1)
-    assert s1
+    assert_equal(HashDiffSym.diff({}, @h1), s1)
     last = Storage.last
     s1_id = last.id
     assert_equal(@h1.to_s, last.entity)
@@ -67,7 +67,7 @@ class GarlandsTest < ActiveSupport::TestCase
     assert_equal(nil, last.next)
 
     s2 = Storage.push(@h2)
-    assert s2
+    assert_equal(HashDiffSym.diff(@h1, @h2), s2)
     last = Storage.last
     s2_id = last.id
     assert_equal(HashDiffSym.diff(@h1, @h2).to_s, last.entity)
@@ -78,7 +78,7 @@ class GarlandsTest < ActiveSupport::TestCase
     assert_equal(s2_id, Storage.find_by(previous: s1_id).id)
 
     s3 = Storage.push(@h3)
-    assert s3
+    assert_equal(HashDiffSym.diff(@h2, @h3), s3)
     last = Storage.last
     s3_id = last.id
     assert_equal(HashDiffSym.diff(@h2, @h3).to_s, last.entity)
@@ -91,7 +91,7 @@ class GarlandsTest < ActiveSupport::TestCase
 
   test "should push to table which belong to something" do
     s = StorageBelongs.push(hash: @h1, belongs_to: @network1)
-    assert s
+    assert_equal(HashDiffSym.diff({}, @h1), s)
   end
 
   test "should be able to make snapshots" do

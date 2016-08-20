@@ -1,4 +1,4 @@
-class Garland < ActiveRecord::Base
+class Garland < AbstractModel
   validates :entity, presence: true
   validates_inclusion_of :entity_type, in: [true, false]
   # for given parent object, described by "belongs_to_id" and "belongs_to_type",
@@ -28,7 +28,11 @@ class Garland < ActiveRecord::Base
     thread = self.thread(b_to)
     if thread.size == 0
       n = self.new(entity: h.to_s, entity_type: SNAPSHOT, belongs_to_id: b_to_id, belongs_to_type: b_to_type)
-      return n.save
+      if n.save
+        return HashDiffSym.diff({}, h)
+      else
+        return false
+      end
     else
       s = self.snapshot(b_to)
       last_e = thread.find_by(next: nil)
@@ -43,7 +47,7 @@ class Garland < ActiveRecord::Base
       if n.save
         last_e.next = n.id
         if last_e.save
-          return true
+          return d
         else
           n.destroy
           return false
