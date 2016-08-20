@@ -11,14 +11,14 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160811093610) do
+ActiveRecord::Schema.define(version: 20160820144424) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
   enable_extension "hstore"
 
   create_table "coordinators", force: :cascade do |t|
-    t.string   "vipnet_id"
+    t.string   "vid"
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
@@ -48,10 +48,10 @@ ActiveRecord::Schema.define(version: 20160811093610) do
   add_index "iplirconfs", ["coordinator_id"], name: "index_iplirconfs_on_coordinator_id", using: :btree
 
   create_table "networks", force: :cascade do |t|
-    t.string   "vipnet_network_id"
+    t.string   "network_vid"
     t.string   "name"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
   end
 
   create_table "nodenames", force: :cascade do |t|
@@ -65,22 +65,23 @@ ActiveRecord::Schema.define(version: 20160811093610) do
   add_index "nodenames", ["network_id"], name: "index_nodenames_on_network_id", using: :btree
 
   create_table "nodes", force: :cascade do |t|
-    t.string   "vipnet_id"
+    t.string   "vid"
     t.string   "name"
-    t.datetime "created_at",                                null: false
-    t.datetime "updated_at",                                null: false
-    t.boolean  "history",                   default: false
-    t.hstore   "ip",                        default: {},    null: false
-    t.hstore   "version",                   default: {},    null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.hstore   "ip",                     default: {},   null: false
+    t.hstore   "version_hw",             default: {},   null: false
     t.datetime "created_first_at"
-    t.datetime "deleted_at"
+    t.datetime "deletion_date"
     t.integer  "network_id"
-    t.boolean  "enabled",                   default: true
+    t.boolean  "enabled",                default: true
     t.string   "category"
-    t.boolean  "created_first_at_accuracy", default: true
+    t.boolean  "creation_date_accuracy", default: true
     t.string   "abonent_number"
     t.string   "server_number"
-    t.hstore   "tickets",                   default: {}
+    t.hstore   "ticket",                 default: {}
+    t.hstore   "version",                default: {}
+    t.datetime "creation_date"
   end
 
   add_index "nodes", ["network_id"], name: "index_nodes_on_network_id", using: :btree

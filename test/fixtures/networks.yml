@@ -1,7 +1,7 @@
 network1:
-  vipnet_network_id: "6670"
+  network_vid: "6670"
   name: "existing_network"
 
 network2:
-  vipnet_network_id: "6671"
+  network_vid: "6671"
   name: "ignoring_network"

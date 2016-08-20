@@ -1,67 +1,83 @@
 class Api::V1::NodenamesController < Api::V1::BaseController
   def create
-    unless (params[:content] && params[:vipnet_network_id])
+    unless (params[:file] && params[:network_vid])
       Rails.logger.error("Incorrect params #{params}")
       render plain: ERROR_RESPONSE and return
     end
 
-    uploaded_file = params[:content].tempfile
-    nodename_vipnet_network_id = params[:vipnet_network_id]
-    uploaded_file_content = File.read(uploaded_file)
-    new_nodename = Nodename.new
-    parsed_nodename = VipnetParser::Nodename.new(uploaded_file_content)
-    render plain: ERROR_RESPONSE and return unless parsed_nodename
-    new_nodename.records = parsed_nodename.records
-    existing_nodename = Nodename.joins(:network).find_by("networks.vipnet_network_id": nodename_vipnet_network_id)
-    new_records = Hash.new
-    if existing_nodename
-      created_first_at_accuracy = true
-    else
-      created_first_at_accuracy = false
-      network = Network.find_or_create_by(vipnet_network_id: nodename_vipnet_network_id)
-      render plain: ERROR_RESPONSE and return unless network
-      existing_nodename = Nodename.new(network_id: network.id)
-      existing_nodename.records = Hash.new
-      # clean existing nodes which belongs to incoming nodename's networks
-      nodes_to_destroy = Node.joins(:network).where("networks.id = ?", existing_nodename.network_id)
-      nodes_to_destroy.destroy_all
+    file_content = File.read(params[:file].tempfile)
+    parsed_nodename = VipnetParser::Nodename.new(file_content)
+    records = parsed_nodename.records
+
+    network = Network.find_or_create_by(network_vid: params[:network_vid])
+    unless diff = Nodename.push(hash: records, belongs_to: network)
+      Rails.logger.error("Unable to push hash")
+      render plain: ERROR_RESPONSE and return
     end
 
-    changed_records = existing_nodename.changed_records(new_nodename)
-    networks_to_ignore = Settings.networks_to_ignore.split(",")
-    changed_records.each do |vipnet_id, record|
-      if existing_nodename.records[vipnet_id]
-        next if eval(existing_nodename.records[vipnet_id])[:category] == :group
-      elsif record[:category]
-        next if record[:category] == :group
-      end
-      record_vipnet_network_id = VipnetParser::network(vipnet_id)
-      network = Network.find_or_create_by(vipnet_network_id: record_vipnet_network_id)
-      render plain: ERROR_RESPONSE and return unless network
-      we_admin_this_network = !!Nodename.joins(:network).find_by("networks.vipnet_network_id": record_vipnet_network_id)
-      it_is_internetworking_node = nodename_vipnet_network_id != record_vipnet_network_id
-      next if we_admin_this_network && it_is_internetworking_node
-      next if networks_to_ignore.include?(network.vipnet_network_id)
-      node_to_history = Node.find_by(vipnet_id: vipnet_id, history: false)
-      if node_to_history
-        node = node_to_history.dup
-        node_to_history.history = true
-        node_to_history.save!
+    current_iplirconfs_snapshots = {}
+    got_iplirconfs_snapshots = false
+    diff.each do |changes|
+      # parse diff
+      action = { "+" => :add, "-" => :remove, "~" => :change }[changes[0]]
+      target = {}
+      tmp = changes[1].split(".")
+      target[:vid] = tmp[0]
+      if tmp[1]
+        target[:field] = HashDiffSym.import_key(tmp[1])
       else
-        node = Node.new(created_first_at: DateTime.now)
+        target[:field] = nil
       end
-      Nodename.props_from_record.each do |prop_name|
-        node[prop_name] = record[prop_name] if record.key?(prop_name)
+      if action == :change
+        before = changes[2]
+        after = changes[3]
       end
-      node.vipnet_id = vipnet_id
-      node.network_id = network.id
-      node.created_first_at_accuracy = created_first_at_accuracy
-      node.save!
-    end
+      if action == :add || action == :remove
+        props = changes[2]
+      end
+      curent_network_vid = VipnetParser::network(target[:vid])
 
-    # rewrite nodename
-    existing_nodename.records = new_nodename.records
-    existing_nodename.save!
+      # skip ignored networks
+      networks_to_ignore = Settings.networks_to_ignore.split(",")
+      next if networks_to_ignore.include?(curent_network_vid)
+
+      # skip extra nodes
+      we_admin_this_network = !!Nodename.joins(:network).find_by("networks.network_vid": curent_network_vid)
+      it_is_internetworking_node = network.network_vid != curent_network_vid
+      next if we_admin_this_network && it_is_internetworking_node
+
+      # skip groups
+      if records[target[:vid]]
+        next if records[target[:vid]][:category] == :group
+      elsif props[:category]
+        next if props[:category] == :group
+      end
+
+      if action == :add
+        unless got_iplirconfs_snapshots
+          Coordinator.all.each do |coord|
+            current_iplirconfs_snapshots[coord.vid] = Iplirconf.snapshot(coord)
+          end
+          got_iplirconfs_snapshots = true
+        end
+        new_node = CurrentNode.new(vid: target[:vid], creation_date: DateTime.now, network_id: network.id)
+        new_node.set_props_from_nodename(props)
+        new_node.set_props_from_iplirconf(props: props, snapshots: current_iplirconfs_snapshots)
+        new_node.save!
+      end
+
+      if action == :remove
+        node_to_destroy = CurrentNode.find_by(vid: target[:vid])
+        node_to_destroy.destroy if node_to_destroy
+      end
+
+      if action == :change
+        changing_node = CurrentNode.find_by(vid: target[:vid])
+        changing_node[target[:field]] = after
+        changing_node.save!
+      end
+    end
+    
     render plain: OK_RESPONSE and return
   end
 end

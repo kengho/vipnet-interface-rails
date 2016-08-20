@@ -1,0 +1,5 @@
+administrator                                      1 A 00001A0E00010001 1A0E000B
+coordinator1                                       1 S 00001A0E00010000 1A0E000A
+coordinator2                                       1 S 00001A0E00020000 1A0E000D
+Вся сеть                                           1 G C0001A0E00000001 1A0E0000
+ignored_node2                                      1 A 00001A1000010001 1A10000C

@@ -14,6 +14,18 @@ class ActiveSupport::TestCase
   ENV["POST_TICKETS_TOKEN"] = "POST_TICKETS_TOKEN"
 end
 
+class Array
+  def sort_by_vid
+    self.sort_by { |h| h[:vid] }
+  end
+
+  def which_index(hash)
+    self.each_with_index do |e, i|
+      return i if e[hash.keys.first] == hash.values.first
+    end
+  end
+end
+
 class ActionController::TestCase
   require "authlogic/test_case"
   setup :activate_authlogic
