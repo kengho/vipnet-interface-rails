@@ -21,34 +21,42 @@ class GarlandsTest < ActiveSupport::TestCase
     @h6 = { a: "a6", b: "b1" }
   end
 
-  test "validations" do
-    s1 = Storage.new(entity: "{}", entity_type: nil)
-    s2 = Storage.new(entity: nil, entity_type: Garland::SNAPSHOT)
-    s3 = Storage.new(entity: "{}", entity_type: Garland::DIFF)
-    s4 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: nil)
-    s5 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: 1)
+  test "should not save without entity" do
+    s = Storage.new(entity: nil, entity_type: Garland::DIFF)
+    assert_not s.save
+  end
+
+  test "should not save without entity_type" do
+    s = Storage.new(entity: "{}", entity_type: nil)
+    assert_not s.save
+  end
+
+  test "should not save more than one record with next is nil" do
+     Storage.new(entity: "{}", entity_type: Garland::DIFF, next: nil).save
+    s1 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: nil)
     assert_not s1.save
-    assert_not s2.save
-    assert s3.save
-    assert_not s4.save
-    assert s5.save
+    s2 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: 1)
+    assert s2.save
   end
 
-  test "validations belongs" do
-    s1 = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: nil)
-    s2 = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: nil)
-    s3 = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: 1)
-    s4 = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "NotNetwork", next: nil)
-    assert s1.save
-    assert_not s2.save
-    assert s3.save
-    assert s4.save
+  test "should not save more than one record with next is nil (belongs)" do
+    StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: nil).save
+    s = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: nil)
+    assert_not s.save
   end
 
-  test "push" do
-    s0 = Storage.push("not hash")
-    assert_not s0
+  test "should save more than one record with next is nil if it belongs to different objects" do
+    StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: 1).save
+    s = StorageBelongs.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "NotNetwork", next: nil)
+    assert s.save
+  end
 
+  test "should not push not hashes" do
+    s = Storage.push("not hash")
+    assert_not s
+  end
+
+  test "should push hashes" do
     s1 = Storage.push(@h1)
     assert s1
     last = Storage.last
@@ -76,29 +84,33 @@ class GarlandsTest < ActiveSupport::TestCase
     assert_equal(HashDiffSym.diff(@h2, @h3).to_s, last.entity)
   end
 
-  test "push belongs" do
-    s0 = StorageBelongs.push(@h1)
-    assert_not s0
-
-    s1 = StorageBelongs.push(hash: @h1, belongs_to: @network1)
-    assert s1
+  test "should not push if table should belong to something but it is not defined" do
+    s = StorageBelongs.push(@h1)
+    assert_not s
   end
 
-  test "snapshot" do
+  test "should push to table which belong to something" do
+    s = StorageBelongs.push(hash: @h1, belongs_to: @network1)
+    assert s
+  end
+
+  test "should be able to make snapshots" do
     Storage.push(@h1)
     Storage.push(@h2)
     assert_equal(@h2, eval(Storage.snapshot.entity))
     Storage.push(@h3)
     assert_equal(@h3, eval(Storage.snapshot.entity))
+  end
 
-    # make little mess
-    last = Storage.last
-    last.next = Garland::NEXT_ID_PENDING
-    last.save
+  test "snapshot should return nil if there are stack errors" do
+    Storage.push(@h1)
+    e = Storage.first
+    e.next = Garland::NEXT_ID_PENDING
+    e.save
     assert_equal(nil, Storage.snapshot)
   end
 
-  test "snapshot belongs" do
+  test "should be able to make snapshots (belongs)" do
     StorageBelongs.push(hash: @h1, belongs_to: @network1)
     StorageBelongs.push(hash: @h2, belongs_to: @network1)
     assert_equal(@h2, eval(StorageBelongs.snapshot(@network1).entity))
