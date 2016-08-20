@@ -123,4 +123,10 @@ class GarlandsTest < ActiveSupport::TestCase
     StorageBelongs.push(hash: @h3, belongs_to: @network2)
     assert_equal(@h3, eval(StorageBelongs.snapshot(@network2).entity))
   end
+
+  test "should be able to tell is there are any records belongs to given" do
+    assert_not StorageBelongs.any?(@network1)
+    StorageBelongs.push(hash: @h1, belongs_to: @network1)
+    assert StorageBelongs.any?(@network1)
+  end
 end

@@ -77,6 +77,10 @@ class Garland < ActiveRecord::Base
     self.new(entity: s_h.to_s, entity_type: SNAPSHOT)
   end
 
+  def self.any?(b_to)
+    self.thread(b_to).any?
+  end
+
   private
     def self.thread(b_to)
       if b_to == nil
