@@ -68,16 +68,24 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
       if action == :remove
         node_to_destroy = CurrentNode.find_by(vid: target[:vid])
-        node_to_destroy.destroy if node_to_destroy
+        if node_to_destroy
+          node_to_destroy.destroy
+        else
+          Rails.logger.error("CurrentNode with vid '#{target[:vid]}' doesn't exists, nothing to destroy")
+        end
       end
 
       if action == :change
         changing_node = CurrentNode.find_by(vid: target[:vid])
-        changing_node[target[:field]] = after
-        changing_node.save!
+        if changing_node
+          changing_node[target[:field]] = after
+          changing_node.save!
+        else
+          Rails.logger.error("CurrentNode with vid '#{target[:vid]}' doesn't exists, nothing to change")
+        end
       end
     end
-    
+
     render plain: OK_RESPONSE and return
   end
 end
