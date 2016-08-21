@@ -16,7 +16,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     assert_equal("error", @response.body)
   end
 
-  test "vipnet_network_id should be provided" do
+  test "network_vid should be provided" do
     nodename_empty = fixture_file_upload("nodenames/empty.doc", "application/octet-stream")
     post(:create, { file: nodename_empty, network_vid: nil })
     assert_equal("error", @response.body)
