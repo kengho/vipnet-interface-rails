@@ -15,7 +15,6 @@ ru:
           enabled_comment: "Статус узла в Центре Управления Сетью ViPNet"
           vipnet_version_comment: "\"?\" если от разных координаторов получены противоречивые данные"
           accessips_label: "Получение данных по адресу доступа"
-          accessips_label_comment: "only[] аналогично п.1"
           errors_label: "Ошибка"
           wrong_params: "Неверные параметры"
           node_not_found: "Узел не найден"

@@ -38,7 +38,6 @@ en:
           enabled_comment: "Node's status in ViPNet Network Control Center"
           vipnet_version_comment: "\"?\" if gotten by some coordinator value conflicts with other values"
           accessips_label: "Getting data by accessip"
-          accessips_label_comment: "only[] param is similar to p.1"
           errors_label: "Errors"
           wrong_params: "Wrong params"
           node_not_found: "Node not found"
