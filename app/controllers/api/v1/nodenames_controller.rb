@@ -45,8 +45,11 @@ class Api::V1::NodenamesController < Api::V1::BaseController
           got_iplirconfs_snapshots = true
         end
         new_node = CurrentNode.new(vid: target[:vid], creation_date: DateTime.now, network_id: network.id)
+        current_iplirconfs_node_params = current_iplirconfs_snapshots
+        # reject all extra sections
+        current_iplirconfs_node_params.map { |k, v| v.reject! { |k, v| k != target[:vid] }}
         new_node.set_props_from_nodename(props)
-        new_node.set_props_from_iplirconf(props: props, snapshots: current_iplirconfs_snapshots)
+        new_node.set_props_from_iplirconf(current_iplirconfs_node_params)
         new_node.save!
       end
 
