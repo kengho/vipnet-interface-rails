@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160820144424) do
+ActiveRecord::Schema.define(version: 20160821100135) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -82,6 +82,7 @@ ActiveRecord::Schema.define(version: 20160820144424) do
     t.hstore   "ticket",                 default: {}
     t.hstore   "version",                default: {}
     t.datetime "creation_date"
+    t.hstore   "accessip",               default: {}
   end
 
   add_index "nodes", ["network_id"], name: "index_nodes_on_network_id", using: :btree
