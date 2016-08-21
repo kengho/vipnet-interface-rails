@@ -85,6 +85,20 @@ class Garland < AbstractModel
     self.thread(b_to).any?
   end
 
+  def self.decode_changes(changes)
+    action = { "+" => :add, "-" => :remove, "~" => :change }[changes[0]]
+    target = {}
+    target[:vid], target[:field] = HashDiffSym.decode_property_path(changes[1])
+    if action == :change
+      before = changes[2]
+      after = changes[3]
+    end
+    if action == :add || action == :remove
+      props = changes[2]
+    end
+    return action, target, props, before, after
+  end
+
   private
     def self.thread(b_to)
       if b_to == nil
