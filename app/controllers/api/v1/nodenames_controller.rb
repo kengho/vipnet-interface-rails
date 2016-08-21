@@ -18,18 +18,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     current_iplirconfs_snapshots = {}
     got_iplirconfs_snapshots = false
     diff.each do |changes|
-      # parse changes
-      # action = { "+" => :add, "-" => :remove, "~" => :change }[changes[0]]
-      # target = {}
-      # target[:vid], target[:field] = HashDiffSym.decode_property_path(changes[1])
-      # if action == :change
-      #   before = changes[2]
-      #   after = changes[3]
-      # end
-      # if action == :add || action == :remove
-      #   props = changes[2]
-      # end
-      action, target, props, before, after = Garland.decode_change(changes)
+      action, target, props, before, after = Garland.decode_changes(changes)
       curent_network_vid = VipnetParser::network(target[:vid])
 
       # skip ignored networks
