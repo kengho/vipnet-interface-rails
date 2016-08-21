@@ -13,6 +13,10 @@ class GarlandsTest < ActiveSupport::TestCase
       belongs_to :coordinator
     end
 
+    Storage.destroy_all
+    StorageBelongsNetwork.destroy_all
+    StorageBelongsCoordinator.destroy_all
+
     @network1 = networks(:network1)
     @network2 = networks(:network2)
     @coordinator1 = coordinators(:coordinator1)
@@ -139,5 +143,11 @@ class GarlandsTest < ActiveSupport::TestCase
     n = StorageBelongsNetwork.first
     n.belongs_to_type = "Something"
     assert_not n.save
+  end
+
+  test "should not save empty diffs" do
+    Storage.push(@h1)
+    Storage.push(@h1)
+    assert_equal(1, Storage.all.size)
   end
 end

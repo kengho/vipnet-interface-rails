@@ -42,18 +42,22 @@ class Garland < AbstractModel
         return false
       end
       d = HashDiffSym.diff(eval(s.entity), h)
-      n = self.new(entity: d.to_s, entity_type: DIFF, previous: last_e.id, belongs_to_id: b_to_id, belongs_to_type: b_to_type)
+      if d == []
+        return d
+      else
+        n = self.new(entity: d.to_s, entity_type: DIFF, previous: last_e.id, belongs_to_id: b_to_id, belongs_to_type: b_to_type)
 
-      if n.save
-        last_e.next = n.id
-        if last_e.save
-          return d
+        if n.save
+          last_e.next = n.id
+          if last_e.save
+            return d
+          else
+            n.destroy
+            return false
+          end
         else
-          n.destroy
           return false
         end
-      else
-        return false
       end
     end
   end
