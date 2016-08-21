@@ -18,16 +18,10 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     current_iplirconfs_snapshots = {}
     got_iplirconfs_snapshots = false
     diff.each do |changes|
-      # parse diff
+      # parse changes
       action = { "+" => :add, "-" => :remove, "~" => :change }[changes[0]]
       target = {}
-      tmp = changes[1].split(".")
-      target[:vid] = tmp[0]
-      if tmp[1]
-        target[:field] = HashDiffSym.import_key(tmp[1])
-      else
-        target[:field] = nil
-      end
+      target[:vid], target[:field] = HashDiffSym.decode_property_path(changes[1])
       if action == :change
         before = changes[2]
         after = changes[3]
