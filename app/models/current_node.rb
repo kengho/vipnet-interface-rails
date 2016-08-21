@@ -1,0 +1,2 @@
+class CurrentNode < Node
+end
