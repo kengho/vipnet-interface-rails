@@ -25,8 +25,7 @@ class Api::V1::AccessipsController < Api::V1::BaseController
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
       render json: @response and return
     elsif nodes.size == 1
-      node = nodes.first
-      @response[:data] = @response.merge({ vid: node.vid })
+      @response[:data] = @response.merge({ vid: nodes.first.vid })
       render json: @response and return
     elsif nodes.size > 1
       @response[:errors] = [{
