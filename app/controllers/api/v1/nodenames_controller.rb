@@ -15,7 +15,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       render plain: ERROR_RESPONSE and return
     end
 
-    current_iplirconfs_snapshots = {}
+    iplirconfs_snapshots = {}
     got_iplirconfs_snapshots = false
     diff.each do |changes|
       action, target, props, before, after = Garland.decode_changes(changes)
@@ -40,16 +40,22 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       if action == :add
         unless got_iplirconfs_snapshots
           Coordinator.all.each do |coord|
-            current_iplirconfs_snapshots[coord.vid] = Iplirconf.snapshot(coord)
+            iplirconfs_snapshots[coord.vid] = (eval(Iplirconf.snapshot(coord).entity))
           end
           got_iplirconfs_snapshots = true
         end
         new_node = CurrentNode.new(vid: target[:vid], creation_date: DateTime.now, network_id: network.id)
-        current_iplirconfs_node_params = current_iplirconfs_snapshots
-        # reject all extra sections
-        current_iplirconfs_node_params.map { |k, v| v.reject! { |k, v| k != target[:vid] }}
+
+        # iplirconfs_node_params if hash of all snapshots but with target[:vid] only
+        iplirconfs_node_params = {}
+        iplirconfs_snapshots.each do |k, snapshot|
+          iplirconf_node_params = snapshot.clone
+          iplirconf_node_params.reject! { |vid, _| vid != target[:vid] }
+          iplirconfs_node_params[k] = iplirconf_node_params
+        end
+
         new_node.set_props_from_nodename(props)
-        new_node.set_props_from_iplirconf(current_iplirconfs_node_params)
+        new_node.set_props_from_iplirconf(iplirconfs_node_params)
         new_node.save!
       end
 

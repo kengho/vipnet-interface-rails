@@ -130,4 +130,81 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     expected_nodes.delete_at(client1_index)
     assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
   end
+
+  test "create with non empty Iplirconf" do
+    # prepare Iplifconf and Coordinator
+    Coordinator.destroy_all
+    request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_HW_TOKEN\""
+    nodenames_controller = @controller
+    @controller = Api::V1::IplirconfsController.new
+    changed_iplirconf = fixture_file_upload("iplirconfs/02_0x1a0e000a_changed.conf", "application/octet-stream")
+    post(:create, { file: changed_iplirconf, coord_vid: "0x1a0e000a" })
+    deleted_ip_iplirconf = fixture_file_upload("iplirconfs/06_0x1a0e000d_deleted_ip.conf", "application/octet-stream")
+    post(:create, { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
+    @controller = nodenames_controller
+    request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
+
+    added_client1_nodename = fixture_file_upload("nodenames/01_added_client1.doc", "application/octet-stream")
+    post(:create, { file: added_client1_nodename, network_vid: "6670" })
+    expected_nodes = [
+      {
+        :vid => "0x1a0e000a",
+        :name => "coordinator1",
+        :enabled => true,
+        :category => "server",
+        :abonent_number => "0000",
+        :server_number => "0001",
+        :ip => {
+          :"0x1a0e000a" => "[\"192.0.2.1\", \"192.0.2.3\"]",
+          :"0x1a0e000d" => "[\"192.0.2.3\"]",
+        },
+        :accessip => { :"0x1a0e000d" => "203.0.113.4" },
+        :version => {
+          :"0x1a0e000a" => "3.0-670",
+          :"0x1a0e000d" => "3.0-670",
+        },
+      },
+      {
+        :vid => "0x1a0e000b",
+        :name => "administrator",
+        :enabled => true,
+        :category => "client",
+        :abonent_number => "0001",
+        :server_number => "0001",
+        :ip => {
+          :"0x1a0e000a" => "[\"192.0.2.55\"]",
+          :"0x1a0e000d" => "[\"192.0.2.55\"]",
+        },
+        :accessip => {
+          :"0x1a0e000a" => "198.51.100.2",
+          :"0x1a0e000d" => "203.0.113.2",
+        },
+        :version => {
+          :"0x1a0e000a" => "3.2-673",
+          :"0x1a0e000d" => "3.2-672",
+        },
+      },
+      {
+        :vid => "0x1a0e000c",
+        :name => "client1",
+        :enabled => true,
+        :category => "client",
+        :abonent_number => "0002",
+        :server_number => "0001",
+        :ip => {
+          :"0x1a0e000a" => "[\"192.0.2.7\"]",
+          :"0x1a0e000d" => "[\"192.0.2.7\"]",
+        },
+        :accessip => {
+          :"0x1a0e000a" => "192.0.2.7",
+          :"0x1a0e000d" => "203.0.113.3",
+        },
+        :version => {
+          :"0x1a0e000a" => "0.3-2",
+          :"0x1a0e000d" => "0.3-2",
+        },
+      },
+    ]
+    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename", "Iplirconf")).sort_by_vid)
+  end
 end

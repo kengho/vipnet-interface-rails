@@ -28,7 +28,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             node[target[:field]][coord_vid] = arr
           else
             # ["+", "0x1a0e000a", {:id=>"0x1a0e000a", :name=>"coordinator1", ... }]
-            node.set_props_from_iplirconf(coord_vid => props)
+            node.set_props_from_iplirconf(coord_vid => { target[:vid] => props })
           end
         end
 

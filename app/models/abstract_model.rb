@@ -21,10 +21,10 @@ class AbstractModel < ActiveRecord::Base
     self.to_json(:only => props + [:vid]).gsub("null", "nil")
   end
 
-  def self.to_json_for(table_types)
+  def self.to_json_for(*table_types)
     result = []
     self.all.each do |e|
-      result.push(eval(e.to_json_for(table_types)))
+      result.push(eval(e.to_json_for(*table_types)))
     end
     result.to_json.gsub("null", "nil")
   end
