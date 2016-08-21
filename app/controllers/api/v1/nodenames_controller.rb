@@ -10,6 +10,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     records = parsed_nodename.records
 
     network = Network.find_or_create_by(network_vid: params[:network_vid])
+    nodename_is_not_first = Nodename.any?(network)
     unless diff = Nodename.push(hash: records, belongs_to: network)
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return
@@ -56,6 +57,8 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
         new_node.set_props_from_nodename(props)
         new_node.set_props_from_iplirconf(iplirconfs_node_params)
+        new_node.creation_date_accuracy = nodename_is_not_first
+
         new_node.save!
       end
 

@@ -38,6 +38,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :category => "server",
         :abonent_number => "0000",
         :server_number => "0001",
+        :creation_date_accuracy => false,
       },
       {
         :vid => "0x1a0e000b",
@@ -46,6 +47,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :category => "client",
         :abonent_number => "0001",
         :server_number => "0001",
+        :creation_date_accuracy => false,
       },
     ]
     assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
@@ -61,6 +63,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :category => "client",
         :abonent_number => "0002",
         :server_number => "0001",
+        :creation_date_accuracy => true,
       },
     )
     assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
@@ -83,6 +86,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :category => "server",
         :abonent_number => "0000",
         :server_number => "0002",
+        :creation_date_accuracy => true,
       },
     )
     assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
@@ -154,6 +158,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :category => "server",
         :abonent_number => "0000",
         :server_number => "0001",
+        :creation_date_accuracy => false,
         :ip => {
           :"0x1a0e000a" => "[\"192.0.2.1\", \"192.0.2.3\"]",
           :"0x1a0e000d" => "[\"192.0.2.3\"]",
@@ -171,6 +176,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :category => "client",
         :abonent_number => "0001",
         :server_number => "0001",
+        :creation_date_accuracy => false,
         :ip => {
           :"0x1a0e000a" => "[\"192.0.2.55\"]",
           :"0x1a0e000d" => "[\"192.0.2.55\"]",
@@ -191,6 +197,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :category => "client",
         :abonent_number => "0002",
         :server_number => "0001",
+        :creation_date_accuracy => false,
         :ip => {
           :"0x1a0e000a" => "[\"192.0.2.7\"]",
           :"0x1a0e000d" => "[\"192.0.2.7\"]",

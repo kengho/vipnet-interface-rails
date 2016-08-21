@@ -16,6 +16,7 @@ class AbstractModel < ActiveRecord::Base
   def to_json_for(*table_types)
     props = []
     table_types.each do |table_type|
+      props += [:creation_date_accuracy] if table_type == "Nodename"
       props += table_type.constantize.props_from_file
     end
     self.to_json(:only => props + [:vid]).gsub("null", "nil")
