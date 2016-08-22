@@ -42,7 +42,7 @@ class Api::V1::AccessipsControllerTest < ActionController::TestCase
 
   test "should return vid by accessip" do
     get(:index, { accessip: "198.51.100.1", token: "GET_INFORMATION_TOKEN" })
-    assert_equal({ data: { vid: "0x1a0e0001" }}, assigns["response"])
+    assert_equal({ data: { "vid" => "0x1a0e0001" }}, assigns["response"])
   end
 
   test "should return error if accessip not found" do

@@ -49,17 +49,17 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
 
   test "should return information" do
     get(:index, { vid: "0x1a0e0001", token: "GET_INFORMATION_TOKEN" })
-    assert_equal({ data: { name: "client-0x1a0e0001" }}, assigns["response"])
+    assert_equal({ data: { "name" => "client-0x1a0e0001" }}, assigns["response"])
   end
 
   test "should return information using only" do
-    get(:index, { vid: "0x1a0e0001", only: ["ip", "category"], token: "GET_INFORMATION_TOKEN" })
+    get(:index, { vid: "0x1a0e0001", only: ["ip", "category", "jibberish"], token: "GET_INFORMATION_TOKEN" })
     assert_equal({ data: {
-      ip: {
+      "ip" => {
         "0x1a0e000a" => "198.51.100.1",
         "0x1a0e000d" => "198.51.100.1",
       },
-      category: "client",
+      "category" => "client",
     }}, assigns["response"])
   end
 end

@@ -18,7 +18,11 @@ class Api::V1::NodesController < Api::V1::BaseController
     end
 
     if node
-      @response[:data] = node.attributes.slice(*only).symbolize_keys
+      avaliable_fileds = [
+        "vid", "name", "ip", "accessip", "version", "version_decoded",
+        "enabled", "category", "creation_date", "creation_date_accuracy",
+      ]
+      @response[:data] = node.attributes.slice(*only & avaliable_fileds)
     else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
     end
