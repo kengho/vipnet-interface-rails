@@ -1,40 +1,43 @@
 require "test_helper"
 
 class Api::V1::TicketsControllerTest < ActionController::TestCase
-  test "validations" do
-    # correct token should be provided
+  test "correct token should be provided" do
     post(:create)
     assert_response :unauthorized
+  end
 
-    # ticket should be provided
+  test "ticket should be provided" do
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_TICKETS_TOKEN\""
     post(:create, { ticket: nil })
     assert_equal("error", @response.body)
   end
 
-  test "post ticket" do
-    # prepare
+  test "create" do
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_TICKETS_TOKEN\""
-    node1 = Node.new(
-      vipnet_id: "0x1a0e0001",
-      name: "test",
-      network_id: networks(:network1).id,
-    )
-    node1.save!
-    # first ticket incoming
+    TicketSystem.destroy_all
+    CurrentNode.new(
+      vid: "0x1a0e0001",
+      network: networks(:network1),
+    ).save!
+
     post(:create, {
-      ticket: { vipnet_id: "0x1a0e0001", id: "1", url_template: "http://tickets.org/ticket_id=\#{id}" },
+      ticket: { vid: "0x1a0e0001", id: "1", url_template: "http://tickets.org/ticket_id={id}" },
     })
-    # creates new node, one goes to history
-    assert_equal(Node.all.size, 2)
-    node1 = Node.where("vipnet_id = ? AND history = 'false'", "0x1a0e0001").first
-    assert_equal({ "http://tickets.org/ticket_id=\#{id}" => "\[\"1\"\]", "ids_summary" => "1" }, node1.tickets)
-    # another ticket incoming
+    assert_equal({ "http://tickets.org/ticket_id={id}" => "\[\"1\"\]" }, CurrentNode.find_by(vid: "0x1a0e0001").ticket)
+    assert TicketSystem.find_by(url_template: "http://tickets.org/ticket_id={id}")
+
     post(:create, {
-      ticket: { vipnet_id: "0x1a0e0001", id: "2", url_template: "http://tickets.org/ticket_id=\#{id}" },
+      ticket: { vid: "0x1a0e0001", id: "2", url_template: "http://tickets.org/ticket_id={id}" },
     })
-    assert_equal(Node.all.size, 3)
-    node1 = Node.where("vipnet_id = ? AND history = 'false'", "0x1a0e0001").first
-    assert_equal({ "http://tickets.org/ticket_id=\#{id}" => "\[\"1\", \"2\"\]", "ids_summary" => "1, 2" }, node1.tickets)
+    assert_equal({ "http://tickets.org/ticket_id={id}" => "\[\"1\", \"2\"\]" }, CurrentNode.find_by(vid: "0x1a0e0001").ticket)
+
+    post(:create, {
+      ticket: { vid: "0x1a0e0001", id: "3", url_template: "http://tickets2.org/ticket_id={id}" },
+    })
+    assert_equal({
+      "http://tickets.org/ticket_id={id}"=>"[\"1\", \"2\"]",
+      "http://tickets2.org/ticket_id={id}"=>"[\"3\"]"
+    }, CurrentNode.find_by(vid: "0x1a0e0001").ticket)
+    assert TicketSystem.find_by(url_template: "http://tickets2.org/ticket_id={id}")
   end
 end
