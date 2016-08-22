@@ -81,7 +81,6 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         end
       end
     end
-
     render plain: OK_RESPONSE and return
   end
 end

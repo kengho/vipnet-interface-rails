@@ -49,7 +49,6 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
         node.save!
       end
     end
-
     render plain: OK_RESPONSE and return
   end
 end
