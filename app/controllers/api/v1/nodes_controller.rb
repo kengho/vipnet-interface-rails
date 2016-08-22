@@ -1,13 +1,13 @@
 class Api::V1::NodesController < Api::V1::BaseController
   def index
     @response = Hash.new
-    if params[:vipnet_id]
-      only = params[:only] || ["name", "enabled"]
-      node = Node.find_by(vipnet_id: params[:vipnet_id], history: false, deleted_at: nil)
+    if params[:vid]
+      only = params[:only] || ["name"]
+      node = CurrentNode.find_by(vid: params[:vid])
     else
       @response[:errors] = [{
         title: "external",
-        detail: "Expected vipnet_id as param",
+        detail: "Expected vid as param",
         links: {
           related: {
             href: "/api/v1/doc"
@@ -18,15 +18,7 @@ class Api::V1::NodesController < Api::V1::BaseController
     end
 
     if node
-      @response[:data] = @response.merge(node.attributes.slice(*only))
-      if params[:availability] == "true"
-        availability = node.availability
-        if availability[:data]
-          @response[:data]["available"] = availability[:data][:availability]
-        else
-          @response[:data]["available"] = false
-        end
-      end
+      @response[:data] = node.attributes.slice(*only).symbolize_keys
     else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
     end
