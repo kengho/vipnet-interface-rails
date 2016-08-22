@@ -32,7 +32,7 @@ class Api::V1::NodesController < Api::V1::BaseController
 
     if node
       avaliable_fileds = [
-        "vid", "name", "ip", "accessip", "version", "version_decoded",
+        "name", "ip", "accessip", "version", "version_decoded",
         "enabled", "category", "creation_date", "creation_date_accuracy",
       ]
       @response[:data] = node.attributes.slice(*only & avaliable_fileds)
