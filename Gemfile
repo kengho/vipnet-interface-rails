@@ -12,6 +12,7 @@ gem "coffee-rails"
 group :development do
   gem "web-console", "~> 2.0"
   gem "spring"
+  gem "faker"
 end
 
 gem "material_design_lite-rails"
