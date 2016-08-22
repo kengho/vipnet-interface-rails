@@ -32,9 +32,11 @@
   </ol>
   <p>2. <%= t(".accessips_label") %></p>
   <%= t(".request") %>: <span class="get">api/v1/accessips?token=$GET_INFORMATION_TOKEN&accessip=$ACCESSIP</span><br>
-  <%= t(".response") %>: <span class="json">data: { vipnet_id: "$VIPNET_ID", enabled: [true | false] }</span><br>
-  <span class="comment">// <%= t(".accessips_label_comment") %></span>
-  <p>3. <%= t(".errors_label") %></p>
+  <%= t(".response") %>: <span class="json">data: { vid: "$VID" }</span><br><br>
+  <p>3. <%= t(".availability_label") %></p>
+  <%= t(".request") %>: <span class="get">api/v1/availability?token=$GET_INFORMATION_TOKEN&vid=$VID</span><br>
+  <%= t(".response") %>: <span class="json">data: { "availability": [true | false] }</span><br><br>
+  <p>4. <%= t(".errors_label") %></p>
   <%= t(".wrong_params") %><br>
   <span class="json">errors [{ title: "external", detail: "Expected $PARAM as param", links: { related: { href: "/api/v1/doc" }}}]</span><br><br>
   <%= t(".node_not_found") %><br>

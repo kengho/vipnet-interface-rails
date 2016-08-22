@@ -1,5 +1,25 @@
 class Api::V1::AvailabilityController < Api::V1::BaseController
   def index
-    render nothing: true, status: :unauthorized, content_type: "text/html" and return
+    @response = {}
+    unless params[:vid]
+      @response[:errors] = [{
+        title: "external",
+        detail: "Expected vid as param",
+        links: {
+          related: {
+            href: "/api/v1/doc"
+          }
+        }
+      }]
+      render json: @response and return
+    end
+
+    node = CurrentNode.find_by(vid: params[:vid])
+    if node
+      @response = node.availability
+    else
+      @response[:errors] = [{ title: "external", detail: "Node not found" }]
+    end
+    render json: @response and return
   end
 end

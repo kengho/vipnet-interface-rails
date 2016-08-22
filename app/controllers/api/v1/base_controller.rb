@@ -21,8 +21,9 @@ class Api::V1::BaseController < ActionController::Base
 
     def authenticate
       actions_get = {
-        "api/v1/accessips" => ["index"],
         "api/v1/nodes" => ["index"],
+        "api/v1/accessips" => ["index"],
+        "api/v1/availability" => ["index"],
       }
 
       actions_post = {
