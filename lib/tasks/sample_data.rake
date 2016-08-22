@@ -27,10 +27,34 @@ namespace :db do
     Coordinator.create!(vid: "0x1a0f000a", network: Network.find_by(network_vid: "6671"))
     Coordinator.create!(vid: "0x1a0f000c", network: Network.find_by(network_vid: "6671"))
 
-    CurrentNode.create!(vid: "0x1a0e000a", name: Faker::App.name, server_number: "0001", network: Network.find_by(network_vid: "6670"))
-    CurrentNode.create!(vid: "0x1a0e000c", name: Faker::App.name, server_number: "0002", network: Network.find_by(network_vid: "6670"))
-    CurrentNode.create!(vid: "0x1a0f000a", name: Faker::App.name, server_number: "0001", network: Network.find_by(network_vid: "6671"))
-    CurrentNode.create!(vid: "0x1a0f000c", name: Faker::App.name, server_number: "0002", network: Network.find_by(network_vid: "6671"))
+    CurrentNode.create!(
+      vid: "0x1a0e000a",
+      name: Faker::App.name,
+      category: "server",
+      server_number: "0001",
+      network: Network.find_by(network_vid: "6670"),
+    )
+    CurrentNode.create!(
+      vid: "0x1a0e000c",
+      name: Faker::App.name,
+      category: "server",
+      server_number: "0002",
+      network: Network.find_by(network_vid: "6670"),
+    )
+    CurrentNode.create!(
+      vid: "0x1a0f000a",
+      name: Faker::App.name,
+      category: "server",
+      server_number: "0001",
+      network: Network.find_by(network_vid: "6671"),
+    )
+    CurrentNode.create!(
+      vid: "0x1a0f000c",
+      name: Faker::App.name,
+      category: "server",
+      server_number: "0002",
+      network: Network.find_by(network_vid: "6671"),
+    )
 
     url_templates = ["http://tickets.org/ticket_id={id}", "http://tickets2.org/ticket_id={id}"]
     url_templates.each do |url_template|
@@ -74,6 +98,7 @@ namespace :db do
         name: name,
         vid: vid,
         network: network,
+        category: "client",
         enabled: enabled,
         creation_date: creation_date,
         creation_date_accuracy: creation_date_accuracy,
