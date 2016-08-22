@@ -17,6 +17,19 @@ class Api::V1::NodesController < Api::V1::BaseController
       render json: @response and return
     end
 
+    if only.class != Array
+      @response[:errors] = [{
+        title: "external",
+        detail: "Only should be an array",
+        links: {
+          related: {
+            href: "/api/v1/doc"
+          }
+        }
+      }]
+      render json: @response and return
+    end
+
     if node
       avaliable_fileds = [
         "vid", "name", "ip", "accessip", "version", "version_decoded",

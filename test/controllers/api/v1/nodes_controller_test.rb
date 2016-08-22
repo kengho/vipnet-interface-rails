@@ -62,4 +62,10 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
       "category" => "client",
     }}, assigns["response"])
   end
+
+  test "should return error if only is not array" do
+    get(:index, { vid: "0x1a0e0001", only: "vid", token: "GET_INFORMATION_TOKEN" })
+    assert assigns["response"][:errors]
+    assert_equal("external", assigns["response"][:errors][0][:title])
+  end
 end
