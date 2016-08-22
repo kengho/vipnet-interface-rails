@@ -7,21 +7,21 @@ class Api::V1::AccessipsControllerTest < ActionController::TestCase
 
     CurrentNode.new(
       vid: "0x1a0e0001",
-      :accessip => {
+      accessip: {
         "0x1a0e000a" => "198.51.100.1",
         "0x1a0e000d" => "203.0.113.1",
       },
     ).save(validate: false)
     CurrentNode.new(
       vid: "0x1a0e0002",
-      :accessip => {
+      accessip: {
         "0x1a0e000a" => "198.51.100.2",
         "0x1a0e000d" => "203.0.113.3",
       },
     ).save(validate: false)
     CurrentNode.new(
       vid: "0x1a0e0003",
-      :accessip => {
+      accessip: {
         "0x1a0e000a" => "198.51.100.3",
         "0x1a0e000d" => "203.0.113.3",
       },
