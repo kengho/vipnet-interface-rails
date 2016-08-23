@@ -47,7 +47,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         end
         new_node = CurrentNode.new(vid: target[:vid], creation_date: DateTime.now, network_id: network.id)
 
-        # iplirconfs_node_params if hash of all snapshots but with target[:vid] only
+        # iplirconfs_node_params is hash of all snapshots but with target[:vid] only
         iplirconfs_node_params = {}
         iplirconfs_snapshots.each do |k, snapshot|
           iplirconf_node_params = snapshot.clone
@@ -57,6 +57,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
         new_node.set_props_from_nodename(props)
         new_node.set_props_from_iplirconf(iplirconfs_node_params)
+        new_node.set_props_from_ticket
         new_node.creation_date_accuracy = nodename_is_not_first
 
         new_node.save!

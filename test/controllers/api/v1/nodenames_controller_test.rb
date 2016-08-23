@@ -135,7 +135,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
   end
 
-  test "create with non empty Iplirconf" do
+  test "create with non empty Iplirconf and Ticket" do
     # prepare Iplifconf and Coordinator
     Coordinator.destroy_all
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_HW_TOKEN\""
@@ -147,6 +147,18 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     post(:create, { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
     @controller = nodenames_controller
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
+
+    # prepare Ticket
+    TicketSystem.destroy_all
+    Ticket.destroy_all
+    ticket_system1 = TicketSystem.create!(url_template: "http://tickets.org/ticket_id={id}")
+    ticket_system2 = TicketSystem.create!(url_template: "http://tickets2.org/ticket_id={id}")
+    Ticket.create!(ticket_system: ticket_system1, vid: "0x1a0e000a", ticket_id: "1")
+    Ticket.create!(ticket_system: ticket_system1, vid: "0x1a0e000b", ticket_id: "2")
+    Ticket.create!(ticket_system: ticket_system1, vid: "0x1a0e000c", ticket_id: "3")
+    Ticket.create!(ticket_system: ticket_system1, vid: "0x1a0e000a", ticket_id: "4")
+    Ticket.create!(ticket_system: ticket_system2, vid: "0x1a0e000b", ticket_id: "5")
+    Ticket.create!(ticket_system: ticket_system2, vid: "0x1a0e000c", ticket_id: "6")
 
     added_client1_nodename = fixture_file_upload("nodenames/01_added_client1.doc", "application/octet-stream")
     post(:create, { file: added_client1_nodename, network_vid: "6670" })
@@ -167,6 +179,9 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :version => {
           :"0x1a0e000a" => "3.0-670",
           :"0x1a0e000d" => "3.0-670",
+        },
+        :ticket => {
+          :"http://tickets.org/ticket_id={id}" => "[\"1\", \"4\"]",
         },
       },
       {
@@ -189,6 +204,10 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
           :"0x1a0e000a" => "3.2-673",
           :"0x1a0e000d" => "3.2-672",
         },
+        :ticket => {
+          :"http://tickets.org/ticket_id={id}" => "[\"2\"]",
+          :"http://tickets2.org/ticket_id={id}" => "[\"5\"]",
+        },
       },
       {
         :vid => "0x1a0e000c",
@@ -210,8 +229,12 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
           :"0x1a0e000a" => "0.3-2",
           :"0x1a0e000d" => "0.3-2",
         },
+        :ticket => {
+          :"http://tickets.org/ticket_id={id}" => "[\"3\"]",
+          :"http://tickets2.org/ticket_id={id}" => "[\"6\"]",
+        },
       },
     ]
-    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename", "Iplirconf")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename", "Iplirconf", "Ticket")).sort_by_vid)
   end
 end

@@ -4,4 +4,8 @@ class Ticket < ActiveRecord::Base
   validates :vid, presence: true
   validates :ticket_id, presence: true
   validates_uniqueness_of :ticket_id, scope: [:vid, :ticket_system]
+
+  def self.props_from_api
+    [:ticket]
+  end
 end
