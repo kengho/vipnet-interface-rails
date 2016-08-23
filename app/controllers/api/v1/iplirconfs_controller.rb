@@ -16,6 +16,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return
     end
+p diff
     diff.each do |changes|
       action, target, props, before, after = Garland.decode_changes(changes)
       node = CurrentNode.find_by(vid: target[:vid])
@@ -43,7 +44,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
 
         if action == :change
           # ["~", "0x1a0e000b.:version", "3.2-673", "3.2-672"]
-          node[target[:field]][coord_vid] = after if Iplirconf.props_from_file.include?(target[:field])
+          node[target[:field]][coord_vid] = after if Iplirconf.props_from_api.include?(target[:field])
         end
 
         node.save!
