@@ -13,7 +13,7 @@ class Api::V1::TicketsController < Api::V1::BaseController
     id = ticket[:id]
     url_template = ticket[:url_template]
 
-    ticketsystem = TicketSystem.find_or_create_by(url_template: url_template)
+    ticket_system = TicketSystem.find_or_create_by(url_template: url_template)
     node = CurrentNode.find_by(vid: vid)
     if node
       ids = eval(node.ticket[url_template] || "\[\]")
