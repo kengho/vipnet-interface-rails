@@ -50,7 +50,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :creation_date_accuracy => false,
       },
     ]
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
 
     # 01_added_client1
     added_client1_nodename = fixture_file_upload("nodenames/01_added_client1.doc", "application/octet-stream")
@@ -66,14 +66,14 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :creation_date_accuracy => true,
       },
     )
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
 
     # 02_renamed_client1
     renamed_client1_nodename = fixture_file_upload("nodenames/02_renamed_client1.doc", "application/octet-stream")
     post(:create, { file: renamed_client1_nodename, network_vid: "6670" })
     client1_index = expected_nodes.which_index(vid: "0x1a0e000c")
     expected_nodes[client1_index][:name] = "client1-renamed1"
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
 
     # 03_added_coordinator2
     added_coordinator2_nodename = fixture_file_upload("nodenames/03_added_coordinator2.doc", "application/octet-stream")
@@ -89,7 +89,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :creation_date_accuracy => true,
       },
     )
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
 
     # 04_client1_moved_to_coordinator2
     client1_moved_to_coordinator2_nodename = fixture_file_upload("nodenames/04_client1_moved_to_coordinator2.doc", "application/octet-stream")
@@ -97,19 +97,19 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     client1_index = expected_nodes.which_index(vid: "0x1a0e000c")
     expected_nodes[client1_index][:abonent_number] = "0001"
     expected_nodes[client1_index][:server_number] = "0002"
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
 
     # 05_client1_disabled
     client1_disabled_nodename = fixture_file_upload("nodenames/05_client1_disabled.doc", "application/octet-stream")
     post(:create, { file: client1_disabled_nodename, network_vid: "6670" })
     client1_index = expected_nodes.which_index(vid: "0x1a0e000c")
     expected_nodes[client1_index][:enabled] = false
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
 
     # 06_added_node_from_ignoring_network
     added_node_from_ignoring_network_nodename = fixture_file_upload("nodenames/06_added_node_from_ignoring_network.doc", "application/octet-stream")
     post(:create, { file: added_node_from_ignoring_network_nodename, network_vid: "6670" })
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
 
     # 07_added_internetworking_node_from_network_we_admin
     # network we admin is network for such we have nodename
@@ -118,21 +118,21 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     Nodename.push(hash: {}, belongs_to: another_network_we_admin)
     added_internetworking_node_we_admins_nodename = fixture_file_upload("nodenames/07_added_internetworking_node_we_admins.doc", "application/octet-stream")
     post(:create, { file: added_internetworking_node_we_admins_nodename, network_vid: "6670" })
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
     another_network_we_admin.destroy
     Nodename.thread(another_network_we_admin).destroy_all
 
     # 08_group_changed
     group_changed_nodename = fixture_file_upload("nodenames/08_group_changed.doc", "application/octet-stream")
     post(:create, { file: group_changed_nodename, network_vid: "6670" })
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
 
     # 09_client1_removed
     client1_removed_nodename = fixture_file_upload("nodenames/09_client1_removed.doc", "application/octet-stream")
     post(:create, { file: client1_removed_nodename, network_vid: "6670" })
     client1_index = expected_nodes.which_index(vid: "0x1a0e000c")
     expected_nodes.delete_at(client1_index)
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename")).sort_by_vid)
   end
 
   test "create with non empty Iplirconf" do
@@ -212,6 +212,6 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         },
       },
     ]
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Nodename", "Iplirconf")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Nodename", "Iplirconf")).sort_by_vid)
   end
 end

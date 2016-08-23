@@ -72,7 +72,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         :version => {},
       },
     ]
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Iplirconf")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Iplirconf")).sort_by_vid)
 
     # 01_added_0x1a0e000d
     added_0x1a0e000d_iplirconf = fixture_file_upload("iplirconfs/01_added_0x1a0e000d.conf", "application/octet-stream")
@@ -97,7 +97,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     expected_nodes[administrator_index][:ip] = { :"0x1a0e000a" => "[\"192.0.2.55\"]" }
     expected_nodes[administrator_index][:version] = { :"0x1a0e000a" => "3.2-673" }
     expected_nodes[client1_index][:accessip] = { :"0x1a0e000a" => "192.0.2.7" }
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Iplirconf")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Iplirconf")).sort_by_vid)
 
     # 03_0x1a0e000d_initial
     coordinator2_initial_iplirconf = fixture_file_upload("iplirconfs/03_0x1a0e000d_initial.conf", "application/octet-stream")
@@ -160,7 +160,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         },
       },
     ]
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Iplirconf")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Iplirconf")).sort_by_vid)
 
     # 04_0x1a0e000d_changed
     # 0x1a0e000a coordinator1 "ip= 192.0.2.1" => "ip= 192.0.2.51"
@@ -171,7 +171,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     administrator_index = expected_nodes.which_index(vid: "0x1a0e000b")
     expected_nodes[coordinator1_index][:ip][:"0x1a0e000d"] = "[\"192.0.2.51\", \"192.0.2.3\"]"
     expected_nodes[administrator_index][:version][:"0x1a0e000d"] = "3.2-672"
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Iplirconf")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Iplirconf")).sort_by_vid)
 
     # 05_0x1a0e000d_added_new_client
     CurrentNode.new(vid: "0x1a0e000e", name: "new_client", network: networks(:network1)).save!
@@ -183,7 +183,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       :accessip => {},
       :version => {},
     })
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Iplirconf")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Iplirconf")).sort_by_vid)
 
     # 06_0x1a0e000d_deleted_ip
     # 0x1a0e000a coordinator1 "deleted ip= 192.0.2.51"
@@ -191,6 +191,6 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
     coordinator1_index = expected_nodes.which_index(vid: "0x1a0e000a")
     expected_nodes[coordinator1_index][:ip][:"0x1a0e000d"] = "[\"192.0.2.3\"]"
-    assert_equal(expected_nodes.sort_by_vid, eval(Node.to_json_for("Iplirconf")).sort_by_vid)
+    assert_equal(expected_nodes.sort_by_vid, eval(CurrentNode.to_json_for("Iplirconf")).sort_by_vid)
   end
 end
