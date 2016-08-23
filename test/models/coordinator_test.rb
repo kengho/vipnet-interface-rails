@@ -1,18 +1,29 @@
 require "test_helper"
 
 class CoordinatorsTest < ActiveSupport::TestCase
-  test "validations" do
-    network = Network.new
-    network.save(validate: false)
-    coordinator1 = Coordinator.new(vipnet_id: nil, network_id: network.id)
-    coordinator2 = Coordinator.new(vipnet_id: "0x1a0e000a", network_id: nil)
-    coordinator3 = Coordinator.new(vipnet_id: "0x1a0e000b", network_id: network.id)
-    coordinator4 = Coordinator.new(vipnet_id: "0x1a0e000b", network_id: network.id)
-    coordinator5 = Coordinator.new(vipnet_id: "1A0E000A", network_id: network.id)
-    assert_not coordinator1.save
-    assert_not coordinator2.save
-    coordinator3.save
-    assert_not coordinator4.save
-    assert_not coordinator5.save
+  setup do
+    @network1 = networks(:network1)
+    @network2 = networks(:network2)
+  end
+
+  test "shouldn't save without network" do
+    coordinator = Coordinator.new(vid: "0x1a0e0001")
+    assert_not coordinator.save
+  end
+
+  test "shouldn't save without vid" do
+    coordinator = Coordinator.new(network: @network1)
+    assert_not coordinator.save
+  end
+
+  test "shouldn't save two coordinators with same vids" do
+    Coordinator.create!(vid: "0x1a0e0001", network: @network1)
+    coordinator = Coordinator.new(vid: "0x1a0e0001", network: @network1)
+    assert_not coordinator.save
+  end
+
+  test "shouldn't save with wrong vid" do
+    coordinator = Coordinator.new(vid: "1A0E000A", network: @network1)
+    assert_not coordinator.save
   end
 end
