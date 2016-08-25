@@ -16,7 +16,6 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return
     end
-p diff
     diff.each do |changes|
       action, target, props, before, after = Garland.decode_changes(changes)
       node = CurrentNode.find_by(vid: target[:vid])
