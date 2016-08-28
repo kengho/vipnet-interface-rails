@@ -83,7 +83,7 @@ namespace :db do
       version_decoded = {}
       first_version = ""
       Coordinator.all.each_with_index do |coord, i|
-        ip[coord.vid] = Faker::Internet.ip_v4_address
+        ip[coord.vid] = [Faker::Internet.ip_v4_address]
         accessip[coord.vid] = Faker::Internet.ip_v4_address
         if i == 0
           version[coord.vid] = versions[rand(versions.size)]
