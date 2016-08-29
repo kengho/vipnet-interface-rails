@@ -1,8 +1,8 @@
 <td class="mdl-data-table__cell--non-numeric nodes__tickets">
-  <% unless tickets == {} %>
+  <% unless ticket == {} %>
     <% links = Array.new %>
 
-    <% tickets.each do |key, ids| %>
+    <% ticket.each do |key, ids| %>
       <% next if key == "ids_summary" %>
       <% eval(ids).each do |id| %>
         <% href = key.gsub("#\{id}", id.to_s) %>

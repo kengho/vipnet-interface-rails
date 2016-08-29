@@ -4,7 +4,7 @@
 <%# http://stackoverflow.com/a/10610347 %>
 <script type="text/javascript">
   window.I18n = <%= current_translations[:js].to_json.html_safe %>
-  // vipnetInterface.nodesData = {};
+  vipnetInterface.nodesData = {};
   <%= @js.html_safe %>
 </script>
 
@@ -20,14 +20,27 @@
   <main class="mdl-layout__content">
     <div class="page-content">
       <div class="nodes">
-        <%#= render "menu" %>
         <form action="/nodes" method="get">
           <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-            <%= render "thead" %>
+            <thead>
+              <tr>
+                <% Node.view_order.each_with_index do |(prop, appearance), i| %>
+                  <% if appearance %>
+                    <% if CurrentNode.column_names.include?(prop.to_s) %>
+                      <%= render "nodes/thead/cell", prop: prop, value: params[prop], tabindex: i %>
+                    <% elsif lookup_context.template_exists?("nodes/thead/_#{prop}") %>
+                      <%= render "nodes/thead/#{prop}", tabindex: i %>
+                    <% else %>
+                      <%= render "nodes/space" %>
+                    <% end %>
+                  <% end %>
+                <% end %>
+              </tr>
+            </thead>
             <% unless @nodes.empty? %>
               <tbody>
                 <% @nodes.each do |node| %>
-                  <%= render "row", node: node, search: @search %>
+                  <%= render "row", node: node %>
                 <% end %>
               </tbody>
             <% end %>

@@ -1,29 +1,14 @@
-<%
-  if defined?(row_class)
-    row_classes = "nodes__row #{row_class}"
-  else
-    row_classes = "nodes__row"
-  end
-%>
-
-<tr id="node-<%= node.id %>__row" class="<%= row_classes %>">
-  <%= render "nodes/row/string", value: node.vipnet_id, node: node %>
-  <%= render "nodes/row/info", node: node %>
-  <%= render "nodes/row/string", value: node.name, node: node %>
-  <% if node.testable? %>
-    <%= render "nodes/row/availability", node: node %>
-  <% else %>
-    <%= render "nodes/row/warnings", node: node %>
+<%# params: node, row_classes (optional) %>
+<tr id="node-<%= node.id %>__row" class="nodes__row<%= defined?(row_classes) ? " #{row_classes}" : "" %>">
+  <% Node.view_order.each do |prop, appearance| %>
+    <% if appearance %>
+      <% if CurrentNode.column_names.include?(prop.to_s) %>
+        <%= render "nodes/row/cell", node: node, prop: prop %>
+      <% elsif lookup_context.template_exists?("nodes/row/_#{prop}") %>
+        <%= render "nodes/row/#{prop}", node: node %>
+      <% else %>
+        <%= render "nodes/space" %>
+      <% end %>
+    <% end %>
   <% end %>
-  <%= render "nodes/row/string", value: node.ip["summary"], td_class: "nodes__td--dontoverflow", node: node %>
-  <%= render "nodes/row/vipnet_version", value: node.version["summary"], node: node %>
-  <% if defined?(history) %>
-    <%= render "nodes/row/space" %>
-  <% else %>
-    <%= render "nodes/row/history", node: node %>
-  <% end %>
-  <%= render "nodes/row/created_at", node: node %>
-  <%= render "nodes/row/deleted_at", node: node %>
-  <%= render "nodes/row/tickets", tickets: node.tickets %>
-  <%= render "nodes/row/space" %>
 </tr>

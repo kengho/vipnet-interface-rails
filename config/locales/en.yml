@@ -24,6 +24,9 @@
 en:
   default:
     title: "ViPNet Interface"
+  boolean:
+    "true": "yes"
+    "false": "no"
   api:
     v1:
       doc:
@@ -64,28 +67,30 @@ en:
         dated_data: "Dated data"
         from: "from"
         to: "to"
-      created_at:
+      creation_date:
         before: "b."
         unknown_date: "It is difficult to discover creation date of this node"
       info:
         button_label: "Information"
         loaded: "Information loaded"
-        vipnet_id: "ID"
-        history: "Relevance"
-        history_actual_data: "the actual data"
-        category: "Category"
-        network: "Network"
+        name: "Name"
+        network_id: "Network"
+        vid: "ID"
+        enabled: "Enabled"
         ip: "IP addresses"
-        accessips: "Accessips"
-        version: "Software version"
-        version_hw: "Software version (HW)"
-        created_first_at: "Created at"
-        deleted_at: "Deleted at"
-        mftp_server: "MFTP server"
-        clients_registred: "Clients registered"
+        accessip: "Accessips"
+        version: "Software version (HW)"
+        version_decoded: "Software version (decoded)"
+        deletion_date: "Deleted"
+        creation_date: "Created"
+        category: "Category"
+        categories:
+          client: "client"
+          server: "coordinator"
         ncc: "NCC location"
-        client: "client"
-        server: "coordinator"
+        ticket: "Tickets"
+        # mftp_server: "MFTP server"
+        # clients_registred: "Clients registered"
       history:
         update_button: "Load last data"
         update_true: "Last data loaded"
@@ -152,16 +157,14 @@ en:
       profile: "Profile"
       exit: "Exit"
     thead:
-      search_button:
-        label_search: "Advanced search"
-        label_clear: "Clear fields"
-      id_label: "ID"
-      name_label: "Name"
-      ip_label: "IP addresses"
-      software_label: "Software ver."
-      created_label: "Created at"
-      deleted_label: "Deleted at"
-      ticket_id_label: "Tickets"
+      search: "Advanced search"
+      vid: "ID"
+      name: "Name"
+      ip: "IP addresses"
+      version_decoded: "Software ver."
+      creation_date: "Created at"
+      deletion_date: "Deleted at"
+      ticket: "Tickets"
   settings:
     flash:
       password: "Password"
@@ -182,6 +185,8 @@ en:
       nodes_per_page: "Nodes per page"
       export_selected_variant: "Export selected format"
       disable_api: "Disable API"
+      iplirconf_api_enabled: "iplir.conf API enabled"
+      ticket_api_enabled: "Tickets API enabled"
       # end settings vars
       submit_label: "Save"
       email: "Email"

@@ -1,6 +1,9 @@
 ru:
   default:
     title: "ViPNet Interface"
+  boolean:
+    "true": "да"
+    "false": "нет"
   api:
     v1:
       doc:
@@ -41,28 +44,30 @@ ru:
         to: "по"
         from: "с"
         dated_data: "Данные из истории"
-      created_at:
+      creation_date:
         before: "до"
         unknown_date: "Узнать точную дату создания узла затруднительно"
       info:
-        button_label: "Подробности"
-        loaded: "Подробности загружены"
-        vipnet_id: "ID"
-        history: "Актуальность"
-        history_actual_data: "актуальные данные"
-        category: "Тип"
-        network: "Сеть"
+        button_label: "Информация"
+        loaded: "Информация загружена"
+        name: "Имя"
+        network_id: "Сеть"
+        vid: "ID"
+        enabled: "Включен"
         ip: "IP-адреса"
-        accessips: "Адреса доступа"
-        version: "Версия ПО"
-        version_hw: "Версия ПО (HW)"
-        created_first_at: "Создан"
-        deleted_at: "Удален"
-        mftp_server: "MFTP-сервер"
-        clients_registred: "Зарегистрированные клиенты"
-        ncc: "Путь в NCC"
-        client: "клиент"
-        server: "координатор"
+        accessip: "Адреса доступа"
+        version: "Версия ПО (HW)"
+        version_decoded: "Версия ПО (декодировано)"
+        deletion_date: "Удален"
+        creation_date: "Создан"
+        category: "Категория"
+        categories:
+          client: "клиент"
+          server: "координатор"
+        ncc: "Пусть в NCC"
+        ticket: "Заявки"
+        # mftp_server: "MFTP сервер"
+        # clients_registred: "Клиентов зарегистрировано"
       history:
         update_button: "Загрузить последние данные"
         update_true: "Последние данные загружены"
@@ -129,16 +134,14 @@ ru:
       profile: "Профиль"
       exit: "Выход"
     thead:
-      search_button:
-        label_search: "Расширенный поиск"
-        label_clear: "Очистить ввод"
-      id_label: "ID"
-      name_label: "Имя"
-      ip_label: "IP-адреса"
-      software_label: "Версия ПО"
-      created_label: "Создан"
-      deleted_label: "Удален"
-      ticket_id_label: "Заявки"
+      search: "Расширенный поиск"
+      vid: "ID"
+      name: "Имя"
+      ip: "IP-адреса"
+      version_decoded: "Версия ПО"
+      creation_date: "Создан"
+      deletion_date: "Удален"
+      ticket: "Заявки"
   settings:
     flash:
       password: "Пароль"
@@ -158,7 +161,8 @@ ru:
       networks_to_ignore: "Игнорируемые сети"
       nodes_per_page: "Узлов на странице"
       export_selected_variant: "Формат экспорта выбранных строк"
-      disable_api: "Отключить API"
+      iplirconf_api_enabled: "API iplir.conf включено"
+      ticket_api_enabled: "API tickets включено"
       # end settings vars
       submit_label: "Сохранить"
       email: "Email"

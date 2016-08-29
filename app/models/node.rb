@@ -39,7 +39,7 @@ class Node < AbstractModel
   end
 
   def self.version_decode(version)
-    ""
+    "3.0"
   end
 
   def self.where_vid_like(vid)
@@ -70,5 +70,21 @@ class Node < AbstractModel
     end
     response[:data] = { "availability" => availability }
     response
+  end
+
+  def self.view_order
+    {
+      :vid => true,
+      :info => true,
+      :name => true,
+      :availability => Settings.iplirconf_api_enabled == "true",
+      :ip => Settings.iplirconf_api_enabled == "true",
+      :version_decoded => Settings.iplirconf_api_enabled == "true",
+      :history => true,
+      :creation_date => true,
+      :deletion_date => true,
+      :ticket => Settings.ticket_api_enabled == "true",
+      :search => true,
+    }
   end
 end
