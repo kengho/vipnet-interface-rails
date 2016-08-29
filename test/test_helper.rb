@@ -28,6 +28,14 @@ class Array
   end
 end
 
+class CurrentNode::ActiveRecord_Relation
+  def vids
+    vids = []
+    self.each { |n| vids.push(n.vid) }
+    vids.sort
+  end
+end
+
 class ActionController::TestCase
   require "authlogic/test_case"
   setup :activate_authlogic

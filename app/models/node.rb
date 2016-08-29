@@ -43,7 +43,13 @@ class Node < AbstractModel
   end
 
   def self.where_vid_like(vid)
-    ""
+    search_resuls = Node.none
+    normal_vids = VipnetParser::id(string: vid, threshold: Settings.vid_search_threshold)
+    normal_vids.each do |normal_vid|
+      search_resuls = search_resuls | CurrentNode.where("vid = ?", normal_vid)
+    end
+    search_resuls = search_resuls | CurrentNode.where("vid ILIKE ?", "%#{vid}%")
+    search_resuls
   end
 
   def availability
