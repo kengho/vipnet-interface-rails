@@ -3,7 +3,7 @@ module PropViewHelper
     case prop
 
     when :name
-      node.name
+      node.name || ""
 
     when :network_id
       network = Network.find_by_id(node.network_id)
