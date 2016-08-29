@@ -10,6 +10,6 @@
   vipnetInterface.remoteStatus.renderInfo({
     parentId: "<%= @response[:parent_id] %>",
     rowId: "<%= @response[:row_id] %>",
-    html: "<%= j render 'nodes/row/info_block', data: @response[:data], order: @response[:order] %>",
+    html: "<%= j render 'nodes/row/info_block', node: @response[:node] %>",
   });
 })();

@@ -1,18 +1,32 @@
 <div name="info" class="mdl-shadow--2dp info-block">
-  <div class="info-block__title"><%= @response[:data][:name] %></div>
+  <div class="info-block__title"><%= node.name %></div>
   <div name="close" class="info-block__close-button">
     <label class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
       <i class="material-icons">close</i>
     </label>
   </div>
   <div class="info-block__text">
-    <% order.each do |prop| %>
-      <% next if prop == :name %>
-      <% value = data[prop] %>
-      <% if value != "" %>
-        <span name="prop"><%= t("nodes.row.info.#{prop}") %></span>:&nbsp;
-        <span name="value"><%= value.to_s.html_safe %></span><br>
+    <%
+      order = [
+        :network_id,
+        :vid,
+        :enabled,
+        :ip,
+        :accessip,
+        :version,
+        :version_decoded,
+        :deletion_date,
+        :creation_date,
+        :category,
+        :ncc,
+        :ticket,
+      ].each do |prop|
+        prop_view = prop_view(node, prop, :long)
+    %>
+        <% if prop_view != "" %>
+          <span name="prop"><%= t("nodes.row.info.#{prop}") %></span>:&nbsp;
+          <span name="value"><%= prop_view.html_safe %></span><br>
+        <% end %>
       <% end %>
-    <% end %>
   </div>
 </div>

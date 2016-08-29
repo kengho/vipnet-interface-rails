@@ -71,23 +71,4 @@ class Node < AbstractModel
     response[:data] = { "availability" => availability }
     response
   end
-
-  def info
-  end
-
-  def view(param, detalization = :short)
-    case param
-      when :vid
-        self.vid
-
-      when :name
-        self.name
-
-      when :network_id
-        network = Network.find_by_id(self[param])
-        "#{network.network_vid}#{network.name ? ' (' + network.name + ')' : ''}"
-
-      else
-        nil
-    end
 end

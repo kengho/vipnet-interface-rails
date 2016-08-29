@@ -451,7 +451,7 @@ div[name="button--undo"] {
 }
 
 .info-block {
-  min-width: 300px;
+  min-width: 400px;
   position: absolute;
   opacity: 0;
   background-color: $info-block-bgcolor;
@@ -475,6 +475,7 @@ div[name="button--undo"] {
     padding: 16px;
     & span[name="value"] {
       font-weight: 600;
+      white-space: normal;
     }
   }
   &:hover {
