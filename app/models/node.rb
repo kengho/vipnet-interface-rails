@@ -87,4 +87,21 @@ class Node < AbstractModel
       :search => true,
     }
   end
+
+  def self.info_order
+    [
+      :network_id,
+      :vid,
+      :enabled,
+      :ip,
+      :accessip,
+      :version,
+      :version_decoded,
+      :deletion_date,
+      :creation_date,
+      :category,
+      :ncc,
+      :ticket,
+    ]
+  end
 end

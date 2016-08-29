@@ -6,27 +6,12 @@
     </label>
   </div>
   <div class="info-block__text">
-    <%
-      order = [
-        :network_id,
-        :vid,
-        :enabled,
-        :ip,
-        :accessip,
-        :version,
-        :version_decoded,
-        :deletion_date,
-        :creation_date,
-        :category,
-        :ncc,
-        :ticket,
-      ].each do |prop|
-        prop_view = prop_view(node, prop, :long)
-    %>
-        <% if prop_view != "" %>
-          <span name="prop"><%= t("nodes.row.info.#{prop}") %></span>:&nbsp;
-          <span name="value"><%= prop_view.html_safe %></span><br>
-        <% end %>
+  <% CurrentNode.info_order.each do |prop| %>
+    <% prop_view = prop_view(node, prop, :long)  %>
+      <% if prop_view != "" %>
+        <span name="prop"><%= t("nodes.row.info.#{prop}") %></span>:&nbsp;
+        <span name="value"><%= prop_view.html_safe %></span><br>
       <% end %>
+    <% end %>
   </div>
 </div>
