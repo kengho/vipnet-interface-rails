@@ -52,4 +52,39 @@ class NodesControllerTest < ActionController::TestCase
     get(:index, { vid: "0x1a0e0001-0x1a0e0100" })
     assert_equal([], assigns["nodes"].vids)
   end
+
+  test "should search by name" do
+    CurrentNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
+    get(:index, { name: "Alex" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
+  test "should search by partial name" do
+    CurrentNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
+    get(:index, { name: "Al" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
+  test "should search by name (case insensitive)" do
+    CurrentNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
+    get(:index, { name: "alex" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
+  test "should search name and treat spaces like anything" do
+    CurrentNode.create!(vid: "0x1a0e0001", name: "Marcus Forest", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", name: "Wilbur Kelly Mallory", network: @network)
+    get(:index, { name: "wil mal" })
+    assert_equal(["0x1a0e0002"], assigns["nodes"].vids)
+  end
+
+  test "should search name using regexp" do
+    CurrentNode.create!(vid: "0x1a0e0001", name: "Wilbur Kelly Mallory", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", name: "Kelly Wilbur Mallory", network: @network)
+    get(:index, { name: "^wilbur\\s" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
 end

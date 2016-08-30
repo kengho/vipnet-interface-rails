@@ -52,6 +52,12 @@ class Node < AbstractModel
     search_resuls
   end
 
+  def self.where_name_like(name)
+    name_regexp = name.gsub(" ", ".*")
+    search_resuls = CurrentNode.where("name ~* ?", name_regexp)
+    search_resuls
+  end
+
   def availability
     availability = false
     response = {}
