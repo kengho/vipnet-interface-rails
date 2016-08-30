@@ -56,7 +56,18 @@ module PropViewHelper
       if node.creation_date_accuracy
         creation_date_view
       else
-        "#{I18n.t('nodes.row.creation_date.before')} #{creation_date_view}"
+        case detalization
+        when :short
+          "<span class=\"nodes__link--hover nodes__hover-for-tooltip\">"\
+            "#{I18n.t('nodes.row.creation_date.before')}"\
+          "</span>"\
+          "<div class=\"nodes__tooltip created-at__tooltip\">"\
+            "#{t('nodes.row.creation_date.unknown_date')}"\
+          "</div>&nbsp;"\
+          "#{creation_date_view}"
+        when :long
+          "#{I18n.t('nodes.row.creation_date.before')} #{creation_date_view}"
+        end
       end
 
     when :category
