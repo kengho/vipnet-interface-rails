@@ -24,5 +24,7 @@ module Vi
     config.active_record.raise_in_transactional_callbacks = true
     # http://stackoverflow.com/a/22933820
     config.generators.javascript_engine :js
+    # http://stackoverflow.com/a/19650564/6376451
+    config.autoload_paths << Rails.root.join("lib")
   end
 end
