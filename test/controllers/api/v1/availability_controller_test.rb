@@ -2,16 +2,9 @@ require "test_helper"
 
 class Api::V1::AvailabilityControllerTest < ActionController::TestCase
   setup do
-    Coordinator.new(vid: "0x1a0e000a").save(validate: false)
-    Coordinator.new(vid: "0x1a0e000d").save(validate: false)
-
-    CurrentNode.new(
-      vid: "0x1a0e0001",
-      accessip: {
-        "0x1a0e000a" => IP::u32("198.51.100.1"),
-        "0x1a0e000d" => IP::u32("203.0.113.1"),
-      },
-    ).save(validate: false)
+    node = CurrentNode.new(vid: "0x1a0e0001", network: networks(:network1))
+    node.save!
+    AccessIp.create!(u32: IP::u32("198.51.100.1"), node: node, coordinator: coordinators(:coordinator1))
   end
 
   test "should return error when no valid token provided" do

@@ -63,7 +63,7 @@ class Node < AbstractModel
   def availability
     availability = false
     response = {}
-    accessips = self.accessip.values
+    accessips = self.accessips
     if accessips.empty?
       response[:errors] = [{
         title: "internal",
@@ -84,6 +84,12 @@ class Node < AbstractModel
     end
     response[:data] = { "availability" => availability }
     response
+  end
+
+  def accessips
+    accessips = []
+    AccessIp.where("node_id = ?", self.id).each { |a| accessips.push(IP::ip(a.u32)) }
+    accessips
   end
 
   def self.view_order
