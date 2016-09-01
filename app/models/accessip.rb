@@ -1,2 +1,0 @@
-class AccessIp < NodeIp
-end
