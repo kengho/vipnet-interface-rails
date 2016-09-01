@@ -1,6 +1,7 @@
 class Node < AbstractModel
   belongs_to :network
   validates :network, presence: true
+  has_many :node_ips, dependent: :destroy
 
   def self.vid_regexp
     /\A0x[0-9a-f]{8}\z/
@@ -73,7 +74,7 @@ class Node < AbstractModel
         availability = true
       else
         accessips.each do |accessip|
-          http_request = Settings.checker.gsub("{ip}", accessip).gsub("{token}", ENV["CHECKER_TOKEN"])
+          http_request = Settings.checker.gsub("{ip}", IP::ip(accessip)).gsub("{token}", ENV["CHECKER_TOKEN"])
           http_response = HTTParty.get(http_request)
           availability ||= http_response.parsed_response["data"]["availability"] if http_response.code == 200
           break if availability

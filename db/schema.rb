@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160823180620) do
+ActiveRecord::Schema.define(version: 20160901190401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,17 @@ ActiveRecord::Schema.define(version: 20160823180620) do
     t.datetime "created_at",  null: false
     t.datetime "updated_at",  null: false
   end
+
+  create_table "node_ips", force: :cascade do |t|
+    t.integer  "node_id"
+    t.integer  "coordinator_id"
+    t.datetime "created_at",               null: false
+    t.datetime "updated_at",               null: false
+    t.integer  "u32",            limit: 8, null: false
+  end
+
+  add_index "node_ips", ["coordinator_id"], name: "index_node_ips_on_coordinator_id", using: :btree
+  add_index "node_ips", ["node_id"], name: "index_node_ips_on_node_id", using: :btree
 
   create_table "nodenames", force: :cascade do |t|
     t.integer  "network_id"
@@ -131,6 +142,8 @@ ActiveRecord::Schema.define(version: 20160823180620) do
   end
 
   add_foreign_key "coordinators", "networks"
+  add_foreign_key "node_ips", "coordinators"
+  add_foreign_key "node_ips", "nodes"
   add_foreign_key "nodenames", "networks"
   add_foreign_key "nodes", "networks"
   add_foreign_key "tickets", "ticket_systems"

@@ -8,8 +8,8 @@ class Api::V1::AvailabilityControllerTest < ActionController::TestCase
     CurrentNode.new(
       vid: "0x1a0e0001",
       accessip: {
-        "0x1a0e000a" => "198.51.100.1",
-        "0x1a0e000d" => "203.0.113.1",
+        "0x1a0e000a" => IP::u32("198.51.100.1"),
+        "0x1a0e000d" => IP::u32("203.0.113.1"),
       },
     ).save(validate: false)
   end

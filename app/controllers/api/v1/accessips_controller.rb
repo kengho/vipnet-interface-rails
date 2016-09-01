@@ -16,8 +16,13 @@ class Api::V1::AccessipsController < Api::V1::BaseController
       render json: @response and return
     end
 
+    unless IP::ip?(params[:accessip])
+      @response[:errors] = [{ title: "external", detail: "Expected valid IPv4 as 'accessip' param" }]
+      render json: @response and return
+    end
+
     Coordinator.all.each do |coord|
-      new_nodes = CurrentNode.where("accessip -> '#{coord.vid}' = ?", params[:accessip])
+      new_nodes = CurrentNode.where("(accessip -> '#{coord.vid}')::bigint = ?", IP::u32(params[:accessip]))
       nodes = nodes | new_nodes
     end
 
