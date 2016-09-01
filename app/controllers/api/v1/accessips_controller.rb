@@ -1,9 +1,7 @@
 class Api::V1::AccessipsController < Api::V1::BaseController
   def index
-    @response = Hash.new
-    if params[:accessip]
-      nodes = CurrentNode.none
-    else
+    @response = {}
+    unless params[:accessip]
       @response[:errors] = [{
         title: "external",
         detail: "Expected accessip as param",
@@ -15,30 +13,17 @@ class Api::V1::AccessipsController < Api::V1::BaseController
       }]
       render json: @response and return
     end
-
     unless IP::ip?(params[:accessip])
       @response[:errors] = [{ title: "external", detail: "Expected valid IPv4 as 'accessip' param" }]
       render json: @response and return
     end
 
-    Coordinator.all.each do |coord|
-      new_nodes = CurrentNode.where("(accessip -> '#{coord.vid}')::bigint = ?", IP::u32(params[:accessip]))
-      nodes = nodes | new_nodes
-    end
-
-    if nodes.size == 0
+    node = CurrentNode.joins(:access_ips).find_by("node_ips.u32": IP::u32(params[:accessip]))
+    if node
+      @response[:data] = { "vid" => node.vid }
+      render json: @response and return
+    else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
-      render json: @response and return
-    elsif nodes.size == 1
-      @response[:data] = @response.merge({ "vid" => nodes.first.vid })
-      render json: @response and return
-    elsif nodes.size > 1
-      @response[:errors] = [{
-        title: "internal",
-        detail: "Please report to developer. "\
-                "Multiple nodes found. "\
-                "Params: #{params.except(:token)}"
-      }]
       render json: @response and return
     end
   end

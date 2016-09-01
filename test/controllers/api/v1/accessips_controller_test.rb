@@ -2,30 +2,9 @@ require "test_helper"
 
 class Api::V1::AccessipsControllerTest < ActionController::TestCase
   setup do
-    Coordinator.new(vid: "0x1a0e000a").save(validate: false)
-    Coordinator.new(vid: "0x1a0e000d").save(validate: false)
-
-    CurrentNode.new(
-      vid: "0x1a0e0001",
-      accessip: {
-        "0x1a0e000a" => IP::u32("198.51.100.1"),
-        "0x1a0e000d" => IP::u32("203.0.113.1"),
-      },
-    ).save(validate: false)
-    CurrentNode.new(
-      vid: "0x1a0e0002",
-      accessip: {
-        "0x1a0e000a" => IP::u32("198.51.100.2"),
-        "0x1a0e000d" => IP::u32("203.0.113.3"),
-      },
-    ).save(validate: false)
-    CurrentNode.new(
-      vid: "0x1a0e0003",
-      accessip: {
-        "0x1a0e000a" => IP::u32("198.51.100.3"),
-        "0x1a0e000d" => IP::u32("203.0.113.3"),
-      },
-    ).save(validate: false)
+    node1 = CurrentNode.new(vid: "0x1a0e0001", network: networks(:network1))
+    node1.save!
+    AccessIp.create!(u32: IP::u32("198.51.100.1"), node: node1, coordinator: coordinators(:coordinator1))
   end
 
   test "should return error if accessip not provided" do
@@ -56,11 +35,5 @@ class Api::V1::AccessipsControllerTest < ActionController::TestCase
     get(:index, { accessip: "0.0.0.0", token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
-  end
-
-  test "should return error if multiple nodes found" do
-    get(:index, { accessip: "203.0.113.3", token: "GET_INFORMATION_TOKEN" })
-    assert assigns["response"][:errors]
-    assert_equal("internal", assigns["response"][:errors][0][:title])
   end
 end

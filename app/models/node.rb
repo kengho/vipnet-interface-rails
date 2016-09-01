@@ -2,6 +2,7 @@ class Node < AbstractModel
   belongs_to :network
   validates :network, presence: true
   has_many :node_ips, dependent: :destroy
+  has_many :access_ips
 
   def self.vid_regexp
     /\A0x[0-9a-f]{8}\z/
