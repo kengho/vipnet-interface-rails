@@ -75,7 +75,7 @@ class Node < AbstractModel
         availability = true
       else
         accessips.each do |accessip|
-          http_request = Settings.checker.gsub("{ip}", IP::ip(accessip)).gsub("{token}", ENV["CHECKER_TOKEN"])
+          http_request = Settings.checker.gsub("{ip}", IPv4::ip(accessip)).gsub("{token}", ENV["CHECKER_TOKEN"])
           http_response = HTTParty.get(http_request)
           availability ||= http_response.parsed_response["data"]["availability"] if http_response.code == 200
           break if availability
@@ -88,7 +88,7 @@ class Node < AbstractModel
 
   def accessips
     accessips = []
-    AccessIp.where("node_id = ?", self.id).each { |a| accessips.push(IP::ip(a.u32)) }
+    Accessip.where("node_id = ?", self.id).each { |a| accessips.push(IPv4::ip(a.u32)) }
     accessips
   end
 

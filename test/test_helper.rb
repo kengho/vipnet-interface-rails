@@ -21,9 +21,22 @@ class Array
     self.sort_by { |h| h[:vid] }
   end
 
+  def sort_by_node_coordinator_and_u32
+    self.sort_by { |h| [h[:node_id], h[:coordinator_id], h[:u32]] }
+  end
+
   def which_index(hash)
     self.each_with_index do |e, i|
-      return i if e[hash.keys.first] == hash.values.first
+      return i if self[i] == self[i].merge(hash)
+    end
+  end
+
+  def change_where(where, changes)
+    index = which_index(where)
+    if changes == nil
+      self.delete_at(index)
+    elsif changes.class == Hash
+      self[index].deep_merge!(changes)
     end
   end
 end

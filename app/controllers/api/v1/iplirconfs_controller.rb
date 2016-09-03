@@ -26,9 +26,11 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             arr = eval(node[target[:field]][coord_vid])
             arr.insert(target[:index], props)
             node[target[:field]][coord_vid] = arr
+            NodeIp.add_ip(coordinator, node, target[:field], props)
           else
             # ["+", "0x1a0e000a", {:id=>"0x1a0e000a", :name=>"coordinator1", ... }]
             node.set_props_from_iplirconf(coord_vid => { target[:vid] => props })
+            NodeIp.create_ips(coordinator, node, props)
           end
         end
 
@@ -38,12 +40,14 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             arr = eval(node[target[:field]][coord_vid])
             arr.delete_at(target[:index])
             node[target[:field]][coord_vid] = arr
+            NodeIp.remove_ip(coordinator, node, target[:field], props)
           end
         end
 
         if action == :change
           # ["~", "0x1a0e000b.:version", "3.2-673", "3.2-672"]
           node[target[:field]][coord_vid] = after if Iplirconf.props_from_api.include?(target[:field])
+          NodeIp.change_ip(coordinator, node, target[:field], before, after)
         end
 
         node.save!

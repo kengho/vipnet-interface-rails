@@ -4,7 +4,7 @@ class Api::V1::AccessipsControllerTest < ActionController::TestCase
   setup do
     node1 = CurrentNode.new(vid: "0x1a0e0001", network: networks(:network1))
     node1.save!
-    AccessIp.create!(u32: IP::u32("198.51.100.1"), node: node1, coordinator: coordinators(:coordinator1))
+    Accessip.create!(u32: IPv4::u32("198.51.100.1"), node: node1, coordinator: coordinators(:coordinator1))
   end
 
   test "should return error if accessip not provided" do

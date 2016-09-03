@@ -1,4 +1,4 @@
-module IP
+module IPv4
   def ip?(string)
     octets = string.split(".")
     return nil unless octets.size == 4
@@ -15,14 +15,14 @@ module IP
     return nil unless Regexp.last_match.size == 3
     probably_ip = Regexp.last_match[1]
     probably_mask = Regexp.last_match[2]
-    return nil unless IP::ip?(probably_ip)
+    return nil unless IPv4::ip?(probably_ip)
     return nil unless probably_mask =~ /^\d+$/
     return nil unless probably_mask.to_i >= 0 && probably_mask.to_i <= 32
     return [probably_ip, probably_mask.to_i]
   end
 
   def u32(string)
-    return nil unless IP::ip?(string)
+    return nil unless IPv4::ip?(string)
     octets = string.split(".")
     hex_string = ""
     octets.each { |octet| hex_string += octet.to_i.to_s(16).rjust(2, "0") }
@@ -42,26 +42,26 @@ module IP
     return nil unless Regexp.last_match
     return nil unless Regexp.last_match.size == 3
     probably_lower_bound = Regexp.last_match[1]
-    return nil unless IP::ip?(probably_lower_bound)
+    return nil unless IPv4::ip?(probably_lower_bound)
     probably_higher_bound = Regexp.last_match[2]
-    return nil unless IP::ip?(probably_higher_bound)
-    return nil unless IP::u32(probably_lower_bound) <= IP::u32(probably_higher_bound)
+    return nil unless IPv4::ip?(probably_higher_bound)
+    return nil unless IPv4::u32(probably_lower_bound) <= IPv4::u32(probably_higher_bound)
     return [probably_lower_bound, probably_higher_bound]
   end
 
   def u32_bounds(string)
-    cidr = IP::cidr(string)
-    range = IP::range(string)
+    cidr = IPv4::cidr(string)
+    range = IPv4::range(string)
     return nil unless cidr || range
     if cidr
       bitwise_mask = "0xffffffff".to_i(16) >> (32 - cidr[1]) << (32 - cidr[1])
       network_size = 1 << (32 - cidr[1])
-      lower_bound = IP::u32(cidr[0]) & bitwise_mask
+      lower_bound = IPv4::u32(cidr[0]) & bitwise_mask
       higher_bound = lower_bound + network_size - 1
       return [lower_bound, higher_bound]
     end
     if range
-      return [IP::u32(range[0]), IP::u32(range[1])]
+      return [IPv4::u32(range[0]), IPv4::u32(range[1])]
     end
   end
 

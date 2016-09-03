@@ -1,0 +1,2 @@
+class Accessip < NodeIp
+end

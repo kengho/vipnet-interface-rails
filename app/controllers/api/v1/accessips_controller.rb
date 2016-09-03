@@ -13,12 +13,12 @@ class Api::V1::AccessipsController < Api::V1::BaseController
       }]
       render json: @response and return
     end
-    unless IP::ip?(params[:accessip])
+    unless IPv4::ip?(params[:accessip])
       @response[:errors] = [{ title: "external", detail: "Expected valid IPv4 as 'accessip' param" }]
       render json: @response and return
     end
 
-    node = CurrentNode.joins(:access_ips).find_by("node_ips.u32": IP::u32(params[:accessip]))
+    node = CurrentNode.joins(:access_ips).find_by("node_ips.u32": IPv4::u32(params[:accessip]))
     if node
       @response[:data] = { "vid" => node.vid }
       render json: @response and return
