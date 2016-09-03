@@ -2,6 +2,8 @@ class NodeIp < AbstractModel
   belongs_to :node
   belongs_to :coordinator
   validates_uniqueness_of :u32, scope: [:coordinator_id, :node_id, :type]
+  validates :node, presence: true
+  validates :coordinator, presence: true
   validates_each :u32 do |record, attr, value|
     unless value.to_i >= 0x0 && value.to_i <= 0xffffffff
       record.errors.add(attr, "u32 should be between 0 and 4294967295")
