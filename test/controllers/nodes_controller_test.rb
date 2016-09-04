@@ -33,6 +33,13 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(["0x1a0e0001", "0x1a0e0002"], assigns["nodes"].vids)
   end
 
+  test "should do quick search" do
+    CurrentNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
+    get(:index, { search: "0x1a0e0001" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
   test "should search by vid" do
     CurrentNode.create!(vid: "0x1a0e0001", network: @network)
     CurrentNode.create!(vid: "0x1a0e0002", network: @network)
