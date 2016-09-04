@@ -46,7 +46,7 @@ class Node < AbstractModel
   end
 
   def self.where_vid_like(vid)
-    search_resuls = Node.none
+    search_resuls = CurrentNode.none
     normal_vids = VipnetParser::id(string: vid, threshold: Settings.vid_search_threshold)
     normal_vids.each do |normal_vid|
       search_resuls = search_resuls | CurrentNode.where("vid = ?", normal_vid)
@@ -69,6 +69,15 @@ class Node < AbstractModel
     if IPv4::cidr(ip) || IPv4::range(ip)
       lower_bound, higher_bound = IPv4::u32_bounds(ip)
       search_resuls = CurrentNode.joins(:ips).where("u32 >= ? AND u32 <= ?", lower_bound, higher_bound)
+    end
+    search_resuls
+  end
+
+  def self.where_version_decoded_like(version_decoded)
+    search_resuls = CurrentNode.none
+    version_decoded_escaped = version_decoded.gsub("_", "\\\\_").gsub("%", "\\\\%")
+    Coordinator.all.each do |coord|
+      search_resuls = search_resuls | CurrentNode.where("version_decoded -> '#{coord.vid}' LIKE ?", "%#{version_decoded_escaped}%")
     end
     search_resuls
   end

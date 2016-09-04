@@ -129,4 +129,54 @@ class NodesControllerTest < ActionController::TestCase
     get(:index, { ip: "invalid ip" })
     assert_equal([], assigns["nodes"].vids)
   end
+
+  test "should search by version_decoded" do
+    CurrentNode.create!(
+      vid: "0x1a0e0001",
+      version_decoded: {
+        "0x1a0e000a" => "2.0",
+        "0x1a0e000b" => "3.0",
+      },
+      network: @network
+    )
+    CurrentNode.create!(
+      vid: "0x1a0e0002",
+      version_decoded: {
+        "0x1a0e000a" => "3.2",
+        "0x1a0e000b" => "3.1",
+      },
+      network: @network
+    )
+    get(:index, { version_decoded: "3.1" })
+    assert_equal(["0x1a0e0002"], assigns["nodes"].vids)
+  end
+
+  test "should search by version_decoded substring" do
+    CurrentNode.create!(
+      vid: "0x1a0e0001",
+      version_decoded: {
+        "0x1a0e000a" => "2.0",
+        "0x1a0e000b" => "2.0",
+      },
+      network: @network
+    )
+    CurrentNode.create!(
+      vid: "0x1a0e0002",
+      version_decoded: {
+        "0x1a0e000a" => "3.2",
+        "0x1a0e000b" => "3.1",
+      },
+      network: @network
+    )
+    get(:index, { version_decoded: "3." })
+    assert_equal(["0x1a0e0002"], assigns["nodes"].vids)
+  end
+
+  test "shouldn't treat underscore and percent as special symbols in version_decoded" do
+    CurrentNode.create!(vid: "0x1a0e0001", version_decoded: { "0x1a0e000a" => "3.0" }, network: @network)
+    get(:index, { version_decoded: "3_" })
+    assert_equal([], assigns["nodes"].vids)
+    get(:index, { version_decoded: "%3" })
+    assert_equal([], assigns["nodes"].vids)
+  end
 end
