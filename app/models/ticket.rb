@@ -1,3 +1,5 @@
+# Ticket model exists because nodes is temp table and should be rebuilded sometimes using this model (besides others)
+# there are shouldn't be assotiations with Node (at least, direct), because of the same reasons
 class Ticket < ActiveRecord::Base
   belongs_to :ticket_system
   validates :ticket_system, presence: true
