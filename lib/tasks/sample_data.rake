@@ -89,9 +89,16 @@ namespace :db do
       version = {}
       version_decoded = {}
       first_version = ""
+      ips = {}
+      accessips = {}
       Coordinator.all.each_with_index do |coord, i|
-        ip[coord.vid] = [Faker::Internet.ip_v4_address]
-        accessip[coord.vid] = Faker::Internet.ip_v4_address
+        random_ip = Faker::Internet.ip_v4_address
+        random_accessip = Faker::Internet.ip_v4_address
+        ips[coord] = random_ip
+        accessips[coord] = random_accessip
+
+        ip[coord.vid] = [random_ip]
+        accessip[coord.vid] = random_accessip
         if i == 0
           version[coord.vid] = versions[rand(versions.size)]
           first_version = version[coord.vid]
@@ -101,7 +108,8 @@ namespace :db do
         end
         version_decoded[coord.vid] = Node.version_decode(version[coord.vid])
       end
-      CurrentNode.create!(
+
+      node = CurrentNode.new(
         name: name,
         vid: vid,
         network: network,
@@ -117,6 +125,14 @@ namespace :db do
         version: version,
         version_decoded: version_decoded,
       )
+      node.save!
+
+      ips.each do |coord, ip|
+        Ip.create!(coordinator: coord, node: node, u32: IPv4::u32(ip))
+      end
+      accessips.each do |coord, accessip|
+        Accessip.create!(coordinator: coord, node: node, u32: IPv4::u32(accessip))
+      end
     end
   end
 end
