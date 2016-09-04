@@ -179,4 +179,25 @@ class NodesControllerTest < ActionController::TestCase
     get(:index, { version_decoded: "%3" })
     assert_equal([], assigns["nodes"].vids)
   end
+
+  # temporarily implementations of DateTime search
+  test "should search by creation_date (tmp)" do
+    CurrentNode.create!(vid: "0x1a0e0001", creation_date: DateTime.new(2016, 9, 1), network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", creation_date: DateTime.new(2016, 9, 2), network: @network)
+    get(:index, { creation_date: "2016-09-01" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
+  test "should search by deletion_date (tmp)" do
+    CurrentNode.create!(vid: "0x1a0e0001", deletion_date: DateTime.new(2016, 9, 1), network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", deletion_date: DateTime.new(2016, 9, 2), network: @network)
+    get(:index, { deletion_date: "2016-09-01" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+  # /temporarily implementations of DateTime search
+
+  test "there are should be creation_date and deletion_date fields in nodes for where_date_like" do
+    assert Node.column_names.include?("creation_date")
+    assert Node.column_names.include?("deletion_date")
+  end
 end

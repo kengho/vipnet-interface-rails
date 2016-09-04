@@ -82,6 +82,21 @@ class Node < AbstractModel
     search_resuls
   end
 
+  def self.where_creation_date_like(creation_date)
+    self.where_date_like("creation_date", creation_date)
+  end
+
+  def self.where_deletion_date_like(deletion_date)
+    self.where_date_like("deletion_date", deletion_date)
+  end
+
+  def self.where_date_like(field, date)
+    return unless field == "deletion_date" || field == "creation_date"
+    date_escaped = date.to_s.gsub("_", "\\\\_").gsub("%", "\\\\%")
+    search_resuls = CurrentNode.where("#{field}::text LIKE ?", "%#{date_escaped}%")
+    search_resuls
+  end
+
   def availability
     availability = false
     response = {}
