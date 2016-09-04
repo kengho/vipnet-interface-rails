@@ -87,4 +87,46 @@ class NodesControllerTest < ActionController::TestCase
     get(:index, { name: "^wilbur\\s" })
     assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
   end
+
+  test "should search by ip" do
+    node = CurrentNode.new(vid: "0x1a0e0001", network: @network)
+    node.save!
+    CurrentNode.create!(vid: "0x1a0e0002", network: @network)
+    Ip.create!(u32: IPv4::u32("192.168.0.1"), node: node, coordinator: coordinators(:coordinator1))
+    get(:index, { ip: "192.168.0.1" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
+  test "should search by cidr" do
+    node1 = CurrentNode.new(vid: "0x1a0e0001", network: @network)
+    node2 = CurrentNode.new(vid: "0x1a0e0002", network: @network)
+    node3 = CurrentNode.new(vid: "0x1a0e0003", network: @network)
+    node1.save!
+    node2.save!
+    node3.save!
+    Ip.create!(u32: IPv4::u32("192.168.0.0"), node: node1, coordinator: coordinators(:coordinator1))
+    Ip.create!(u32: IPv4::u32("192.168.1.0"), node: node2, coordinator: coordinators(:coordinator1))
+    Ip.create!(u32: IPv4::u32("192.168.0.255"), node: node3, coordinator: coordinators(:coordinator1))
+    get(:index, { ip: "192.168.0.0/24" })
+    assert_equal(["0x1a0e0001", "0x1a0e0003"], assigns["nodes"].vids)
+  end
+
+  test "should search by range" do
+    node1 = CurrentNode.new(vid: "0x1a0e0001", network: @network)
+    node2 = CurrentNode.new(vid: "0x1a0e0002", network: @network)
+    node3 = CurrentNode.new(vid: "0x1a0e0003", network: @network)
+    node1.save!
+    node2.save!
+    node3.save!
+    Ip.create!(u32: IPv4::u32("192.168.0.0"), node: node1, coordinator: coordinators(:coordinator1))
+    Ip.create!(u32: IPv4::u32("192.168.0.255"), node: node2, coordinator: coordinators(:coordinator1))
+    Ip.create!(u32: IPv4::u32("192.168.0.254"), node: node3, coordinator: coordinators(:coordinator1))
+    get(:index, { ip: "192.168.0.0-192.168.0.254" })
+    assert_equal(["0x1a0e0001", "0x1a0e0003"], assigns["nodes"].vids)
+  end
+
+  test "shouldn't search by invalid ip" do
+    get(:index, { ip: "invalid ip" })
+    assert_equal([], assigns["nodes"].vids)
+  end
 end

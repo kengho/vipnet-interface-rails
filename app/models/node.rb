@@ -3,6 +3,7 @@ class Node < AbstractModel
   validates :network, presence: true
   has_many :node_ips, dependent: :destroy
   has_many :access_ips
+  has_many :ips
 
   def self.vid_regexp
     /\A0x[0-9a-f]{8}\z/
@@ -57,6 +58,18 @@ class Node < AbstractModel
   def self.where_name_like(name)
     name_regexp = name.gsub(" ", ".*")
     search_resuls = CurrentNode.where("name ~* ?", name_regexp)
+    search_resuls
+  end
+
+  def self.where_ip_like(ip)
+    search_resuls = CurrentNode.none
+    if IPv4::ip?(ip)
+      search_resuls = CurrentNode.joins(:ips).where("u32 = ?", IPv4::u32(ip))
+    end
+    if IPv4::cidr(ip) || IPv4::range(ip)
+      lower_bound, higher_bound = IPv4::u32_bounds(ip)
+      search_resuls = CurrentNode.joins(:ips).where("u32 >= ? AND u32 <= ?", lower_bound, higher_bound)
+    end
     search_resuls
   end
 
