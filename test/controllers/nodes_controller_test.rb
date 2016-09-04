@@ -18,6 +18,21 @@ class NodesControllerTest < ActionController::TestCase
     assert_response :success
   end
 
+  test "shouldn't treat empty params as .*" do
+    CurrentNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
+    get(:index, { vid: "0x1a0e0001", name: "" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
+  test "should search by many params using AND logic" do
+    CurrentNode.create!(vid: "0x1a0e0001", name: "Alex1", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", name: "Alex2", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0010", name: "Alex", network: @network)
+    get(:index, { vid: "0x1a0e000", name: "Alex" })
+    assert_equal(["0x1a0e0001", "0x1a0e0002"], assigns["nodes"].vids)
+  end
+
   test "should search by vid" do
     CurrentNode.create!(vid: "0x1a0e0001", network: @network)
     CurrentNode.create!(vid: "0x1a0e0002", network: @network)
