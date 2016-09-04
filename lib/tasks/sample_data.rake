@@ -74,7 +74,14 @@ namespace :db do
       server_number = rand(2) == 0 ? "0001" : "0002"
       ticket = {}
       url_templates.each do |url_template|
-        ticket[url_template] = Array.new(rand(1...5)) { rand(100000...300000).to_s }.to_s if rand(2) == 0
+        random_ticket_ids = Array.new(rand(1...5)) { rand(100000...300000).to_s }
+        if rand(2) == 0
+          ticket[url_template] = random_ticket_ids.to_s
+          random_ticket_ids.each do |random_ticket_id|
+            ts = TicketSystem.find_by(url_template: url_template)
+            Ticket.create!(ticket_system: ts, vid: vid, ticket_id: random_ticket_id, )
+          end
+        end
       end
       versions = ["3.0-670", "3.0-671", "3.0-672", "0.3-2", "4.20"]
       ip = {}
