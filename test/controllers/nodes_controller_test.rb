@@ -235,11 +235,4 @@ class NodesControllerTest < ActionController::TestCase
     get(:index, { ticket: "11" })
     assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
   end
-
-  test "shouldn't search if ticket isn't a number" do
-    CurrentNode.create!(vid: "0x1a0e0001", network: @network)
-    Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "not a number")
-    get(:index, { ticket: "not a number" })
-    assert_equal([], assigns["nodes"].vids)
-  end
 end

@@ -99,7 +99,6 @@ class Node < AbstractModel
 
   def self.where_ticket_like(ticket_id)
     search_resuls = CurrentNode.none
-    return search_resuls unless ticket_id =~ /^\d+$/
     tickets = Ticket.where("ticket_id LIKE ?", "%#{ticket_id}%")
     tickets.each do |ticket|
       search_resuls = search_resuls | CurrentNode.where("vid = ?", ticket.vid)
