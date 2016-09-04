@@ -2,6 +2,8 @@ class NodesControllerTest < ActionController::TestCase
   setup do
     @session = UserSession.create(users(:user1))
     @network = networks(:network1)
+    @ticket_system1 = TicketSystem.create!(url_template: "http://tickets.org/ticket_id={id}")
+    @ticket_system2 = TicketSystem.create!(url_template: "http://tickets2.org/ticket_id={id}")
     Settings.vid_search_threshold = "0xff".to_i(16)
   end
 
@@ -199,5 +201,30 @@ class NodesControllerTest < ActionController::TestCase
   test "there are should be creation_date and deletion_date fields in nodes for where_date_like" do
     assert Node.column_names.include?("creation_date")
     assert Node.column_names.include?("deletion_date")
+  end
+
+  test "should search by ticket" do
+    CurrentNode.create!(vid: "0x1a0e0001", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", network: @network)
+    Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
+    Ticket.create!(ticket_system: @ticket_system2, vid: "0x1a0e0001", ticket_id: "2")
+    get(:index, { ticket: "1" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
+  test "should search by ticket substring" do
+    CurrentNode.create!(vid: "0x1a0e0001", network: @network)
+    CurrentNode.create!(vid: "0x1a0e0002", network: @network)
+    Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "111")
+    Ticket.create!(ticket_system: @ticket_system2, vid: "0x1a0e0001", ticket_id: "222")
+    get(:index, { ticket: "11" })
+    assert_equal(["0x1a0e0001"], assigns["nodes"].vids)
+  end
+
+  test "shouldn't search if ticket isn't a number" do
+    CurrentNode.create!(vid: "0x1a0e0001", network: @network)
+    Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "not a number")
+    get(:index, { ticket: "not a number" })
+    assert_equal([], assigns["nodes"].vids)
   end
 end
