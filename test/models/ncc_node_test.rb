@@ -6,18 +6,18 @@ class NccNodesTest < ActiveSupport::TestCase
   end
 
   test "shouldn't save without network" do
-    node = NccNode.new(vid: "0x1a0e0001")
-    assert_not node.save
+    ncc_node = NccNode.new(vid: "0x1a0e0001")
+    assert_not ncc_node.save
   end
 
   test "shouldn't save without vid" do
-    node = NccNode.new(network: @network)
-    assert_not node.save
+    ncc_node = NccNode.new(network: @network)
+    assert_not ncc_node.save
   end
 
   test "shouldn't save with wrong vid" do
-    node = NccNode.new(network: @network, vid: "1A0E000A")
-    assert_not node.save
+    ncc_node = NccNode.new(network: @network, vid: "1A0E000A")
+    assert_not ncc_node.save
   end
 
   test "when network destroys, all its ncc_nodes destroys" do
