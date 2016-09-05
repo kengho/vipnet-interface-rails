@@ -1,0 +1,2 @@
+class CurrentHwNode < HwNode
+end

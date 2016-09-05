@@ -14,7 +14,7 @@ class Api::V1::AvailabilityController < Api::V1::BaseController
       render json: @response and return
     end
 
-    ncc_node = NccNode.find_by(vid: params[:vid])
+    ncc_node = CurrentNccNode.find_by(vid: params[:vid])
     if ncc_node
       @response = ncc_node.availability
     else

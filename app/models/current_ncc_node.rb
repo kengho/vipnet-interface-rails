@@ -1,0 +1,2 @@
+class CurrentNccNode < NccNode
+end

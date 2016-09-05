@@ -2,9 +2,9 @@ require "test_helper"
 
 class Api::V1::AccessipsControllerTest < ActionController::TestCase
   setup do
-    ncc_node = NccNode.new(network: networks(:network1), vid: "0x1a0e0001")
+    ncc_node = CurrentNccNode.new(network: networks(:network1), vid: "0x1a0e0001")
     ncc_node.save!
-    HwNode.create!(
+    CurrentHwNode.create!(
       ncc_node: ncc_node,
       coordinator: coordinators(:coordinator1),
       accessip: "198.51.100.1",
