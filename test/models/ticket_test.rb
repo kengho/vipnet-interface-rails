@@ -4,6 +4,7 @@ class TicketTest < ActiveSupport::TestCase
   setup do
     @ticket_system1 = TicketSystem.create!(url_template: "http://tickets.org/ticket_id={id}")
     @ticket_system2 = TicketSystem.create!(url_template: "http://tickets2.org/ticket_id={id}")
+    @ncc_node = NccNode.new(network: networks(:network1), vid: "0x1a0e0001")
   end
 
   test "should not save without ticket_system" do
@@ -55,5 +56,12 @@ class TicketTest < ActiveSupport::TestCase
     assert_equal(3, Ticket.all.size)
     @ticket_system1.destroy
     assert_equal(0, Ticket.all.size)
+  end
+
+  test "when ncc_node destroys, foreign_key nullifies" do
+    Ticket.create!(ticket_system: @ticket_system1, ncc_node: @ncc_node, vid: "0x1a0e0001", ticket_id: "1")
+    assert Ticket.first.ncc_node_id
+    @ncc_node.destroy
+    assert_not Ticket.first.ncc_node_id
   end
 end
