@@ -2,9 +2,13 @@ require "test_helper"
 
 class Api::V1::AvailabilityControllerTest < ActionController::TestCase
   setup do
-    node = CurrentNode.new(vid: "0x1a0e0001", network: networks(:network1))
-    node.save!
-    Accessip.create!(u32: IPv4::u32("198.51.100.1"), node: node, coordinator: coordinators(:coordinator1))
+    ncc_node = NccNode.new(network: networks(:network1), vid: "0x1a0e0001")
+    ncc_node.save!
+    HwNode.create!(
+      ncc_node: ncc_node,
+      coordinator: coordinators(:coordinator1),
+      accessip: "198.51.100.1",
+    )
   end
 
   test "should return error when no valid token provided" do

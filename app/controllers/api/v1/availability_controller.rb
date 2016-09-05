@@ -14,9 +14,9 @@ class Api::V1::AvailabilityController < Api::V1::BaseController
       render json: @response and return
     end
 
-    node = CurrentNode.find_by(vid: params[:vid])
-    if node
-      @response = node.availability
+    ncc_node = NccNode.find_by(vid: params[:vid])
+    if ncc_node
+      @response = ncc_node.availability
     else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
     end
