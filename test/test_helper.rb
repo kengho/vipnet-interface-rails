@@ -14,6 +14,10 @@ class ActiveSupport::TestCase
   ENV["DEFAULT_LOCALE"] = "DEFAULT_LOCALE"
   ENV["POST_HW_TOKEN"] = "POST_HW_TOKEN"
   ENV["POST_TICKETS_TOKEN"] = "POST_TICKETS_TOKEN"
+
+  def ncc_nodes_should_be(expected_ncc_nodes)
+    assert_equal(expected_ncc_nodes.sort_by_vid, eval(CurrentNccNode.to_json_ncc).sort_by_vid)
+  end
 end
 
 class Array
@@ -21,12 +25,8 @@ class Array
     self.sort_by { |h| h[:vid] }
   end
 
-  def sort_by_node_coordinator_and_u32
-    self.sort_by { |h| [h[:node_id], h[:coordinator_id], h[:u32]] }
-  end
-
   def which_index(hash)
-    self.each_with_index do |e, i|
+    self.each_with_index do |_, i|
       return i if self[i] == self[i].merge(hash)
     end
   end

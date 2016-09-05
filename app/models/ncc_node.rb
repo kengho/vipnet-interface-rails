@@ -46,4 +46,28 @@ class NccNode < AbstractModel
     end
     accessips
   end
+
+  def self.to_json_ncc
+    result = []
+    self.all.each do |e|
+      result.push(eval(e.to_json_ncc))
+    end
+    result.to_json.gsub("null", "nil")
+  end
+
+  def to_json_ncc
+    self.to_json(
+      :only => NccNode.props_from_nodename + [:vid, :creation_date_accuracy]
+    ).gsub("null", "nil")
+  end
+
+  def self.props_from_nodename
+    [
+      :name,
+      :enabled,
+      :category,
+      :abonent_number,
+      :server_number,
+    ]
+  end
 end
