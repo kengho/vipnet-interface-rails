@@ -1,2 +1,0 @@
-class CurrentNode < Node
-end
