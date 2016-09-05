@@ -10,5 +10,5 @@ class NccNode < AbstractModel
 
   validates :vid,
             presence: true,
-            format: { with: Node.vid_regexp, message: "vid should be like \"#{NccNode.vid_regexp}\"" }
+            format: { with: NccNode.vid_regexp, message: "vid should be like \"#{NccNode.vid_regexp}\"" }
 end

@@ -5,5 +5,5 @@ class Coordinator < ActiveRecord::Base
   validates :network, presence: true
   validates :vid, presence: true,
                   uniqueness: true,
-                  format: { with: Node.vid_regexp, message: "vid should be like \"#{Node.vid_regexp}\"" }
+                  format: { with: NccNode.vid_regexp, message: "vid should be like \"#{NccNode.vid_regexp}\"" }
 end
