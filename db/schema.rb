@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160903083659) do
+ActiveRecord::Schema.define(version: 20160905061750) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -37,15 +37,37 @@ ActiveRecord::Schema.define(version: 20160903083659) do
     t.string  "belongs_to_type"
   end
 
-  create_table "iplirconfs", force: :cascade do |t|
+  create_table "hw_nodes", force: :cascade do |t|
+    t.string   "accessip"
+    t.string   "version"
+    t.string   "version_decoded"
+    t.datetime "created_at"
+    t.datetime "updated_at"
     t.integer  "coordinator_id"
-    t.datetime "created_at",                  null: false
-    t.datetime "updated_at",                  null: false
-    t.hstore   "sections",       default: {}
-    t.string   "content"
+    t.integer  "ncc_node_id"
+    t.string   "type"
   end
 
-  add_index "iplirconfs", ["coordinator_id"], name: "index_iplirconfs_on_coordinator_id", using: :btree
+  add_index "hw_nodes", ["coordinator_id"], name: "index_hw_nodes_on_coordinator_id", using: :btree
+  add_index "hw_nodes", ["ncc_node_id"], name: "index_hw_nodes_on_ncc_node_id", using: :btree
+
+  create_table "ncc_nodes", force: :cascade do |t|
+    t.string   "vid"
+    t.string   "name"
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
+    t.datetime "deletion_date"
+    t.integer  "network_id"
+    t.boolean  "enabled",                default: true
+    t.string   "category"
+    t.boolean  "creation_date_accuracy", default: true
+    t.string   "abonent_number"
+    t.string   "server_number"
+    t.datetime "creation_date"
+    t.string   "type"
+  end
+
+  add_index "ncc_nodes", ["network_id"], name: "index_ncc_nodes_on_network_id", using: :btree
 
   create_table "networks", force: :cascade do |t|
     t.string   "network_vid"
@@ -55,49 +77,14 @@ ActiveRecord::Schema.define(version: 20160903083659) do
   end
 
   create_table "node_ips", force: :cascade do |t|
-    t.integer  "node_id"
-    t.integer  "coordinator_id"
-    t.datetime "created_at",               null: false
-    t.datetime "updated_at",               null: false
-    t.integer  "u32",            limit: 8, null: false
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "u32",        limit: 8, null: false
     t.string   "type"
+    t.integer  "hw_node_id"
   end
 
-  add_index "node_ips", ["coordinator_id"], name: "index_node_ips_on_coordinator_id", using: :btree
-  add_index "node_ips", ["node_id"], name: "index_node_ips_on_node_id", using: :btree
-
-  create_table "nodenames", force: :cascade do |t|
-    t.integer  "network_id"
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.hstore   "records",    default: {}
-    t.string   "content"
-  end
-
-  add_index "nodenames", ["network_id"], name: "index_nodenames_on_network_id", using: :btree
-
-  create_table "nodes", force: :cascade do |t|
-    t.string   "vid"
-    t.string   "name"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
-    t.hstore   "ip",                     default: {},   null: false
-    t.hstore   "version_decoded",        default: {},   null: false
-    t.datetime "deletion_date"
-    t.integer  "network_id"
-    t.boolean  "enabled",                default: true
-    t.string   "category"
-    t.boolean  "creation_date_accuracy", default: true
-    t.string   "abonent_number"
-    t.string   "server_number"
-    t.hstore   "ticket",                 default: {}
-    t.hstore   "version",                default: {}
-    t.datetime "creation_date"
-    t.hstore   "accessip",               default: {}
-    t.string   "type"
-  end
-
-  add_index "nodes", ["network_id"], name: "index_nodes_on_network_id", using: :btree
+  add_index "node_ips", ["hw_node_id"], name: "index_node_ips_on_hw_node_id", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",                   null: false
@@ -120,8 +107,10 @@ ActiveRecord::Schema.define(version: 20160903083659) do
     t.integer  "ticket_system_id"
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
+    t.integer  "ncc_node_id"
   end
 
+  add_index "tickets", ["ncc_node_id"], name: "index_tickets_on_ncc_node_id", using: :btree
   add_index "tickets", ["ticket_system_id"], name: "index_tickets_on_ticket_system_id", using: :btree
 
   create_table "users", force: :cascade do |t|
@@ -144,9 +133,10 @@ ActiveRecord::Schema.define(version: 20160903083659) do
   end
 
   add_foreign_key "coordinators", "networks"
-  add_foreign_key "node_ips", "coordinators"
-  add_foreign_key "node_ips", "nodes"
-  add_foreign_key "nodenames", "networks"
-  add_foreign_key "nodes", "networks"
+  add_foreign_key "hw_nodes", "coordinators"
+  add_foreign_key "hw_nodes", "ncc_nodes"
+  add_foreign_key "ncc_nodes", "networks"
+  add_foreign_key "node_ips", "hw_nodes"
+  add_foreign_key "tickets", "ncc_nodes"
   add_foreign_key "tickets", "ticket_systems"
 end
