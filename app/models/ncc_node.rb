@@ -19,7 +19,7 @@ class NccNode < AbstractModel
     if accessips.empty?
       response[:errors] = [{
         title: "internal",
-        detail: "no-accessips"
+        detail: "no-accessips",
       }]
       return response
     else
@@ -27,7 +27,7 @@ class NccNode < AbstractModel
         availability = true
       else
         accessips.each do |accessip|
-          http_request = Settings.checker.gsub("{ip}", IPv4::ip(accessip)).gsub("{token}", ENV["CHECKER_TOKEN"])
+          http_request = Settings.checker.gsub("{ip}", accessip).gsub("{token}", ENV["CHECKER_TOKEN"])
           http_response = HTTParty.get(http_request)
           availability ||= http_response.parsed_response["data"]["availability"] if http_response.code == :ok
           break if availability
