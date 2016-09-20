@@ -26,4 +26,9 @@ class NccNodesTest < ActiveSupport::TestCase
     @network.destroy
     assert_equal(0, NccNode.all.size)
   end
+
+  test "there are should be creation_date and deletion_date fields in nodes for where_date_like" do
+    assert NccNode.column_names.include?("creation_date")
+    assert NccNode.column_names.include?("deletion_date")
+  end
 end
