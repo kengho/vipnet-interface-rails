@@ -54,7 +54,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :creation_date_accuracy => false,
       },
     ]
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 01_added_client1 (:add)
     added_client1_nodename = fixture_file_upload(
@@ -73,7 +73,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :creation_date_accuracy => true,
       },
     )
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 02_renamed_client1 (:change)
     renamed_client1_nodename = fixture_file_upload(
@@ -82,7 +82,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     )
     post(:create, { file: renamed_client1_nodename, network_vid: "6670" })
     expected_ncc_nodes.change_where({ vid: "0x1a0e000c" }, { name: "client1-renamed1" })
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 03_added_coordinator2 (:change)
     added_coordinator2_nodename = fixture_file_upload(
@@ -101,7 +101,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :creation_date_accuracy => true,
       },
     )
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 04_client1_moved_to_coordinator2 (:change)
     client1_moved_to_coordinator2_nodename = fixture_file_upload(
@@ -115,7 +115,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         server_number: "0002",
       }
     )
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 05_client1_disabled (:change)
     client1_disabled_nodename = fixture_file_upload(
@@ -124,7 +124,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     )
     post(:create, { file: client1_disabled_nodename, network_vid: "6670" })
     expected_ncc_nodes.change_where({ vid: "0x1a0e000c" }, { enabled: false })
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 06_added_node_from_ignoring_network
     # (nothing should change)
@@ -134,7 +134,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: added_node_from_ignoring_network_nodename, network_vid: "6670" })
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 07_added_internetworking_node_from_network_we_admin
     # (nothing should change)
@@ -148,7 +148,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: added_internetworking_node_we_admins_nodename, network_vid: "6670" })
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
     # cleaning up
     another_network_we_admin.destroy
     Nodename.thread(another_network_we_admin).destroy_all
@@ -160,7 +160,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: group_changed_nodename, network_vid: "6670" })
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 09_client1_removed (:remove)
     client1_removed_nodename = fixture_file_upload(
@@ -169,6 +169,6 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     )
     post(:create, { file: client1_removed_nodename, network_vid: "6670" })
     expected_ncc_nodes.change_where({ vid: "0x1a0e000c" }, nil)
-    ncc_nodes_should_be expected_ncc_nodes
+    assert_ncc_nodes_should_be expected_ncc_nodes
   end
 end
