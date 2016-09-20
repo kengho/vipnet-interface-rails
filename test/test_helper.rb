@@ -16,15 +16,24 @@ class ActiveSupport::TestCase
   ENV["POST_TICKETS_TOKEN"] = "POST_TICKETS_TOKEN"
 
   def assert_ncc_nodes_should_be(expected_ncc_nodes)
-    assert_equal(expected_ncc_nodes.sort_by_vid, eval(CurrentNccNode.to_json_ncc).sort_by_vid)
+    assert_equal(
+      expected_ncc_nodes.sort_by_vid,
+      eval(CurrentNccNode.to_json_ncc).sort_by_vid
+    )
   end
 
   def assert_hw_nodes_should_be(expected_hw_nodes)
-    assert_equal(expected_hw_nodes.sort_by_ncc_node_and_coordinator, eval(CurrentHwNode.to_json_hw).sort_by_ncc_node_and_coordinator)
+    assert_equal(
+      expected_hw_nodes.sort_by_ncc_node_and_coordinator,
+      eval(CurrentHwNode.to_json_hw).sort_by_ncc_node_and_coordinator
+    )
   end
 
   def assert_node_ips_should_be(expected_node_ips)
-    assert_equal(expected_node_ips.sort_by_hw_node_and_u32, eval(NodeIp.to_json_nonmagic).sort_by_hw_node_and_u32)
+    assert_equal(
+      expected_node_ips.sort_by_hw_node_and_u32,
+      eval(NodeIp.to_json_nonmagic).sort_by_hw_node_and_u32
+    )
   end
 end
 
