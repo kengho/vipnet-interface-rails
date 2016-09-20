@@ -1,10 +1,10 @@
 module IPv4
   def ip?(string)
     octets = string.split(".")
-    return nil unless octets.size == 4
+    return false unless octets.size == 4
     octets.each do |octet|
-      return nil unless octet =~ /^\d+$/
-      return nil unless octet.to_i >= 0 && octet.to_i <= 255
+      return false unless octet =~ /^\d+$/
+      return false unless octet.to_i >= 0 && octet.to_i <= 255
     end
     return true
   end
