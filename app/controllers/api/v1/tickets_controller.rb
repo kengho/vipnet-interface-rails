@@ -13,16 +13,14 @@ class Api::V1::TicketsController < Api::V1::BaseController
     id = ticket[:id]
     url_template = ticket[:url_template]
 
+    ncc_node = CurrentNccNode.find_by(vid: vid)
     ticket_system = TicketSystem.find_or_create_by(url_template: url_template)
-    ticket = Ticket.create!(ticket_system: ticket_system, vid: vid, ticket_id: id)
-    node = CurrentNode.find_by(vid: vid)
-    if node
-      ids = eval(node.ticket[url_template] || "\[\]")
-      ids.push(id)
-      ids = ids.uniq.sort
-      node.ticket[url_template] = ids
-      node.save!
-    end
+    Ticket.create!(
+      ncc_node: ncc_node,
+      ticket_system: ticket_system,
+      vid: vid,
+      ticket_id: id,
+    )
     render plain: OK_RESPONSE and return
   end
 end
