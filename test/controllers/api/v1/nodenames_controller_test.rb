@@ -168,7 +168,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: client1_removed_nodename, network_vid: "6670" })
-    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" }, nil)
+    expected_ncc_nodes.delete_where({ vid: "0x1a0e000c" })
     assert_ncc_nodes_should_be expected_ncc_nodes
   end
 end

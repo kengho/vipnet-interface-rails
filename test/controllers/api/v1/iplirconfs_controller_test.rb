@@ -326,16 +326,13 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
-    expected_node_ips.change_where(
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000a,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.51"),
-      },
-      nil
-    )
+    expected_node_ips.delete_where({
+      :hw_node_id => CurrentHwNode.find_by(
+        ncc_node: ncc_node_0x1a0e000a,
+        coordinator: coordinator_0x1a0e000d,
+      ).id,
+      :u32 => IPv4::u32("192.0.2.51"),
+    })
     assert_hw_nodes_should_be expected_hw_nodes
     assert_node_ips_should_be expected_node_ips
 
@@ -345,23 +342,17 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/07_0x1a0e000d_deleted_client1.conf",
       "application/octet-stream"
     )
-    expected_hw_nodes.change_where(
-      {
-        :ncc_node_id => ncc_node_0x1a0e000c.id,
-        :coordinator_id => coordinator_0x1a0e000d.id,
-      },
-      nil
-    )
-    expected_node_ips.change_where(
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000c,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.7"),
-      },
-      nil
-    )
+    expected_hw_nodes.delete_where({
+      :ncc_node_id => ncc_node_0x1a0e000c.id,
+      :coordinator_id => coordinator_0x1a0e000d.id,
+    })
+    expected_node_ips.delete_where({
+      :hw_node_id => CurrentHwNode.find_by(
+        ncc_node: ncc_node_0x1a0e000c,
+        coordinator: coordinator_0x1a0e000d,
+      ).id,
+      :u32 => IPv4::u32("192.0.2.7"),
+    })
     # we made post() after change_where because post() deletes records we search for
     post(:create, { file: deleted_client1, coord_vid: "0x1a0e000d" })
     assert_hw_nodes_should_be expected_hw_nodes

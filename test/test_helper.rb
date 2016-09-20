@@ -49,11 +49,12 @@ class Array
 
   def change_where(where, changes)
     index = which_index(where)
-    if changes == nil
-      self.delete_at(index)
-    elsif changes.class == Hash
-      self[index].deep_merge!(changes)
-    end
+    self[index].deep_merge!(changes)
+  end
+
+  def delete_where(where)
+    index = which_index(where)
+    self.delete_at(index)
   end
 end
 
