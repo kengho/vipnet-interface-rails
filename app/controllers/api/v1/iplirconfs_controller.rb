@@ -18,39 +18,62 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     end
     diff.each do |changes|
       action, target, props, before, after = Garland.decode_changes(changes)
-      node = CurrentNode.find_by(vid: target[:vid])
-      if node
+      ncc_node = CurrentNccNode.find_by(vid: target[:vid])
+      if ncc_node
         if action == :add
           if target[:field] && target[:index]
             # ["+", "0x1a0e000b.:ip[0]", "192.0.2.55"]
-            arr = eval(node[target[:field]][coord_vid])
-            arr.insert(target[:index], props)
-            node[target[:field]][coord_vid] = arr
-            NodeIp.add_ip(coordinator, node, target[:field], props)
+            if target[:field] == :ip && IPv4::ip?(props)
+              hw_node = CurrentHwNode.find_by({
+                ncc_node: ncc_node,
+                coordinator: coordinator,
+              })
+              NodeIp.create!(hw_node: hw_node, u32: IPv4::u32(props))
+            end
           else
             # ["+", "0x1a0e000a", {:id=>"0x1a0e000a", :name=>"coordinator1", ... }]
-            node.set_props_from_iplirconf(coord_vid => { target[:vid] => props })
-            NodeIp.create_ips(coordinator, node, props)
+            hw_node = CurrentHwNode.new({
+              ncc_node: ncc_node,
+              coordinator: coordinator,
+            }.merge(props.reject { |p| !HwNode.props_from_iplirconf.include?(p) }))
+            hw_node.save!
+            if props[:ip]
+              props[:ip].each do |ip|
+                NodeIp.create!(hw_node: hw_node, u32: IPv4::u32(ip)) if IPv4::ip?(ip)
+              end
+            end
           end
         end
 
         if action == :remove
           if target[:field] && target[:index]
             # ["-", "0x1a0e000a.:ip[0]", "192.0.2.51"]
-            arr = eval(node[target[:field]][coord_vid])
-            arr.delete_at(target[:index])
-            node[target[:field]][coord_vid] = arr
-            NodeIp.remove_ip(coordinator, node, target[:field], props)
+            if target[:field] == :ip && IPv4::ip?(props)
+              hw_node = CurrentHwNode.find_by({
+                ncc_node: ncc_node,
+                coordinator: coordinator,
+              })
+              node_ip = NodeIp.find_by(hw_node: hw_node, u32: IPv4::u32(props))
+              node_ip.destroy! if node_ip
+            end
+          else
+            # ["-", "0x1a0e000c", {:id=>"0x1a0e000c", ...]
+            # (entire section is deleted)
+            hw_node = CurrentHwNode.find_by({
+              ncc_node: ncc_node,
+              coordinator: coordinator,
+            })
+            hw_node.destroy! if hw_node
           end
         end
 
         if action == :change
           # ["~", "0x1a0e000b.:version", "3.2-673", "3.2-672"]
-          node[target[:field]][coord_vid] = after if Iplirconf.props_from_api.include?(target[:field])
-          NodeIp.change_ip(coordinator, node, target[:field], before, after)
+          hw_node = CurrentHwNode.find_by(ncc_node: ncc_node, coordinator: coordinator)
+          if hw_node && HwNode.props_from_iplirconf.include?(target[:field])
+            hw_node.update_attribute(target[:field], after)
+          end
         end
-
-        node.save!
       end
     end
     render plain: OK_RESPONSE and return
