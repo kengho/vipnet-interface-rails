@@ -1,4 +1,4 @@
-class HwNode < AbstractModel
+class HwNode < ActiveRecord::Base
   belongs_to :coordinator
   belongs_to :ncc_node
   validates :coordinator, presence: true

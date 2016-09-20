@@ -1,4 +1,4 @@
-class NccNode < AbstractModel
+class NccNode < ActiveRecord::Base
   belongs_to :network
   validates :network, presence: true
   has_many :hw_nodes, dependent: :destroy

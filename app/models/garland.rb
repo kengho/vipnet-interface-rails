@@ -1,4 +1,4 @@
-class Garland < AbstractModel
+class Garland < ActiveRecord::Base
   validates :entity, presence: true
   validates_inclusion_of :entity_type, in: [true, false]
   # for given parent object, described by "belongs_to_id" and "belongs_to_type",
