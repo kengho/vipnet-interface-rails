@@ -2,7 +2,8 @@ var vipnetInterface = {
   remoteStatus: {
     showStatusTime: 5000,
     showStatusBeforeUndoTime: 1000,
-    ajaxTimeout: 15000,
+    ajaxTimeout: 3000,
+    // ajaxTimeout: 15000,
     ajaxTimeoutHandlers: {},
 
     renderDefault: function(parentId) {
@@ -131,12 +132,12 @@ var vipnetInterface = {
     },
 
     initAjax: function(parent) {
-      id = $(parent).parent().attr("id");
-      spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
+      var id = $(parent).parent().attr("id");
+      var spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
       if(!spinner_visibility) {
         vipnetInterface.remoteStatus.renderSpinner("#" + id);
         vipnetInterface.remoteStatus.ajaxTimeoutHandlers["#" + id] = setTimeout(function() {
-          spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
+          var spinner_visibility = vipnetInterface.remoteStatus.spinnerVisibility(id)
           if(spinner_visibility == "visible") {
             // http://stackoverflow.com/a/10610347
             vipnetInterface.remoteStatus.renderStatus({ parentId: "#" + id, status: "false", tooltipText: I18n["ajax_error"] });
