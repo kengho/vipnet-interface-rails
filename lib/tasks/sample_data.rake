@@ -36,6 +36,7 @@ namespace :db do
       name: Faker::App.name,
       category: "server",
       server_number: "0001",
+      abonent_number: "0000",
       network: Network.find_by(network_vid: "6670"),
     )
     CurrentNccNode.create!(
@@ -43,6 +44,7 @@ namespace :db do
       name: Faker::App.name,
       category: "server",
       server_number: "0002",
+      abonent_number: "0000",
       network: Network.find_by(network_vid: "6670"),
     )
     CurrentNccNode.create!(
@@ -50,6 +52,7 @@ namespace :db do
       name: Faker::App.name,
       category: "server",
       server_number: "0001",
+      abonent_number: "0000",
       network: Network.find_by(network_vid: "6671"),
     )
     CurrentNccNode.create!(
@@ -57,6 +60,7 @@ namespace :db do
       name: Faker::App.name,
       category: "server",
       server_number: "0002",
+      abonent_number: "0000",
       network: Network.find_by(network_vid: "6671"),
     )
 
