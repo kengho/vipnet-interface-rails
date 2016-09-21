@@ -12,23 +12,25 @@ namespace :db do
       n = DEFAULT_N
     end
 
-    print "Destroying db... "
+    print "Destroying db...\n"
     ActiveRecord::Base.connection.tables.each do |table|
       unless ["users", "schema_migrations", "settings"].include?(table)
         table_type = table.classify.constantize
         table_type.destroy_all
       end
     end
-    print "success\n"
 
+    print "Filling Network...\n"
     Network.create!(network_vid: "6670")
     Network.create!(network_vid: "6671")
 
+    print "Filling Coordinator...\n"
     Coordinator.create!(vid: "0x1a0e000a", network: Network.find_by(network_vid: "6670"))
     Coordinator.create!(vid: "0x1a0e000c", network: Network.find_by(network_vid: "6670"))
     Coordinator.create!(vid: "0x1a0f000a", network: Network.find_by(network_vid: "6671"))
     Coordinator.create!(vid: "0x1a0f000c", network: Network.find_by(network_vid: "6671"))
 
+    print "Creating CurrentNccNode for coordinators...\n"
     CurrentNccNode.create!(
       vid: "0x1a0e000a",
       name: Faker::App.name,
@@ -61,6 +63,7 @@ namespace :db do
     url_templates = ["http://tickets.org/ticket_id={id}", "http://tickets2.org/ticket_id={id}"]
     url_templates.each { |url_template| TicketSystem.create!(url_template: url_template) }
 
+    print "Filling CurrentNccNode...\n"
     n.times do |i|
       print "#{i+1}/#{n}..."
       name = Faker::Name.name
@@ -85,14 +88,17 @@ namespace :db do
       )
     end
 
+    print "Filling CurrentHwNode, NodeIp and Ticket...\n"
     versions = ["3.0-670", "3.0-671", "3.0-672", "0.3-2", "4.20"]
-    CurrentNccNode.all.each do |ncc_node|
+    CurrentNccNode.all.each_with_index do |ncc_node, i|
+      print "#{i+1}/#{n+4}..."
+      random_version = versions[rand(versions.size)]
       Coordinator.all.each do |coordinator|
         hw_node = CurrentHwNode.new(
           ncc_node: ncc_node,
           coordinator: coordinator,
           accessip: Faker::Internet.ip_v4_address,
-          version: versions[rand(versions.size)],
+          version: rand(10) < 9 ? random_version : versions[rand(versions.size)],
         )
         hw_node.save!
 
@@ -102,7 +108,7 @@ namespace :db do
         )
       end
 
-      random_ticket_ids = Array.new(rand(1...5)) { rand(100000...300000).to_s }
+      random_ticket_ids = Array.new(rand(0...5)) { rand(100000...300000).to_s }
       random_ticket_ids.each do |random_ticket_id|
         Ticket.create!(
           ncc_node: ncc_node,
