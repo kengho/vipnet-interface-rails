@@ -12,12 +12,14 @@ namespace :db do
       n = DEFAULT_N
     end
 
+    print "Destroying db... "
     ActiveRecord::Base.connection.tables.each do |table|
       unless ["users", "schema_migrations", "settings"].include?(table)
         table_type = table.classify.constantize
         table_type.destroy_all
       end
     end
+    print "success\n"
 
     Network.create!(network_vid: "6670")
     Network.create!(network_vid: "6671")
@@ -27,28 +29,28 @@ namespace :db do
     Coordinator.create!(vid: "0x1a0f000a", network: Network.find_by(network_vid: "6671"))
     Coordinator.create!(vid: "0x1a0f000c", network: Network.find_by(network_vid: "6671"))
 
-    CurrentNode.create!(
+    CurrentNccNode.create!(
       vid: "0x1a0e000a",
       name: Faker::App.name,
       category: "server",
       server_number: "0001",
       network: Network.find_by(network_vid: "6670"),
     )
-    CurrentNode.create!(
+    CurrentNccNode.create!(
       vid: "0x1a0e000c",
       name: Faker::App.name,
       category: "server",
       server_number: "0002",
       network: Network.find_by(network_vid: "6670"),
     )
-    CurrentNode.create!(
+    CurrentNccNode.create!(
       vid: "0x1a0f000a",
       name: Faker::App.name,
       category: "server",
       server_number: "0001",
       network: Network.find_by(network_vid: "6671"),
     )
-    CurrentNode.create!(
+    CurrentNccNode.create!(
       vid: "0x1a0f000c",
       name: Faker::App.name,
       category: "server",
@@ -57,9 +59,7 @@ namespace :db do
     )
 
     url_templates = ["http://tickets.org/ticket_id={id}", "http://tickets2.org/ticket_id={id}"]
-    url_templates.each do |url_template|
-      TicketSystem.create!(url_template: url_template)
-    end
+    url_templates.each { |url_template| TicketSystem.create!(url_template: url_template) }
 
     n.times do |i|
       print "#{i+1}/#{n}..."
@@ -72,44 +72,7 @@ namespace :db do
       creation_date_accuracy = rand(10) < 8
       abonent_number = rand("0x1000".to_i(16)).to_s(16).upcase.rjust(4, "0")
       server_number = rand(2) == 0 ? "0001" : "0002"
-      ticket = {}
-      url_templates.each do |url_template|
-        random_ticket_ids = Array.new(rand(1...5)) { rand(100000...300000).to_s }
-        if rand(2) == 0
-          ticket[url_template] = random_ticket_ids.to_s
-          random_ticket_ids.each do |random_ticket_id|
-            ts = TicketSystem.find_by(url_template: url_template)
-            Ticket.create!(ticket_system: ts, vid: vid, ticket_id: random_ticket_id, )
-          end
-        end
-      end
-      versions = ["3.0-670", "3.0-671", "3.0-672", "0.3-2", "4.20"]
-      ip = {}
-      accessip = {}
-      version = {}
-      version_decoded = {}
-      first_version = ""
-      ips = {}
-      accessips = {}
-      Coordinator.all.each_with_index do |coord, i|
-        random_ip = Faker::Internet.ip_v4_address
-        random_accessip = Faker::Internet.ip_v4_address
-        ips[coord] = random_ip
-        accessips[coord] = random_accessip
-
-        ip[coord.vid] = [random_ip]
-        accessip[coord.vid] = random_accessip
-        if i == 0
-          version[coord.vid] = versions[rand(versions.size)]
-          first_version = version[coord.vid]
-        else
-          versions_minus_first = versions - [first_version]
-          version[coord.vid] = rand(10) < 8 ? first_version : versions_minus_first[rand(versions_minus_first.size)]
-        end
-        version_decoded[coord.vid] = Node.version_decode(version[coord.vid])
-      end
-
-      node = CurrentNode.new(
+      CurrentNccNode.create!(
         name: name,
         vid: vid,
         network: network,
@@ -119,19 +82,35 @@ namespace :db do
         creation_date_accuracy: creation_date_accuracy,
         abonent_number: abonent_number,
         server_number: server_number,
-        ticket: ticket,
-        ip: ip,
-        accessip: accessip,
-        version: version,
-        version_decoded: version_decoded,
       )
-      node.save!
+    end
 
-      ips.each do |coord, ip|
-        Ip.create!(coordinator: coord, node: node, u32: IPv4::u32(ip))
+    versions = ["3.0-670", "3.0-671", "3.0-672", "0.3-2", "4.20"]
+    CurrentNccNode.all.each do |ncc_node|
+      Coordinator.all.each do |coordinator|
+        hw_node = CurrentHwNode.new(
+          ncc_node: ncc_node,
+          coordinator: coordinator,
+          accessip: Faker::Internet.ip_v4_address,
+          version: versions[rand(versions.size)],
+        )
+        hw_node.save!
+
+        NodeIp.create!(
+          hw_node: hw_node,
+          u32: IPv4::u32(Faker::Internet.ip_v4_address)
+        )
       end
-      accessips.each do |coord, accessip|
-        Accessip.create!(coordinator: coord, node: node, u32: IPv4::u32(accessip))
+
+      random_ticket_ids = Array.new(rand(1...5)) { rand(100000...300000).to_s }
+      random_ticket_ids.each do |random_ticket_id|
+        Ticket.create!(
+          ncc_node: ncc_node,
+          # http://stackoverflow.com/a/5342324/6376451
+          ticket_system: TicketSystem.order("RANDOM()").first,
+          vid: ncc_node.vid,
+          ticket_id: random_ticket_id,
+        )
       end
     end
   end
