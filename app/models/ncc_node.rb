@@ -3,7 +3,6 @@ class NccNode < ActiveRecord::Base
   validates :network, presence: true
   has_many :hw_nodes, dependent: :destroy
   has_many :tickets, dependent: :nullify
-
   def self.vid_regexp
     /\A0x[0-9a-f]{8}\z/
   end
@@ -11,6 +10,8 @@ class NccNode < ActiveRecord::Base
   validates :vid,
             presence: true,
             format: { with: NccNode.vid_regexp, message: "vid should be like \"#{NccNode.vid_regexp}\"" }
+
+  after_create :adopt_tickets
 
   def self.where_vid_like(vid)
     search_resuls = CurrentNccNode.none
@@ -133,4 +134,12 @@ class NccNode < ActiveRecord::Base
       :server_number,
     ]
   end
+
+  private
+    def adopt_tickets
+      tickets_to_adopt = Ticket.where(vid: self.vid)
+      tickets_to_adopt.each do |ticket_to_adopt|
+        ticket_to_adopt.update_attribute("ncc_node_id", self.id)
+      end
+    end
 end
