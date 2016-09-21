@@ -2,8 +2,7 @@ var vipnetInterface = {
   remoteStatus: {
     showStatusTime: 5000,
     showStatusBeforeUndoTime: 1000,
-    ajaxTimeout: 3000,
-    // ajaxTimeout: 15000,
+    ajaxTimeout: 15000,
     ajaxTimeoutHandlers: {},
 
     renderDefault: function(parentId) {
