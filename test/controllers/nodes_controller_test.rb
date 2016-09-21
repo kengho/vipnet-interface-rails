@@ -257,6 +257,41 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
+  test "should search by mftp_server_vid" do
+    CurrentNccNode.create!(
+      vid: "0x1a0e0001",
+      network: @network,
+      server_number: "0001",
+      category: "client",
+    )
+    CurrentNccNode.create!(
+      vid: "0x1a0e0002",
+      network: @network,
+      server_number: "0002",
+      category: "client",
+    )
+    CurrentNccNode.create!(
+      vid: "0x1a0e0003",
+      network: networks(:network2),
+      server_number: "0001",
+      category: "client",
+    )
+    CurrentNccNode.create!(
+      vid: "0x1a0e0004",
+      network: @network,
+      server_number: "0001",
+      category: "client",
+    )
+    CurrentNccNode.create!(
+      vid: "0x1a0e000a",
+      network: @network,
+      server_number: "0001",
+      category: "server",
+    )
+    get(:index, { mftp_server_vid: "0x1a0e000a" })
+    assert_equal(["0x1a0e0001", "0x1a0e0004"], assigns["ncc_nodes"].vids)
+  end
+
   test "shouldn't treat empty params as .*" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "John", network: @network)

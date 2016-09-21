@@ -13,6 +13,9 @@ class NccNode < ActiveRecord::Base
 
   after_create :adopt_tickets
 
+  FROM_DB = true
+  CUSTOM_ERB = false
+
   def self.where_vid_like(vid)
     search_resuls = CurrentNccNode.none
     normal_vids = VipnetParser::id(string: vid, threshold: Settings.vid_search_threshold)
@@ -76,6 +79,18 @@ class NccNode < ActiveRecord::Base
     search_resuls
   end
 
+  def self.where_mftp_server_vid_like(mftp_server_vid)
+    mftp_server = CurrentNccNode.find_by(vid: mftp_server_vid)
+    if mftp_server
+      search_resuls = CurrentNccNode.where(
+        network: mftp_server.network,
+        server_number: mftp_server.server_number,
+        category: "client",
+      )
+      search_resuls
+    end
+  end
+
   def availability
     availability = false
     response = {}
@@ -111,6 +126,18 @@ class NccNode < ActiveRecord::Base
     accessips
   end
 
+  def mftp_server
+    if self.category == "client"
+      mftp_server = CurrentNccNode.find_by(
+        network: self.network,
+        server_number: self.server_number,
+        abonent_number: "0000",
+        category: "server",
+      )
+      mftp_server
+    end
+  end
+
   def self.to_json_ncc
     result = []
     self.all.each do |e|
@@ -132,6 +159,45 @@ class NccNode < ActiveRecord::Base
       :category,
       :abonent_number,
       :server_number,
+    ]
+  end
+
+  def self.view_order
+    always_visible = true
+    visible_if_iplirconf_api_enabled = Settings.iplirconf_api_enabled == "true"
+    visible_if_ticket_api_enabled = Settings.ticket_api_enabled == "true"
+    # [property, source, column visibility]
+    [
+      [:vid,             FROM_DB,    always_visible],
+      [:info,            CUSTOM_ERB, always_visible],
+      [:name,            FROM_DB,    always_visible],
+      [:availability,    CUSTOM_ERB, visible_if_iplirconf_api_enabled],
+      [:ip,              FROM_DB,    visible_if_iplirconf_api_enabled],
+      [:version_decoded, FROM_DB,    visible_if_iplirconf_api_enabled],
+      [:history,         FROM_DB,    always_visible],
+      [:creation_date,   FROM_DB,    always_visible],
+      [:deletion_date,   FROM_DB,    always_visible],
+      [:ticket,          FROM_DB,    visible_if_ticket_api_enabled],
+      [:search,          CUSTOM_ERB, always_visible],
+    ]
+  end
+
+  def self.info_order
+    [
+      :network,
+      :vid,
+      :enabled,
+      :category,
+      :clients_registred,
+      :mftp_server,
+      :ip,
+      :accessip,
+      :version,
+      :version_decoded,
+      :deletion_date,
+      :creation_date,
+      :ncc,
+      :ticket,
     ]
   end
 
