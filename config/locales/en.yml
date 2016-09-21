@@ -89,8 +89,8 @@ en:
           server: "coordinator"
         ncc: "NCC location"
         ticket: "Tickets"
-        # mftp_server: "MFTP server"
-        # clients_registred: "Clients registered"
+        mftp_server: "MFTP server"
+        clients_registred: "Clients registered"
       history:
         update_button: "Load last data"
         update_true: "Last data loaded"

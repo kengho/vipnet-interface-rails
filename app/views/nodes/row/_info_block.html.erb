@@ -1,14 +1,14 @@
 <div name="info" class="mdl-shadow--2dp info-block">
-  <div class="info-block__title"><%= node.name %></div>
+  <div class="info-block__title"><%= ncc_node.name %></div>
   <div name="close" class="info-block__close-button">
     <label class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
       <i class="material-icons">close</i>
     </label>
   </div>
   <div class="info-block__text">
-  <% CurrentNode.info_order.each do |prop| %>
-    <% prop_view = prop_view(node, prop, :long)  %>
-      <% if prop_view != "" %>
+  <% NccNode.info_order.each do |prop| %>
+    <% prop_view = prop_view(ncc_node, prop, :long)  %>
+      <% if prop_view %>
         <span name="prop"><%= t("nodes.row.info.#{prop}") %></span>:&nbsp;
         <span name="value"><%= prop_view.html_safe %></span><br>
       <% end %>

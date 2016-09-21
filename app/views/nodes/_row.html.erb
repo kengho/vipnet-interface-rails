@@ -1,11 +1,12 @@
-<%# params: node, row_classes (optional) %>
-<tr id="node-<%= node.id %>__row" class="nodes__row<%= defined?(row_classes) ? " #{row_classes}" : "" %>">
-  <% Node.view_order.each do |prop, appearance| %>
-    <% if appearance %>
-      <% if CurrentNode.column_names.include?(prop.to_s) %>
-        <%= render "nodes/row/cell", node: node, prop: prop %>
+<%# params: ncc_node, row_classes (optional) %>
+<tr id="node-<%= ncc_node.id %>__row" class="nodes__row<%= defined?(row_classes) ? " #{row_classes}" : "" %>">
+  <% NccNode.view_order.each_with_index do |order, i| %>
+    <% prop, src, column_visible = order %>
+    <% if column_visible %>
+      <% if src == NccNode::FROM_DB %>
+        <%= render "nodes/row/cell", ncc_node: ncc_node, prop: prop %>
       <% elsif lookup_context.template_exists?("nodes/row/_#{prop}") %>
-        <%= render "nodes/row/#{prop}", node: node %>
+        <%= render "nodes/row/#{prop}", ncc_node: ncc_node %>
       <% else %>
         <%= render "nodes/space" %>
       <% end %>

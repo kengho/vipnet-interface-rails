@@ -1,4 +1,6 @@
-<% prop_view = prop_view(node, prop) %>
+<% prop_view = prop_view(ncc_node, prop) %>
 <td class="mdl-data-table__cell--non-numeric nodes__td nodes__<%= prop %>">
-  <span><%= prop_view.html_safe %></span>
+  <% if prop_view %>
+    <span><%= prop_view.html_safe %></span>
+  <% end %>
 </td>

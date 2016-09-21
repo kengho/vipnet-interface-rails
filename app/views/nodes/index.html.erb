@@ -7,7 +7,6 @@
   vipnetInterface.nodesData = {};
   <%= @js.html_safe %>
 </script>
-
 <% t("nodes.fullscreen_tooltip").each do |key, value| %>
   <%# filter t(".close") and etc. %>
   <% if value.class == Hash %>
@@ -15,6 +14,7 @@
   <% end %>
 <% end %>
 
+<% if true %>
 <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
   <%= render "header" %>
   <main class="mdl-layout__content">
@@ -24,11 +24,12 @@
           <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
             <thead>
               <tr>
-                <% Node.view_order.each_with_index do |(prop, appearance), i| %>
-                  <% if appearance %>
-                    <% if CurrentNode.column_names.include?(prop.to_s) %>
+                <% NccNode.view_order.each_with_index do |order, i| %>
+                  <% prop, src, column_visible = order %>
+                  <% if column_visible %>
+                    <% if src == NccNode::FROM_DB %>
                       <%= render "nodes/thead/cell", prop: prop, value: params[prop], tabindex: i %>
-                    <% elsif lookup_context.template_exists?("nodes/thead/_#{prop}") %>
+                    <% elsif src == NccNode::CUSTOM_ERB && lookup_context.template_exists?("nodes/thead/_#{prop}") %>
                       <%= render "nodes/thead/#{prop}", tabindex: i %>
                     <% else %>
                       <%= render "nodes/space" %>
@@ -37,19 +38,20 @@
                 <% end %>
               </tr>
             </thead>
-            <% unless @nodes.empty? %>
+            <% unless @ncc_nodes.empty? %>
               <tbody>
-                <% @nodes.each do |node| %>
-                  <%= render "row", node: node %>
+                <% @ncc_nodes.each do |ncc_node| %>
+                  <%= render "row", ncc_node: ncc_node %>
                 <% end %>
               </tbody>
             <% end %>
           </table>
         </form>
       </div>
-      <%= will_paginate @nodes, previous_label: "<i class='material-icons'>chevron_left</i>", next_label: "<i class='material-icons'>chevron_right</i>", inner_window: 1 %>
+      <%= will_paginate @ncc_nodes, previous_label: "<i class='material-icons'>chevron_left</i>", next_label: "<i class='material-icons'>chevron_right</i>", inner_window: 1 %>
       <%= render "per_page" %>
       <%= render "snackbar" %>
     </div>
   </main>
 </div>
+<% end %>

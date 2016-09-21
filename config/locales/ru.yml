@@ -66,8 +66,8 @@ ru:
           server: "координатор"
         ncc: "Пусть в NCC"
         ticket: "Заявки"
-        # mftp_server: "MFTP сервер"
-        # clients_registred: "Клиентов зарегистрировано"
+        mftp_server: "MFTP сервер"
+        clients_registred: "Клиентов зарегистрировано"
       history:
         update_button: "Загрузить последние данные"
         update_true: "Последние данные загружены"

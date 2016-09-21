@@ -1,59 +1,19 @@
 module PropViewHelper
-  def prop_view(node, prop, detalization = :short)
+  def prop_view(ncc_node, prop, detalization = :short)
     case prop
 
-    when :name
-      node.name || ""
-
-    when :network_id
-      network = Network.find_by_id(node.network_id)
-      "#{network.network_vid}#{network.name ? ' (' + network.name + ')' : ''}"
-
     when :vid
-      node.vid
+      ncc_node.vid
 
-    when :enabled
-      I18n.t("boolean.#{node.enabled}")
-
-    when :ip
-      case detalization
-      when :short
-        tmp_arr = []
-        node.ip.each { |coord_vid, ips| tmp_arr += eval(ips) }
-        tmp_arr.sort.uniq.join(", ")
-      when :long
-        prop_view_hstore(node, :ip)
-      end
-
-    when :accessip
-      prop_view_hstore(node, :accessip)
-
-    when :version
-      prop_view_hstore(node, :version)
-
-    when :version_decoded
-      case detalization
-      when :short
-        tmp_arr = []
-        node.version_decoded.each { |_, version| tmp_arr.push(version) }
-        tmp_arr.sort!.uniq!
-        if tmp_arr.size == 0
-          ""
-        elsif tmp_arr.size == 1
-          tmp_arr.first
-        elsif tmp_arr.size > 1
-          "?"
-        end
-      when :long
-        prop_view_hstore(node, :version_decoded)
-      end
+    when :name
+      ncc_node.name
 
     when :deletion_date
-      prop_view_datetime(node.deletion_date, detalization)
+      prop_view_datetime(ncc_node.deletion_date, detalization)
 
     when :creation_date
-      creation_date_view = prop_view_datetime(node.creation_date, detalization)
-      if node.creation_date_accuracy
+      creation_date_view = prop_view_datetime(ncc_node.creation_date, detalization)
+      if ncc_node.creation_date_accuracy
         creation_date_view
       else
         case detalization
@@ -70,26 +30,39 @@ module PropViewHelper
         end
       end
 
-    when :category
-      I18n.t("nodes.row.info.categories.#{node.category}")
-
-    when :ncc
-      if node.server_number && node.abonent_number
-        "#{sprintf("%05d", node.server_number.to_i(16))}&nbsp;→&nbsp;#{sprintf("%05d", node.abonent_number.to_i(16))}"
-      else
-        ""
+    when :ip
+      ips = []
+      ncc_node.hw_nodes.each do |hw_node|
+        hw_node.node_ips.each do |node_ip|
+          ips.push(IPv4::ip(node_ip.u32))
+        end
       end
+      ips.join(", ")
+
+    when :accessip
+      accessips = []
+      ncc_node.hw_nodes.each do |hw_node|
+        accessips.push(
+          "<a href='?vid=#{hw_node.coordinator.vid}'>#{hw_node.coordinator.vid}</a>"\
+          "&nbsp;→&nbsp;"\
+          "#{hw_node.accessip}"
+        )
+      end
+      accessips.join(", ")
+
+    when :version_decoded
+      prop_view_version(ncc_node, :version_decoded)
+
+    when :version
+      prop_view_version(ncc_node, :version)
 
     when :ticket
-      if node.ticket == {}
-        ""
-      else
+      tickets = ncc_node.tickets
+      if tickets.any?
         links = []
-        node.ticket.each do |url_template, ids|
-          eval(ids).each do |id|
-            href = url_template.gsub("{id}", id.to_s)
-            links.push("<a href=#{href}>#{id.to_s}</a>")
-          end
+        tickets.each do |ticket|
+          href = ticket.ticket_system.url_template.gsub("{id}", ticket.ticket_id.to_s)
+          links.push("<a href=#{href}>#{ticket.ticket_id.to_s}</a>")
         end
 
         case detalization
@@ -114,21 +87,46 @@ module PropViewHelper
         end
       end
 
-    else
-      ""
+    when :enabled
+      I18n.t("boolean.#{ncc_node.enabled}")
+
+    when :network
+      network_vid = ncc_node.network.network_vid
+      network_name = ncc_node.network.name
+      "#{network_vid}#{network_name ? ' (' + network_name + ')' : ''}"
+
+    when :category
+      I18n.t("nodes.row.info.categories.#{ncc_node.category}")
+
+    when :ncc
+      if ncc_node.server_number && ncc_node.abonent_number
+        server_number_normal = sprintf("%05d", ncc_node.server_number.to_i(16))
+        abonent_number_normal = sprintf("%05d", ncc_node.abonent_number.to_i(16))
+        "#{server_number_normal}&nbsp;→&nbsp;#{abonent_number_normal}"
+      end
+
+    when :clients_registred
+      if ncc_node.category == "server"
+        clients_registred = NccNode.where_mftp_server_vid_like(ncc_node.vid)
+        "<a href='?mftp_server_vid=#{ncc_node.vid}'>#{clients_registred.size.to_s}</a>" if clients_registred
+      end
+
+    when :mftp_server
+      mftp_server = ncc_node.mftp_server
+      "<a href='?vid=#{mftp_server.vid}'>#{mftp_server.vid}</a>" if mftp_server
+
     end
   end
 
-  def prop_view_hstore(node, prop)
-    tmp_arr = []
-    node[prop].each do |coord_vid, value|
-      if value =~ /^\[.*\]$/
-        tmp_arr.push("#{coord_vid}&nbsp;→&nbsp;\"#{eval(value).sort.uniq.join(', ')}\"")
-      else
-        tmp_arr.push("#{coord_vid}&nbsp;→&nbsp;\"#{value}\"")
-      end
+  def prop_view_version(ncc_node, field)
+    tmp = []
+    ncc_node.hw_nodes.each { |hw_node| tmp.push(hw_node[field]) }
+    tmp.sort!.uniq!
+    if tmp.size == 1
+      tmp.first
+    elsif tmp.size > 1
+      "?"
     end
-    tmp_arr.join(", ").gsub("-", "&#8209;")
   end
 
   def prop_view_datetime(datetime, detalization)
@@ -139,8 +137,6 @@ module PropViewHelper
       when :long
         datetime.strftime("%Y-%m-%d %H:%M UTC")
       end
-    else
-      ""
     end
   end
 end
