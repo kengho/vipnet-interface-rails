@@ -51,10 +51,10 @@ module PropViewHelper
       accessips.join(", ")
 
     when :version_decoded
-      prop_view_version(ncc_node, :version_decoded)
+      prop_view_version(ncc_node, :version_decoded, detalization)
 
     when :version
-      prop_view_version(ncc_node, :version)
+      prop_view_version(ncc_node, :version, detalization)
 
     when :ticket
       tickets = ncc_node.tickets
@@ -118,14 +118,27 @@ module PropViewHelper
     end
   end
 
-  def prop_view_version(ncc_node, field)
-    tmp = []
-    ncc_node.hw_nodes.each { |hw_node| tmp.push(hw_node[field]) }
-    tmp.sort!.uniq!
-    if tmp.size == 1
-      tmp.first
-    elsif tmp.size > 1
-      "?"
+  def prop_view_version(ncc_node, field, detalization)
+    versions = []
+    long_versions = []
+    ncc_node.hw_nodes.each do |hw_node|
+      versions.push(hw_node[field])
+      long_versions.push(
+        "<a href='?vid=#{hw_node.coordinator.vid}'>#{hw_node.coordinator.vid}</a>"\
+        "&nbsp;→&nbsp;"\
+        "#{hw_node[field]}"
+      )
+    end
+    versions.sort!.uniq!
+    if versions.size == 1
+      versions.first
+    elsif versions.size > 1
+      case detalization
+      when :short
+        "?"
+      when :long
+        long_versions.join(", ")
+      end
     end
   end
 
