@@ -174,7 +174,7 @@ class NccNode < ActiveRecord::Base
       [:availability,    CUSTOM_ERB, visible_if_iplirconf_api_enabled],
       [:ip,              FROM_DB,    visible_if_iplirconf_api_enabled],
       [:version_decoded, FROM_DB,    visible_if_iplirconf_api_enabled],
-      [:history,         FROM_DB,    always_visible],
+      [:history,         CUSTOM_ERB, always_visible],
       [:creation_date,   FROM_DB,    always_visible],
       [:deletion_date,   FROM_DB,    always_visible],
       [:ticket,          FROM_DB,    visible_if_ticket_api_enabled],
