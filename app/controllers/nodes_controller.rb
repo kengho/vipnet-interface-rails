@@ -1,6 +1,6 @@
 class NodesController < ApplicationController
   skip_before_action :check_administrator_role
-  before_action :check_if_node_exist, only: [:info]
+  before_action :check_if_node_exist, only: [:info, :availability]
 
   def index
     @search = false
@@ -49,6 +49,23 @@ class NodesController < ApplicationController
       ncc_node: @ncc_node,
     }
     respond_with(@response, template: "nodes/row/info") and return
+  end
+
+  def availability
+    @response = {
+      parent_id: "#node-#{@ncc_node.id}__check-availability"
+    }
+    availability = @ncc_node.availability
+    if availability[:errors]
+      @response[:status] = false
+      @response[:tooltip_text] = t("nodes.fullscreen_tooltip.#{availability[:errors][0][:detail]}.short")
+      @response[:fullscreen_tooltip_key] = availability[:errors][0][:detail]
+    else
+      @response[:status] = availability[:data][:availability]
+      @response[:tooltip_text] = t("nodes.row.availability.status_#{@response[:status]}")
+      @response[:fullscreen_tooltip_key] = "node-unavailable" if @response[:status] == false
+    end
+    respond_with(@response, template: "nodes/row/remote_status_button") and return
   end
 
   private

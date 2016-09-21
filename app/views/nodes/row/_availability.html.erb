@@ -1,6 +1,6 @@
 <td class="mdl-data-table__cell--non-numeric nodes__td">
-  <div id="node-<%= node.id %>__check-availability">
-    <a data-remote="true" data-replace-link-by-spinner="true" href="/nodes/availability/<%= node.id %>">
+  <div id="node-<%= ncc_node.id %>__check-availability">
+    <a data-remote="true" data-replace-link-by-spinner="true" href="/nodes/availability/<%= ncc_node.id %>">
       <%= render "nodes/row/remote_status/button", icon: "help_outline", tooltip_text: t(".button_label") %>
     </a>
   </div>
