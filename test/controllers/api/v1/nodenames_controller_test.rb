@@ -36,6 +36,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     post(:create, { file: initial_nodename, network_vid: "6670" })
     expected_ncc_nodes = [
       {
+        :type => "CurrentNccNode",
         :vid => "0x1a0e000a",
         :name => "coordinator1",
         :enabled => true,
@@ -45,6 +46,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         :creation_date_accuracy => false,
       },
       {
+        :type => "CurrentNccNode",
         :vid => "0x1a0e000b",
         :name => "administrator",
         :enabled => true,
@@ -64,6 +66,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     post(:create, { file: added_client1_nodename, network_vid: "6670" })
     expected_ncc_nodes.push(
       {
+        :type => "CurrentNccNode",
         :vid => "0x1a0e000c",
         :name => "client1",
         :enabled => true,
@@ -92,6 +95,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     post(:create, { file: added_coordinator2_nodename, network_vid: "6670" })
     expected_ncc_nodes.push(
       {
+        :type => "CurrentNccNode",
         :vid => "0x1a0e000d",
         :name => "coordinator2",
         :enabled => true,

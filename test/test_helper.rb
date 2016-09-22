@@ -18,7 +18,7 @@ class ActiveSupport::TestCase
   def assert_ncc_nodes_should_be(expected_ncc_nodes)
     assert_equal(
       expected_ncc_nodes.sort_by_vid,
-      eval(CurrentNccNode.to_json_ncc).sort_by_vid
+      eval(NccNode.to_json_ncc).sort_by_vid
     )
   end
 
@@ -54,6 +54,11 @@ class Array
     self.each_with_index do |_, i|
       return i if self[i] == self[i].merge(hash)
     end
+  end
+
+  def find_by(where)
+    index = which_index(where)
+    self[index]
   end
 
   def change_where(where, changes)

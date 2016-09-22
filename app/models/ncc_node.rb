@@ -152,7 +152,7 @@ class NccNode < ActiveRecord::Base
 
   def to_json_ncc
     self.to_json(
-      :only => NccNode.props_from_nodename + [:vid, :creation_date_accuracy]
+      :only => NccNode.props_from_nodename + [:vid, :creation_date_accuracy, :type]
     ).gsub("null", "nil")
   end
 
