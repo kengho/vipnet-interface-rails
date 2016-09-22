@@ -3,6 +3,10 @@ class NccNode < ActiveRecord::Base
   validates :network, presence: true
   has_many :hw_nodes, dependent: :destroy
   has_many :tickets, dependent: :nullify
+  has_many :ascendants, dependent: :destroy,
+           class_name: "NccNode",
+           foreign_key:"descendant_id"
+
   def self.vid_regexp
     /\A0x[0-9a-f]{8}\z/
   end

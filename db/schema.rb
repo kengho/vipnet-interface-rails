@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160905061750) do
+ActiveRecord::Schema.define(version: 20160922185757) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "coordinators", force: :cascade do |t|
     t.string   "vid"
@@ -64,6 +65,7 @@ ActiveRecord::Schema.define(version: 20160905061750) do
     t.string   "server_number"
     t.datetime "creation_date"
     t.string   "type"
+    t.integer  "descendant_id"
   end
 
   add_index "ncc_nodes", ["network_id"], name: "index_ncc_nodes_on_network_id", using: :btree
