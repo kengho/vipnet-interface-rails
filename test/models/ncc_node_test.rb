@@ -5,19 +5,43 @@ class NccNodesTest < ActiveSupport::TestCase
     @network = networks(:network1)
   end
 
-  test "shouldn't save without network" do
-    ncc_node = NccNode.new(vid: "0x1a0e0001")
-    assert_not ncc_node.save
+  test "shouldn't save CurrentNccNode without network" do
+    current_ncc_node = CurrentNccNode.new(vid: "0x1a0e0001")
+    assert_not current_ncc_node.save
   end
 
-  test "shouldn't save without vid" do
-    ncc_node = NccNode.new(network: @network)
-    assert_not ncc_node.save
+  test "shouldn't save DeletedNccNode without network" do
+    deleted_ncc_node = DeletedNccNode.new(vid: "0x1a0e0001")
+    assert_not deleted_ncc_node.save
+  end
+
+  test "shouldn't save CurrentNccNode without vid" do
+    current_ncc_node = CurrentNccNode.new(network: @network)
+    assert_not current_ncc_node.save
+  end
+
+  test "shouldn't save DeletedNccNode without vid" do
+    deleted_ncc_node = DeletedNccNode.new(network: @network)
+    assert_not deleted_ncc_node.save
   end
 
   test "shouldn't save with wrong vid" do
     ncc_node = NccNode.new(network: @network, vid: "1A0E000A")
     assert_not ncc_node.save
+  end
+
+  test "shouldn't save two CurrentNccNode with same vid" do
+    current_ncc_node1 = CurrentNccNode.new(vid: "0x1a0e0001", network: @network)
+    current_ncc_node2 = CurrentNccNode.new(vid: "0x1a0e0001", network: @network)
+    assert current_ncc_node1.save
+    assert_not current_ncc_node2.save
+  end
+
+  test "shouldn't save two DeletedNccNode with same vid" do
+    deleted_ncc_node1 = DeletedNccNode.new(vid: "0x1a0e0001", network: @network)
+    deleted_ncc_node2 = DeletedNccNode.new(vid: "0x1a0e0001", network: @network)
+    assert deleted_ncc_node1.save
+    assert_not deleted_ncc_node2.save
   end
 
   test "when network destroys, all its ncc_nodes destroys" do
