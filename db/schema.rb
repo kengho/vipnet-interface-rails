@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922201959) do
+ActiveRecord::Schema.define(version: 20160923144322) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -46,6 +46,7 @@ ActiveRecord::Schema.define(version: 20160922201959) do
     t.integer  "coordinator_id"
     t.integer  "ncc_node_id"
     t.string   "type"
+    t.integer  "descendant_id"
   end
 
   add_index "hw_nodes", ["coordinator_id"], name: "index_hw_nodes_on_coordinator_id", using: :btree
