@@ -1,0 +1,2 @@
+class DeletedHwNode < CurrentHwNode
+end

@@ -11,9 +11,19 @@ class HwNodesTest < ActiveSupport::TestCase
     assert_not current_hw_node.save
   end
 
+  test "shouldn't save DeletedHwNode without ncc_node" do
+    deleted_hw_node = DeletedHwNode.new(coordinator: @coordinator)
+    assert_not deleted_hw_node.save
+  end
+
   test "shouldn't save CurrentHwNode without coordinator" do
     current_hw_node = CurrentHwNode.new(ncc_node: @ncc_node)
     assert_not current_hw_node.save
+  end
+
+  test "shouldn't save DeletedHwNode without coordinator" do
+    deleted_hw_node = DeletedHwNode.new(ncc_node: @ncc_node)
+    assert_not deleted_hw_node.save
   end
 
   test "shouldn't save HwNode without descendant" do
