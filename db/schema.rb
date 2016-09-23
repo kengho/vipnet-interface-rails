@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160922185757) do
+ActiveRecord::Schema.define(version: 20160922201959) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,13 +54,13 @@ ActiveRecord::Schema.define(version: 20160922185757) do
   create_table "ncc_nodes", force: :cascade do |t|
     t.string   "vid"
     t.string   "name"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.datetime "deletion_date"
     t.integer  "network_id"
-    t.boolean  "enabled",                default: true
+    t.boolean  "enabled"
     t.string   "category"
-    t.boolean  "creation_date_accuracy", default: true
+    t.boolean  "creation_date_accuracy"
     t.string   "abonent_number"
     t.string   "server_number"
     t.datetime "creation_date"
