@@ -1,0 +1,2 @@
+class DeletedNccNode < CurrentNccNode
+end

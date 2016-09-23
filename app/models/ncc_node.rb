@@ -1,19 +1,21 @@
 class NccNode < ActiveRecord::Base
   belongs_to :network
-  validates :network, presence: true
   has_many :hw_nodes, dependent: :destroy
   has_many :tickets, dependent: :nullify
   has_many :ascendants, dependent: :destroy,
            class_name: "NccNode",
            foreign_key:"descendant_id"
+  belongs_to :descendant,
+             class_name: "NccNode",
+             foreign_key:"descendant_id"
 
   def self.vid_regexp
     /\A0x[0-9a-f]{8}\z/
   end
 
   validates :vid,
-            presence: true,
-            format: { with: NccNode.vid_regexp, message: "vid should be like \"#{NccNode.vid_regexp}\"" }
+            format: { with: NccNode.vid_regexp, message: "vid should be like \"#{NccNode.vid_regexp}\"" },
+            allow_blank: true
 
   after_create :adopt_tickets
 
@@ -145,7 +147,7 @@ class NccNode < ActiveRecord::Base
   def self.to_json_ncc
     result = []
     self.all.each do |e|
-      result.push(eval(e.to_json_ncc))
+      result.push(eval(e.to_json_ncc)) if e.vid
     end
     result.to_json.gsub("null", "nil")
   end
@@ -154,6 +156,30 @@ class NccNode < ActiveRecord::Base
     self.to_json(
       :only => NccNode.props_from_nodename + [:vid, :creation_date_accuracy, :type]
     ).gsub("null", "nil")
+  end
+
+  def self.to_json_ascendants
+    result = []
+    self.all.each do |e|
+      to_json_ascendants = e.to_json_ascendants
+      result.push(eval(to_json_ascendants)) if to_json_ascendants
+    end
+    result.to_json
+  end
+
+  def to_json_ascendants
+    p self
+    descendant = self.descendant
+    p descendant
+    if descendant
+      attributes = self.attributes.reject do |attribute, value|
+        ["id", "created_at", "updated_at", "network_id", "descendant_id"].include?(attribute) ||
+        value == nil ||
+        false
+      end
+      attributes.merge!({ descendant_type: descendant.type, descendant_vid: descendant.vid })
+      attributes.to_json
+    end
   end
 
   def self.props_from_nodename

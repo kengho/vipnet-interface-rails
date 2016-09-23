@@ -22,6 +22,13 @@ class ActiveSupport::TestCase
     )
   end
 
+  def assert_ncc_nodes_ascendants_should_be(expected_ncc_nodes_ascendants)
+    assert_equal(
+      expected_ncc_nodes_ascendants.sort_by_descendant,
+      eval(NccNode.to_json_ascendants).sort_by_descendant
+    )
+  end
+
   def assert_hw_nodes_should_be(expected_hw_nodes)
     assert_equal(
       expected_hw_nodes.sort_by_ncc_node_and_coordinator,
@@ -50,25 +57,36 @@ class Array
     self.sort_by { |h| [h[:hw_node_id], h[:u32]] }
   end
 
-  def which_index(hash)
+  def sort_by_descendant
+    self.sort_by { |h| [h[:descendant_type], h[:descendant_vid]] }
+  end
+
+  def which_indexes(hash)
+    indexes = []
     self.each_with_index do |_, i|
-      return i if self[i] == self[i].merge(hash)
+      indexes.push(i) if self[i] == self[i].merge(hash)
     end
+    indexes
   end
 
   def find_by(where)
-    index = which_index(where)
-    self[index]
+    indexes = which_indexes(where)
+    self[indexes.first]
   end
 
   def change_where(where, changes)
-    index = which_index(where)
-    self[index].deep_merge!(changes)
+    indexes = which_indexes(where)
+    indexes.each do |index|
+      self[index].deep_merge!(changes)
+    end
   end
 
   def delete_where(where)
-    index = which_index(where)
-    self.delete_at(index)
+    indexes = which_indexes(where)
+    indexes.each do |index|
+      self[index] = :to_delete
+    end
+    self.delete_if { |e| e == :to_delete }
   end
 end
 

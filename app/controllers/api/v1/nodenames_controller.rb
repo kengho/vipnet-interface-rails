@@ -16,6 +16,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       render plain: ERROR_RESPONSE and return
     end
 
+    ascendants_ids = []
     diff.each do |changes|
       action, target, props, before, after = Garland.decode_changes(changes)
       curent_network_vid = VipnetParser::network(target[:vid])
@@ -48,18 +49,35 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       end
 
       if action == :remove
-        ncc_node_to_destroy = CurrentNccNode.find_by(vid: target[:vid])
-        if ncc_node_to_destroy
-          ncc_node_to_destroy.destroy!
+        ncc_node_to_delete = CurrentNccNode.find_by(vid: target[:vid])
+        if ncc_node_to_delete
+          ncc_node_to_delete.update_attribute(:type, "DeletedNccNode")
         else
-          Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' doesn't exists, nothing to destroy")
+          Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' doesn't exists, nothing to delete")
         end
       end
 
       if action == :change
+        # [["~", "0x1a0e000c.:name", "client1", "client1-renamed1"]]
         if NccNode.props_from_nodename.include?(target[:field])
           changing_ncc_node = CurrentNccNode.find_by(vid: target[:vid])
           if changing_ncc_node
+            accendant = NccNode
+              .where(id: ascendants_ids)
+              .find_by(descendant: changing_ncc_node)
+            if accendant
+              accendant.update_attribute(target[:field], before)
+            else
+              new_accendant = NccNode.new(
+                :descendant => changing_ncc_node,
+                target[:field] => before,
+              )
+              if new_accendant.save!
+                ascendants_ids.push(new_accendant.id)
+              else
+                Rails.logger.info("Unable to save new_accendant: #{new_accendant.inspect}")
+              end
+            end
             changing_ncc_node.update_attribute(target[:field], after)
           else
             Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' doesn't exists, nothing to change")
