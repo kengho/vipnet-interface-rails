@@ -1,9 +1,14 @@
 class HwNode < ActiveRecord::Base
   belongs_to :coordinator
   belongs_to :ncc_node
-  validates :coordinator, presence: true
-  validates :ncc_node, presence: true
   has_many :node_ips, dependent: :destroy
+  has_many :ascendants, dependent: :destroy,
+           class_name: "HwNode",
+           foreign_key:"descendant_id"
+  belongs_to :descendant,
+             class_name: "HwNode",
+             foreign_key:"descendant_id"
+  validates_presence_of :descendant, unless: :type?
 
   before_save :update_version_decoded, if: :version_changed?
 
