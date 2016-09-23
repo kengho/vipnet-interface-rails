@@ -8,6 +8,7 @@ class NccNode < ActiveRecord::Base
   belongs_to :descendant,
              class_name: "NccNode",
              foreign_key:"descendant_id"
+  validates_presence_of :descendant, unless: :type?
 
   def self.vid_regexp
     /\A0x[0-9a-f]{8}\z/

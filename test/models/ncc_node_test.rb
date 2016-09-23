@@ -25,6 +25,11 @@ class NccNodesTest < ActiveSupport::TestCase
     assert_not deleted_ncc_node.save
   end
 
+  test "shouldn't save NccNode without descendant" do
+    ncc_node = NccNode.new(network: @network, vid: "0x1a0e0001")
+    assert_not ncc_node.save
+  end
+
   test "shouldn't save with wrong vid" do
     ncc_node = NccNode.new(network: @network, vid: "1A0E000A")
     assert_not ncc_node.save
@@ -45,7 +50,7 @@ class NccNodesTest < ActiveSupport::TestCase
   end
 
   test "when network destroys, all its ncc_nodes destroys" do
-    NccNode.create!(vid: "0x1a0e0001", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0001", network: @network)
     assert_equal(1, NccNode.all.size)
     @network.destroy
     assert_equal(0, NccNode.all.size)
@@ -61,7 +66,7 @@ class NccNodesTest < ActiveSupport::TestCase
     Ticket.create!(ticket_system: ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
     Ticket.create!(ticket_system: ticket_system1, vid: "0x1a0e0001", ticket_id: "2")
     Ticket.create!(ticket_system: ticket_system1, vid: "0x1a0e0002", ticket_id: "3")
-    ncc_node = NccNode.new(vid: "0x1a0e0001", network: @network); ncc_node.save!
+    ncc_node = CurrentNccNode.new(vid: "0x1a0e0001", network: @network); ncc_node.save!
     ticket1 = Ticket.find_by(vid: "0x1a0e0001", ticket_id: "1")
     ticket2 = Ticket.find_by(vid: "0x1a0e0001", ticket_id: "2")
     ticket3 = Ticket.find_by(vid: "0x1a0e0002", ticket_id: "3")
