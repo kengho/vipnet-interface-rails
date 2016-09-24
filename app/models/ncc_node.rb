@@ -169,9 +169,7 @@ class NccNode < ActiveRecord::Base
   end
 
   def to_json_ascendants
-    p self
     descendant = self.descendant
-    p descendant
     if descendant
       attributes = self.attributes.reject do |attribute, value|
         ["id", "created_at", "updated_at", "network_id", "descendant_id"].include?(attribute) ||
