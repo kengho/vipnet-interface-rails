@@ -1,3 +1,4 @@
+# @TODO this is mess, use to_json(:include => :node_ips) or something related
 require "test_helper"
 
 class Api::V1::IplirconfsControllerTest < ActionController::TestCase
@@ -187,8 +188,34 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       },
       { :u32 => IPv4::u32("192.0.2.55") }
     )
+    expected_node_ips.push({
+      :hw_node_id => HwNode.find_by(
+        descendant: CurrentHwNode.find_by(
+          ncc_node: ncc_node_0x1a0e000b,
+          coordinator: coordinator_0x1a0e000a,
+        ),
+        version: "3.2-672",
+      ).id,
+      :u32 => IPv4::u32("192.0.2.5"),
+    })
+    expected_hw_nodes_ascendants = [
+      {
+        descendant_type: "CurrentHwNode",
+        descendant_coord_vid: "0x1a0e000a",
+        descendant_vid: "0x1a0e000c",
+        accessip: "198.51.100.3",
+      },
+      {
+        descendant_type: "CurrentHwNode",
+        descendant_coord_vid: "0x1a0e000a",
+        descendant_vid: "0x1a0e000b",
+        version: "3.2-672",
+        version_decoded: HwNode.decode_version("3.2-672"),
+      },
+    ]
     assert_hw_nodes_should_be expected_hw_nodes
     assert_node_ips_should_be expected_node_ips
+    assert_hw_nodes_ascendants_should_be expected_hw_nodes_ascendants
 
     # 03_0x1a0e000d_initial (:add)
     coordinator2_initial_iplirconf = fixture_file_upload(
@@ -277,6 +304,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     )
     assert_hw_nodes_should_be expected_hw_nodes
     assert_node_ips_should_be expected_node_ips
+    assert_hw_nodes_ascendants_should_be expected_hw_nodes_ascendants
 
     # 04_0x1a0e000d_changed (:change, :add, :remove)
     # 0x1a0e000a coordinator1 "ip= 192.0.2.1" => "ip= 192.0.2.51"
@@ -306,8 +334,32 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       },
       { :u32 => IPv4::u32("192.0.2.51") }
     )
+    expected_node_ips.push({
+      :hw_node_id => HwNode.find_by(
+        descendant: CurrentHwNode.find_by(
+          ncc_node: ncc_node_0x1a0e000a,
+          coordinator: coordinator_0x1a0e000d,
+        ),
+      ).id,
+      :u32 => IPv4::u32("192.0.2.1"),
+    })
+    expected_hw_nodes_ascendants.push(
+      {
+        descendant_type: "CurrentHwNode",
+        descendant_coord_vid: "0x1a0e000d",
+        descendant_vid: "0x1a0e000b",
+        version: "3.2-673",
+        version_decoded: HwNode.decode_version("3.2-673"),
+      },
+      {
+        descendant_type: "CurrentHwNode",
+        descendant_coord_vid: "0x1a0e000d",
+        descendant_vid: "0x1a0e000a",
+      },
+    )
     assert_hw_nodes_should_be expected_hw_nodes
     assert_node_ips_should_be expected_node_ips
+    assert_hw_nodes_ascendants_should_be expected_hw_nodes_ascendants
 
     # 05_0x1a0e000d_added_new_client (:add)
     ncc_node_0x1a0e000e = CurrentNccNode.new(vid: "0x1a0e000e", network: networks(:network1))
@@ -327,6 +379,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     })
     assert_hw_nodes_should_be expected_hw_nodes
     assert_node_ips_should_be expected_node_ips
+    assert_hw_nodes_ascendants_should_be expected_hw_nodes_ascendants
 
     # 06_0x1a0e000d_deleted_ip (:remove)
     # 0x1a0e000a coordinator1 "deleted ip= 192.0.2.51"
@@ -335,15 +388,27 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
-    expected_node_ips.delete_where({
-      :hw_node_id => CurrentHwNode.find_by(
-        ncc_node: ncc_node_0x1a0e000a,
-        coordinator: coordinator_0x1a0e000d,
-      ).id,
-      :u32 => IPv4::u32("192.0.2.51"),
+    accendant_0x1a0e000d_0x1a0e000a_ip_51 = HwNode.joins(:node_ips).find_by("node_ips.u32": IPv4::u32("192.0.2.51"))
+    expected_node_ips.change_where(
+      {
+        :hw_node_id => CurrentHwNode.find_by(
+          ncc_node: ncc_node_0x1a0e000a,
+          coordinator: coordinator_0x1a0e000d,
+        ).id,
+        :u32 => IPv4::u32("192.0.2.51"),
+      },
+      {
+        :hw_node_id => accendant_0x1a0e000d_0x1a0e000a_ip_51.id,
+      }
+    )
+    expected_hw_nodes_ascendants.push({
+      descendant_type: "CurrentHwNode",
+      descendant_coord_vid: "0x1a0e000d",
+      descendant_vid: "0x1a0e000a",
     })
     assert_hw_nodes_should_be expected_hw_nodes
     assert_node_ips_should_be expected_node_ips
+    assert_hw_nodes_ascendants_should_be expected_hw_nodes_ascendants
 
     # 07_0x1a0e000d_deleted_client1 (:remove)
     # 0x1a0e000c client1 "deleted section"
@@ -351,20 +416,84 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/07_0x1a0e000d_deleted_client1.conf",
       "application/octet-stream"
     )
-    expected_hw_nodes.delete_where({
-      :ncc_node_id => ncc_node_0x1a0e000c.id,
-      :coordinator_id => coordinator_0x1a0e000d.id,
-    })
-    expected_node_ips.delete_where({
+    # where ip = 192.0.2.51
+    hw_node_0x1a0e000d_0x1a0e000c_ip_7 = HwNode.joins(:node_ips).find_by("node_ips.u32": IPv4::u32("192.0.2.7"))
+    post(:create, { file: deleted_client1, coord_vid: "0x1a0e000d" })
+    accendant_0x1a0e000d_0x1a0e000c_ip_7 = HwNode.joins(:node_ips).find_by("node_ips.u32": IPv4::u32("192.0.2.7"))
+    expected_hw_nodes.change_where(
+      {
+        :ncc_node_id => ncc_node_0x1a0e000c.id,
+        :coordinator_id => coordinator_0x1a0e000d.id,
+      },
+      { type: "DeletedHwNode" }
+    )
+    expected_node_ips.change_where(
+      {
+        :hw_node_id => hw_node_0x1a0e000d_0x1a0e000c_ip_7.id
+      },
+      {
+        :hw_node_id => accendant_0x1a0e000d_0x1a0e000c_ip_7.id,
+      }
+    )
+    expected_hw_nodes_ascendants.change_where(
+      {
+        descendant_type: "CurrentHwNode",
+        descendant_vid: "0x1a0e000c",
+        descendant_coord_vid: "0x1a0e000d",
+      },
+      {
+        descendant_type: "DeletedHwNode",
+      }
+    )
+    assert_hw_nodes_should_be expected_hw_nodes
+    assert_node_ips_should_be expected_node_ips
+    assert_hw_nodes_ascendants_should_be expected_hw_nodes_ascendants
+
+    # 08_0x1a0e000d_restored_client1 (:add)
+    restored_client1 = fixture_file_upload(
+      "iplirconfs/08_0x1a0e000d_restored_client1.conf",
+      "application/octet-stream"
+    )
+    post(:create, { file: restored_client1, coord_vid: "0x1a0e000d" })
+    expected_hw_nodes.change_where(
+      {
+        :ncc_node_id => ncc_node_0x1a0e000c.id,
+        :coordinator_id => coordinator_0x1a0e000d.id,
+      },
+      {
+        type: "CurrentHwNode",
+        accessip: "203.0.113.5",
+        version: nil,
+        version_decoded: HwNode.decode_version(nil),
+      }
+    )
+    expected_node_ips.push(
       :hw_node_id => CurrentHwNode.find_by(
         ncc_node: ncc_node_0x1a0e000c,
         coordinator: coordinator_0x1a0e000d,
       ).id,
-      :u32 => IPv4::u32("192.0.2.7"),
+      :u32 => IPv4::u32("192.0.2.18"),
+    )
+    expected_hw_nodes_ascendants.change_where(
+      {
+        descendant_type: "DeletedHwNode",
+        descendant_vid: "0x1a0e000c",
+        descendant_coord_vid: "0x1a0e000d",
+      },
+      {
+        descendant_type: "CurrentHwNode",
+      }
+    )
+    expected_hw_nodes_ascendants.push({
+      descendant_type: "CurrentHwNode",
+      descendant_vid: "0x1a0e000c",
+      descendant_coord_vid: "0x1a0e000d",
+      accessip: "203.0.113.3",
+      version: "0.3-2",
+      version_decoded: HwNode.decode_version("0.3-2"),
     })
-    # we made post() after change_where because post() deletes records we search for
-    post(:create, { file: deleted_client1, coord_vid: "0x1a0e000d" })
     assert_hw_nodes_should_be expected_hw_nodes
     assert_node_ips_should_be expected_node_ips
+    assert_hw_nodes_ascendants_should_be expected_hw_nodes_ascendants
   end
 end

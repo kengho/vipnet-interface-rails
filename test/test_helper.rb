@@ -36,10 +36,22 @@ class ActiveSupport::TestCase
     )
   end
 
-  def assert_node_ips_should_be(expected_node_ips)
+  def assert_hw_nodes_ascendants_should_be(expected_hw_nodes_ascendants)
     assert_equal(
+      expected_hw_nodes_ascendants.sort_by_descendant,
+      eval(HwNode.to_json_ascendants).sort_by_descendant
+    )
+  end
+
+  def assert_node_ips_should_be(expected_node_ips)
+    msg = HwNode.all.to_yaml + HashDiffSym.diff(
       expected_node_ips.sort_by_hw_node_and_u32,
       eval(NodeIp.to_json_nonmagic).sort_by_hw_node_and_u32
+    ).to_s
+    assert_equal(
+      expected_node_ips.sort_by_hw_node_and_u32,
+      eval(NodeIp.to_json_nonmagic).sort_by_hw_node_and_u32,
+      msg
     )
   end
 end
@@ -58,7 +70,7 @@ class Array
   end
 
   def sort_by_descendant
-    self.sort_by { |h| [h[:descendant_type], h[:descendant_vid]] }
+    self.sort_by { |h| [h[:descendant_type], h[:descendant_vid], h[:descendant_coord_vid]] }
   end
 
   def which_indexes(hash)

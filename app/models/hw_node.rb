@@ -28,7 +28,7 @@ class HwNode < ActiveRecord::Base
   def self.to_json_hw
     result = []
     self.all.each do |e|
-      result.push(eval(e.to_json_hw))
+      result.push(eval(e.to_json_hw)) if e.ncc_node && e.coordinator
     end
     result.to_json.gsub("null", "nil")
   end
