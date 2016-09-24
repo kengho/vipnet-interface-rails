@@ -60,6 +60,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     assert_equal(Api::V1::BaseController::OK_RESPONSE, @response.body)
     expected_hw_nodes = [
       {
+        :type => "CurrentHwNode",
         :ncc_node_id => ncc_node_0x1a0e000a.id,
         :coordinator_id => coordinator_0x1a0e000a.id,
         :version => "3.0-670",
@@ -67,6 +68,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         :accessip => nil,
       },
       {
+        :type => "CurrentHwNode",
         :ncc_node_id => ncc_node_0x1a0e000b.id,
         :coordinator_id => coordinator_0x1a0e000a.id,
         :accessip => "198.51.100.2",
@@ -74,6 +76,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         :version_decoded => HwNode.decode_version("3.2-672"),
       },
       {
+        :type => "CurrentHwNode",
         :ncc_node_id => ncc_node_0x1a0e000c.id,
         :coordinator_id => coordinator_0x1a0e000a.id,
         :accessip => "198.51.100.3",
@@ -121,6 +124,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     )
     post(:create, { file: added_0x1a0e000d_iplirconf, coord_vid: "0x1a0e000a" })
     expected_hw_nodes.push({
+      :type => "CurrentHwNode",
       :ncc_node_id => ncc_node_0x1a0e000d.id,
       :coordinator_id => coordinator_0x1a0e000a.id,
       :version => "3.0-670",
@@ -195,6 +199,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     coordinator_0x1a0e000d = Coordinator.find_by(vid: "0x1a0e000d")
     expected_hw_nodes.push(
       {
+        :type => "CurrentHwNode",
         :ncc_node_id => ncc_node_0x1a0e000a.id,
         :coordinator_id => coordinator_0x1a0e000d.id,
         :version => "3.0-670",
@@ -202,6 +207,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         :accessip => "203.0.113.4",
       },
       {
+        :type => "CurrentHwNode",
         :ncc_node_id => ncc_node_0x1a0e000b.id,
         :coordinator_id => coordinator_0x1a0e000d.id,
         :version => "3.2-673",
@@ -209,6 +215,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         :accessip => "203.0.113.2",
       },
       {
+        :type => "CurrentHwNode",
         :ncc_node_id => ncc_node_0x1a0e000c.id,
         :coordinator_id => coordinator_0x1a0e000d.id,
         :version => "0.3-2",
@@ -216,6 +223,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         :accessip => "203.0.113.3",
       },
       {
+        :type => "CurrentHwNode",
         :ncc_node_id => ncc_node_0x1a0e000d.id,
         :coordinator_id => coordinator_0x1a0e000d.id,
         :version => "3.0-670",
@@ -310,6 +318,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     )
     post(:create, { file: added_new_client_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.push({
+      :type => "CurrentHwNode",
       :ncc_node_id => ncc_node_0x1a0e000e.id,
       :coordinator_id => coordinator_0x1a0e000d.id,
       :version => nil,

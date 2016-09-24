@@ -35,8 +35,41 @@ class HwNode < ActiveRecord::Base
 
   def to_json_hw
     self.to_json(
-      :only => HwNode.props_from_iplirconf + [:ncc_node_id, :coordinator_id, :version_decoded]
+      :only => HwNode.props_from_iplirconf + [:ncc_node_id, :coordinator_id, :version_decoded, :type]
     ).gsub("null", "nil")
+  end
+
+  def self.to_json_ascendants
+    result = []
+    self.all.each do |e|
+      to_json_ascendants = e.to_json_ascendants
+      result.push(eval(to_json_ascendants)) if to_json_ascendants
+    end
+    result.to_json
+  end
+
+  def to_json_ascendants
+    descendant = self.descendant
+    if descendant
+      attributes = self.attributes.reject do |attribute, value|
+        [
+          "id",
+          "created_at",
+          "updated_at",
+          "ncc_node_id",
+          "coordinator_id",
+          "descendant_id"
+        ].include?(attribute) ||
+        value == nil ||
+        false
+      end
+      attributes.merge!({
+        descendant_type: descendant.type,
+        descendant_coord_vid: descendant.coordinator.vid,
+        descendant_vid: descendant.ncc_node.vid,
+      })
+      attributes.to_json
+    end
   end
 
   def self.props_from_iplirconf

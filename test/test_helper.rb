@@ -32,7 +32,7 @@ class ActiveSupport::TestCase
   def assert_hw_nodes_should_be(expected_hw_nodes)
     assert_equal(
       expected_hw_nodes.sort_by_ncc_node_and_coordinator,
-      eval(CurrentHwNode.to_json_hw).sort_by_ncc_node_and_coordinator
+      eval(HwNode.to_json_hw).sort_by_ncc_node_and_coordinator
     )
   end
 
