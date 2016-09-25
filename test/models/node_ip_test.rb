@@ -2,8 +2,8 @@ require "test_helper"
 
 class NodeIpTest < ActiveSupport::TestCase
   setup do
-    ncc_node = NccNode.new(network: networks(:network1), vid: "0x1a0e0001")
-    @hw_node = HwNode.new(coordinator: coordinators(:coordinator1), ncc_node: ncc_node)
+    ncc_node = CurrentNccNode.new(network: networks(:network1), vid: "0x1a0e0001")
+    @hw_node = CurrentHwNode.new(coordinator: coordinators(:coordinator1), ncc_node: ncc_node)
   end
 
   test "shouldn't save without hw_node" do
