@@ -26,6 +26,20 @@ class HwNodesTest < ActiveSupport::TestCase
     assert_not deleted_hw_node.save
   end
 
+  test "shouldn't save two CurrentHwNode with ncc_node and coordinator" do
+    current_hw_node1 = CurrentHwNode.new(coordinator: @coordinator, ncc_node: @ncc_node)
+    current_hw_node2 = CurrentHwNode.new(coordinator: @coordinator, ncc_node: @ncc_node)
+    assert current_hw_node1.save
+    assert_not current_hw_node2.save
+  end
+
+  test "shouldn't save two DeletedHwNode with ncc_node and coordinator" do
+    deleted_hw_node1 = DeletedHwNode.new(coordinator: @coordinator, ncc_node: @ncc_node)
+    deleted_hw_node2 = DeletedHwNode.new(coordinator: @coordinator, ncc_node: @ncc_node)
+    assert deleted_hw_node1.save
+    assert_not deleted_hw_node2.save
+  end
+
   test "shouldn't save HwNode without descendant" do
     hw_node = HwNode.new(coordinator: @coordinator, ncc_node: @ncc_node)
     assert_not hw_node.save
