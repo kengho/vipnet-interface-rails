@@ -28,48 +28,54 @@ class HwNode < ActiveRecord::Base
   def self.to_json_hw
     result = []
     self.all.each do |e|
-      result.push(eval(e.to_json_hw)) if e.ncc_node && e.coordinator
+      result.push(eval(e.to_json_hw))
     end
     result.to_json.gsub("null", "nil")
   end
 
   def to_json_hw
-    self.to_json(
-      :only => HwNode.props_from_iplirconf + [:ncc_node_id, :coordinator_id, :version_decoded, :type]
+    json = self.to_json(
+      include: {
+        node_ips: {
+          only: :u32,
+        },
+      },
+      only: [
+        :type,
+        :ncc_node_id,
+        :coordinator_id,
+        :descendant_id,
+        :accessip,
+        :version,
+        :version_decoded,
+      ],
     ).gsub("null", "nil")
-  end
-
-  def self.to_json_ascendants
-    result = []
-    self.all.each do |e|
-      to_json_ascendants = e.to_json_ascendants
-      result.push(eval(to_json_ascendants)) if to_json_ascendants
-    end
-    result.to_json
-  end
-
-  def to_json_ascendants
-    descendant = self.descendant
-    if descendant
-      attributes = self.attributes.reject do |attribute, value|
-        [
-          "id",
-          "created_at",
-          "updated_at",
-          "ncc_node_id",
-          "coordinator_id",
-          "descendant_id"
-        ].include?(attribute) ||
-        value == nil ||
-        false
+    json = eval(json)
+    tmp = json.clone
+    json.each do |key, value|
+      if key == :coordinator_id
+        coordinator = Coordinator.find_by(id: value)
+        tmp[:coord_vid] = coordinator.vid if coordinator
+      elsif key == :ncc_node_id
+        ncc_node = NccNode.find_by(id: value)
+        tmp[:ncc_node_vid] = ncc_node.vid if ncc_node
+      elsif key == :descendant_id
+        descendant = HwNode.find_by(id: value)
+        if descendant
+          ncc_node = descendant.ncc_node
+          if ncc_node
+            tmp[:descendant_coord_vid] = descendant.coordinator.vid
+            tmp[:descendant_vid] = ncc_node.vid
+          end
+        end
       end
-      attributes.merge!({
-        descendant_type: descendant.type,
-        descendant_coord_vid: descendant.coordinator.vid,
-        descendant_vid: descendant.ncc_node.vid,
-      })
-      attributes.to_json
     end
+    tmp.reject! do |key, value|
+      [nil, []].include?(value) ||
+      [:coordinator_id, :ncc_node_id, :descendant_id].include?(key) ||
+      false
+    end
+    tmp.to_json
   end
 
   def self.props_from_iplirconf

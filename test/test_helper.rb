@@ -30,27 +30,13 @@ class ActiveSupport::TestCase
   end
 
   def assert_hw_nodes_should_be(expected_hw_nodes)
-    assert_equal(
-      expected_hw_nodes.sort_by_ncc_node_and_coordinator,
-      eval(HwNode.to_json_hw).sort_by_ncc_node_and_coordinator
+    msg = HashDiffSym.diff(
+      expected_hw_nodes.sort_hw,
+      eval(HwNode.to_json_hw).sort_hw
     )
-  end
-
-  def assert_hw_nodes_ascendants_should_be(expected_hw_nodes_ascendants)
     assert_equal(
-      expected_hw_nodes_ascendants.sort_by_descendant,
-      eval(HwNode.to_json_ascendants).sort_by_descendant
-    )
-  end
-
-  def assert_node_ips_should_be(expected_node_ips)
-    msg = HwNode.all.to_yaml + HashDiffSym.diff(
-      expected_node_ips.sort_by_hw_node_and_u32,
-      eval(NodeIp.to_json_nonmagic).sort_by_hw_node_and_u32
-    ).to_s
-    assert_equal(
-      expected_node_ips.sort_by_hw_node_and_u32,
-      eval(NodeIp.to_json_nonmagic).sort_by_hw_node_and_u32,
+      expected_hw_nodes.sort_hw,
+      eval(HwNode.to_json_hw).sort_hw,
       msg
     )
   end
@@ -61,12 +47,42 @@ class Array
     self.sort_by { |h| h[:vid] }
   end
 
-  def sort_by_ncc_node_and_coordinator
-    self.sort_by { |h| [h[:ncc_node_id], h[:coordinator_id]] }
-  end
-
-  def sort_by_hw_node_and_u32
-    self.sort_by { |h| [h[:hw_node_id], h[:u32]] }
+  def sort_hw
+    self.sort! do |a, b|
+      if a[:ncc_node_vid] && a[:coord_vid] && b[:ncc_node_vid] && b[:coord_vid]
+        if a[:coord_vid] == b[:coord_vid]
+          a[:ncc_node_vid] <=> b[:ncc_node_vid]
+        else
+          a[:coord_vid] <=> b[:coord_vid]
+        end
+      elsif a[:descendant_vid] && a[:descendant_coord_vid] && b[:descendant_vid] && b[:descendant_coord_vid]
+        if a[:descendant_coord_vid] == b[:descendant_coord_vid]
+          if a[:descendant_vid] == b[:descendant_vid]
+            if [a[:accessip], a[:version], a[:version_decoded]] == [b[:accessip], b[:version], b[:version_decoded]]
+              if a[:node_ips] && b[:node_ips]
+                a_u32s = []
+                b_u32s = []
+                a[:node_ips].each { |node_ip| a_u32s.push(node_ip[:u32])}
+                b[:node_ips].each { |node_ip| b_u32s.push(node_ip[:u32])}
+                a_u32s.sort <=> b_u32s
+              else
+                # dunno
+              end
+            else
+              [a[:accessip], a[:version], a[:version_decoded]] <=> [b[:accessip], b[:version], b[:version_decoded]]
+            end
+          else
+            a[:descendant_vid] <=> b[:descendant_vid]
+          end
+        else
+          a[:descendant_coord_vid] <=> b[:descendant_coord_vid]
+        end
+      elsif a[:ncc_node_vid] && a[:coord_vid] && b[:descendant_vid] && b[:descendant_coord_vid]
+        1
+      elsif a[:descendant_vid] && a[:descendant_coord_vid] && b[:ncc_node_vid] && b[:coord_vid]
+        -1
+      end
+    end
   end
 
   def sort_by_descendant

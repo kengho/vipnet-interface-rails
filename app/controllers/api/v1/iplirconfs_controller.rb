@@ -51,7 +51,14 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
               accendant_props = deleted_hw_node.attributes.reject do |attribute, _|
                 !(HwNode.props_from_iplirconf).include?(attribute.to_sym)
               end
-              HwNode.create!({ descendant: deleted_hw_node }.merge(accendant_props))
+              new_accendant = HwNode.new({ descendant: deleted_hw_node }.merge(accendant_props))
+              if new_accendant.save
+                deleted_hw_node.node_ips.each do |node_ip|
+                  node_ip.update_attribute(:hw_node_id, new_accendant.id)
+                end
+              else
+                Rails.logger.info("Unable to save new_accendant: #{new_accendant.inspect}")
+              end
               # if some prop was deleted, new_section_props will lack of it,
               # thus update_attributes will leave this prop as it was before,
               # but we want it to become nil
