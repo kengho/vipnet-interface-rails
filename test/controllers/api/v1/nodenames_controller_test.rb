@@ -34,6 +34,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: initial_nodename, network_vid: "6670" })
+    network1 = Network.first
     expected_ncc_nodes = [
       {
         type: "CurrentNccNode",
@@ -43,6 +44,10 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         category: "server",
         abonent_number: "0000",
         server_number: "0001",
+        # example_datetime.to_json =>    "2016-09-29T16:39:01.899Z"
+        # example_datetime.iso8601 =>    "2016-09-29T16:39:01Z"
+        # example_datetime.iso8601(3) => "2016-09-29T16:39:01.899Z"
+        creation_date: last_nodename_created_at(network1),
         creation_date_accuracy: false,
       },
       {
@@ -53,6 +58,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         category: "client",
         abonent_number: "0001",
         server_number: "0001",
+        creation_date: last_nodename_created_at(network1),
         creation_date_accuracy: false,
       },
     ]
@@ -73,6 +79,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         category: "client",
         abonent_number: "0002",
         server_number: "0001",
+        creation_date: last_nodename_created_at(network1),
         creation_date_accuracy: true,
       },
     )
@@ -96,6 +103,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         descendant_vid: "0x1a0e000c",
         name: "client1",
         enabled: true,
+        creation_date: last_nodename_created_at(network1),
       }
     ]
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -116,6 +124,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         category: "server",
         abonent_number: "0000",
         server_number: "0002",
+        creation_date: last_nodename_created_at(network1),
         creation_date_accuracy: true,
       },
     )
@@ -125,6 +134,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         descendant_type: "CurrentNccNode",
         descendant_vid: "0x1a0e000c",
         enabled: false,
+        creation_date: last_nodename_created_at(network1),
       }
     )
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -148,6 +158,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         descendant_vid: "0x1a0e000c",
         abonent_number: "0002",
         server_number: "0001",
+        creation_date: last_nodename_created_at(network1),
       }
     )
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -165,6 +176,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         descendant_type: "CurrentNccNode",
         descendant_vid: "0x1a0e000c",
         enabled: true,
+        creation_date: last_nodename_created_at(network1),
       }
     )
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -215,7 +227,12 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: client1_removed_nodename, network_vid: "6670" })
-    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" }, { type: "DeletedNccNode" })
+    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" },
+      {
+        type: "DeletedNccNode",
+        deletion_date: last_nodename_created_at(network1),
+      }
+    )
     expected_ncc_nodes_ascendants.change_where(
       {
         descendant_type: "CurrentNccNode",
@@ -227,5 +244,6 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     )
     assert_ncc_nodes_should_be expected_ncc_nodes
     assert_ncc_nodes_ascendants_should_be expected_ncc_nodes_ascendants
+    # @TODO: add some other networks' Nodenames
   end
 end

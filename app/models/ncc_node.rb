@@ -154,9 +154,18 @@ class NccNode < ActiveRecord::Base
   end
 
   def to_json_ncc
-    self.to_json(
-      :only => NccNode.props_from_nodename + [:vid, :creation_date_accuracy, :type]
+    json = self.to_json(
+      only: NccNode.props_from_nodename + [
+        :vid,
+        :creation_date,
+        :creation_date_accuracy,
+        :deletion_date,
+        :type,
+      ]
     ).gsub("null", "nil")
+    hash = eval(json)
+    hash.reject! { |_, v| v == nil }
+    hash.to_json
   end
 
   def self.to_json_ascendants

@@ -11,7 +11,8 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
     network = Network.find_or_create_by(network_vid: params[:network_vid])
     nodename_is_not_first = Nodename.any?(network)
-    unless diff = Nodename.push(hash: records, belongs_to: network)
+    diff, nodename_created_at = Nodename.push(hash: records, belongs_to: network)
+    unless diff
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return
     end
@@ -42,7 +43,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         props.reject! { |p| !NccNode.props_from_nodename.include?(p) }
         CurrentNccNode.create!({
           vid: target[:vid],
-          creation_date: DateTime.now,
+          creation_date: nodename_created_at,
           network: network,
           creation_date_accuracy: nodename_is_not_first,
         }.merge(props))
@@ -51,7 +52,10 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       if action == :remove
         ncc_node_to_delete = CurrentNccNode.find_by(vid: target[:vid])
         if ncc_node_to_delete
-          ncc_node_to_delete.update_attribute(:type, "DeletedNccNode")
+          ncc_node_to_delete.update_attributes({
+            type: "DeletedNccNode",
+            deletion_date: nodename_created_at,
+          })
         else
           Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' doesn't exists, nothing to delete")
         end
@@ -70,6 +74,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
             else
               new_ascendant = NccNode.new(
                 :descendant => changing_ncc_node,
+                :creation_date => nodename_created_at,
                 target[:field] => before,
               )
               if new_ascendant.save!

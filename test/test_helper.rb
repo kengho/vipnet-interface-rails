@@ -16,9 +16,14 @@ class ActiveSupport::TestCase
   ENV["POST_TICKETS_TOKEN"] = "POST_TICKETS_TOKEN"
 
   def assert_ncc_nodes_should_be(expected_ncc_nodes)
-    assert_equal(
+    msg = HashDiffSym.diff(
       expected_ncc_nodes.sort_by_vid,
       eval(NccNode.to_json_ncc).sort_by_vid
+    )
+    assert_equal(
+      expected_ncc_nodes.sort_by_vid,
+      eval(NccNode.to_json_ncc).sort_by_vid,
+      msg
     )
   end
 
@@ -40,6 +45,11 @@ class ActiveSupport::TestCase
       msg
     )
   end
+
+  def last_nodename_created_at(network)
+    Nodename.thread(network).last.created_at.iso8601(3)
+  end
+
 end
 
 class Array
