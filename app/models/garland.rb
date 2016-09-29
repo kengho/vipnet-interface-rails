@@ -29,7 +29,7 @@ class Garland < ActiveRecord::Base
     if thread.size == 0
       n = self.new(entity: h.to_s, entity_type: SNAPSHOT, belongs_to_id: b_to_id, belongs_to_type: b_to_type)
       if n.save
-        return HashDiffSym.diff({}, h)
+        return HashDiffSym.diff({}, h), n.created_at
       else
         return false
       end
@@ -50,7 +50,7 @@ class Garland < ActiveRecord::Base
         if n.save
           last_e.next = n.id
           if last_e.save
-            return d
+            return d, n.created_at
           else
             n.destroy
             return false

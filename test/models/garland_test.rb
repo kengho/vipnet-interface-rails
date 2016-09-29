@@ -65,7 +65,7 @@ class GarlandsTest < ActiveSupport::TestCase
   end
 
   test "should push hashes" do
-    s1 = Storage.push(@h1)
+    s1, _ = Storage.push(@h1)
     assert_equal(HashDiffSym.diff({}, @h1), s1)
     last = Storage.last
     s1_id = last.id
@@ -74,7 +74,7 @@ class GarlandsTest < ActiveSupport::TestCase
     assert_equal(nil, last.previous)
     assert_equal(nil, last.next)
 
-    s2 = Storage.push(@h2)
+    s2, _ = Storage.push(@h2)
     assert_equal(HashDiffSym.diff(@h1, @h2), s2)
     last = Storage.last
     s2_id = last.id
@@ -85,7 +85,7 @@ class GarlandsTest < ActiveSupport::TestCase
     assert_equal(s1_id, Storage.find_by(next: s2_id).id)
     assert_equal(s2_id, Storage.find_by(previous: s1_id).id)
 
-    s3 = Storage.push(@h3)
+    s3, _ = Storage.push(@h3)
     assert_equal(HashDiffSym.diff(@h2, @h3), s3)
     last = Storage.last
     s3_id = last.id
@@ -93,12 +93,12 @@ class GarlandsTest < ActiveSupport::TestCase
   end
 
   test "should not push if table should belong to something but it is not defined" do
-    s = StorageBelongsNetwork.push(@h1)
+    s, _ = StorageBelongsNetwork.push(@h1)
     assert_not s
   end
 
   test "should push to table which belong to something" do
-    s = StorageBelongsNetwork.push(hash: @h1, belongs_to: @network1)
+    s, _ = StorageBelongsNetwork.push(hash: @h1, belongs_to: @network1)
     assert_equal(HashDiffSym.diff({}, @h1), s)
   end
 
