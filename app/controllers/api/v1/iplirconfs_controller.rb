@@ -12,7 +12,8 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     coord_vid = params[:coord_vid]
     network = Network.find_or_create_by(network_vid: VipnetParser::network(coord_vid))
     coordinator = Coordinator.find_or_create_by(vid: coord_vid, network: network)
-    unless diff = Iplirconf.push(hash: sections, belongs_to: coordinator)
+    diff, iplirconf_created_at = Iplirconf.push(hash: sections, belongs_to: coordinator)
+    unless diff
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return
     end
