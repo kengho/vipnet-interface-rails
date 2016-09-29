@@ -91,11 +91,6 @@ class Array
     indexes
   end
 
-  def find_by(where)
-    indexes = which_indexes(where)
-    self[indexes.first]
-  end
-
   def change_where(where, changes)
     indexes = which_indexes(where)
     indexes.each do |index|
