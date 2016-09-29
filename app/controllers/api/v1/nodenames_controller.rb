@@ -62,20 +62,20 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         if NccNode.props_from_nodename.include?(target[:field])
           changing_ncc_node = CurrentNccNode.find_by(vid: target[:vid])
           if changing_ncc_node
-            accendant = NccNode
+            ascendant = NccNode
               .where(id: ascendants_ids)
               .find_by(descendant: changing_ncc_node)
-            if accendant
-              accendant.update_attribute(target[:field], before)
+            if ascendant
+              ascendant.update_attribute(target[:field], before)
             else
-              new_accendant = NccNode.new(
+              new_ascendant = NccNode.new(
                 :descendant => changing_ncc_node,
                 target[:field] => before,
               )
-              if new_accendant.save!
-                ascendants_ids.push(new_accendant.id)
+              if new_ascendant.save!
+                ascendants_ids.push(new_ascendant.id)
               else
-                Rails.logger.info("Unable to save new_accendant: #{new_accendant.inspect}")
+                Rails.logger.info("Unable to save new_ascendant: #{new_ascendant.inspect}")
               end
             end
             changing_ncc_node.update_attribute(target[:field], after)
