@@ -45,6 +45,7 @@ class HwNode < ActiveRecord::Base
         :ncc_node_id,
         :coordinator_id,
         :descendant_id,
+        :creation_date,
         :accessip,
         :version,
         :version_decoded,

@@ -52,7 +52,12 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
               accendant_props = deleted_hw_node.attributes.reject do |attribute, _|
                 !(HwNode.props_from_iplirconf).include?(attribute.to_sym)
               end
-              new_accendant = HwNode.new({ descendant: deleted_hw_node }.merge(accendant_props))
+              new_accendant = HwNode.new(
+                {
+                  descendant: deleted_hw_node,
+                  creation_date: iplirconf_created_at,
+                }.merge(accendant_props)
+              )
               if new_accendant.save
                 deleted_hw_node.node_ips.each do |node_ip|
                   node_ip.update_attribute(:hw_node_id, new_accendant.id)
@@ -76,6 +81,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
               hw_node = CurrentHwNode.new({
                 ncc_node: ncc_node,
                 coordinator: coordinator,
+                creation_date: iplirconf_created_at,
               }.merge(props.reject { |p| !HwNode.props_from_iplirconf.include?(p) }))
               hw_node.save!
               if props[:ip]
@@ -103,7 +109,10 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
                 if accendant
                   node_ip.update_attribute(:hw_node_id, accendant.id)
                 else
-                  new_accendant = HwNode.new(descendant: changing_hw_node)
+                  new_accendant = HwNode.new(
+                    descendant: changing_hw_node,
+                    creation_date: iplirconf_created_at,
+                  )
                   if new_accendant.save!
                     ascendants_ids.push(new_accendant.id)
                     node_ip.update_attribute(:hw_node_id, new_accendant.id)
@@ -145,6 +154,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
               else
                 new_accendant = HwNode.new(
                   :descendant => changing_hw_node,
+                  :creation_date => iplirconf_created_at,
                   target[:field] => before,
                 )
                 if new_accendant.save!
