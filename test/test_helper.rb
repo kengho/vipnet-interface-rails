@@ -17,20 +17,13 @@ class ActiveSupport::TestCase
 
   def assert_ncc_nodes_should_be(expected_ncc_nodes)
     msg = HashDiffSym.diff(
-      expected_ncc_nodes.sort_by_vid,
-      eval(NccNode.to_json_ncc).sort_by_vid
+      expected_ncc_nodes.sort_ncc,
+      eval(NccNode.to_json_ncc).sort_ncc
     )
     assert_equal(
-      expected_ncc_nodes.sort_by_vid,
-      eval(NccNode.to_json_ncc).sort_by_vid,
+      expected_ncc_nodes.sort_ncc,
+      eval(NccNode.to_json_ncc).sort_ncc,
       msg
-    )
-  end
-
-  def assert_ncc_nodes_ascendants_should_be(expected_ncc_nodes_ascendants)
-    assert_equal(
-      expected_ncc_nodes_ascendants.sort_by_descendant,
-      eval(NccNode.to_json_ascendants).sort_by_descendant
     )
   end
 
@@ -53,8 +46,19 @@ class ActiveSupport::TestCase
 end
 
 class Array
-  def sort_by_vid
-    self.sort_by { |h| h[:vid] }
+
+  def sort_ncc
+    self.sort! do |a, b|
+      if a[:vid] && b[:vid]
+        a[:vid] <=> b[:vid]
+      elsif a[:vid] && b[:descendant_vid]
+        1
+      elsif a[:descendant_vid] && b[:vid]
+        -1
+      elsif a[:descendant_vid] && b[:descendant_vid]
+        a[:creation_date] <=> b[:creation_date]
+      end
+    end
   end
 
   def sort_hw

@@ -148,7 +148,7 @@ class NccNode < ActiveRecord::Base
   def self.to_json_ncc
     result = []
     self.all.each do |e|
-      result.push(eval(e.to_json_ncc)) if e.vid
+      result.push(eval(e.to_json_ncc))
     end
     result.to_json.gsub("null", "nil")
   end
@@ -156,38 +156,31 @@ class NccNode < ActiveRecord::Base
   def to_json_ncc
     json = self.to_json(
       only: NccNode.props_from_nodename + [
+        :type,
         :vid,
+        :descendant_id,
         :creation_date,
         :creation_date_accuracy,
         :deletion_date,
-        :type,
       ]
     ).gsub("null", "nil")
-    hash = eval(json)
-    hash.reject! { |_, v| v == nil }
-    hash.to_json
-  end
-
-  def self.to_json_ascendants
-    result = []
-    self.all.each do |e|
-      to_json_ascendants = e.to_json_ascendants
-      result.push(eval(to_json_ascendants)) if to_json_ascendants
-    end
-    result.to_json
-  end
-
-  def to_json_ascendants
-    descendant = self.descendant
-    if descendant
-      attributes = self.attributes.reject do |attribute, value|
-        ["id", "created_at", "updated_at", "network_id", "descendant_id"].include?(attribute) ||
-        value == nil ||
-        false
+    json = eval(json)
+    tmp = json.clone
+    json.each do |key, value|
+      if key == :network_id
+        network = Network.find_by(id: value)
+        tmp[:network_vid] = network.network_vid if network
+      elsif key == :descendant_id
+        descendant = NccNode.find_by(id: value)
+        tmp[:descendant_vid] = descendant.vid if descendant
       end
-      attributes.merge!({ descendant_type: descendant.type, descendant_vid: descendant.vid })
-      attributes.to_json
     end
+    tmp.reject! do |key, value|
+      key == :descendant_id ||
+      value == nil ||
+      false
+    end
+    tmp.to_json
   end
 
   def self.props_from_nodename
