@@ -94,6 +94,7 @@ namespace :db do
 
     print "Filling CurrentHwNode, NodeIp and Ticket...\n"
     versions = ["3.0-670", "3.0-671", "3.0-672", "0.3-2", "4.20"]
+    creation_date = DateTime.parse(Faker::Date.backward(365).to_s)
     CurrentNccNode.all.each_with_index do |ncc_node, i|
       print "#{i+1}/#{n+4}..."
       random_version = versions[rand(versions.size)]
@@ -103,6 +104,7 @@ namespace :db do
           coordinator: coordinator,
           accessip: Faker::Internet.ip_v4_address,
           version: rand(10) < 9 ? random_version : versions[rand(versions.size)],
+          creation_date: creation_date,
         )
         hw_node.save!
 
