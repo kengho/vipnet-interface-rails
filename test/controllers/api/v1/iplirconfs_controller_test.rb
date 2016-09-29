@@ -55,43 +55,43 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     assert_equal(Api::V1::BaseController::OK_RESPONSE, @response.body)
     expected_hw_nodes = [
       {
-        "type": "CurrentHwNode",
-        "coord_vid": "0x1a0e000a",
-        "ncc_node_vid": "0x1a0e000a",
-        "version": "3.0-670",
-        "version_decoded": HwNode.decode_version("3.0-670"),
-        "node_ips": [
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000a",
+        version: "3.0-670",
+        version_decoded: HwNode.decode_version("3.0-670"),
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.1"),
+            u32: IPv4::u32("192.0.2.1"),
           },
           {
-            "u32": IPv4::u32("192.0.2.3"),
-          },
-        ],
-      },
-      {
-        "type": "CurrentHwNode",
-        "coord_vid": "0x1a0e000a",
-        "ncc_node_vid": "0x1a0e000b",
-        "accessip": "198.51.100.2",
-        "version": "3.2-672",
-        "version_decoded": HwNode.decode_version("3.2-672"),
-        "node_ips":[
-          {
-            "u32": IPv4::u32("192.0.2.5"),
+            u32: IPv4::u32("192.0.2.3"),
           },
         ],
       },
       {
-        "type": "CurrentHwNode",
-        "coord_vid": "0x1a0e000a",
-        "ncc_node_vid": "0x1a0e000c",
-        "accessip": "198.51.100.3",
-        "version": "0.3-2",
-        "version_decoded": HwNode.decode_version("0.3-2"),
-        "node_ips": [
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000b",
+        accessip: "198.51.100.2",
+        version: "3.2-672",
+        version_decoded: HwNode.decode_version("3.2-672"),
+        node_ips:[
           {
-            "u32": IPv4::u32("192.0.2.7"),
+            u32: IPv4::u32("192.0.2.5"),
+          },
+        ],
+      },
+      {
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000c",
+        accessip: "198.51.100.3",
+        version: "0.3-2",
+        version_decoded: HwNode.decode_version("0.3-2"),
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.7"),
           },
         ],
       },
@@ -105,18 +105,18 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     )
     post(:create, { file: added_0x1a0e000d_iplirconf, coord_vid: "0x1a0e000a" })
     expected_hw_nodes.push({
-      "type": "CurrentHwNode",
-      "coord_vid": "0x1a0e000a",
-      "ncc_node_vid": "0x1a0e000d",
-      "accessip": "198.51.100.4",
-      "version": "3.0-670",
-      "version_decoded": HwNode.decode_version("3.0-670"),
-      "node_ips": [
+      type: "CurrentHwNode",
+      coord_vid: "0x1a0e000a",
+      ncc_node_vid: "0x1a0e000d",
+      accessip: "198.51.100.4",
+      version: "3.0-670",
+      version_decoded: HwNode.decode_version("3.0-670"),
+      node_ips: [
         {
-          "u32": IPv4::u32("192.0.2.9"),
+          u32: IPv4::u32("192.0.2.9"),
         },
         {
-          "u32": IPv4::u32("192.0.2.10"),
+          u32: IPv4::u32("192.0.2.10"),
         },
       ],
     })
@@ -134,40 +134,40 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: changed_iplirconf, coord_vid: "0x1a0e000a" })
     expected_hw_nodes.change_where(
       {
-        "coord_vid": "0x1a0e000a",
-        "ncc_node_vid": "0x1a0e000b",
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000b",
       },
       {
-        "version": "3.2-673",
-        "version_decoded": HwNode.decode_version("3.2-673"),
-        "node_ips": [
+        version: "3.2-673",
+        version_decoded: HwNode.decode_version("3.2-673"),
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.55"),
+            u32: IPv4::u32("192.0.2.55"),
           },
         ],
       }
     )
     expected_hw_nodes.change_where(
       {
-        "coord_vid": "0x1a0e000a",
-        "ncc_node_vid": "0x1a0e000c",
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000c",
       },
-      { "accessip": "192.0.2.7" }
+      { accessip: "192.0.2.7" }
     )
     expected_hw_nodes.push(
       {
-        "descendant_coord_vid": "0x1a0e000a",
-        "descendant_vid": "0x1a0e000c",
-        "accessip": "198.51.100.3",
+        descendant_coord_vid: "0x1a0e000a",
+        descendant_vid: "0x1a0e000c",
+        accessip: "198.51.100.3",
       },
       {
-        "descendant_coord_vid": "0x1a0e000a",
-        "descendant_vid": "0x1a0e000b",
-        "version": "3.2-672",
-        "version_decoded": HwNode.decode_version("3.2-672"),
-        "node_ips": [
+        descendant_coord_vid: "0x1a0e000a",
+        descendant_vid: "0x1a0e000b",
+        version: "3.2-672",
+        version_decoded: HwNode.decode_version("3.2-672"),
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.5"),
+            u32: IPv4::u32("192.0.2.5"),
           },
         ]
       },
@@ -182,59 +182,59 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: coordinator2_initial_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.push(
       {
-        "type": "CurrentHwNode",
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000a",
-        "accessip": "203.0.113.4",
-        "version": "3.0-670",
-        "version_decoded": HwNode.decode_version("3.0-670"),
-        "node_ips": [
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000a",
+        accessip: "203.0.113.4",
+        version: "3.0-670",
+        version_decoded: HwNode.decode_version("3.0-670"),
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.1"),
+            u32: IPv4::u32("192.0.2.1"),
           },
           {
-            "u32": IPv4::u32("192.0.2.3"),
-          },
-        ],
-      },
-      {
-        "type": "CurrentHwNode",
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000b",
-        "accessip": "203.0.113.2",
-        "version": "3.2-673",
-        "version_decoded": HwNode.decode_version("3.2-673"),
-        "node_ips": [
-          {
-            "u32": IPv4::u32("192.0.2.55"),
+            u32: IPv4::u32("192.0.2.3"),
           },
         ],
       },
       {
-        "type": "CurrentHwNode",
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000c",
-        "accessip": "203.0.113.3",
-        "version": "0.3-2",
-        "version_decoded": HwNode.decode_version("0.3-2"),
-        "node_ips": [
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000b",
+        accessip: "203.0.113.2",
+        version: "3.2-673",
+        version_decoded: HwNode.decode_version("3.2-673"),
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.7"),
+            u32: IPv4::u32("192.0.2.55"),
           },
         ],
       },
       {
-        "type": "CurrentHwNode",
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000d",
-        "version": "3.0-670",
-        "version_decoded": HwNode.decode_version("3.0-670"),
-        "node_ips": [
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000c",
+        accessip: "203.0.113.3",
+        version: "0.3-2",
+        version_decoded: HwNode.decode_version("0.3-2"),
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.9"),
+            u32: IPv4::u32("192.0.2.7"),
+          },
+        ],
+      },
+      {
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000d",
+        version: "3.0-670",
+        version_decoded: HwNode.decode_version("3.0-670"),
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.9"),
           },
           {
-            "u32": IPv4::u32("192.0.2.10"),
+            u32: IPv4::u32("192.0.2.10"),
           },
         ],
       },
@@ -251,44 +251,44 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: changed_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
       {
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000b",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000b",
       },
       {
-        "version": "3.2-672",
-        "version_decoded": HwNode.decode_version("3.2-672"),
+        version: "3.2-672",
+        version_decoded: HwNode.decode_version("3.2-672"),
       }
     )
     expected_hw_nodes.change_where(
       {
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000a",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000a",
       },
       {
         # deep_merge deletes "192.0.2.3" here if not speciied
-        "node_ips": [
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.3"),
+            u32: IPv4::u32("192.0.2.3"),
           },
           {
-            "u32": IPv4::u32("192.0.2.51"),
+            u32: IPv4::u32("192.0.2.51"),
           },
         ],
       }
     )
     expected_hw_nodes.push(
       {
-        "descendant_coord_vid": "0x1a0e000d",
-        "descendant_vid": "0x1a0e000b",
-        "version": "3.2-673",
-        "version_decoded": HwNode.decode_version("3.2-673"),
+        descendant_coord_vid: "0x1a0e000d",
+        descendant_vid: "0x1a0e000b",
+        version: "3.2-673",
+        version_decoded: HwNode.decode_version("3.2-673"),
       },
       {
-        "descendant_coord_vid": "0x1a0e000d",
-        "descendant_vid": "0x1a0e000a",
-        "node_ips": [
+        descendant_coord_vid: "0x1a0e000d",
+        descendant_vid: "0x1a0e000a",
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.1"),
+            u32: IPv4::u32("192.0.2.1"),
           },
         ],
       },
@@ -304,9 +304,9 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     )
     post(:create, { file: added_new_client_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.push({
-      "type": "CurrentHwNode",
-      "coord_vid": "0x1a0e000d",
-      "ncc_node_vid": "0x1a0e000e",
+      type: "CurrentHwNode",
+      coord_vid: "0x1a0e000d",
+      ncc_node_vid: "0x1a0e000e",
     })
     assert_hw_nodes_should_be expected_hw_nodes
 
@@ -318,23 +318,23 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     )
     post(:create, { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.push({
-      "descendant_coord_vid": "0x1a0e000d",
-      "descendant_vid": "0x1a0e000a",
-      "node_ips": [
+      descendant_coord_vid: "0x1a0e000d",
+      descendant_vid: "0x1a0e000a",
+      node_ips: [
         {
-          "u32": IPv4::u32("192.0.2.51"),
+          u32: IPv4::u32("192.0.2.51"),
         },
       ],
     })
     expected_hw_nodes.change_where(
       {
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000a",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000a",
       },
       {
-        "node_ips": [
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.3"),
+            u32: IPv4::u32("192.0.2.3"),
           },
         ],
       }
@@ -350,11 +350,11 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: deleted_client1, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
       {
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000c",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000c",
       },
       {
-        "type": "DeletedHwNode",
+        type: "DeletedHwNode",
       }
     )
     assert_hw_nodes_should_be expected_hw_nodes
@@ -367,30 +367,30 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: restored_client1, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
       {
-        "coord_vid": "0x1a0e000d",
-        "ncc_node_vid": "0x1a0e000c",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000c",
       },
       {
-        "type": "CurrentHwNode",
-        "accessip": "203.0.113.5",
-        "version": nil,
-        "version_decoded": nil,
-        "node_ips": [
+        type: "CurrentHwNode",
+        accessip: "203.0.113.5",
+        version: nil,
+        version_decoded: nil,
+        node_ips: [
           {
-            "u32": IPv4::u32("192.0.2.18"),
+            u32: IPv4::u32("192.0.2.18"),
           },
         ],
       }
     )
     expected_hw_nodes.push({
-      "descendant_coord_vid": "0x1a0e000d",
-      "descendant_vid": "0x1a0e000c",
-      "accessip": "203.0.113.3",
-      "version": "0.3-2",
-      "version_decoded": HwNode.decode_version("0.3-2"),
-      "node_ips": [
+      descendant_coord_vid: "0x1a0e000d",
+      descendant_vid: "0x1a0e000c",
+      accessip: "203.0.113.3",
+      version: "0.3-2",
+      version_decoded: HwNode.decode_version("0.3-2"),
+      node_ips: [
         {
-          "u32": IPv4::u32("192.0.2.7"),
+          u32: IPv4::u32("192.0.2.7"),
         },
       ],
     })
