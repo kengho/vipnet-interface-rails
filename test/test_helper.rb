@@ -105,6 +105,10 @@ class Array
     end
     self.delete_if { |e| e == :to_delete }
   end
+
+  def reject_nil_keys
+    self.each { |h| h.reject! { |_, v| v == nil }}
+  end
 end
 
 class CurrentNccNode::ActiveRecord_Relation

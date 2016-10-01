@@ -40,13 +40,22 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       end
 
       if action == :add
-        props.reject! { |p| !NccNode.props_from_nodename.include?(p) }
-        CurrentNccNode.create!({
-          vid: target[:vid],
-          creation_date: nodename_created_at,
-          network: network,
-          creation_date_accuracy: nodename_is_not_first,
-        }.merge(props))
+        deleted_ncc_node = DeletedNccNode.find_by(vid: target[:vid])
+        # may occur only when old ncc db restores, no need for saving history
+        if deleted_ncc_node
+          deleted_ncc_node.update_attributes({
+            type: "CurrentNccNode",
+            deletion_date: nil,
+          })
+        else
+          props.reject! { |p| !NccNode.props_from_nodename.include?(p) }
+          CurrentNccNode.create!({
+            vid: target[:vid],
+            creation_date: nodename_created_at,
+            network: network,
+            creation_date_accuracy: nodename_is_not_first,
+          }.merge(props))
+        end
       end
 
       if action == :remove

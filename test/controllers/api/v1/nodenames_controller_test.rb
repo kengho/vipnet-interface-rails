@@ -217,6 +217,21 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       }
     )
     assert_ncc_nodes_should_be expected_ncc_nodes
+
+    # restore 0x1a0e000c client1
+    restore_client1_nodename = fixture_file_upload(
+      "nodenames/08_group_changed.doc",
+      "application/octet-stream"
+    )
+    post(:create, { file: restore_client1_nodename, network_vid: "6670" })
+    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" },
+      {
+        type: "CurrentNccNode",
+        deletion_date: nil,
+      }
+    )
+    expected_ncc_nodes.reject_nil_keys
+    assert_ncc_nodes_should_be expected_ncc_nodes
     # @TODO: add some other networks' Nodenames
   end
 end
