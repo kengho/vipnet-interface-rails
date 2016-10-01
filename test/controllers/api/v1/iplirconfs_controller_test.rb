@@ -411,7 +411,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         },
       ],
     })
-    expected_hw_nodes.each { |h| h.reject! { |_, v| v == nil }}
+    expected_hw_nodes.reject_nil_keys
     assert_hw_nodes_should_be expected_hw_nodes
   end
 end
