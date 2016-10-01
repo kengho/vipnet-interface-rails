@@ -16,27 +16,17 @@ class ActiveSupport::TestCase
   ENV["POST_TICKETS_TOKEN"] = "POST_TICKETS_TOKEN"
 
   def assert_ncc_nodes_should_be(expected_ncc_nodes)
-    msg = HashDiffSym.diff(
-      expected_ncc_nodes.sort_ncc,
-      eval(NccNode.to_json_ncc).sort_ncc
-    )
-    assert_equal(
-      expected_ncc_nodes.sort_ncc,
-      eval(NccNode.to_json_ncc).sort_ncc,
-      msg
-    )
+    expected = expected_ncc_nodes.sort_ncc
+    actual = eval(NccNode.to_json_ncc).sort_ncc
+    msg = HashDiffSym.diff(expected, actual)
+    assert_equal(expected, actual, msg)
   end
 
   def assert_hw_nodes_should_be(expected_hw_nodes)
-    msg = HashDiffSym.diff(
-      expected_hw_nodes.sort_hw,
-      eval(HwNode.to_json_hw).sort_hw
-    )
-    assert_equal(
-      expected_hw_nodes.sort_hw,
-      eval(HwNode.to_json_hw).sort_hw,
-      msg
-    )
+    expected = expected_hw_nodes.sort_hw
+    actual = eval(HwNode.to_json_hw).sort_hw
+    msg = HashDiffSym.diff(expected, actual)
+    assert_equal(expected, actual, msg)
   end
 
   def last_nodename_created_at(network)
@@ -46,7 +36,6 @@ class ActiveSupport::TestCase
   def last_iplirconf_created_at(coordinator)
     Iplirconf.thread(coordinator).last.created_at.iso8601(3)
   end
-
 end
 
 class Array
@@ -92,17 +81,11 @@ class Array
   end
 
   def change_where(where, changes)
-    indexes = which_indexes(where)
-    indexes.each do |index|
-      self[index].deep_merge!(changes)
-    end
+    which_indexes(where).each { |i| self[i].deep_merge!(changes) }
   end
 
   def delete_where(where)
-    indexes = which_indexes(where)
-    indexes.each do |index|
-      self[index] = :to_delete
-    end
+    which_indexes(where).each { |i| self[i] = :to_delete }
     self.delete_if { |e| e == :to_delete }
   end
 
@@ -116,6 +99,18 @@ class CurrentNccNode::ActiveRecord_Relation
     vids = []
     self.each { |n| vids.push(n.vid) }
     vids.sort
+  end
+end
+
+class Network::ActiveRecord::Base
+  def last_nodenames_created_at
+    Nodename.thread(self).last.created_at.iso8601(3)
+  end
+end
+
+class Coordinator::ActiveRecord::Base
+  def last_iplirconfs_created_at
+    Iplirconf.thread(self).last.created_at.iso8601(3)
   end
 end
 

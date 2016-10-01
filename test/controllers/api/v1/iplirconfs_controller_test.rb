@@ -61,7 +61,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         ncc_node_vid: "0x1a0e000a",
         version: "3.0-670",
         version_decoded: HwNode.decode_version("3.0-670"),
-        creation_date: last_iplirconf_created_at(coordinator1),
+        creation_date: coordinator1.last_iplirconfs_created_at,
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.1"),
@@ -78,7 +78,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         accessip: "198.51.100.2",
         version: "3.2-672",
         version_decoded: HwNode.decode_version("3.2-672"),
-        creation_date: last_iplirconf_created_at(coordinator1),
+        creation_date: coordinator1.last_iplirconfs_created_at,
         node_ips:[
           {
             u32: IPv4::u32("192.0.2.5"),
@@ -92,7 +92,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         accessip: "198.51.100.3",
         version: "0.3-2",
         version_decoded: HwNode.decode_version("0.3-2"),
-        creation_date: last_iplirconf_created_at(coordinator1),
+        creation_date: coordinator1.last_iplirconfs_created_at,
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.7"),
@@ -115,7 +115,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       accessip: "198.51.100.4",
       version: "3.0-670",
       version_decoded: HwNode.decode_version("3.0-670"),
-      creation_date: last_iplirconf_created_at(coordinator1),
+      creation_date: coordinator1.last_iplirconfs_created_at,
       node_ips: [
         {
           u32: IPv4::u32("192.0.2.9"),
@@ -164,14 +164,14 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         descendant_coord_vid: "0x1a0e000a",
         descendant_vid: "0x1a0e000c",
         accessip: "198.51.100.3",
-        creation_date: last_iplirconf_created_at(coordinator1),
+        creation_date: coordinator1.last_iplirconfs_created_at,
       },
       {
         descendant_coord_vid: "0x1a0e000a",
         descendant_vid: "0x1a0e000b",
         version: "3.2-672",
         version_decoded: HwNode.decode_version("3.2-672"),
-        creation_date: last_iplirconf_created_at(coordinator1),
+        creation_date: coordinator1.last_iplirconfs_created_at,
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.5"),
@@ -196,7 +196,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         accessip: "203.0.113.4",
         version: "3.0-670",
         version_decoded: HwNode.decode_version("3.0-670"),
-        creation_date: last_iplirconf_created_at(coordinator2),
+        creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.1"),
@@ -213,7 +213,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         accessip: "203.0.113.2",
         version: "3.2-673",
         version_decoded: HwNode.decode_version("3.2-673"),
-        creation_date: last_iplirconf_created_at(coordinator2),
+        creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.55"),
@@ -227,7 +227,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         accessip: "203.0.113.3",
         version: "0.3-2",
         version_decoded: HwNode.decode_version("0.3-2"),
-        creation_date: last_iplirconf_created_at(coordinator2),
+        creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.7"),
@@ -240,7 +240,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         ncc_node_vid: "0x1a0e000d",
         version: "3.0-670",
         version_decoded: HwNode.decode_version("3.0-670"),
-        creation_date: last_iplirconf_created_at(coordinator2),
+        creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.9"),
@@ -294,12 +294,12 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         descendant_vid: "0x1a0e000b",
         version: "3.2-673",
         version_decoded: HwNode.decode_version("3.2-673"),
-        creation_date: last_iplirconf_created_at(coordinator2),
+        creation_date: coordinator2.last_iplirconfs_created_at,
       },
       {
         descendant_coord_vid: "0x1a0e000d",
         descendant_vid: "0x1a0e000a",
-        creation_date: last_iplirconf_created_at(coordinator2),
+        creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.1"),
@@ -321,7 +321,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       type: "CurrentHwNode",
       coord_vid: "0x1a0e000d",
       ncc_node_vid: "0x1a0e000e",
-      creation_date: last_iplirconf_created_at(coordinator2),
+      creation_date: coordinator2.last_iplirconfs_created_at,
     })
     assert_hw_nodes_should_be expected_hw_nodes
 
@@ -335,7 +335,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     expected_hw_nodes.push({
       descendant_coord_vid: "0x1a0e000d",
       descendant_vid: "0x1a0e000a",
-      creation_date: last_iplirconf_created_at(coordinator2),
+      creation_date: coordinator2.last_iplirconfs_created_at,
       node_ips: [
         {
           u32: IPv4::u32("192.0.2.51"),
@@ -404,7 +404,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       accessip: "203.0.113.3",
       version: "0.3-2",
       version_decoded: HwNode.decode_version("0.3-2"),
-      creation_date: last_iplirconf_created_at(coordinator2),
+      creation_date: coordinator2.last_iplirconfs_created_at,
       node_ips: [
         {
           u32: IPv4::u32("192.0.2.7"),
