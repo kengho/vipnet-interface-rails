@@ -348,4 +348,21 @@ class NodesControllerTest < ActionController::TestCase
     get_js(:load, { search: "Brad" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
+
+  test "shouldn't search by mftp_server_vid if mftp_server_vid doesn't belongs to coordinator" do
+    CurrentNccNode.create!(
+      vid: "0x1a0e0001",
+      network: @network,
+      server_number: "0001",
+      category: "client",
+    )
+    CurrentNccNode.create!(
+      vid: "0x1a0e0002",
+      network: @network,
+      server_number: "0001",
+      category: "client",
+    )
+    get_js(:load, { mftp_server_vid: "0x1a0e0001" })
+    assert_equal([], assigns["ncc_nodes"].vids)
+  end
 end
