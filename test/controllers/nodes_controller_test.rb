@@ -327,4 +327,25 @@ class NodesControllerTest < ActionController::TestCase
     get_js(:load, { search: "192.168.0.1-192.168.0.254" })
     assert_equal(["0x1a0e0001", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
+
+  test "should search through DeletedNccNode if there are no such CurrentNccNode" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    DeletedNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
+    get_js(:load, { name: "Brad" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
+
+  test "shouldn't search through DeletedNccNode if there are such CurrentNccNode" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    DeletedNccNode.create!(vid: "0x1a0e0002", name: "Alex", network: @network)
+    get_js(:load, { name: "Alex" })
+    assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
+  end
+
+  test "should search through DeletedNccNode in quick search" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    DeletedNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
+    get_js(:load, { search: "Brad" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
 end
