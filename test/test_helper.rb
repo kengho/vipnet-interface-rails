@@ -36,10 +36,13 @@ class ActiveSupport::TestCase
   def last_iplirconf_created_at(coordinator)
     Iplirconf.thread(coordinator).last.created_at.iso8601(3)
   end
+
+  def get_js(action, params)
+    get(action, params.merge(format: :js))
+  end
 end
 
 class Array
-
   def sort_ncc
     self.sort! do |a, b|
       if a[:vid] && b[:vid]
