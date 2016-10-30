@@ -182,4 +182,26 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
     assert_equal("4", ncc_node.most_likely(:version))
     # because coordinator1 have the lowest vid
   end
+
+  test "should work if any relation of hw_nodes is given" do
+    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001"); ncc_node.save!
+
+    hw_node = CurrentHwNode.new(
+      coordinator: @coordinator1,
+      ncc_node: ncc_node,
+      version: "4",
+    ); hw_node.save!
+    HwNode.create!(descendant: hw_node, version: "3")
+    HwNode.create!(descendant: hw_node, version: "3.2")
+    HwNode.create!(descendant: hw_node, version: "3.1")
+
+    assert_equal(
+      HwNode.first.version,
+      NccNode.most_likely(
+        prop: :version,
+        ncc_node: ncc_node,
+        hw_nodes: HwNode.all,
+      )
+    )
+  end
 end
