@@ -88,17 +88,40 @@ class NccNodesTest < ActiveSupport::TestCase
   test "should calculate most likely version out of all (mftp server)" do
     CurrentNccNode.create!(
       network: @network1,
+      vid: "0x1a0e000a",
+      category: "server",
+      abonent_number: "0000",
+      server_number: "0001",
+    )
+    CurrentNccNode.create!(
+      network: @network1,
       vid: "0x1a0e000b",
       category: "server",
       abonent_number: "0000",
       server_number: "0002",
     )
+
     ncc_node = CurrentNccNode.new(
       network: @network1,
       vid: "0x1a0e0001",
       category: "client",
       server_number: "0002",
     ); ncc_node.save!
+
+    # 0x1a0e000a: 2 clients registered
+    CurrentNccNode.create!(
+      network: @network1,
+      vid: "0x1a0e0002",
+      category: "client",
+      server_number: "0001",
+    ); ncc_node.save!
+    CurrentNccNode.create!(
+      network: @network1,
+      vid: "0x1a0e0003",
+      category: "client",
+      server_number: "0001",
+    )
+
     CurrentHwNode.create!(coordinator: coordinators(:coordinator1), ncc_node: ncc_node, version: "4")
     CurrentHwNode.create!(coordinator: coordinators(:coordinator2), ncc_node: ncc_node, version: "3")
     CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "4")
