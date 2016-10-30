@@ -82,7 +82,7 @@ class NccNodesTest < ActiveSupport::TestCase
     CurrentHwNode.create!(coordinator: coordinators(:coordinator2), ncc_node: ncc_node, version: "3")
     CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "4")
     CurrentHwNode.create!(coordinator: coordinators(:coordinator4), ncc_node: ncc_node, version: "4")
-    assert_equal("4", ncc_node.most_likely_version)
+    assert_equal("4", ncc_node.most_likely(:version))
   end
 
   test "should calculate most likely version out of all (mftp server)" do
@@ -103,7 +103,7 @@ class NccNodesTest < ActiveSupport::TestCase
     CurrentHwNode.create!(coordinator: coordinators(:coordinator2), ncc_node: ncc_node, version: "3")
     CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "4")
     CurrentHwNode.create!(coordinator: coordinators(:coordinator4), ncc_node: ncc_node, version: "4")
-    assert_equal("3", ncc_node.most_likely_version)
+    assert_equal("3", ncc_node.most_likely(:version))
   end
 
   test "should calculate most likely version out of all (weights)" do
@@ -192,7 +192,7 @@ class NccNodesTest < ActiveSupport::TestCase
     CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "4")
     CurrentHwNode.create!(coordinator: coordinators(:coordinator4), ncc_node: ncc_node, version: "4")
 
-    assert_equal("3", ncc_node.most_likely_version)
+    assert_equal("3", ncc_node.most_likely(:version))
     # because we trust the most in coordinator2
   end
 
@@ -264,7 +264,7 @@ class NccNodesTest < ActiveSupport::TestCase
     CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "3.1")
     CurrentHwNode.create!(coordinator: coordinators(:coordinator4), ncc_node: ncc_node, version: "3.2 (11.19855)")
 
-    assert_equal("4", ncc_node.most_likely_version)
+    assert_equal("4", ncc_node.most_likely(:version))
     # because coordinator1 have the lowest vid
   end
 end
