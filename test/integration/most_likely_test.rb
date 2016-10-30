@@ -4,6 +4,10 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
   setup do
     @network1 = networks(:network1)
     @network2 = networks(:network2)
+    @coordinator1 = coordinators(:coordinator1)
+    @coordinator2 = coordinators(:coordinator2)
+    @coordinator3 = coordinators(:coordinator3)
+    @coordinator4 = coordinators(:coordinator4)
 
     CurrentNccNode.create!(
       network: @network1,
@@ -37,10 +41,10 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
 
   test "should calculate most likely version out of all" do
     ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001"); ncc_node.save!
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator1), ncc_node: ncc_node, version: "4")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator2), ncc_node: ncc_node, version: "3")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "4")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator4), ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator1, ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator2, ncc_node: ncc_node, version: "3")
+    CurrentHwNode.create!(@coordinator3, ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator4, ncc_node: ncc_node, version: "4")
     assert_equal("4", ncc_node.most_likely(:version))
   end
 
@@ -66,10 +70,10 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
       server_number: "0001",
     )
 
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator1), ncc_node: ncc_node, version: "4")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator2), ncc_node: ncc_node, version: "3")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "4")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator4), ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator1, ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator2, ncc_node: ncc_node, version: "3")
+    CurrentHwNode.create!(@coordinator3, ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator4, ncc_node: ncc_node, version: "4")
     assert_equal("3", ncc_node.most_likely(:version))
     # because coordinator2 is ncc_node's mftp_server
   end
@@ -126,10 +130,10 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
       server_number: "0002",
     )
 
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator1), ncc_node: ncc_node, version: "4")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator2), ncc_node: ncc_node, version: "3")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "4")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator4), ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator1, ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator2, ncc_node: ncc_node, version: "3")
+    CurrentHwNode.create!(@coordinator3, ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator4, ncc_node: ncc_node, version: "4")
 
     assert_equal("3", ncc_node.most_likely(:version))
     # because we trust the most in coordinator2
@@ -170,10 +174,10 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
       server_number: "0002",
     )
 
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator1), ncc_node: ncc_node, version: "4")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator2), ncc_node: ncc_node, version: "3.2")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator3), ncc_node: ncc_node, version: "3.1")
-    CurrentHwNode.create!(coordinator: coordinators(:coordinator4), ncc_node: ncc_node, version: "3.2 (11.19855)")
+    CurrentHwNode.create!(@coordinator1, ncc_node: ncc_node, version: "4")
+    CurrentHwNode.create!(@coordinator2, ncc_node: ncc_node, version: "3.2")
+    CurrentHwNode.create!(@coordinator3, ncc_node: ncc_node, version: "3.1")
+    CurrentHwNode.create!(@coordinator4, ncc_node: ncc_node, version: "3.2 (11.19855)")
 
     assert_equal("4", ncc_node.most_likely(:version))
     # because coordinator1 have the lowest vid
