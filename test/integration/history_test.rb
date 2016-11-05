@@ -56,12 +56,12 @@ class HistoryTest < ActionDispatch::IntegrationTest
 
     expected_history = [
       {
-        "creation_date" => DateTime.new(2016, 9, 3),
-        "name" => "Larry",
+        creation_date: DateTime.new(2016, 9, 3),
+        name: "Larry",
       },
       {
-        "creation_date" => DateTime.new(2016, 9, 1),
-        "name" => "Barry",
+        creation_date: DateTime.new(2016, 9, 1),
+        name: "Barry",
       },
     ]
 
@@ -134,24 +134,24 @@ class HistoryTest < ActionDispatch::IntegrationTest
 
     expected_history = [
       {
-        "creation_date" => DateTime.new(2016, 9, 3),
-        "version_decoded" => NccNode.most_likely(
+        creation_date: DateTime.new(2016, 9, 3),
+        version_decoded: NccNode.most_likely(
           prop: :version_decoded,
           ncc_node: ncc_node,
           hw_nodes: HwNode.where(id: [hw_node13.id, hw_node23.id]) ,
         ),
       },
       {
-        "creation_date" => DateTime.new(2016, 9, 2),
-        "version_decoded" => NccNode.most_likely(
+        creation_date: DateTime.new(2016, 9, 2),
+        version_decoded: NccNode.most_likely(
           prop: :version_decoded,
           ncc_node: ncc_node,
           hw_nodes: HwNode.where(id: [hw_node12.id, hw_node22.id]) ,
         ),
       },
       {
-        "creation_date" => DateTime.new(2016, 9, 1),
-        "version_decoded" => NccNode.most_likely(
+        creation_date: DateTime.new(2016, 9, 1),
+        version_decoded: NccNode.most_likely(
           prop: :version_decoded,
           ncc_node: ncc_node,
           hw_nodes: HwNode.where(id: [hw_node11.id, hw_node21.id]) ,
