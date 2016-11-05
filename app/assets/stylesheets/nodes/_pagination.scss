@@ -1,0 +1,31 @@
+@import "_shared";
+
+.pagination {
+  margin: 12px 0;
+  font-size: 13px;
+  text-align: center;
+
+  & a, & em, & .gap, & span {
+    text-align: center;
+    padding: 6px 12px;
+    color: $main-text-color;
+    text-decoration: none;
+    font-style: normal;
+    font-family: "Helvetica", "Arial", sans-serif;
+  }
+
+  & a i.material-icons {
+    position: relative;
+    top: 4px;
+    font-size: 18px !important;
+  }
+
+  & span.disabled {
+    visibility: hidden;
+  }
+
+  & em.current {
+    background: $primary-color;
+    color: $inverted-text-color;
+  }
+}

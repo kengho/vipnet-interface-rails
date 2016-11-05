@@ -1,0 +1,43 @@
+@import "_shared";
+
+$nodes-per-page-color: #888;
+$nodes-per-page-checked-color: #fff;
+$nodes-per-page-checked-bgcolor: #888;
+
+.nodes-per-page {
+  margin-top: 12px;
+  text-align: center;
+  font-size: 10px;
+  // for snackbar
+  margin-bottom: 60px;
+
+  & label {
+    display: inline-block;
+    padding: 0 6px;
+    cursor: pointer;
+    color: $nodes-per-page-color;
+    height: 20px;
+  }
+
+  & > input {
+    display: none;
+  }
+
+  & input[type="radio"]:checked + label {
+    background: $nodes-per-page-checked-bgcolor;
+    color: $nodes-per-page-checked-color;
+    cursor: default;
+  }
+
+  & i {
+    vertical-align: bottom;
+    font-size: 20px;
+    color: $nodes-per-page-checked-bgcolor;
+  }
+}
+
+.tooltip--nodes-per-page {
+  top: 30px;
+  width: 90px;
+  left: -40px;
+}

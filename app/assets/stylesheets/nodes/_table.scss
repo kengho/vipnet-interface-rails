@@ -1,0 +1,256 @@
+@import "_shared";
+
+$table-max-width: 90%;
+$table-bgcolor: white;
+$table-bgcolor-hover: darken( $table-bgcolor, 10% );
+$table-selected-bgcolor: #ddd;
+$table-selected-hover-bgcolor: darken( $table-selected-bgcolor, 10% );
+$table-border-thickness: 2px;
+$table-border: $table-border-thickness solid $body-bgcolor;
+$multi-list-border: 1px solid #ddd;
+$icon-size: 20px;
+$small-icon-size: 24px;
+$td-padding: 12px;
+$td-padding-edges: 32px;
+$td-button-padding: 0;
+$info-block-bgcolor: darken( $table-bgcolor, 5% );
+$info-block-bgcolor-hover: $info-block-bgcolor;
+
+.nodes .table {
+  z-index: 10;
+  margin: 20px auto;
+
+  max-width: $table-max-width;
+
+  & .tr {
+    width: 100%;
+  }
+
+  & .td:not(:first-of-type):not(:last-of-type):not(.td--small-icon-right):not(.td--button) {
+    padding: $td-padding;
+  }
+
+  & .td {
+    position: relative;
+    border-top: $table-border;
+    border-bottom: $table-border;
+
+    &:first-of-type {
+      padding-left: $td-padding-edges;
+    }
+
+    &:last-of-type {
+      padding-right: $td-padding-edges;
+      padding-left: $td-padding;
+    }
+
+  }
+
+  a {
+    text-decoration: none;
+    color: $main-link-color;
+
+    &:hover {
+      color: $main-link-color-hover;
+    }
+  }
+}
+
+.nodes__thead {
+  background-color: $table-bgcolor;
+  color: $main-text-color;
+  font-size: 15px;
+}
+
+.nodes__row {
+  background-color: $table-bgcolor;
+  color: $main-text-color;
+  cursor: pointer;
+
+  &:hover {
+    background-color: $table-bgcolor-hover;
+    transition: background-color $animation-time;
+
+    & .td--show-onhover .mdl-button {
+      opacity: 1;
+    }
+  }
+
+  &--selected {
+    background-color: $table-selected-bgcolor;
+
+    &:hover {
+      background-color: $table-selected-hover-bgcolor !important;
+    }
+  }
+}
+
+
+
+.row__info-block {
+  z-index: 700;
+  display: block;
+  position: absolute;
+  min-width: 400px;
+  max-width: 800px;
+  background-color: $info-block-bgcolor;
+  cursor: move;
+  @extend %shadow;
+
+  & div[name="close-button"] {
+    margin: 4px;
+    position: absolute;
+    right: 0;
+    top: 0;
+    cursor: pointer;
+  }
+
+  & div[name="text"] {
+    padding: 16px;
+
+    & span[name="line"] {
+      cursor: text;
+    }
+
+    & span[name="value"] {
+      font-weight: 600;
+      white-space: normal;
+    }
+  }
+
+  &:hover {
+    z-index: 701;
+    background-color: $info-block-bgcolor-hover;
+  }
+}
+
+.td--button {
+  padding: $td-button-padding;
+}
+
+.td--show-onhover .mdl-button {
+  opacity: 0;
+}
+
+.td--small-icon-right label {
+  right: -$td-padding;
+  min-width: $small-icon-size;
+  width: $small-icon-size;
+  height: $small-icon-size;
+
+  & i {
+    font-size: $small-icon-size * 3 / 4;
+  }
+}
+
+.td--small-icon-right
+.tooltip--remote-button {
+  left: -24px;
+}
+
+.td--hoverable-tooltip
+.tooltip--remote-button {
+  top: 35px;
+  cursor: default;
+}
+
+.tooltip--remote-button,
+.tooltip--status {
+  width: 80px;
+  left: -34px;
+  top: 50px;
+}
+
+.td--small-icon-right .tooltip--status {
+  width: 80px;
+  left: -25px;
+  top: 50px;
+}
+
+*[name="spinner"] .mdl-spinner {
+  position: absolute;
+  opacity: 0;
+}
+
+.td *[name="spinner"] .mdl-spinner {
+  opacity: 1;
+  width: $icon-size;
+  height: $icon-size;
+  top: 13px;
+  right: 6px;
+}
+
+.td--small-icon-right *[name="spinner"] .mdl-spinner {
+  width: $small-icon-size * 3 / 4 - 2px;
+  height: $small-icon-size * 3 / 4 - 2px;
+  top: 15px;
+  right: -$td-padding + 4px;
+}
+
+.td--small-icon-right *[name="status--true"] .mdl-button,
+.td--small-icon-right *[name="status--false"] .mdl-button {
+  top: 10px;
+}
+
+*[name="status--true"] .mdl-button,
+*[name="status--false"] .mdl-button {
+  position: absolute;
+  top: 7px;
+  opacity: 0;
+}
+
+.nodes *[name="status--true"] .mdl-button,
+.nodes *[name="status--false"] .mdl-button {
+  opacity: 1;
+}
+
+*[name="history"] {
+  display: table-row-group;
+
+  & .mdl-button {
+    opacity: 0;
+  }
+
+  &:hover .mdl-button {
+    opacity: 1;
+  }
+
+  & [name="close-button"] {
+    display: table-cell;
+  }
+}
+
+.ticket__multi {
+  z-index: 500;
+  top: 6px;
+
+  &--hover::after {
+    content: "...";
+    display: block;
+    line-height: 0;
+  }
+
+  &--list {
+    z-index: 600;
+    opacity: 0;
+    transition: opacity $animation-time;
+    visibility: hidden;
+    background: white;
+    overflow: hidden;
+    top: 36px;
+    border: $multi-list-border;
+    border-radius: 2px;
+  }
+
+  &, &--hover, &--list {
+    text-align: center;
+    position: absolute;
+    padding: 6px;
+    left: 6px;
+  }
+
+  &--hover:hover + &--list, &--list:hover {
+    opacity: 1;
+    visibility: visible;
+  }
+}
