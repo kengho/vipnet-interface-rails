@@ -16,7 +16,7 @@ class Api::V1::AvailabilityController < Api::V1::BaseController
 
     ncc_node = CurrentNccNode.find_by(vid: params[:vid])
     if ncc_node
-      @response = ncc_node.availability
+      @response[:data] = { "availability" => ncc_node.availability }
     else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
     end
