@@ -1,4 +1,7 @@
 class User < ActiveRecord::Base
+  validates_presence_of :role
+  validates_uniqueness_of :role, conditions: -> { where(role: "administrator") }
+
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
   end
@@ -6,24 +9,9 @@ class User < ActiveRecord::Base
   include RailsSettings::Extend
 
   def self.roles
-    roles = ["administrator", "user", "editor"]
-  end
-
-  def self.settings
-    settings = {
-      locale: {
-        accepted_values: ApplicationHelper::available_locales,
-      },
-      nodes_per_page: {
-        accepted_values: ["10", "20", "50", "100"],
-      },
-      export_selected_variant: {
-        accepted_values: {
-          "id_space_name_newline" => "#{I18n.t('nodes.thead.id_label')} #{I18n.t('nodes.thead.name_label')}<br>...",
-          "id_comma" => "#{I18n.t('nodes.thead.id_label')},...",
-          "csv" => "CSV",
-         },
-      },
+    {
+      list: ["administrator", "user", "editor"],
+      default: "user",
     }
   end
 end
