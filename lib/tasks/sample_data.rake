@@ -35,7 +35,10 @@ namespace :db do
       network: network1,
       vid: "0x1a0e000a",
       name: Faker::Address.city,
+      enabled: true,
       category: "server",
+      creation_date: get_rand_date,
+      creation_date_accuracy: true,
       server_number: "0001",
       abonent_number: "0000",
     )
@@ -43,7 +46,10 @@ namespace :db do
       network: network1,
       vid: "0x1a0e000c",
       name: Faker::Address.city,
+      enabled: true,
       category: "server",
+      creation_date: get_rand_date,
+      creation_date_accuracy: true,
       server_number: "0002",
       abonent_number: "0000",
     )
@@ -51,7 +57,10 @@ namespace :db do
       network: network2,
       vid: "0x1a0f000a",
       name: Faker::Address.city,
+      enabled: true,
       category: "server",
+      creation_date: get_rand_date,
+      creation_date_accuracy: true,
       server_number: "0001",
       abonent_number: "0000",
     )
@@ -59,7 +68,10 @@ namespace :db do
       network: network2,
       vid: "0x1a0f000c",
       name: Faker::Address.city,
+      enabled: true,
       category: "server",
+      creation_date: get_rand_date,
+      creation_date_accuracy: true,
       server_number: "0002",
       abonent_number: "0000",
     )
@@ -164,15 +176,15 @@ namespace :db do
   end
 
   def get_rand_enabled
-    rand(10) < 8
+    rand(100) < 95
   end
 
   def get_rand_date
-    DateTime.parse(Faker::Date.backward(365).to_s)
+    DateTime.parse(Faker::Time.backward(7).to_s)
   end
 
   def get_rand_date_after(date)
-    Faker::Date.between(date, Date.today)
+    Faker::Time.between(date, Time.now)
   end
 
   def get_rand_creation_date_accuracy
