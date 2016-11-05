@@ -49,7 +49,7 @@ module Nodes::RowHelper
       view = prop_view_version(:version, detalization)
 
     when :ticket
-      tickets = @ncc_node.tickets
+      tickets = @ncc_node.tickets.order(ticket_id: :DESC)
       if tickets.any?
         links = []
         tickets.each do |ticket|
