@@ -2,10 +2,13 @@
 <html>
 <head>
   <%= favicon_link_tag "favicon.ico" %>
-  <title><%= page_title %></title>
+  <%= content_tag(:title, page_title) %>
   <%= stylesheet_link_tag    "application", media: "all" %>
   <%= javascript_include_tag "application" %>
   <%= csrf_meta_tags %>
+  <%= content_tag(:script, type: "text/javascript") do %>
+    window.I18n = <%= current_translations[:js].to_json.html_safe %>
+  <% end %>
 </head>
 <body>
 
