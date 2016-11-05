@@ -1,26 +1,3 @@
-
-
-# Files in the config/locales directory are used for internationalization
-# and are automatically loaded by Rails. If you want to use locales other
-# than English, add the necessary files in this directory.
-#
-# To use the locales, use `I18n.t`:
-#
-#     I18n.t 'hello'
-#
-# In views, this is aliased to just `t`:
-#
-#     <%= t('hello') %>
-#
-# To use a different locale, set it with `I18n.locale`:
-#
-#     I18n.locale = :es
-#
-# This would use the information in config/locales/es.yml.
-#
-# To learn more, please read the Rails Internationalization guide
-# available at http://guides.rubyonrails.org/i18n.html.
-
 en:
   default:
     title: "ViPNet Interface"
@@ -48,102 +25,45 @@ en:
           node_not_found: "Node not found"
           internal_error: "Server error"
   nodes:
+    nodes:
+      nodes_per_page: "Nodes per page"
     row:
-      remote_status:
-        status_false:
-          more: "More"
-        spinner:
-          wait: "Please, wait"
-        button_undo:
-          tooltip_text: "Cancel"
-      availability:
-        button_label: "Check availability"
-        more: "More"
-        status_true: "Node available"
-        status_false: "Node unavailable"
-      warnings:
-        node_disabled: "Node disabled"
-        node_deleted: "Node deleted"
-        dated_data: "Dated data"
-        from: "from"
-        to: "to"
+      remote_button:
+        info:
+          label: "Information"
+          loaded: "Information loaded"
+          name: "Name"
+          network: "Network"
+          vid: "ID"
+          enabled: "Enabled"
+          ncc: "NCC location"
+          mftp_server: "MFTP server"
+          clients_registered: "Clients registered"
+          ip: "IP addresses"
+          accessip: "Accessips"
+          version: "Software version (HW)"
+          version_decoded: "Software version (decoded)"
+          deletion_date: "Deleted"
+          creation_date: "Created"
+          category: "Category"
+          categories:
+            client: "client"
+            server: "coordinator"
+          ticket: "Tickets"
+        history:
+          label: "Changes"
+          "true": "Changes loaded"
+          "false": "Changes not found"
+        availability:
+          label: "Check availability"
+          "true": "Node available"
+          "false": "Node unavailable"
+      status:
+        deleted: "Node deleted"
+        disabled: "Node disabled"
       creation_date:
         before: "b."
         unknown_date: "It is difficult to discover creation date of this node"
-      info:
-        button_label: "Information"
-        loaded: "Information loaded"
-        name: "Name"
-        network_id: "Network"
-        vid: "ID"
-        enabled: "Enabled"
-        ip: "IP addresses"
-        accessip: "Accessips"
-        version: "Software version (HW)"
-        version_decoded: "Software version (decoded)"
-        deletion_date: "Deleted"
-        creation_date: "Created"
-        category: "Category"
-        categories:
-          client: "client"
-          server: "coordinator"
-        ncc: "NCC location"
-        ticket: "Tickets"
-        mftp_server: "MFTP server"
-        clients_registred: "Clients registered"
-      history:
-        update_button: "Load last data"
-        update_true: "Last data loaded"
-        update_false: "Error"
-        history_button: "Load history"
-        history_true: "History loaded"
-        history_false: "History not found"
-      remote_status_button:
-        last_data: "Last data"
-        history: "History"
-        node: "Node"
-        now: "now"
-        available: "available"
-        unavailable: "unavailable"
-        enable_js: "Enable JavaScript for more convenience."
-        back: "back"
-    fullscreen_tooltip:
-      node-deleted:
-        short: "Node deleted"
-        long: >
-          <span>This node was deleted by ViPNet administrator. PC with ViPNet Client with this ID can't use any of protected network features, such as using protected servers or Business Mail.</span>
-          <span>Reasons for deleting ViPNet nodes:</span>
-          <ol><li>node was create temporarily;</li>
-          <li>someone with corresponding rights initiated deletion for objective reasons (uselessness, dismissal, etc.);</li>
-          <li>node was created for testing purpose.</li>
-          </ol>If node shouldn't be deleted, contact ViPNet administrator.
-      no-accessips:
-        short: "No accessips"
-        long: >
-          <span>Node's availability in any moment could be determined by making connection to certain <a href='https://en.wikipedia.org/wiki/Port_%28computer_networking%29'>port</a> and <a href='https://en.wikipedia.org/wiki/IP_address'>IP address</a>, called «accessip».</span>
-          <span>This service collects information about nodes from ViPNet Coordinator. Node gets related to coordinator accessip at the time of the first request to it and updated over the time when node's network settings changed.</span>
-          <span>Each node is connected at least to one coordinator, therefore, lack of accessips indicates, that</span>
-          <ol><li>corresponding ViPNet distributive (DST file) never was initialized to ViPNet Client,</li>
-          <li>or this distributive was initialized, but because of network problems was unable to make request to coordinator.</li>
-          </ol><span>Node will be unavailable until this causes are eliminated.</span>
-      node-unavailable:
-        short: "Node unavailable"
-        long: >
-          <span>Node could be unavailable because of:</span>
-          <ol><li>lack of node's network connection;</li>
-          <li>wrong node's ViPNet Client settings (coordinator for connections, mode, etc.);</li>
-          <li>transit network problems;</li>
-          <li>malfuncion of used for check availablility ViPNet Coordinator;</li>
-          <li>node's firewall that blocks 5100\TCP;</li>
-          <li>lack of node's references that have related tunnel for this service;</li>
-          <li>node's deletion in other network.</li></ol>
-      node-disabled:
-        short: "Node disabled"
-        long: >
-          <span>Node was disabled by ViPNet administrator.</span>
-          <span>PC with ViPNet Client with this ID can't use any of protected network features, such as using protected servers or Business Mail. Node could be disabled by someone with corresponding rights for objective reasons.</span>
-          <span>If node shouldn't be disabled, contact ViPNet administrator.</span>
-      close: "(Press Esc or click outside this field to exit.)"
     header:
       title: "ViPNet Interface"
       search_results_subtitle: "Searh results"
@@ -151,60 +71,59 @@ en:
       export_selected: "Copy data from selected rows"
       select_all: "Select all"
       unselect_all: "Clear selection"
-      quick_search: "Quick search"
+      search: "Search"
       settings: "Settings"
       support: "Support"
       profile: "Profile"
       exit: "Exit"
     thead:
-      search: "Advanced search"
-      vid: "ID"
-      name: "Name"
-      ip: "IP addresses"
-      version_decoded: "Software ver."
-      creation_date: "Created at"
-      deletion_date: "Deleted at"
-      ticket: "Tickets"
+      cell:
+        vid: "ID"
+        name: "Name"
+        ip: "IP addresses"
+        version_decoded: "Software ver."
+        creation_date: "Created at"
+        deletion_date: "Deleted at"
+        ticket: "Tickets"
   settings:
-    flash:
-      password: "Password"
-      error_saving_user: "Error saving user"
-      user_saved: "User saved"
-      user_destroyed: "User deleted"
-      error_destroying_user: "Error deleting user"
-      settings_saved: "Settings saved"
     index:
       title: "VI → Settings"
       label: "Settings"
-      general: "General"
-      users: "Users"
-      # settings vars
-      checker: "Check availablility API"
+      general_label: "General"
+      users_label: "Users"
+      snackbar:
+        password: "Password"
+        email: "Email"
+        user_created: "User created"
+        error_creating_user: "Error creating user"
+        user_saved: "User saved"
+        error_saving_user: "Error saving user"
+        user_destroyed: "User deleted"
+        error_destroying_user: "Error deleting user"
+        settings_saved: "Settings saved"
+        error_saving_settings: "Error saving settings"
+    general:
+      locale: "Default language"
+      checker_api: "Check availablility API"
       support_email: "Support Email"
-      networks_to_ignore: "Ignoring networks"
-      nodes_per_page: "Nodes per page"
-      export_selected_variant: "Export selected format"
+      networks_to_ignore: "Ignoring networks (separated by commas without spaces)"
+      nodes_per_page: "Default nodes per page"
+      export_selected_variant: "Default export selected format"
       disable_api: "Disable API"
-      iplirconf_api_enabled: "iplir.conf API enabled"
-      ticket_api_enabled: "Tickets API enabled"
-      # end settings vars
+      nodename_api_enabled: "Enable nodename API"
+      iplirconf_api_enabled: "Enable iplirconf API"
+      ticket_api_enabled: "Enable ticket API"
       submit_label: "Save"
+    users:
       email: "Email"
-      role: "Role"
-      add: "Add"
-      save: "Save"
-      delete: "Delete"
-      delete_confirm: "Delete user"
-    select_role:
-      administrator: "Administrator"
-      user: "User"
-      editor: "Editor"
-  shared:
-    password:
-      password_label: "Password"
-      password_confirmation_label: "Password confirmation"
-      current_password_label: "Current password"
-      new_password_label: "New password"
+      button:
+        add: "Add"
+        save: "Save"
+        delete: "Delete"
+      select_role:
+        administrator: "Administrator"
+        user: "User"
+        editor: "Editor"
   user_sessions:
     new:
       title: "VI → Sign in"
@@ -213,16 +132,21 @@ en:
       remember_me: "Remember me"
   users:
     edit:
+      submit_label: "Save"
       title: "VI → Profile"
       label: "Profile"
-      submit_label: "Save"
     flash:
-      error_saving_user_settings: "Unable to save user settings"
-      user_settings_saved: "User settings successfully saved"
+      error_saving_user_settings: "Error saving settings"
+      user_settings_saved: "Settings saved"
+      password_successfully_changed: "Password changed"
+      error_changing_password: "Error changing password"
+      error_confirmation_password: "Error confirmation password"
+      error_validating_password: "Error validating password"
   js:
-    ajax_error: "Server timeout"
+    ajax_error: "Error"
     snackbar:
       copied: "Data copied to clipboard"
+      close: "Close"
   authlogic:
     error_messages:
       login_blank: can not be blank
@@ -243,7 +167,17 @@ en:
     attributes:
       user_session:
         base:
-        login: login
-        email: email
-        password: password
+        login: Login
+        email: Email
+        password: Password
         remember_me: remember me
+
+  shared:
+    id_space_name_newline: "ID имя<br>..."
+    id_comma: "ID,..."
+    csv: "CSV"
+    textfield:
+      password_label: "Password"
+      password_confirmation_label: "Password confirmation"
+      current_password_label: "Current password"
+      email_label: "Email"
