@@ -3,7 +3,11 @@ class Garland < ActiveRecord::Base
   validates_inclusion_of :entity_type, in: [true, false]
   # for given parent object, described by "belongs_to_id" and "belongs_to_type",
   # there are only one record of each type which is on top of the stack
-  validates_uniqueness_of :type, scope: [:belongs_to_id, :belongs_to_type, :next], conditions: -> { where(next: nil) }
+  validates_uniqueness_of :type, scope: [
+    :belongs_to_id,
+    :belongs_to_type,
+    :next,
+  ], conditions: -> { where(next: nil) }
 
   SNAPSHOT = false
   DIFF = true
