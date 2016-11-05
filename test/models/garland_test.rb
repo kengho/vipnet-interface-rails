@@ -40,7 +40,7 @@ class GarlandsTest < ActiveSupport::TestCase
   end
 
   test "should not save more than one record with next is nil" do
-    Storage.new(entity: "{}", entity_type: Garland::DIFF, next: nil).save
+    Storage.create!(entity: "{}", entity_type: Garland::DIFF, next: nil)
     s1 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: nil)
     assert_not s1.save
     s2 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: 1)
@@ -48,14 +48,38 @@ class GarlandsTest < ActiveSupport::TestCase
   end
 
   test "should not save more than one record with next is nil (belongs)" do
-    StorageBelongsNetwork.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: nil).save
-    s = StorageBelongsNetwork.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: nil)
+    StorageBelongsNetwork.create!(
+      entity: "{}",
+      entity_type: Garland::SNAPSHOT,
+      belongs_to_id: @network1.id,
+      belongs_to_type: "Network",
+      next: nil,
+    )
+    s = StorageBelongsNetwork.new(
+      entity: "{}",
+      entity_type: Garland::SNAPSHOT,
+      belongs_to_id: @network1.id,
+      belongs_to_type: "Network",
+      next: nil,
+    )
     assert_not s.save
   end
 
   test "should save more than one record with next is nil if it belongs to different objects" do
-    StorageBelongsNetwork.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @network1.id, belongs_to_type: "Network", next: 1).save
-    s = StorageBelongsCoordinator.new(entity: "{}", entity_type: Garland::SNAPSHOT, belongs_to_id: @coordinator1.id, belongs_to_type: "Coordinator", next: nil)
+    StorageBelongsNetwork.create!(
+      entity: "{}",
+      entity_type: Garland::SNAPSHOT,
+      belongs_to_id: @network1.id,
+      belongs_to_type: "Network",
+      next: 1,
+    )
+    s = StorageBelongsCoordinator.new(
+      entity: "{}",
+      entity_type: Garland::SNAPSHOT,
+      belongs_to_id: @coordinator1.id,
+      belongs_to_type: "Coordinator",
+      next: nil,
+    )
     assert s.save
   end
 
