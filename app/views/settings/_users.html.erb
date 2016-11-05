@@ -1,0 +1,73 @@
+<%= content_tag(:form, action: "/settings", method: "get", class: "tr") do %>
+  <%= tag(:input, hidden: true, name: "add_user") %>
+  <%= tag(:input, hidden: true, name: "password", value: SecureRandom.hex(12)) %>
+
+  <%= render layout: "settings/users/td" do %>
+    <%= render "shared/textfield", props: {
+          id: "email",
+          name: "email",
+          autocomplete: "on",
+          autofocus: "true",
+        }
+    %>
+  <% end %>
+
+  <%= render layout: "settings/users/td" do %>
+    <%= render "settings/users/select_role", selected_role: User.roles[:default] %>
+  <% end %>
+
+  <%= render layout: "settings/users/td" do %>
+    <%= render "settings/users/button", {
+          color: "primary",
+          id: "users__add-user",
+          icon: i("settings.users.add"),
+          label: "add",
+        }
+    %>
+  <% end %>
+
+  <%= render layout: "settings/users/td" do %><% end %>
+<% end %>
+
+<% @users.each do |user| %>
+  <%= content_tag(:form, action: "/settings", method: "get", class: "tr") do %>
+    <%= tag(:input, hidden: true, name: "users") %>
+    <%= tag(:input, hidden: true, name: "id", value: user.id) %>
+
+    <%= render layout: "settings/users/td" do %>
+      <%= render "shared/textfield", props: {
+            id: "users-#{user.id}__email",
+            name: "email",
+            label: "",
+            value: user.email,
+          }
+      %>
+    <% end %>
+
+    <%= render layout: "settings/users/td" do %>
+      <%= render "settings/users/select_role", selected_role: user.role %>
+    <% end %>
+
+    <%= render layout: "settings/users/td" do %>
+      <%= render "settings/users/button", {
+            color: "primary",
+            id: "users__user-#{user.id}-save",
+            icon: i("settings.users.save"),
+            label: "save",
+          }
+      %>
+    <% end %>
+
+    <%= render layout: "settings/users/td" do %>
+      <%= link_to user_path(user), method: :delete do %>
+        <%= render "settings/users/button", {
+              color: "accent",
+              id: "users__user-#{user.id}-delete",
+              icon: i("settings.users.delete"),
+              label: "delete",
+            }
+        %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>

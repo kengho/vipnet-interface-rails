@@ -1,101 +1,79 @@
-<%
-  title = t(".title")
-  if @search
-    @sub_title = "#{t('.search_results_subtitle')} (#{@size})"
-  else
-    @sub_title = t(".default_nodes_subtitle")
-  end
-%>
+<%= content_tag(:header, class: "mdl-layout__header") do %>
+  <%= content_tag(:div, class: "mdl-layout__header-row") do %>
 
-<header class="mdl-layout__header nodes__header">
-  <div class="mdl-layout__header-row">
-    <span class="mdl-layout-title">
-      <a href="/nodes"><%= title %></a>
-    </span>
-    <i class="material-icons">chevron_right</i>
-    <span class="mdl-layout-title nodes__sub-title"><%= @sub_title %></span>
+    <%= content_tag(:div, id: "header__title", class: "mdl-layout-title") do %>
+      <%= content_tag(:div, t(".title"), name: "home", "data-load": "home") %>
+      <%= content_tag(:div, "", id: "header__subtitle",  class: "mdl-layout-title") %>
+    <% end %>
 
-    <div id="nodes__actions" disabled="disabled">
-      <div class="mdl-tooltip" for="nodes__export-selected"><%= t(".export_selected") %></div>
+    <%= content_tag(:div, id: "header__actions", disabled: "disabled") do %>
+      <%= content_tag(:div, t(".export_selected"),
+            for: "actions__export-selected",
+            class: "mdl-tooltip",
+          )
+      %>
 
-      <div id="nodes__export-selected">
-        <label class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons">content_copy</i>
-        </label>
-        <textarea></textarea>
-      </div>
+      <%= content_tag(:div, id: "actions__export-selected") do %>
+        <%= content_tag(:label, class: ["mdl-button", "mdl-js-button", "mdl-button--icon"]) do %>
+          <%= content_tag(:i, i("nodes.header.export_selected.copy"), class: "material-icons") %>
+        <% end %>
+        <%= content_tag(:textarea, "") %>
+      <% end %>
 
-      <div id="export-selected__variants">
-        <% current_variant = current_user.settings[:export_selected_variant] || Settings.export_selected_variant %>
-        <% User.settings[:export_selected_variant][:accepted_values].each do |variant, mapping| %>
-          <%= link_to user_path(current_user, export_selected_variant: variant),
-            remote: true,
-            "data-variant": variant,
-            class: (variant == current_variant) ? "disabled-link" : "" do %>
-            <div name="<%= variant %>" <% if variant == current_variant %>selected="selected"<% end %>>
-              <%= mapping.html_safe %>
-            </div>
+      <%# div #export-selected__variants should be below #actions__export-selected for :hover to work %>
+      <%= content_tag(:div, user_settings_params.merge(class: "export-selected-variant")) do %>
+        <%= render "shared/user_settings/radio", name: "export_selected_variant" %>
+      <% end %>
+
+      <%= content_tag(:div, "｜", id: "actions__separator") %>
+
+      <%= content_tag(:div, id: "actions__unselect-all", class: "mdl-badge") do %>
+        <%= content_tag(:button, class: ["mdl-button", "mdl-js-button", "mdl-button--icon"]) do %>
+          <%= content_tag(:i, i("nodes.header.export_selected.unselect_all"), class: "material-icons") %>
+        <% end %>
+      <% end %>
+
+      <%= content_tag(:div, t(".unselect_all"), class: "mdl-tooltip", for: "actions__unselect-all") %>
+    <% end %>
+
+    <%= content_tag(:div, id: "header__select-all") do %>
+      <%= content_tag(:button, class: ["mdl-button", "mdl-js-button", "mdl-button--icon"]) do %>
+        <%= content_tag(:i, i("nodes.header.export_selected.select_all"), class: "material-icons") %>
+      <% end %>
+    <% end %>
+
+    <%= content_tag(:div, t(".select_all"), for: "header__select-all", class:"mdl-tooltip") %>
+
+    <%= content_tag(:div, id: "header__search", class: "mdl-layout-spacer") do %>
+      <%= content_tag(:form, action: "/nodes/load",  method: "get",  "data-remote": "true") do %>
+        <%= tag(:input,
+                  "autofocus": "autofocus",
+                  "name": "search",
+                  "type": "text",
+                  "tabindex": "1",
+                  "placeholder": t(".search"),
+                  "value": params[:search],
+            )
+        %>
+      <% end %>
+    <% end %>
+
+    <%= content_tag(:nav, class: "mdl-navigation") do %>
+      <% nav_buttons.each do |nav_button| %>
+        <% id, props, icon, label, visibility = nav_button %>
+        <% if visibility %>
+          <%= content_tag(:a, { class: "mdl-navigation__link" }.merge(props)) do %>
+            <%= content_tag(
+                  :label,
+                  content_tag(:i, icon, class: "material-icons"),
+                  id: id,
+                  class: ["mdl-button", "mdl-js-button mdl-button--icon"],
+                )
+            %>
+            <%= content_tag(:div, label, for: id, class: "mdl-tooltip") %>
           <% end %>
         <% end %>
-      </div>
-
-      <div id="nodes__separator">｜</div>
-
-      <div id="nodes__unselect-all" class="mdl-badge">
-        <button class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons">close</i>
-        </button>
-      </div>
-
-      <div class="mdl-tooltip" for="nodes__unselect-all"><%= t(".unselect_all") %></div>
-    </div>
-
-    <div id="nodes__select-all">
-      <button class="mdl-button mdl-js-button mdl-button--icon">
-        <i class="material-icons">select_all</i>
-      </button>
-    </div>
-
-    <div class="mdl-tooltip" for="nodes__select-all"><%= t(".select_all") %></div>
-
-    <div class="mdl-layout-spacer nodes__search">
-      <form action="/nodes" method="get">
-        <input class="mdl-shadow--1dp" name="search" type="text" tabindex="1" autofocus placeholder="<%= t(".quick_search") %>" value="<%= params[:search] %>" />
-      </form>
-    </div>
-
-    <nav class="mdl-navigation">
-      <% if current_user.role == "administrator" %>
-        <a class="mdl-navigation__link nodes__navigation-link" href="/settings#general">
-          <label id="nodes__settings" class="mdl-button mdl-js-button mdl-button--icon">
-            <i class="material-icons">settings</i>
-          </label>
-        </a>
-        <div class="mdl-tooltip" for="nodes__settings"><%= t(".settings") %></div>
       <% end %>
-
-      <% unless Settings.support_email.empty? %>
-        <a class="mdl-navigation__link nodes__navigation-link" href="mailto:<%= Settings.support_email %>">
-          <label id="nodes__support" class="mdl-button mdl-js-button mdl-button--icon">
-            <i class="material-icons">feedback</i>
-          </label>
-        </a>
-        <div class="mdl-tooltip" for="nodes__support"><%= t(".support") %></div>
-      <% end %>
-
-      <%= link_to edit_user_path(current_user), class: "mdl-navigation__link nodes__navigation-link" do %>
-        <label id="nodes__profile" class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons">person</i>
-        </label>
-        <div class="mdl-tooltip" for="nodes__profile"><%= t(".profile") %></div>
-      <% end %>
-
-      <%= link_to sign_out_path, class: "mdl-navigation__link nodes__navigation-link", method: :delete do %>
-        <label id="nodes__exit" class="mdl-button mdl-js-button mdl-button--icon">
-          <i class="material-icons">exit_to_app</i>
-        </label>
-        <div class="mdl-tooltip" for="nodes__exit"><%= t(".exit") %></div>
-      <% end %>
-    </nav>
-  </div>
-</header>
+    <% end %>
+  <% end %>
+<% end %>

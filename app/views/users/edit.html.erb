@@ -1,36 +1,65 @@
-<div class="auth__form--outside">
-  <div class="auth__form mdl-shadow--2dp">
-    <%= render "shared/header", render_back_button: true, text: t(".label") %>
-    <%# locale user settings %>
-    <%= form_for @user, method: :patch do |f| %>
-      <div class="locale">
-        <% available_locales = (I18n.available_locales - [:"zh-CN"] - [:"zh-TW"]).map(&:to_s) %>
-        <% User.settings[:locale][:accepted_values].each do |available_locale| %>
-          <% checked_locale = false %>
-          <% if current_user.settings.locale %>
-            <% checked_locale = true if available_locale == current_user.settings.locale %>
-          <% else %>
-            <% checked_locale = true if available_locale == I18n.default_locale.to_s %>
-          <% end %>
-          <input id="<%= available_locale %>" <% if checked_locale %>checked<% end %> type="radio" name="locale" value="<%= available_locale %>">
-            <label for="<%= available_locale %>">
-              <%= available_locale %>
-            </label>
-          </input>
-        <% end %>
-        <noscript>
-          <button type="submit" class="mdl-button mdl-js-button mdl-button--icon mdl-button--primary">
-            <i class="material-icons">save</i>
-          </button>
-        </noscript>
-      </div>
+<%= content_tag(:div, class: "auth__form--outside") do %>
+  <%= content_tag(:div, class: "auth__form") do %>
+    <%= content_tag(:h3) do %>
+      <%= render "shared/back_button" %>
+      <%= t(".label") %>
     <% end %>
-    <%= form_for @user, method: :patch do |f| %>
-      <%= render "shared/hidden_email" %>
-      <%= render "shared/password", type: "current_password" %>
-      <%= render "shared/password", type: "new_password" %>
-      <%= render "shared/password", type: "password_confirmation" %>
-      <%= render "shared/submit", text: t(".submit_label") %>
+
+    <%= content_tag(:div, user_settings_params.merge(class: "locale")) do %>
+      <%= render "shared/user_settings/radio", name: "locale" %>
     <% end %>
-  </div>
-  <%= render "flash" %>
+
+    <%# hidden input for browser to properly update saved password using users's email %>
+    <%= content_tag(:div, user_settings_params) do %>
+      <%= content_tag(:div) do %>
+        <%= tag(:input,
+              name: "user[email]",
+              type: "text",
+              value: current_user.email,
+              hidden: true,
+            )
+        %>
+      <% end %>
+    <% end %>
+
+    <%= content_tag(:div, user_settings_params) do %>
+      <%= content_tag(:div) do %>
+        <%= tag(:input,
+              name: "user[email]",
+              type: "text",
+              value: current_user.email,
+              hidden: true,
+            )
+        %>
+      <% end %>
+
+      <%= render "shared/textfield", props: {
+            id: "current_password",
+            name: "user_session[current_password]",
+            autocomplete: "on",
+            type: "password",
+          }
+      %>
+
+      <%= render "shared/textfield", props: {
+            id: "password",
+            name: "user_session[password]",
+            autocomplete: "on",
+            type: "password",
+          }
+      %>
+
+      <%= render "shared/textfield", props: {
+            id: "password_confirmation",
+            name: "user_session[password_confirmation]",
+            autocomplete: "on",
+            type: "password",
+          }
+      %>
+
+      <%= render "shared/submit", label: t(".submit_label") %>
+    <% end %>
+  <% end %>
+
+  <%= render "shared/snackbar", light: true %>
+<% end %>

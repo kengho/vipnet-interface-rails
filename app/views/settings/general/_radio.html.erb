@@ -1,0 +1,18 @@
+<%= content_tag(:div, class: "settings__radio") do %>
+  <%= content_tag(:span, label) %>
+  <% Settings.values[settings.var][:accepted_values].each do |value, t| %>
+    <% id = "settings__#{settings.var}--#{value}" %>
+    <% checked = settings.value == value %>
+    <% visible_value = t ? t(t) : value %>
+    <%= content_tag(:input,
+        name: settings.var,
+        id: id,
+        value: value,
+        checked: checked,
+        type: "radio",
+       ) do
+    %>
+      <%= content_tag(:label, visible_value, for: id) %>
+    <% end %>
+  <% end %>
+<% end %>

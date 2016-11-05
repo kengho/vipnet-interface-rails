@@ -1,0 +1,14 @@
+<% if links.size == 1 %>
+  <%= content_tag(:div, class: ["ticket__multi"]) do %>
+    <%= render "shared/link", links[0] %>
+  <% end %>
+<% else %>
+  <%= content_tag(:div, class: ["ticket__multi ticket__multi--hover"]) do %>
+    <%= render "shared/link", links[0] %>
+  <% end %>
+  <%= content_tag(:div, class: ["ticket__multi--list"]) do %>
+    <% links[1..-1].each do |link| %>
+      <%= render "shared/link", link %><%= tag(:br) %>
+    <% end %>
+  <% end %>
+<% end %>

@@ -1,55 +1,39 @@
-<div id="nodes__spinner-template"><%= render "nodes/row/remote_status/spinner" %></div>
-<div id="nodes__status-false-template"><%= render "nodes/row/remote_status/status_false" %></div>
-<div id="nodes__status-true-template"><%= render "nodes/row/remote_status/status_true" %></div>
-<%# http://stackoverflow.com/a/10610347 %>
-<script type="text/javascript">
-  window.I18n = <%= current_translations[:js].to_json.html_safe %>
-  vipnetInterface.nodesData = {};
-  <%= @js.html_safe %>
-</script>
-<% t("nodes.fullscreen_tooltip").each do |key, value| %>
-  <%# filter t(".close") and etc. %>
-  <% if value.class == Hash %>
-    <%= render "fullscreen_tooltip", key: key, short: value[:short], long: value[:long] %>
-  <% end %>
+<%= content_tag(:div, id: "spinner-template") do %>
+  <%= render "nodes/row/remote_button/spinner" %>
+<% end %>
+<%= content_tag(:div, id: "status-template--true") do %>
+  <%= render "nodes/row/remote_button/status",
+        name: "status--true",
+        color: "primary",
+        icon: i("nodes.row.remote_button.status.true",
+      )
+  %>
+<% end %>
+<%= content_tag(:div, id: "status-template--false") do %>
+  <%= render "nodes/row/remote_button/status",
+        name: "status--false",
+        color: "accent",
+        icon: i("nodes.row.remote_button.status.false",
+      )
+  %>
 <% end %>
 
-<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
+<%= content_tag(:script) do %>
+  vipnetInterface.nodes.ajax.load(<%= @params.to_json.html_safe %>);
+<% end %>
+
+<%= content_tag(:div, class: ["mdl-layout", "mdl-js-layout", "mdl-layout--fixed-header"]) do %>
+  <%= render "progress" %>
   <%= render "header" %>
-  <main class="mdl-layout__content">
-    <div class="page-content">
-      <div class="nodes">
-        <form action="/nodes" method="get">
-          <table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
-            <thead>
-              <tr>
-                <% NccNode.view_order.each_with_index do |order, i| %>
-                  <% prop, src, column_visible = order %>
-                  <% if column_visible %>
-                    <% if src == NccNode::FROM_DB %>
-                      <%= render "nodes/thead/cell", prop: prop, value: params[prop], tabindex: i %>
-                    <% elsif src == NccNode::CUSTOM_ERB && lookup_context.template_exists?("nodes/thead/_#{prop}") %>
-                      <%= render "nodes/thead/#{prop}", tabindex: i %>
-                    <% else %>
-                      <%= render "nodes/space" %>
-                    <% end %>
-                  <% end %>
-                <% end %>
-              </tr>
-            </thead>
-            <% unless @ncc_nodes.empty? %>
-              <tbody>
-                <% @ncc_nodes.each do |ncc_node| %>
-                  <%= render "row", ncc_node: ncc_node %>
-                <% end %>
-              </tbody>
-            <% end %>
-          </table>
-        </form>
-      </div>
-      <%= will_paginate @ncc_nodes, previous_label: "<i class='material-icons'>chevron_left</i>", next_label: "<i class='material-icons'>chevron_right</i>", inner_window: 1 %>
-      <%= render "per_page" %>
-      <%= render "snackbar" %>
-    </div>
-  </main>
-</div>
+
+  <%= content_tag(:main, class: "mdl-layout__content") do %>
+    <%= content_tag(:div, class: "page-content") do %>
+      <%= content_tag(:div, id: "nodes-container") do %>
+        <%# for $(".nodes").fadeOut() before first load() %>
+        <%= content_tag(:div, "", class: "nodes") %>
+      <% end %>
+
+      <%= render "shared/snackbar" %>
+    <% end %>
+  <% end %>
+<% end %>
