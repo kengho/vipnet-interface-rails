@@ -1,14 +1,39 @@
 $(document).ready(function() {
-  hash = window.location.hash.substring(1);
-  $("#settings__a--" + hash).addClass("settings__form-a-selected");
+  var anchor = window.location.hash.substring(1);
+  displaySettings(anchor);
 
-  $("#settings__a--general").click(function() {
-    $("#settings__a--general").addClass("settings__form-a-selected");
-    $("#settings__a--users").removeClass("settings__form-a-selected");
+  $("a[data-anchor]").click(function() {
+    var anchor = $(this).data("anchor");
+    displaySettings(anchor);
+    vipnetInterface.hideSnackbar();
   });
 
-  $("#settings__a--users").click(function() {
-    $("#settings__a--users").addClass("settings__form-a-selected");
-    $("#settings__a--general").removeClass("settings__form-a-selected");
-  });
+  function displaySettings(tab) {
+    location.href = "#" + tab;
+    $("a[data-anchor]").each(function(_, a) {
+      var iteratingTab = $(a).data("anchor");
+      var settingsDivQuery = "#" + iteratingTab + "-settings";
+      var linkIdQuery = "a[data-anchor='" + iteratingTab + "']";
+      if(iteratingTab == tab) {
+        $(settingsDivQuery).css("display", "block");
+        $(linkIdQuery).addClass("settings__tab--selected");
+      } else {
+        $(settingsDivQuery).css("display", "none");
+        $(linkIdQuery).removeClass("settings__tab--selected");
+      }
+    });
+  };
+});
+
+// http://stackoverflow.com/a/36088776/6376451
+// http://stackoverflow.com/a/5182050/6376451
+$(window).load(function() {
+  var flash = $("div[data-flash]");
+  if(flash) {
+    var message = $(flash).data("message");
+    if(message) {
+      var timeout = $(flash).data("timeout");
+      vipnetInterface.showSnackbar(message, timeout);
+    }
+  }
 });
