@@ -83,6 +83,7 @@ class HwNode < ActiveRecord::Base
     [
       :accessip,
       :version,
+      :version_decoded,
     ]
   end
 
