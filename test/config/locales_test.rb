@@ -1,7 +1,7 @@
 class LocalesTest < ActionController::TestCase
   test "have same keys" do
     localizations = Hash.new
-    ApplicationHelper::available_locales.each do |locale|
+    Settings.available_locales.each do |locale|
       localizations[locale] = YAML.load(File.read("config/locales/#{locale}.yml"))[locale]
     end
     localizations.each do |locale1, localizations1|
