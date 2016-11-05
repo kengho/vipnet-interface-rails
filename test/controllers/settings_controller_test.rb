@@ -1,4 +1,8 @@
 class SettingsControllerTest < ActionController::TestCase
+  setup do
+    Settings.set_defaults
+  end
+
   test "should be available by administrator role" do
     user_session1 = UserSession.create(users(:administrator))
     get :index
