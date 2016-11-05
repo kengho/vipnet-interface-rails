@@ -1,0 +1,43 @@
+<% unless @ncc_nodes.empty? %>
+  <%= content_tag(:div, class: "nodes") do %>
+    <%= content_tag(:div, class: "table") do %>
+      <%= content_tag(:div, class: ["tr", "nodes__thead"]) do %>
+        <% column_erbs("thead").each do |column_erb| %>
+          <% params = column_erb[:params] || {} %>
+          <%= render column_erb[:erb], params %>
+        <% end %>
+      <% end %>
+      <% @ncc_nodes.each do |ncc_node| %>
+        <% @ncc_node = ncc_node %>
+        <%= content_tag(:div, class: ["tr", "nodes__row"],
+              "data-vid": @ncc_node.vid,
+              "data-selectable": true,
+            ) do
+        %>
+          <% column_erbs("row").each do |column_erb| %>
+            <% params = column_erb[:params] || {} %>
+            <%= render column_erb[:erb], params %>
+          <% end %>
+        <% end %>
+      <% end %>
+    <% end %>
+  <% end %>
+<% end %>
+
+<% paginate = paginate @ncc_nodes,
+      previous_label: "<i class='material-icons'>#{i('nodes.paginate.previous')}</i>",
+      next_label: "<i class='material-icons'>#{i('nodes.paginate.next')}</i>",
+      inner_window: 1
+%>
+<%= paginate %>
+
+<%# paginate is nil if there are only 1 page %>
+<% if paginate %>
+  <%= content_tag(:div, user_settings_params.merge(class: "nodes-per-page")) do %>
+    <%= content_tag(:div, class: "tooltip-wrapper") do %>
+      <%= content_tag(:i, i("nodes.nodes_per_page"), class: ["material-icons", "tooltip-hover"]) %>
+      <%= content_tag(:div, t(".nodes_per_page"), class: ["tooltip", "tooltip--nodes-per-page"]) %>
+    <% end %>
+    <%= render "shared/user_settings/radio", name: "nodes_per_page" %>
+  <% end %>
+<% end %>

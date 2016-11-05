@@ -1,0 +1,11 @@
+<% status, icon, tooltip_text = status_data(ncc_node) %>
+<% if status == :ok %>
+  <%= render "nodes/space" %>
+<% else %>
+  <%= content_tag(:div, class: ["td", "td__status--not-ok"]) do %>
+    <%= content_tag(:div, class: "td__status-wrapper") do %>
+      <%= content_tag(:i, icon, class: ["material-icons", "tooltip-hover"]) %>
+      <%= content_tag(:div, t(".#{status}"), class: ["tooltip", "status__tooltip"]) %>
+    <% end %>
+  <% end %>
+<% end %>

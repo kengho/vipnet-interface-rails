@@ -1,0 +1,17 @@
+(function() {
+  vipnetInterface.nodes.ajax.renderStatus({
+    action: "load",
+    data: {
+      status: "true",
+    },
+  });
+
+  vipnetInterface.nodes.ajax.renderLoad({
+    subtitle: "<%= js_subtitle %>",
+    html: "<%= j render "nodes" %>",
+    params: <%= @params.to_json.html_safe %>,
+    paramsQuery: "<%= @params.to_query.html_safe %>",
+  });
+
+  vipnetInterface.nodes.export.updateData(<%= @js_data.to_json.html_safe %>);
+})();

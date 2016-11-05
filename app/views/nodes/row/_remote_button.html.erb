@@ -1,0 +1,19 @@
+<%= content_tag(:div, class: ["td"] + additional_td_classes) do %>
+  <%= content_tag(:div, name: "button", "data-stop-propagation": true,
+        "data-action-name": action_name,
+        "data-action-prop": action_prop,
+      ) do
+  %>
+    <%= content_tag(:label,
+          class: [
+            "mdl-button", "mdl-js-button", "mdl-button--icon",
+            "mdl-button--#{color}", "tooltip-hover",
+          ],
+          disabled: disabled,
+        ) do
+    %>
+      <%= content_tag(:i, icon, class: "material-icons") %>
+    <% end %>
+    <%= content_tag(:div, t, class: ["tooltip", "tooltip--remote-button"]) %>
+  <% end %>
+<% end %>
