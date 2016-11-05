@@ -1,31 +1,41 @@
+$body-bgcolor: #f0f0f0;
 $primary-color: #098;
 $accent-color: #40a;
-$third-color: #04b;
+$third-color: #45b;
 $main-text-color: #333;
-$reversed-text-color: #eee;
+$inverted-text-color: invert($main-text-color);
 $main-link-color: #478;
-$main-link-color-hover: #6ab;
-$reversed-link-color: #adf;
-$reversed-link-color-hover: #9cd;
+$main-link-color-hover: lighten( $main-link-color, 10% );
 $dark-gray-bgcolor: #272727;
-$light-gray-bgcolor: #666;
 $form-inside-bgcolor: #eee;
-$form-inside-bgcolor-hover: #ddd;
 $gray-icon-color: #666;
+
+$snackbar-light-text-color: $main-text-color;
+$snackbar-light-bgcolor: #eee;
+$animation-time: 200ms;
+
+%shadow {
+  box-shadow:
+    0 4px 4px 0    rgba(0, 0, 0, 0.15),
+    0 3px 1px -2px rgba(0, 0, 0, 0.2),
+    0 1px 5px 0    rgba(0, 0, 0, 0.15)
+    !important;
+}
 
 %for-tooltips {
   position: absolute;
   visibility: hidden;
-  z-index: 500;
+  z-index: 1000 !important;
   transition-timing-function: cubic-bezier(0, 0, 0.2, 1);
   transition-property: transform;
-  // mdl-tooltip ripoff
+  transition-duration: 0.1s;
+  // mdl-tooltip
   transform: scale(0);
   transform-origin: center top 0px;
-  background: rgba(97, 97, 97, 0.9) none repeat scroll 0% 0%;
+  background: rgba(97, 97, 97, 0.9);
   border-radius: 2px;
   color: white;
-  display: inline-block;
+  // display: inline-block;
   font-size: 10px;
   font-weight: 500;
   line-height: 14px;
@@ -34,6 +44,44 @@ $gray-icon-color: #666;
   white-space: normal;
 }
 
-%half-shadow {
-  box-shadow: 0 2px 2px 0 rgba(0, 0, 0, 0.07), 0 3px 1px -2px rgba(0, 0, 0, 0.1), 0 1px 5px 0 rgba(0, 0, 0, 0.06);
+.tooltip-wrapper {
+  display: inline-block;
+  position: relative;
+}
+
+.tooltip {
+  @extend %for-tooltips;
+
+  &:hover {
+    transform: scale(1);
+    visibility: visible;
+  }
+}
+
+.tooltip-hover:hover + .tooltip {
+  visibility: visible;
+  transform: scale(1);
+}
+
+button[name="commit"] {
+  margin-top: 24px;
+}
+
+.back-button {
+  color: $gray-icon-color;
+  text-decoration: none;
+  font-size: 24px;
+  display: inline-block;
+}
+
+.table {
+  display: table;
+}
+
+.tr {
+  display: table-row;
+}
+
+.td {
+  display: table-cell;
 }

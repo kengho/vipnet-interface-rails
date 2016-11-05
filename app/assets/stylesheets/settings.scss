@@ -1,46 +1,33 @@
 @import "_shared";
 
 $settings-textfield-width: 600px;
-
-.settings__textfield {
-  padding: 20px 0px 0px 0px;
-  width: $settings-textfield-width;
-}
-
-.settings_field {
-  position: relative;
-  & span {
-    display: block;
-    position: absolute;
-    top: 0px;
-    color: $primary-color;
-  }
-}
-
-.settings__label {
-  position: absolute;
-  top: -20px;
-  &::after {
-    position: absolute;
-    bottom: 0px;
-  }
-}
+$settings-radio-bgcolor: $form-inside-bgcolor;
+$settings-radio-text: $third-color;
+$settings-radio-checked-bgcolor: $third-color;
+$settings-radio-checked-text: $form-inside-bgcolor;
 
 .settings {
   background-color: $dark-gray-bgcolor;
 }
 
+#general-settings, #users-settings {
+  margin-top: 30px;
+}
+
 .settings__form {
   width: $settings-textfield-width;
-  margin: 0px auto;
+  margin: 20px auto;
   padding: 20px;
   background-color: $form-inside-bgcolor;
+
   & a {
     text-decoration: none;
   }
+
   & h3 {
     color: $main-text-color;
   }
+
   & > a {
     color: $main-link-color;
     cursor: pointer;
@@ -50,80 +37,67 @@ $settings-textfield-width: 600px;
   }
 }
 
-.settings__form-a-selected {
+.settings__tab--selected {
   color: $main-link-color-hover !important;
   border-bottom: 1px solid $main-link-color-hover;
 }
 
-.settings__small-icon {
-  color: $gray-icon-color !important;
-  font-size: 24px;
-  display: inline-block;
-}
-
-div.table {
-  display: table;
-  width: 100%;
-}
-
-form.tr, div.tr {
-  display: table-row;
-  width: 100%;
-}
-
-div.tr:nth-of-type(1):hover {
-  background-color: $form-inside-bgcolor;
-}
-
-div.tr:nth-of-type(1) span.td,
-tr.tr:nth-of-type(1) span.td {
-  color: $primary-color;
-}
-
-span.td {
-  display: table-cell;
-  padding: 6px;
-  width: 100%;
-  color: $main-text-color;
-}
-
-#general, #users {
-  display: none;
-  margin-top: 30px;
-}
-
-:target {
-  display: block !important;
-}
-
-.settings__tooltip {
-  @extend %for-tooltips;
-}
-
-.settings__tooltip {
-  top: 35px;
-}
-
-.settings__hover-for-tooltip:hover + .settings__tooltip {
-  visibility: visible;
-  transform: scale(1);
-}
-
-.buttons__tooltip {
-  width: 50px;
-  left: -17px;
-}
-
-.td a {
+.settings__text {
   position: relative;
+
+  & span {
+    display: block;
+    position: absolute;
+    top: 0px;
+    color: $primary-color;
+  }
+
+  & input, label {
+    width: $settings-textfield-width;
+  }
+
 }
 
-.users__textfield {
-  width: 100%;
-  padding: 0px !important;
-  vertical-align: bottom;
-    & label::after {
-      position: absolute;
-      bottom: 0px;
+.settings__radio {
+  padding-bottom: 20px;
+
+  & span {
+    display: block;
+    color: $primary-color;
+  }
+
+  & label {
+    display: inline-block;
+    padding: 2px 6px;
+    border-radius: 2px;
+    cursor: pointer;
+    font-size: 16px;
+    background: $settings-radio-bgcolor;
+    color: $settings-radio-text;
+    height: 20px;
+    vertical-align: top;
+  }
+
+  & > input {
+    display: none;
+
+    &[type="radio"]:checked + label {
+      background: $settings-radio-checked-bgcolor;
+      color: $settings-radio-checked-text;
     }
+  }
+}
+
+.settings__boolean {
+  padding-bottom: 20px;
+
+  & span {
+    display: block;
+    color: $primary-color;
+  }
+}
+
+.settings__td {
+  color: $main-text-color;
+  padding: 6px;
 }
