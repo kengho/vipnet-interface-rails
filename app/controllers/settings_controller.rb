@@ -1,43 +1,52 @@
 class SettingsController < ApplicationController
   def index
     if params[:general]
+      saved_successfully = true
       params.each do |param, value|
-        next if param == "general"
-        settings = Settings.where("var = '#{param}'")
-        if settings.size == 1
-          setting = settings.first
-          setting.value = value
-          setting.save
+        settings = Settings.find_by(var: param)
+        if settings
+          unless settings.update_attribute(:value, value)
+            saved_successfully = false
+            break
+          end
         end
       end
-      flash[:notice] = "settings saved"
+      if saved_successfully
+        flash[:notice] = :settings_saved
+      else
+        flash[:notice] = :error_saving_settings
+      end
       redirect_to "/settings#general"
+
     elsif params[:users]
       user = User.find(params[:id])
-      user.role = params[:role]
-      user.email = params[:email]
-      if user.save
-        flash[:notice] = "user saved"
-        redirect_to "/settings#users"
-      else
-        render nothing: true, status: :internal_server_error, content_type: "text/html"
+      if user
+        if user.update_attributes(role: params[:role], email: params[:email])
+          flash[:notice] = :user_saved
+        else
+          flash[:notice] = :error_saving_user
+        end
       end
+      redirect_to "/settings#users"
+
     elsif params[:add_user]
-      user = User.new(  email: params[:email],
-                        password: params[:password],
-                        password_confirmation: params[:password],
-                        role: params[:role] )
+      user = User.new(
+        email: params[:email],
+        password: params[:password],
+        password_confirmation: params[:password],
+        role: params[:role],
+      )
       if user.save
-        flash[:notice] = "user created"
-        flash[:password] = params[:password]
+        flash[:notice] = :user_created
         flash[:email] = params[:email]
-        redirect_to "/settings#users"
+        flash[:password] = params[:password]
       else
-        flash[:notice] = "error creating user"
-        redirect_to "/settings#users"
+        flash[:notice] = :error_creating_user
       end
+      redirect_to "/settings#users"
     end
 
+    # "thing_id is null" means this settings are not users'
     @settings = Settings.unscoped.where("thing_id is null").reorder(var: :asc)
     @users = User.all.reorder(email: :asc)
   end
