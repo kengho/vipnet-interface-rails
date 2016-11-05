@@ -1,0 +1,42 @@
+nodes:
+  # status:
+    # deleted: "delete_forever"
+    #           # "cancel"
+    #           # "sentiment_very_dissatisfied"
+    # disabled: "do_not_disturb_on"
+    #           # "warning"
+    #           # "block"
+    # history: "history"
+  header:
+    subtitle:
+      separator: "chevron_right"
+    export_selected:
+      copy: "content_copy"
+      unselect_all: "close"
+      select_all: "select_all"
+    nav:
+      settings: "settings"
+      profile: "person"
+      exit: "exit_to_app"
+  row:
+    remote_button:
+      availability: "swap_horiz"
+      info: "info_outline"
+      history: "history"
+      deleted: "delete_forever"
+      disabled: "do_not_disturb_on"
+      status:
+        "true": "check_circle"
+        "false": "error"
+  paginate:
+    next: chevron_right
+    previous: chevron_left
+  nodes_per_page: "list"
+settings:
+  users:
+    save: "save"
+    add: "add"
+    delete: "close"
+shared:
+  back_button: "arrow_back"
+  close_button: "close"
