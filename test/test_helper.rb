@@ -97,7 +97,7 @@ class Array
   end
 end
 
-class CurrentNccNode::ActiveRecord_Relation
+class NccNode::ActiveRecord_Relation
   def vids
     vids = []
     self.each { |n| vids.push(n.vid) }
