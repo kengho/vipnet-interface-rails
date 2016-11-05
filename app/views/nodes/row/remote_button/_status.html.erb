@@ -1,0 +1,14 @@
+<%= content_tag(:div, name: name) do %>
+  <%= content_tag(:label, disabled: true,
+        class: [
+          "mdl-button", "mdl-button--icon",
+          "mdl-button--#{color}", "tooltip-hover"
+        ],
+      ) do
+  %>
+    <%= content_tag(:i, icon, class: "material-icons") %>
+  <% end %>
+  <%= content_tag(:div, class: ["tooltip", "tooltip--status"]) do %>
+    <%= content_tag(:span, "", name: "tooltip-text") %>
+  <% end %>
+<% end %>

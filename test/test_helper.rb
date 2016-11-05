@@ -16,62 +16,104 @@ class ActiveSupport::TestCase
   ENV["POST_TICKETS_TOKEN"] = "POST_TICKETS_TOKEN"
 
   def assert_ncc_nodes_should_be(expected_ncc_nodes)
-    assert_equal(
-      expected_ncc_nodes.sort_by_vid,
-      eval(CurrentNccNode.to_json_ncc).sort_by_vid
-    )
+    expected = expected_ncc_nodes.sort_ncc
+    actual = eval(NccNode.to_json_ncc).sort_ncc
+    msg = HashDiffSym.diff(expected, actual)
+    assert_equal(expected, actual, msg)
   end
 
   def assert_hw_nodes_should_be(expected_hw_nodes)
-    assert_equal(
-      expected_hw_nodes.sort_by_ncc_node_and_coordinator,
-      eval(CurrentHwNode.to_json_hw).sort_by_ncc_node_and_coordinator
-    )
+    expected = expected_hw_nodes.sort_hw
+    actual = eval(HwNode.to_json_hw).sort_hw
+    msg = HashDiffSym.diff(expected, actual)
+    assert_equal(expected, actual, msg)
   end
 
-  def assert_node_ips_should_be(expected_node_ips)
-    assert_equal(
-      expected_node_ips.sort_by_hw_node_and_u32,
-      eval(NodeIp.to_json_nonmagic).sort_by_hw_node_and_u32
-    )
+  def last_nodename_created_at(network)
+    Nodename.thread(network).last.created_at.iso8601(3)
+  end
+
+  def last_iplirconf_created_at(coordinator)
+    Iplirconf.thread(coordinator).last.created_at.iso8601(3)
+  end
+
+  def get_js(action, params)
+    get(action, params.merge(format: :js))
   end
 end
 
 class Array
-  def sort_by_vid
-    self.sort_by { |h| h[:vid] }
-  end
-
-  def sort_by_ncc_node_and_coordinator
-    self.sort_by { |h| [h[:ncc_node_id], h[:coordinator_id]] }
-  end
-
-  def sort_by_hw_node_and_u32
-    self.sort_by { |h| [h[:hw_node_id], h[:u32]] }
-  end
-
-  def which_index(hash)
-    self.each_with_index do |_, i|
-      return i if self[i] == self[i].merge(hash)
+  def sort_ncc
+    self.sort! do |a, b|
+      if a[:vid] && b[:vid]
+        a[:vid] <=> b[:vid]
+      elsif a[:vid] && b[:descendant_vid]
+        1
+      elsif a[:descendant_vid] && b[:vid]
+        -1
+      elsif a[:descendant_vid] && b[:descendant_vid]
+        a[:creation_date] <=> b[:creation_date]
+      end
     end
   end
 
+  def sort_hw
+    self.sort! do |a, b|
+      if a[:ncc_node_vid] && a[:coord_vid] &&
+         b[:ncc_node_vid] && b[:coord_vid]
+        [a[:ncc_node_vid], a[:coord_vid], a[:creation_date]] <=>
+        [b[:ncc_node_vid], b[:coord_vid], b[:creation_date]]
+      elsif a[:ncc_node_vid] && a[:coord_vid] && b[:descendant_vid] && b[:descendant_coord_vid]
+        1
+      elsif a[:descendant_vid] && a[:descendant_coord_vid] && b[:ncc_node_vid] && b[:coord_vid]
+        -1
+      elsif a[:descendant_vid] && a[:descendant_coord_vid] &&
+            b[:descendant_vid] && b[:descendant_coord_vid]
+        [a[:descendant_vid], a[:descendant_coord_vid], a[:creation_date]] <=>
+        [b[:descendant_vid], b[:descendant_coord_vid], b[:creation_date]]
+      end
+    end
+  end
+
+  def which_indexes(hash)
+    indexes = []
+    self.each_with_index do |_, i|
+      indexes.push(i) if self[i] == self[i].merge(hash)
+    end
+    indexes
+  end
+
   def change_where(where, changes)
-    index = which_index(where)
-    self[index].deep_merge!(changes)
+    which_indexes(where).each { |i| self[i].deep_merge!(changes) }
   end
 
   def delete_where(where)
-    index = which_index(where)
-    self.delete_at(index)
+    which_indexes(where).each { |i| self[i] = :to_delete }
+    self.delete_if { |e| e == :to_delete }
+  end
+
+  def reject_nil_keys
+    self.each { |h| h.reject! { |_, v| v == nil }}
   end
 end
 
-class CurrentNccNode::ActiveRecord_Relation
+class NccNode::ActiveRecord_Relation
   def vids
     vids = []
     self.each { |n| vids.push(n.vid) }
     vids.sort
+  end
+end
+
+class Network::ActiveRecord::Base
+  def last_nodenames_created_at
+    Nodename.thread(self).last.created_at.iso8601(3)
+  end
+end
+
+class Coordinator::ActiveRecord::Base
+  def last_iplirconfs_created_at
+    Iplirconf.thread(self).last.created_at.iso8601(3)
   end
 end
 

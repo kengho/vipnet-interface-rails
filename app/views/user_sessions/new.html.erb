@@ -1,16 +1,44 @@
-<div class="auth__form--outside">
-  <div class="auth__form mdl-shadow--2dp">
-    <%= render "shared/header", text: t(".label") %>
-    <%= render "errors" %>
-    <%= form_for @user_session do |f| %>
-      <%= render "shared/email" %>
-      <%= render "shared/password", type: "password" %>
-        <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="user_remember_me">
-          <input name="user_session[remember_me]" value="0" type="hidden">
-          <input id="user_remember_me" type="checkbox" name="user_session[remember_me]" class="mdl-checkbox__input">
-          <span class="mdl-checkbox__label"><%= t(".remember_me") %></span>
-        </label>
-      <%= render "shared/submit", text: t(".submit_label") %>
+<%= content_tag(:div, class: "auth__form--outside") do %>
+  <%= content_tag(:div, class: "auth__form") do %>
+    <%= content_tag(:h3, t(".label")) %>
+
+    <% if @user_session.errors.any? %>
+      <% @user_session.errors.messages.each do |field, error_messages| %>
+        <% error_messages.each do |error_message| %>
+          <%= content_tag(:span, class: "auth__error") do %>
+            <%= t("authlogic.attributes.user_session.#{field}") %>
+            <%= error_message %>
+          <% end %>
+        <% end %>
+      <% end %>
     <% end %>
-  </div>
-</div>
+
+    <%= form_for @user_session do |f| %>
+      <%= render "shared/textfield", props: {
+            id: "email",
+            name: "user_session[email]",
+            autocomplete: "on",
+            autofocus: "true",
+          }
+      %>
+
+      <%= render "shared/textfield", props: {
+            id: "password",
+            name: "user_session[password]",
+            autocomplete: "on",
+            type: "password",
+          }
+      %>
+
+      <%# it is hard to make "railish" html below due to mdl mdl-checkbox preprocessing %>
+      <%# (or something else I don't understand) %>
+      <label class="mdl-checkbox mdl-js-checkbox mdl-js-ripple-effect" for="user_remember_me">
+        <input name="user_session[remember_me]" value="0" type="hidden">
+        <input id="user_remember_me" type="checkbox" name="user_session[remember_me]" class="mdl-checkbox__input">
+        <span class="mdl-checkbox__label"><%= t(".remember_me") %></span>
+      </label>
+
+      <%= render "shared/submit", label: t(".submit_label") %>
+    <% end %>
+  <% end %>
+<% end %>

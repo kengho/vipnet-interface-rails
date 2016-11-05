@@ -1,76 +1,89 @@
 class NodesController < ApplicationController
   skip_before_action :check_administrator_role
-  before_action :check_if_node_exist, only: [:info, :availability]
+  before_action :check_if_ncc_node_exist, only: [:info, :history, :availability]
 
   def index
-    @search = false
-    if params["search"]
-      @search = true
-      search_resuls = CurrentNccNode.none
-      param = params["search"].strip
-      NccNode.view_order.each do |order|
-        prop, _, _ = order
-        search_method = "where_#{prop}_like".to_sym
-        if NccNode.methods.include?(search_method)
-          search_resuls = search_resuls | CurrentNccNode.public_send(search_method, param)
-        end
-      end
-    else
-      search_resuls = CurrentNccNode.all
-      params_expanded = params.each { |_, value| value.strip! }
-      params_expanded.reject! { |_, value| value.empty? }
-      params_expanded.each do |key, param|
-        search_method = "where_#{key}_like".to_sym
-        if NccNode.methods.include?(search_method)
-          @search = true
-          search_resuls = search_resuls & CurrentNccNode.public_send(search_method, param)
-        end
-      end
-    end
-    if @search
-      # http://stackoverflow.com/a/24448317/6376451
-      @ncc_nodes = CurrentNccNode.where(id: search_resuls.map(&:id)).order(vid: :asc)
-      @size = @ncc_nodes.size
-    else
-      @ncc_nodes = CurrentNccNode.order(creation_date: :desc)
-    end
-    CurrentNccNode.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
-    @ncc_nodes = @ncc_nodes.paginate(page: params[:page]).includes(:hw_nodes, hw_nodes: [:node_ips])
-    @js = "vipnetInterface.nodesData = {};"
+    @params = params.reject { |k, _| ["controller", "action"].include?(k) }
   end
 
   respond_to :js
 
+  def load
+    @search = false
+    params_expanded = params.each { |_, value| value.strip! }
+    params_expanded.reject! do |key, value|
+      value.empty? ||
+      ["controller", "action", "_"].include?(key) ||
+      false
+    end
+
+    if params_expanded["search"]
+      @search = true
+      search_resuls = NccNode.none
+      param = params_expanded["search"]
+      NccNode.quick_searchable.each do |prop|
+        search_method = "where_#{prop}_like".to_sym
+        if NccNode.methods.include?(search_method)
+          search_resuls = search_resuls | NccNode.public_send(search_method, param)
+        end
+      end
+    else
+      search_resuls = NccNode.all
+      params_expanded.each do |key, param|
+        search_method = "where_#{key}_like".to_sym
+        if NccNode.methods.include?(search_method)
+          @search = true
+          search_resuls = search_resuls & NccNode.public_send(search_method, param)
+        end
+      end
+    end
+
+    if @search
+      # http://stackoverflow.com/a/24448317/6376451
+      all_ncc_nodes = NccNode
+        .where(id: search_resuls.map(&:id))
+        .order(vid: :asc)
+      current_ncc_nodes = all_ncc_nodes.where(type: "CurrentNccNode")
+      if current_ncc_nodes.size > 0
+        @ncc_nodes = current_ncc_nodes
+      else
+        @ncc_nodes = all_ncc_nodes
+      end
+      # calculating size here because of paginate() later
+      @size = @ncc_nodes.size
+    else
+      # there are mess in pagination if creation_date is the same
+      # and there are only one ordering prop
+      @ncc_nodes = CurrentNccNode.order(creation_date: :desc, vid: :desc)
+    end
+
+    CurrentNccNode.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
+    @ncc_nodes = @ncc_nodes
+      .paginate(page: params[:page])
+      .includes(:hw_nodes, hw_nodes: [:node_ips])
+    @params = params_expanded
+    @js_data = @ncc_nodes.js_data
+  end
+
   def info
-    @response = {
-      parent_id: "#node-#{@ncc_node.id}__info",
-      row_id: "#node-#{@ncc_node.id}__row",
-      tooltip_text: t("nodes.row.info.loaded"),
-      ncc_node: @ncc_node,
-    }
-    respond_with(@response, template: "nodes/row/info") and return
+    @ncc_node
+  end
+
+  def history
+    @prop = params[:prop].to_sym
+    @data = @ncc_node.history(@prop)
+    @status = @data.size > 0
   end
 
   def availability
-    @response = {
-      parent_id: "#node-#{@ncc_node.id}__check-availability"
-    }
-    availability = @ncc_node.availability
-    if availability[:errors]
-      @response[:status] = false
-      @response[:tooltip_text] = t("nodes.fullscreen_tooltip.#{availability[:errors][0][:detail]}.short")
-      @response[:fullscreen_tooltip_key] = availability[:errors][0][:detail]
-    else
-      @response[:status] = availability[:data][:availability]
-      @response[:tooltip_text] = t("nodes.row.availability.status_#{@response[:status]}")
-      @response[:fullscreen_tooltip_key] = "node-unavailable" if @response[:status] == false
-    end
-    respond_with(@response, template: "nodes/row/remote_status_button") and return
+    @status = @ncc_node.availability
   end
 
   private
-    def check_if_node_exist
-      @ncc_node = NccNode.find_by_id(params[:node_id])
-      render nothing: true, status: :bad_request, content_type: "text/html" and return unless @ncc_node
+    def check_if_ncc_node_exist
+      @ncc_node = NccNode.find_by(vid: params[:vid])
+      unless @ncc_node
+        render nothing: true, status: :bad_request, content_type: "text/html" and return
+      end
     end
 end

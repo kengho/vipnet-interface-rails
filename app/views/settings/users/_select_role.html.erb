@@ -1,0 +1,6 @@
+<%= content_tag(:select, name: "role") do %>
+  <% User.roles[:list].each do |role| %>
+    <% selected = role == selected_role %>
+    <%= content_tag(:option, t(".#{role}"), value: role, selected: selected) %>
+  <% end %>
+<% end %>

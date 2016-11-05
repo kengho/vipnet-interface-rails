@@ -1,0 +1,12 @@
+<%= content_tag(:form, action: "/settings", method: "get") do %>
+  <%= tag(:input, hidden: true, name: "general") %>
+  <% Settings.values.each do |value, settings_params| %>
+    <% settings = @settings.find_by(var: value) %>
+    <%= render "settings/general/#{settings_params[:type]}",
+          settings: settings,
+          label: t(".#{settings.var}")
+    %>
+  <% end %>
+
+  <%= render "shared/submit", label: t(".submit_label") %>
+<% end %>

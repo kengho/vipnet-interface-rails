@@ -1,11 +1,3 @@
-# This file should contain all the record creation needed to seed the database with its default values.
-# The data can then be loaded with the rake db:seed (or created alongside the db with db:setup).
-#
-# Examples:
-#
-#   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
-#   Mayor.create(name: 'Emanuel', city: cities.first)
-
 # http://stackoverflow.com/a/5458190
 loop do
   STDOUT.puts "Enter administrator's email"
@@ -15,7 +7,12 @@ loop do
   password = STDIN.noecho(&:gets).chomp
   STDOUT.puts "Enter password's confirmation"
   password_confirmation = STDIN.noecho(&:gets).chomp
-  admin = User.new(email: email, password: password, password_confirmation: password_confirmation, role: "administrator")
+  admin = User.new(
+            email: email,
+            password: password,
+            password_confirmation: password_confirmation,
+            role: "administrator"
+          )
   if admin.save
     STDOUT.puts "Administrator user successfully created"
     break
@@ -38,15 +35,8 @@ STDOUT.puts "POST_ADMINISTRATOR_TOKEN=#{POST_ADMINISTRATOR_TOKEN}"
 STDOUT.puts "CHECKER_TOKEN=#{CHECKER_TOKEN}"
 STDOUT.puts ""
 STDOUT.puts "(You may use your own tokens.)"
+STDOUT.puts ""
 
-# default settings
-# for some reason 'Setting.save_default(:some_key, "123")' doesn't work sometimes
-support_email = Settings.new(var: "support_email", value: "")
-support_email.save
-checker = Settings.new(var: "checker", value: "http://localhost:8080/?ip=\{ip}&token=\{token}")
-checker.save
-nodes_per_page = Settings.new(var: "nodes_per_page", value: "20")
-nodes_per_page.save
-networks_to_ignore = Settings.new(var: "networks_to_ignore", value: "6670,6671")
-networks_to_ignore.save
-Settings.new(var: "export_selected_variant", value: "id_space_name_newline").save!
+Settings.set_defaults
+
+STDOUT.puts "All done. Enable needed functionality in /settings page"

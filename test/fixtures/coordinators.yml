@@ -6,3 +6,11 @@ coordinator1:
 coordinator2:
   vid: "0x1a0e000b"
   network: network1
+
+coordinator3:
+  vid: "0x1a0f000a"
+  network: network2
+
+coordinator4:
+  vid: "0x1a0f000b"
+  network: network2

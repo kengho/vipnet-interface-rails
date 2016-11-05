@@ -1,0 +1,22 @@
+@import "_shared";
+
+.locale {
+  margin-bottom: 20px;
+
+  & label {
+    display: inline-block;
+    padding: 8px 12px;
+    cursor: pointer;
+    background: $form-inside-bgcolor;
+  }
+
+  & > input {
+    display: none;
+  }
+
+  & input[type="radio"]:checked + label {
+    background: $primary-color;
+    color: white;
+    cursor: default;
+  }
+}

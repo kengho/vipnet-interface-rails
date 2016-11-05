@@ -1,0 +1,20 @@
+<%= content_tag(:div, class: "settings__text") do %>
+  <%= content_tag(:span, label) %>
+  <%= content_tag(:div, class: ["mdl-textfield", "mdl-js-textfield"]) do %>
+    <% id = "settings__#{settings.var}" %>
+    <%= tag(:input,
+          name: settings.var,
+          id: id,
+          value: settings.value,
+          tabindex: @tabindex,
+          type: "text",
+          class: ["mdl-textfield__input"],
+        )
+    %>
+    <%= tag(:label,
+          for: id,
+          class: ["mdl-textfield__label"],
+        )
+    %>
+  <% end %>
+<% end %>

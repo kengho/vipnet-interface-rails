@@ -45,10 +45,6 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: added_coordinator2_nodename, network_vid: "6670" })
     @controller = iplirconfs_controller
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_HW_TOKEN\""
-    ncc_node_0x1a0e000a = CurrentNccNode.find_by(vid: "0x1a0e000a")
-    ncc_node_0x1a0e000b = CurrentNccNode.find_by(vid: "0x1a0e000b")
-    ncc_node_0x1a0e000c = CurrentNccNode.find_by(vid: "0x1a0e000c")
-    ncc_node_0x1a0e000d = CurrentNccNode.find_by(vid: "0x1a0e000d")
 
     # upload iplirconf with administrator, client1 and coordinator1 (:add)
     initial_iplirconf = fixture_file_upload(
@@ -56,63 +52,55 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: initial_iplirconf, coord_vid: "0x1a0e000a" })
-    coordinator_0x1a0e000a = Coordinator.find_by(vid: "0x1a0e000a")
     assert_equal(Api::V1::BaseController::OK_RESPONSE, @response.body)
+    coordinator1 = Coordinator.find_by(vid: "0x1a0e000a")
     expected_hw_nodes = [
       {
-        :ncc_node_id => ncc_node_0x1a0e000a.id,
-        :coordinator_id => coordinator_0x1a0e000a.id,
-        :version => "3.0-670",
-        :version_decoded => HwNode.decode_version("3.0-670"),
-        :accessip => nil,
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000a",
+        version: "3.0-670",
+        version_decoded: HwNode.decode_version("3.0-670"),
+        creation_date: coordinator1.last_iplirconfs_created_at,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.1"),
+          },
+          {
+            u32: IPv4::u32("192.0.2.3"),
+          },
+        ],
       },
       {
-        :ncc_node_id => ncc_node_0x1a0e000b.id,
-        :coordinator_id => coordinator_0x1a0e000a.id,
-        :accessip => "198.51.100.2",
-        :version => "3.2-672",
-        :version_decoded => HwNode.decode_version("3.2-672"),
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000b",
+        accessip: "198.51.100.2",
+        version: "3.2-672",
+        version_decoded: HwNode.decode_version("3.2-672"),
+        creation_date: coordinator1.last_iplirconfs_created_at,
+        node_ips:[
+          {
+            u32: IPv4::u32("192.0.2.5"),
+          },
+        ],
       },
       {
-        :ncc_node_id => ncc_node_0x1a0e000c.id,
-        :coordinator_id => coordinator_0x1a0e000a.id,
-        :accessip => "198.51.100.3",
-        :version => "0.3-2",
-        :version_decoded => HwNode.decode_version("0.3-2"),
-      },
-    ]
-    expected_node_ips = [
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000a,
-          coordinator: coordinator_0x1a0e000a,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.1"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000a,
-          coordinator: coordinator_0x1a0e000a,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.3"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000b,
-          coordinator: coordinator_0x1a0e000a,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.5"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000c,
-          coordinator: coordinator_0x1a0e000a,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.7"),
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000c",
+        accessip: "198.51.100.3",
+        version: "0.3-2",
+        version_decoded: HwNode.decode_version("0.3-2"),
+        creation_date: coordinator1.last_iplirconfs_created_at,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.7"),
+          },
+        ],
       },
     ]
     assert_hw_nodes_should_be expected_hw_nodes
-    assert_node_ips_should_be expected_node_ips
 
     # 01_added_0x1a0e000d (:add)
     added_0x1a0e000d_iplirconf = fixture_file_upload(
@@ -121,30 +109,23 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     )
     post(:create, { file: added_0x1a0e000d_iplirconf, coord_vid: "0x1a0e000a" })
     expected_hw_nodes.push({
-      :ncc_node_id => ncc_node_0x1a0e000d.id,
-      :coordinator_id => coordinator_0x1a0e000a.id,
-      :version => "3.0-670",
-      :version_decoded => HwNode.decode_version("3.0-670"),
-      :accessip => "198.51.100.4",
+      type: "CurrentHwNode",
+      coord_vid: "0x1a0e000a",
+      ncc_node_vid: "0x1a0e000d",
+      accessip: "198.51.100.4",
+      version: "3.0-670",
+      version_decoded: HwNode.decode_version("3.0-670"),
+      creation_date: coordinator1.last_iplirconfs_created_at,
+      node_ips: [
+        {
+          u32: IPv4::u32("192.0.2.9"),
+        },
+        {
+          u32: IPv4::u32("192.0.2.10"),
+        },
+      ],
     })
-    expected_node_ips.push(
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000d,
-          coordinator: coordinator_0x1a0e000a,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.9"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000d,
-          coordinator: coordinator_0x1a0e000a,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.10"),
-      },
-    )
     assert_hw_nodes_should_be expected_hw_nodes
-    assert_node_ips_should_be expected_node_ips
 
     # 02_changed_client1_and_administrator
     # (:change accessip, :add ip, :remove ip)
@@ -158,33 +139,47 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: changed_iplirconf, coord_vid: "0x1a0e000a" })
     expected_hw_nodes.change_where(
       {
-        :ncc_node_id => ncc_node_0x1a0e000b.id,
-        :coordinator_id => coordinator_0x1a0e000a.id,
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000b",
       },
       {
-        :version => "3.2-673",
-        :version_decoded => HwNode.decode_version("3.2-673"),
+        version: "3.2-673",
+        version_decoded: HwNode.decode_version("3.2-673"),
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.55"),
+          },
+        ],
       }
     )
     expected_hw_nodes.change_where(
       {
-        :ncc_node_id => ncc_node_0x1a0e000c.id,
-        :coordinator_id => coordinator_0x1a0e000a.id,
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000c",
       },
-      { :accessip => "192.0.2.7" }
+      { accessip: "192.0.2.7" }
     )
-    expected_node_ips.change_where(
+    expected_hw_nodes.push(
       {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000b,
-          coordinator: coordinator_0x1a0e000a,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.5"),
+        descendant_coord_vid: "0x1a0e000a",
+        descendant_vid: "0x1a0e000c",
+        accessip: "198.51.100.3",
+        creation_date: coordinator1.last_iplirconfs_created_at,
       },
-      { :u32 => IPv4::u32("192.0.2.55") }
+      {
+        descendant_coord_vid: "0x1a0e000a",
+        descendant_vid: "0x1a0e000b",
+        version: "3.2-672",
+        version_decoded: HwNode.decode_version("3.2-672"),
+        creation_date: coordinator1.last_iplirconfs_created_at,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.5"),
+          },
+        ]
+      },
     )
     assert_hw_nodes_should_be expected_hw_nodes
-    assert_node_ips_should_be expected_node_ips
 
     # 03_0x1a0e000d_initial (:add)
     coordinator2_initial_iplirconf = fixture_file_upload(
@@ -192,83 +187,71 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: coordinator2_initial_iplirconf, coord_vid: "0x1a0e000d" })
-    coordinator_0x1a0e000d = Coordinator.find_by(vid: "0x1a0e000d")
+    coordinator2 = Coordinator.find_by(vid: "0x1a0e000d")
     expected_hw_nodes.push(
       {
-        :ncc_node_id => ncc_node_0x1a0e000a.id,
-        :coordinator_id => coordinator_0x1a0e000d.id,
-        :version => "3.0-670",
-        :version_decoded => HwNode.decode_version("3.0-670"),
-        :accessip => "203.0.113.4",
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000a",
+        accessip: "203.0.113.4",
+        version: "3.0-670",
+        version_decoded: HwNode.decode_version("3.0-670"),
+        creation_date: coordinator2.last_iplirconfs_created_at,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.1"),
+          },
+          {
+            u32: IPv4::u32("192.0.2.3"),
+          },
+        ],
       },
       {
-        :ncc_node_id => ncc_node_0x1a0e000b.id,
-        :coordinator_id => coordinator_0x1a0e000d.id,
-        :version => "3.2-673",
-        :version_decoded => HwNode.decode_version("3.2-673"),
-        :accessip => "203.0.113.2",
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000b",
+        accessip: "203.0.113.2",
+        version: "3.2-673",
+        version_decoded: HwNode.decode_version("3.2-673"),
+        creation_date: coordinator2.last_iplirconfs_created_at,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.55"),
+          },
+        ],
       },
       {
-        :ncc_node_id => ncc_node_0x1a0e000c.id,
-        :coordinator_id => coordinator_0x1a0e000d.id,
-        :version => "0.3-2",
-        :version_decoded => HwNode.decode_version("0.3-2"),
-        :accessip => "203.0.113.3",
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000c",
+        accessip: "203.0.113.3",
+        version: "0.3-2",
+        version_decoded: HwNode.decode_version("0.3-2"),
+        creation_date: coordinator2.last_iplirconfs_created_at,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.7"),
+          },
+        ],
       },
       {
-        :ncc_node_id => ncc_node_0x1a0e000d.id,
-        :coordinator_id => coordinator_0x1a0e000d.id,
-        :version => "3.0-670",
-        :version_decoded => HwNode.decode_version("3.0-670"),
-        :accessip => nil,
-      },
-    )
-    expected_node_ips.push(
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000a,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.1"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000a,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.3"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000b,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.55"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000c,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.7"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000d,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.9"),
-      },
-      {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000d,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.10"),
+        type: "CurrentHwNode",
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000d",
+        version: "3.0-670",
+        version_decoded: HwNode.decode_version("3.0-670"),
+        creation_date: coordinator2.last_iplirconfs_created_at,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.9"),
+          },
+          {
+            u32: IPv4::u32("192.0.2.10"),
+          },
+        ],
       },
     )
     assert_hw_nodes_should_be expected_hw_nodes
-    assert_node_ips_should_be expected_node_ips
 
     # 04_0x1a0e000d_changed (:change, :add, :remove)
     # 0x1a0e000a coordinator1 "ip= 192.0.2.1" => "ip= 192.0.2.51"
@@ -280,26 +263,51 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     post(:create, { file: changed_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
       {
-        :ncc_node_id => ncc_node_0x1a0e000b.id,
-        :coordinator_id => coordinator_0x1a0e000d.id,
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000b",
       },
       {
-        :version => "3.2-672",
-        :version_decoded => HwNode.decode_version("3.2-672"),
+        version: "3.2-672",
+        version_decoded: HwNode.decode_version("3.2-672"),
       }
     )
-    expected_node_ips.change_where(
+    expected_hw_nodes.change_where(
       {
-        :hw_node_id => CurrentHwNode.find_by(
-          ncc_node: ncc_node_0x1a0e000a,
-          coordinator: coordinator_0x1a0e000d,
-        ).id,
-        :u32 => IPv4::u32("192.0.2.1"),
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000a",
       },
-      { :u32 => IPv4::u32("192.0.2.51") }
+      {
+        # deep_merge deletes "192.0.2.3" here if not speciied
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.3"),
+          },
+          {
+            u32: IPv4::u32("192.0.2.51"),
+          },
+        ],
+      }
+    )
+    expected_hw_nodes.push(
+      {
+        descendant_coord_vid: "0x1a0e000d",
+        descendant_vid: "0x1a0e000b",
+        version: "3.2-673",
+        version_decoded: HwNode.decode_version("3.2-673"),
+        creation_date: coordinator2.last_iplirconfs_created_at,
+      },
+      {
+        descendant_coord_vid: "0x1a0e000d",
+        descendant_vid: "0x1a0e000a",
+        creation_date: coordinator2.last_iplirconfs_created_at,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.1"),
+          },
+        ],
+      },
     )
     assert_hw_nodes_should_be expected_hw_nodes
-    assert_node_ips_should_be expected_node_ips
 
     # 05_0x1a0e000d_added_new_client (:add)
     ncc_node_0x1a0e000e = CurrentNccNode.new(vid: "0x1a0e000e", network: networks(:network1))
@@ -310,14 +318,12 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     )
     post(:create, { file: added_new_client_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.push({
-      :ncc_node_id => ncc_node_0x1a0e000e.id,
-      :coordinator_id => coordinator_0x1a0e000d.id,
-      :version => nil,
-      :version_decoded => nil,
-      :accessip => nil,
+      type: "CurrentHwNode",
+      coord_vid: "0x1a0e000d",
+      ncc_node_vid: "0x1a0e000e",
+      creation_date: coordinator2.last_iplirconfs_created_at,
     })
     assert_hw_nodes_should_be expected_hw_nodes
-    assert_node_ips_should_be expected_node_ips
 
     # 06_0x1a0e000d_deleted_ip (:remove)
     # 0x1a0e000a coordinator1 "deleted ip= 192.0.2.51"
@@ -326,15 +332,30 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "application/octet-stream"
     )
     post(:create, { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
-    expected_node_ips.delete_where({
-      :hw_node_id => CurrentHwNode.find_by(
-        ncc_node: ncc_node_0x1a0e000a,
-        coordinator: coordinator_0x1a0e000d,
-      ).id,
-      :u32 => IPv4::u32("192.0.2.51"),
+    expected_hw_nodes.push({
+      descendant_coord_vid: "0x1a0e000d",
+      descendant_vid: "0x1a0e000a",
+      creation_date: coordinator2.last_iplirconfs_created_at,
+      node_ips: [
+        {
+          u32: IPv4::u32("192.0.2.51"),
+        },
+      ],
     })
+    expected_hw_nodes.change_where(
+      {
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000a",
+      },
+      {
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.3"),
+          },
+        ],
+      }
+    )
     assert_hw_nodes_should_be expected_hw_nodes
-    assert_node_ips_should_be expected_node_ips
 
     # 07_0x1a0e000d_deleted_client1 (:remove)
     # 0x1a0e000c client1 "deleted section"
@@ -342,20 +363,55 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/07_0x1a0e000d_deleted_client1.conf",
       "application/octet-stream"
     )
-    expected_hw_nodes.delete_where({
-      :ncc_node_id => ncc_node_0x1a0e000c.id,
-      :coordinator_id => coordinator_0x1a0e000d.id,
-    })
-    expected_node_ips.delete_where({
-      :hw_node_id => CurrentHwNode.find_by(
-        ncc_node: ncc_node_0x1a0e000c,
-        coordinator: coordinator_0x1a0e000d,
-      ).id,
-      :u32 => IPv4::u32("192.0.2.7"),
-    })
-    # we made post() after change_where because post() deletes records we search for
     post(:create, { file: deleted_client1, coord_vid: "0x1a0e000d" })
+    expected_hw_nodes.change_where(
+      {
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000c",
+      },
+      {
+        type: "DeletedHwNode",
+      }
+    )
     assert_hw_nodes_should_be expected_hw_nodes
-    assert_node_ips_should_be expected_node_ips
+
+    # 08_0x1a0e000d_restored_client1 (:add)
+    restored_client1 = fixture_file_upload(
+      "iplirconfs/08_0x1a0e000d_restored_client1.conf",
+      "application/octet-stream"
+    )
+    post(:create, { file: restored_client1, coord_vid: "0x1a0e000d" })
+    expected_hw_nodes.change_where(
+      {
+        coord_vid: "0x1a0e000d",
+        ncc_node_vid: "0x1a0e000c",
+      },
+      {
+        type: "CurrentHwNode",
+        accessip: "203.0.113.5",
+        version: nil,
+        version_decoded: nil,
+        node_ips: [
+          {
+            u32: IPv4::u32("192.0.2.18"),
+          },
+        ],
+      }
+    )
+    expected_hw_nodes.push({
+      descendant_coord_vid: "0x1a0e000d",
+      descendant_vid: "0x1a0e000c",
+      accessip: "203.0.113.3",
+      version: "0.3-2",
+      version_decoded: HwNode.decode_version("0.3-2"),
+      creation_date: coordinator2.last_iplirconfs_created_at,
+      node_ips: [
+        {
+          u32: IPv4::u32("192.0.2.7"),
+        },
+      ],
+    })
+    expected_hw_nodes.reject_nil_keys
+    assert_hw_nodes_should_be expected_hw_nodes
   end
 end

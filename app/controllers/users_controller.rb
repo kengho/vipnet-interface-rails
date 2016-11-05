@@ -6,59 +6,62 @@ class UsersController < ApplicationController
   end
 
   def destroy
-    user = User.find(params[:id])
-    if user.destroy
-      flash[:notice] = "user destroyed"
+    user = User.find_by(id: params[:id])
+    if user
+      if user.destroy
+        flash[:notice] = :user_destroyed
+      else
+        flash[:notice] = :error_destroying_user
+      end
     else
-      flash[:notice] = "error destroying user"
+      render nothing: true, status: :bad_request, content_type: "text/html" and return
     end
     redirect_to "/settings#users"
   end
 
+  respond_to :js
+
   def update
-    # user additional settings
-    params.each do |param, value|
-      # save settings if there are no accepted values or if passed value is in it
-      corresponding_settings = User.settings[param.to_sym]
-      if corresponding_settings
-        accepted_values = corresponding_settings[:accepted_values]
-        if !accepted_values
-          current_user.settings[param] = value
-        elsif accepted_values.include?(value)
-          current_user.settings[param] = value
-        end
+    if current_user.id.to_s != params["id"]
+      render nothing: true, status: :unauthorized, content_type: "text/html" and return
+    end
+
+    # additional user settings
+    name = params["name"]
+    corresponding_settings = Settings.values[name]
+    if corresponding_settings
+      value = params["value"]
+      accepted_values = corresponding_settings[:accepted_values]
+      if !accepted_values
+        current_user.settings[name] = value
+      elsif accepted_values.include?(value)
+        current_user.settings[name] = value
+      end
+      if current_user.save
+        @response = :user_settings_saved
+      else
+        @response = :error_saving_user_settings
       end
     end
-    if current_user.save
-      flash[:notice] = "user settings saved"
-    else
-      flash[:notice] = "error saving user settings"
-    end
-    # user auth settings
+
     if params["user_session"]
       if current_user.valid_password?(params["user_session"]["current_password"])
-        current_user.password = params["user_session"]["password"]
-        current_user.password_confirmation = params["user_session"]["password_confirmation"]
-        if current_user.save
-          flash[:success] = "password successfully changed"
-          redirect_to "/nodes"
+        if params["user_session"]["password"].to_s != params["user_session"]["password_confirmation"].to_s
+          @response = :error_confirmation_password
         else
-          flash[:error] = "error confirmation password"
+          current_user.password = params["user_session"]["password"]
+          current_user.password_confirmation = params["user_session"]["password_confirmation"]
+          if current_user.changed? && current_user.save
+            @response = :password_successfully_changed
+          else
+            @response = :error_changing_password
+          end
         end
       else
-        flash[:error] = "error validating password"
+        @response = :error_validating_password
       end
     end
 
-    if params["redirect_to"]
-      redirect_to params["redirect_to"]
-    else
-      redirect_to edit_user_path(current_user)
-    end
+    respond_with(@response, template: "shared/user") and return
   end
-
-  private
-    def users_params
-      params.require(:user).permit(:email, :password, :password_confirmation)
-    end
 end

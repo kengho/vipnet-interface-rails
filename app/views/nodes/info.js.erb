@@ -1,0 +1,15 @@
+(function() {
+  vipnetInterface.nodes.ajax.renderStatus({
+    action: "info",
+    data: {
+      vid: "<%= @ncc_node.vid %>",
+      status: "true",
+      tooltipText: "<%= t("nodes.row.remote_button.info.loaded") %>",
+    },
+  });
+
+  vipnetInterface.nodes.ajax.renderInfoBlock({
+    vid: "<%= @ncc_node.vid %>",
+    html: "<%= j render "nodes/row/info_block" %>",
+  });
+})();

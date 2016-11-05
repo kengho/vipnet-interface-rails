@@ -1,0 +1,10 @@
+(function() {
+  vipnetInterface.nodes.ajax.renderStatus({
+    action: "availability",
+    data: {
+      vid: "<%= @ncc_node.vid %>",
+      status: "<%= @status %>",
+      tooltipText: "<%= t("nodes.row.remote_button.availability.#{@status}") %>",
+    },
+  });
+})();

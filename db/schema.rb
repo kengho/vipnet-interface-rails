@@ -11,10 +11,11 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160905061750) do
+ActiveRecord::Schema.define(version: 20161016131401) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+  enable_extension "hstore"
 
   create_table "coordinators", force: :cascade do |t|
     t.string   "vid"
@@ -27,13 +28,15 @@ ActiveRecord::Schema.define(version: 20160905061750) do
   add_index "coordinators", ["network_id"], name: "index_coordinators_on_network_id", using: :btree
 
   create_table "garlands", force: :cascade do |t|
-    t.text    "entity"
-    t.boolean "entity_type"
-    t.string  "type"
-    t.integer "next"
-    t.integer "previous"
-    t.integer "belongs_to_id"
-    t.string  "belongs_to_type"
+    t.text     "entity"
+    t.boolean  "entity_type"
+    t.string   "type"
+    t.integer  "next"
+    t.integer  "previous"
+    t.integer  "belongs_to_id"
+    t.string   "belongs_to_type"
+    t.datetime "created_at",      null: false
+    t.datetime "updated_at",      null: false
   end
 
   create_table "hw_nodes", force: :cascade do |t|
@@ -45,6 +48,8 @@ ActiveRecord::Schema.define(version: 20160905061750) do
     t.integer  "coordinator_id"
     t.integer  "ncc_node_id"
     t.string   "type"
+    t.integer  "descendant_id"
+    t.datetime "creation_date"
   end
 
   add_index "hw_nodes", ["coordinator_id"], name: "index_hw_nodes_on_coordinator_id", using: :btree
@@ -53,17 +58,18 @@ ActiveRecord::Schema.define(version: 20160905061750) do
   create_table "ncc_nodes", force: :cascade do |t|
     t.string   "vid"
     t.string   "name"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",             null: false
+    t.datetime "updated_at",             null: false
     t.datetime "deletion_date"
     t.integer  "network_id"
-    t.boolean  "enabled",                default: true
+    t.boolean  "enabled"
     t.string   "category"
-    t.boolean  "creation_date_accuracy", default: true
+    t.boolean  "creation_date_accuracy"
     t.string   "abonent_number"
     t.string   "server_number"
     t.datetime "creation_date"
     t.string   "type"
+    t.integer  "descendant_id"
   end
 
   add_index "ncc_nodes", ["network_id"], name: "index_ncc_nodes_on_network_id", using: :btree

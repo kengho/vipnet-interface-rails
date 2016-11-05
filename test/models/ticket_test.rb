@@ -4,7 +4,7 @@ class TicketTest < ActiveSupport::TestCase
   setup do
     @ticket_system1 = TicketSystem.create!(url_template: "http://tickets.org/ticket_id={id}")
     @ticket_system2 = TicketSystem.create!(url_template: "http://tickets2.org/ticket_id={id}")
-    @ncc_node = NccNode.new(network: networks(:network1), vid: "0x1a0e0001")
+    @ncc_node = CurrentNccNode.new(network: networks(:network1), vid: "0x1a0e0001")
   end
 
   test "should not save without ticket_system" do

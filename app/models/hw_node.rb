@@ -1,9 +1,14 @@
 class HwNode < ActiveRecord::Base
   belongs_to :coordinator
   belongs_to :ncc_node
-  validates :coordinator, presence: true
-  validates :ncc_node, presence: true
   has_many :node_ips, dependent: :destroy
+  has_many :ascendants, dependent: :destroy,
+           class_name: "HwNode",
+           foreign_key:"descendant_id"
+  belongs_to :descendant,
+             class_name: "HwNode",
+             foreign_key:"descendant_id"
+  validates_presence_of :descendant, unless: :type?
 
   before_save :update_version_decoded, if: :version_changed?
 
@@ -29,15 +34,56 @@ class HwNode < ActiveRecord::Base
   end
 
   def to_json_hw
-    self.to_json(
-      :only => HwNode.props_from_iplirconf + [:ncc_node_id, :coordinator_id, :version_decoded]
+    json = self.to_json(
+      include: {
+        node_ips: {
+          only: :u32,
+        },
+      },
+      only: [
+        :type,
+        :ncc_node_id,
+        :coordinator_id,
+        :descendant_id,
+        :creation_date,
+        :accessip,
+        :version,
+        :version_decoded,
+      ],
     ).gsub("null", "nil")
+    json = eval(json)
+    tmp = json.clone
+    json.each do |key, value|
+      if key == :coordinator_id
+        coordinator = Coordinator.find_by(id: value)
+        tmp[:coord_vid] = coordinator.vid if coordinator
+      elsif key == :ncc_node_id
+        ncc_node = NccNode.find_by(id: value)
+        tmp[:ncc_node_vid] = ncc_node.vid if ncc_node
+      elsif key == :descendant_id
+        descendant = HwNode.find_by(id: value)
+        if descendant
+          ncc_node = descendant.ncc_node
+          if ncc_node
+            tmp[:descendant_coord_vid] = descendant.coordinator.vid
+            tmp[:descendant_vid] = ncc_node.vid
+          end
+        end
+      end
+    end
+    tmp.reject! do |key, value|
+      [nil, []].include?(value) ||
+      [:coordinator_id, :ncc_node_id, :descendant_id].include?(key) ||
+      false
+    end
+    tmp.to_json
   end
 
   def self.props_from_iplirconf
     [
       :accessip,
       :version,
+      :version_decoded,
     ]
   end
 

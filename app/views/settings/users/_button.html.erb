@@ -1,0 +1,10 @@
+<% classes = ["mdl-button", "mdl-js-button", "mdl-button--icon", "mdl-button--#{color}"] %>
+<%= content_tag(:button,
+      id: id,
+      class: classes,
+      type: "submit",
+    ) do
+%>
+  <%= content_tag(:i, icon, class: "material-icons") %>
+<% end %>
+<%= content_tag(:div, t(".#{label}"), for: id, class: "mdl-tooltip") %>

@@ -1,6 +1,4 @@
-<% prop_view = prop_view(ncc_node, prop) %>
-<td class="mdl-data-table__cell--non-numeric nodes__td nodes__<%= prop %>">
-  <% if prop_view %>
-    <span><%= prop_view.html_safe %></span>
-  <% end %>
-</td>
+<% prop_view = prop_view(prop) %>
+<%= content_tag(:div, class: "td") do %>
+  <%= content_tag(:span, prop_view.html_safe, class: "span__#{prop}") %>
+<% end %>

@@ -1,20 +1,31 @@
 class ApplicationController < ActionController::Base
   # Prevent CSRF attacks by raising an exception.
-  # For APIs, you may want to use :null_session instead.
   protect_from_forgery with: :exception unless Rails.env.test?
   before_action :set_locale
   before_action :authenticate_user
   before_action :check_administrator_role
 
-  helper_method :current_user_session, :current_user
+  helper_method :current_user_session, :current_user, :current
 
   private
-    def set_locale
+    def current(settings)
+      system_settings =
+         Settings[settings] ||
+         Settings.values[settings][:default_value] ||
+         true
       if current_user
-        I18n.locale = current_user.settings.locale
+        current_settings =
+          current_user.settings[settings] ||
+          system_settings ||
+          true
       else
-        I18n.locale = I18n.default_locale
+        current_settings = system_settings
       end
+      current_settings
+    end
+
+    def set_locale
+      I18n.locale = current("locale")
     end
 
     def check_administrator_role

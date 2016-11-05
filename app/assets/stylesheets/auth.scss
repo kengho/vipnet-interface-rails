@@ -21,6 +21,7 @@ $error-color: #c30;
   transform: translate(-50%,-50%);
   padding: 20px;
   background-color: $form-inside-bgcolor;
+
   &--outside {
     z-index: 1000;
     position: fixed;
@@ -30,41 +31,16 @@ $error-color: #c30;
     vertical-align: middle;
     background-color: rgba(black, 0.85);
   }
-  & a {
-    text-decoration: none;
-    color: $main-link-color !important;
-    &:hover {
-      color: $main-link-color-hover !important;
-    }
-  }
+
   & h3 {
     color: $main-text-color;
   }
-  & span.error {
+
+  & a {
+    text-decoration: none;
+  }
+
+  & span.auth__error {
     color: $error-color;
   }
-}
-
-.user-registration__back-button {
-  color: $gray-icon-color !important;
-  font-size: 24px;
-  display: inline-block;
-}
-
-.locale {
-  margin-bottom: 20px;
-  & label {
-    display: inline-block;
-    padding: 8px 12px;
-    cursor: pointer;
-    background: $form-inside-bgcolor;
-  }
-  & > input {
-    display: none;
-  }
-}
-
-.locale input[type="radio"]:checked + label {
-  background: $primary-color;
-  color: white;
 }

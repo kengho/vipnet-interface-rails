@@ -1,0 +1,15 @@
+<% Settings.values[name][:accepted_values].each do |value, t| %>
+  <% checked = value == current(name) %>
+  <% label = (t) ? t(t) : value %>
+  <% id = "#{name}__#{value}" %>
+  <%= content_tag(:input,
+        id: id,
+        value: value,
+        name: name,
+        checked: checked,
+        type: "radio",
+      ) do
+  %>
+    <%= content_tag(:label, label, for: id) %>
+  <% end %>
+<% end %>
