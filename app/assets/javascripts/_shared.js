@@ -94,7 +94,8 @@ vipnetInterface = {
   selectWhatWasSelected: function() {
     $("*[data-selectable]").each(function(_, row) {
       var vid = $(row).data("vid");
-      if(vipnetInterface.nodes.export.data[vid].selected) {
+      var data = vipnetInterface.nodes.export.data[vid];
+      if(data && data.selected) {
         vipnetInterface.nodes.export.selectRow(vid);
       }
     });
