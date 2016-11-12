@@ -18,23 +18,29 @@ class NodesController < ApplicationController
     end
 
     # { "search" => "id: 0x1a0e0001, name: Alex" } =>
-    # { "vid" => "0x1a0e0001", "name"=>"Alex" }
+    # { "vid" => "0x1a0e0001", "name" => "Alex" }
     if params_expanded["search"]
       custom_search = false
       aliases = { "id" => "vid" }
       request = params_expanded["search"]
 
-      request.split(",").each do |partial_request|
-        if partial_request =~ /^(?<prop>.*):(?<value>.*)$/
-          prop = Regexp.last_match[:prop].strip
-          prop = aliases[prop] if aliases[prop]
-          value = Regexp.last_match[:value].strip
+      if request =~ /ids:(?<ids>.*)/
+        params_expanded[:vid] = Regexp.last_match[:ids]
+          .split(",")
+          .map { |id| id.strip }
+        custom_search = true
+      else
+        request.split(",").each do |partial_request|
+          if partial_request =~ /^(?<prop>.*):(?<value>.*)$/
+            prop = Regexp.last_match[:prop].strip
+            prop = aliases[prop] if aliases[prop]
+            value = Regexp.last_match[:value].strip
 
-          params_expanded[prop] = value
-          custom_search = true
+            params_expanded[prop] = value
+            custom_search = true
+          end
         end
       end
-
       params_expanded.delete("search") if custom_search
     end
 
@@ -50,11 +56,16 @@ class NodesController < ApplicationController
       end
     else
       search_resuls = NccNode.all
-      params_expanded.each do |key, param|
-        search_method = "where_#{key}_like".to_sym
+      params_expanded.each do |prop, value|
+        search_method = "where_#{prop}_like".to_sym
         if NccNode.methods.include?(search_method)
           @search = true
-          search_resuls = search_resuls & NccNode.public_send(search_method, param)
+          values = Array(value)
+          sub_search_resuls = NccNode.none
+          values.each do |value|
+            sub_search_resuls = sub_search_resuls | NccNode.public_send(search_method, value)
+          end
+          search_resuls = search_resuls & sub_search_resuls
         end
       end
     end

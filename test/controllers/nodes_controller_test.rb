@@ -395,4 +395,12 @@ class NodesControllerTest < ActionController::TestCase
     get_js(:load, { search: "id: 0x1a0e000, name: Brad" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
+
+  test "should parse 'search' param to perform custom search (multiple ids)" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0002", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0003", network: @network)
+    get_js(:load, { search: "ids: 0x1a0e0002, 0x1a0e0003" })
+    assert_equal(["0x1a0e0002", "0x1a0e0003"], assigns["ncc_nodes"].vids)
+  end
 end
