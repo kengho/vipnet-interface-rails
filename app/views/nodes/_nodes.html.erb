@@ -1,5 +1,5 @@
-<% unless @ncc_nodes.empty? %>
-  <%= content_tag(:div, class: "nodes") do %>
+<%= content_tag(:div, class: "nodes") do %>
+  <% unless @ncc_nodes.empty? %>
     <%= content_tag(:div, class: "table") do %>
       <%= content_tag(:div, class: ["tr", "nodes__thead"]) do %>
         <% column_erbs("thead").each do |column_erb| %>
