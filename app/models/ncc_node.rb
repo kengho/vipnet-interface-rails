@@ -309,6 +309,10 @@ class NccNode < ActiveRecord::Base
     result.to_json.gsub("null", "nil")
   end
 
+  def self.vids
+    all.map { |n| n.vid }.reject { |vid| !vid }.sort
+  end
+
   def self.quick_searchable
     [
       :vid, :name,

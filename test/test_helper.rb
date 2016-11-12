@@ -97,14 +97,6 @@ class Array
   end
 end
 
-class NccNode::ActiveRecord_Relation
-  def vids
-    vids = []
-    self.each { |n| vids.push(n.vid) }
-    vids.sort
-  end
-end
-
 class Network::ActiveRecord::Base
   def last_nodenames_created_at
     Nodename.thread(self).last.created_at.iso8601(3)
