@@ -104,7 +104,7 @@ namespace :db do
       rand(5).times do |_|
         new_ascendant = NccNode.new(descendant: ncc_node)
         # up to 2 random props changing simultaneously
-        rand_changing_props = changing_props.shuffle[0..rand(1)]
+        rand_changing_props = changing_props.sample(rand(3))
         rand_changing_props.each { |p| new_ascendant[p] = send("get_rand_#{p}") }
         new_ascendant.creation_date = get_rand_date_after(ncc_node.creation_date)
         new_ascendant.save!
@@ -129,7 +129,7 @@ namespace :db do
         create_random_ip_for(hw_node)
 
         rand(5).times do |_|
-          changes = [:version, :ip, :both][rand(3)]
+          changes = [:version, :ip, :both].sample
           new_ascendant = HwNode.new(descendant: hw_node)
           new_ascendant.creation_date = get_rand_date_after(hw_node.creation_date)
           new_ascendant.version = get_rand_version if [:version, :both].include?(changes)
@@ -211,8 +211,7 @@ namespace :db do
   end
 
   def get_rand_version
-    versions = ["3.0-670", "3.0-671", "3.0-672", "0.3-2", "4.20"]
-    versions[rand(versions.size)]
+    ["3.0-670", "3.0-671", "3.0-672", "0.3-2", "4.20"].sample
   end
 
   def get_rand_version_near(version)
