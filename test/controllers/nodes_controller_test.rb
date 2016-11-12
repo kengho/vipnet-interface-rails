@@ -403,4 +403,62 @@ class NodesControllerTest < ActionController::TestCase
     get_js(:load, { search: "ids: 0x1a0e0002, 0x1a0e0003" })
     assert_equal(["0x1a0e0002", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
+
+  test "should parse 'search' param to perform custom search (version, ver)" do
+    ncc_node1 = CurrentNccNode.new(vid: "0x1a0e0001", network: @network); ncc_node1.save!
+    ncc_node2 = CurrentNccNode.new(vid: "0x1a0e0002", network: @network); ncc_node2.save!
+    CurrentHwNode.create!(
+      ncc_node: ncc_node1,
+      coordinator: @coordinator1,
+      version_decoded: "2.0",
+    )
+    CurrentHwNode.create!(
+      ncc_node: ncc_node1,
+      coordinator: @coordinator2,
+      version_decoded: "3.0",
+    )
+    CurrentHwNode.create!(
+      ncc_node: ncc_node2,
+      coordinator: @coordinator1,
+      version_decoded: "3.1",
+    )
+    CurrentHwNode.create!(
+      ncc_node: ncc_node2,
+      coordinator: @coordinator2,
+      version_decoded: "3.2",
+    )
+    get_js(:load, { search: "version: 3.1" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+    get_js(:load, { search: "ver: 3.1" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
+
+  test "should parse 'search' param to perform custom search (version_hw, ver_hw)" do
+    ncc_node1 = CurrentNccNode.new(vid: "0x1a0e0001", network: @network); ncc_node1.save!
+    ncc_node2 = CurrentNccNode.new(vid: "0x1a0e0002", network: @network); ncc_node2.save!
+    CurrentHwNode.create!(
+      ncc_node: ncc_node1,
+      coordinator: @coordinator1,
+      version: "3.0-670",
+    )
+    CurrentHwNode.create!(
+      ncc_node: ncc_node1,
+      coordinator: @coordinator2,
+      version: "3.2-672",
+    )
+    CurrentHwNode.create!(
+      ncc_node: ncc_node2,
+      coordinator: @coordinator1,
+      version: "0.3-2",
+    )
+    CurrentHwNode.create!(
+      ncc_node: ncc_node2,
+      coordinator: @coordinator2,
+      version: "4.20-0",
+    )
+    get_js(:load, { search: "version_hw: 0.3-2" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+    get_js(:load, { search: "ver_hw: 0.3-2" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
 end

@@ -21,7 +21,13 @@ class NodesController < ApplicationController
     # { "vid" => "0x1a0e0001", "name" => "Alex" }
     if params_expanded["search"]
       custom_search = false
-      aliases = { "id" => "vid" }
+      aliases = {
+        "id" => "vid",
+        "version" => "version_decoded",
+        "ver" => "version_decoded",
+        "version_hw" => "version",
+        "ver_hw" => "version",
+       }
       request = params_expanded["search"]
 
       if request =~ /ids:(?<ids>.*)/

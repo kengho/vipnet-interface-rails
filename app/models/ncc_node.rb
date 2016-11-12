@@ -55,13 +55,17 @@ class NccNode < ActiveRecord::Base
     search_resuls
   end
 
-  def self.where_version_decoded_like(version_decoded)
+  def self.where_version_like(version, subtype = "version")
     search_resuls = NccNode.none
-    version_decoded_escaped = version_decoded.gsub("_", "\\\\_").gsub("%", "\\\\%")
+    version_escaped = version.gsub("_", "\\\\_").gsub("%", "\\\\%")
     search_resuls = NccNode
       .joins(:hw_nodes)
-      .where("hw_nodes.version_decoded LIKE ?", "%#{version_decoded_escaped}%")
+      .where("hw_nodes.#{subtype} LIKE ?", "%#{version_escaped}%")
     search_resuls
+  end
+
+  def self.where_version_decoded_like(version_decoded)
+    NccNode.where_version_like(version_decoded, "version_decoded")
   end
 
   def self.where_creation_date_like(creation_date)
