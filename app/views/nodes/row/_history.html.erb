@@ -1,4 +1,6 @@
-<%= content_tag(:div, name: "history", "data-prop": @prop, "data-closable": true) do %>
+<%# so closable is true by default, but may be reset %>
+<% closable = true unless closable == false %>
+<%= content_tag(:div, name: "history", "data-prop": @prop, "data-closable": closable) do %>
   <% @data.each_with_index do |slice, i| %>
     <%= content_tag(:div, class: "tr") do %>
       <% NodesHelper::COLUMN_ORDER.each do |order| %>
@@ -8,7 +10,7 @@
             <%= render "nodes/row/cell_history", value: slice[@prop] %>
           <% elsif prop == :creation_date %>
             <%= render "nodes/row/cell_history", value: prop_view_datetime(slice[:creation_date]) %>
-          <% elsif prop == :history_close_button && i == 0 %>
+          <% elsif closable && prop == :history_close_button && i == 0 %>
             <%= content_tag(:div, name: "close-button") do %>
               <%= content_tag(:label, "data-close": true,
                     class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "mdl-button--gray"]

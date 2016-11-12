@@ -8,7 +8,14 @@
         <% end %>
       <% end %>
       <% @ncc_nodes.each do |ncc_node| %>
-        <% @ncc_node = ncc_node %>
+        <% if ncc_node.descendant %>
+          <% @ncc_node = ncc_node.descendant %>
+          <% @prop = history_prop(ncc_node) %>
+          <% @data = @ncc_node.history(@prop) %>
+        <% else %>
+          <% @ncc_node = ncc_node %>
+        <% end %>
+
         <%= content_tag(:div, class: ["tr", "nodes__row"],
               "data-vid": @ncc_node.vid,
               "data-selectable": true,
@@ -18,6 +25,10 @@
             <% params = column_erb[:params] || {} %>
             <%= render column_erb[:erb], params %>
           <% end %>
+        <% end %>
+
+        <% if @data %>
+          <%= render "nodes/row/history", closable: false %>
         <% end %>
       <% end %>
     <% end %>

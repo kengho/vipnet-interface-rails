@@ -109,4 +109,17 @@ module NodesHelper
       end
     end
   end
+
+  def history_prop(ncc_node)
+    NccNode.props_from_nodename.each do |prop|
+      return prop if ncc_node[prop]
+    end
+
+    if ncc_node.hw_nodes
+      hw_node = ncc_node.hw_nodes.first
+      HwNode.props_from_iplirconf.each do |prop|
+        return prop if hw_node[prop]
+      end
+    end
+  end
 end

@@ -60,7 +60,7 @@ class NodesController < ApplicationController
     CurrentNccNode.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     @ncc_nodes = @ncc_nodes
       .paginate(page: params[:page])
-      .includes(:hw_nodes, hw_nodes: [:node_ips])
+      .includes(:descendant, :hw_nodes, hw_nodes: [:node_ips])
     @params = params_expanded
     @js_data = @ncc_nodes.js_data
   end

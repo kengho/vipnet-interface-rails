@@ -252,6 +252,7 @@ class NccNode < ActiveRecord::Base
   def self.js_data
     js_data = {}
     all.each do |ncc_node|
+      ncc_node = ncc_node.descendant if ncc_node.descendant
       js_data[ncc_node.vid] = ncc_node.as_json(only: [
         :name,
         :creation_date,
