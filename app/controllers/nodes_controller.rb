@@ -13,8 +13,29 @@ class NodesController < ApplicationController
     params_expanded = params.each { |_, value| value.strip! }
     params_expanded.reject! do |key, value|
       value.empty? ||
-      ["controller", "action", "_"].include?(key) ||
+      ["controller", "action", "format", "_"].include?(key) ||
       false
+    end
+
+    # { "search" => "id: 0x1a0e0001, name: Alex" } =>
+    # { "vid" => "0x1a0e0001", "name"=>"Alex" }
+    if params_expanded["search"]
+      custom_search = false
+      aliases = { "id" => "vid" }
+      request = params_expanded["search"]
+
+      request.split(",").each do |partial_request|
+        if partial_request =~ /^(?<prop>.*):(?<value>.*)$/
+          prop = Regexp.last_match[:prop].strip
+          prop = aliases[prop] if aliases[prop]
+          value = Regexp.last_match[:value].strip
+
+          params_expanded[prop] = value
+          custom_search = true
+        end
+      end
+
+      params_expanded.delete("search") if custom_search
     end
 
     if params_expanded["search"]

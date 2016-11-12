@@ -365,4 +365,34 @@ class NodesControllerTest < ActionController::TestCase
     get_js(:load, { mftp_server_vid: "0x1a0e0001" })
     assert_equal([], assigns["ncc_nodes"].vids)
   end
+
+  test "should parse 'search' param to perform custom search (single param)" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
+    get_js(:load, { search: "name:Brad" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
+
+  test "should parse 'search' param to perform custom search (single param with spaces)" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
+    get_js(:load, { search: "name: Brad" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
+
+  test "should parse 'search' param to perform custom search (multiple params)" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0002", name: "Brad1", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0013", name: "Brad2", network: @network)
+    get_js(:load, { search: "id:0x1a0e000,name:Brad" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
+
+  test "should parse 'search' param to perform custom search (multiple params with spaces)" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0002", name: "Brad1", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0013", name: "Brad2", network: @network)
+    get_js(:load, { search: "id: 0x1a0e000, name: Brad" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
 end
