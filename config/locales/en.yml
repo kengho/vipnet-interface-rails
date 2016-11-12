@@ -72,6 +72,17 @@ en:
       select_all: "Select all"
       unselect_all: "Clear selection"
       search: "Search"
+      search_tip_pre: "E.g"
+      search_tips:
+        - "10.0.0.0/8"
+        - "0x1a0e07e1-0x1a0e07f2"
+        - "id: 0x1a0, name: Larson"
+        - "name: ^B.*r$"
+        - "version: 4"
+        - "ver: 3.1"
+        - "version_hw: 0.3-2"
+        - "ver_hw: 3.0-670"
+        - "ids: 0x1a0fe167, 1A0EE6D8"
       settings: "Settings"
       support: "Support"
       profile: "Profile"
@@ -159,7 +170,7 @@ en:
       password_invalid: is not valid
       not_active: Your account is not active
       not_confirmed: Your account is not confirmed
-      not_approved: Your account is not approved
+      not_approved: Your accoun ft is not approved
       no_authentication_details: You did not provide any details for authentication
       general_credentials_error: Login/Password combination is not valid
     models:
