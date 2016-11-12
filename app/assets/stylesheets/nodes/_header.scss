@@ -95,14 +95,22 @@ $variants-hover-bgcolor: rgba(white, 0.4);
 
 #header__search {
   text-align: left;
-  padding-right: 24px;
+  margin-right: 56px;
+  min-width: 200px;
+  max-width: 500px;
+  position: relative;
 
   & input {
     color: $main-text-color !important;
     width: 100%;
-    max-width: 600px;
     border: none;
     padding: 4px;
     border-radius: 2px;
   }
+}
+
+#header__search-button {
+  position: absolute;
+  right: -40px;
+  top: -4px;
 }

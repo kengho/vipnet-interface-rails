@@ -55,8 +55,15 @@
                   "value": params[:search],
             )
         %>
+
+        <%= content_tag(:div, id: "header__search-button") do %>
+          <%= content_tag(:button, class: ["mdl-button", "mdl-js-button", "mdl-button--icon"], type: "submit",) do %>
+            <%= content_tag(:i, i("nodes.header.search"), class: "material-icons") %>
+          <% end %>
+        <% end %>
       <% end %>
     <% end %>
+
 
     <%= content_tag(:nav, class: "mdl-navigation") do %>
       <% nav_buttons.each do |nav_button| %>

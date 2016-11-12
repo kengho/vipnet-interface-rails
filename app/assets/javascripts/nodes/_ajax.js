@@ -61,6 +61,10 @@ vipnetInterface.nodes.ajax = {
           $("#progress").vipnetInterface().tmpShow();
         }
     })
+
+    $("#header__search-button").click(function() {
+      $("#progress").vipnetInterface().tmpShow();
+    });
   },
 
   bindRemoteButtons: function() {

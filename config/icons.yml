@@ -1,12 +1,4 @@
 nodes:
-  # status:
-    # deleted: "delete_forever"
-    #           # "cancel"
-    #           # "sentiment_very_dissatisfied"
-    # disabled: "do_not_disturb_on"
-    #           # "warning"
-    #           # "block"
-    # history: "history"
   header:
     subtitle:
       separator: "chevron_right"
@@ -14,6 +6,7 @@ nodes:
       copy: "content_copy"
       unselect_all: "close"
       select_all: "select_all"
+    search: "search"
     nav:
       settings: "settings"
       profile: "person"
@@ -24,7 +17,11 @@ nodes:
       info: "info_outline"
       history: "history"
       deleted: "delete_forever"
+            #  "cancel"
+            #  "sentiment_very_dissatisfied"
       disabled: "do_not_disturb_on"
+            #  "warning"
+            #  "block"
       status:
         "true": "check_circle"
         "false": "error"
