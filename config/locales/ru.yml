@@ -136,7 +136,7 @@ ru:
       submit_label: "Сохрнить"
       title: "VI → Профиль"
       label: "Профиль"
-    flash:
+    snackbar:
       error_saving_user_settings: "Не удалось сохранить настройки"
       user_settings_saved: "Настройки сохранены"
       password_successfully_changed: "Пароль изменен"

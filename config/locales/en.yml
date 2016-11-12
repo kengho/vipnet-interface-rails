@@ -135,7 +135,7 @@ en:
       submit_label: "Save"
       title: "VI → Profile"
       label: "Profile"
-    flash:
+    snackbar:
       error_saving_user_settings: "Error saving settings"
       user_settings_saved: "Settings saved"
       password_successfully_changed: "Password changed"
