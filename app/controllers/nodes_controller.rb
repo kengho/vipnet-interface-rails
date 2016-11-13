@@ -76,12 +76,14 @@ class NodesController < ApplicationController
       end
     end
 
+    per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if @search
       # http://stackoverflow.com/a/24448317/6376451
       all_ncc_nodes = NccNode
         .where(id: search_resuls.map(&:id))
         .order(vid: :asc)
       current_ncc_nodes = all_ncc_nodes.where(type: "CurrentNccNode")
+      NccNode.per_page = per_page
       if current_ncc_nodes.size > 0
         @ncc_nodes = current_ncc_nodes
       else
@@ -93,9 +95,9 @@ class NodesController < ApplicationController
       # there are mess in pagination if creation_date is the same
       # and there are only one ordering prop
       @ncc_nodes = CurrentNccNode.order(creation_date: :desc, vid: :desc)
+      CurrentNccNode.per_page = per_page
     end
 
-    CurrentNccNode.per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     @ncc_nodes = @ncc_nodes
       .paginate(page: params[:page])
       .includes(:descendant, :hw_nodes, hw_nodes: [:node_ips])
