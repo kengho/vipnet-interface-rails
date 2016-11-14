@@ -17,7 +17,8 @@ class HwNode < ActiveRecord::Base
       /^3\.0\-.*/ => "3.1",
       /^3\.2\-.*/ => "3.2",
       /^0\.3\-2$/ => "3.2 (11.19855)",
-      /^4\..*/ => "4",
+      /^4\.2.*/ => "4.2",
+      /^4\.3.*/ => "4.3",
     }
     substitution_list.each do |regexp, outcome|
       return outcome if version =~ regexp
