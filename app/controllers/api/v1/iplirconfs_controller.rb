@@ -5,14 +5,14 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
       render plain: ERROR_RESPONSE and return
     end
 
-    file_content = File.read(params[:file].tempfile)
-    parsed_iplirconf = VipnetParser::Iplirconf.new(file_content)
-    sections = parsed_iplirconf.sections
+    iplirconf_file = File.read(params[:file].tempfile)
+    iplirconf = VipnetParser::Iplirconf.new(iplirconf_file)
+    iplirconf.parse()
 
     coord_vid = params[:coord_vid]
     network = Network.find_or_create_by(network_vid: VipnetParser::network(coord_vid))
     coordinator = Coordinator.find_or_create_by(vid: coord_vid, network: network)
-    diff, iplirconf_created_at = Iplirconf.push(hash: sections, belongs_to: coordinator)
+    diff, iplirconf_created_at = Iplirconf.push(hash: iplirconf.hash[:id], belongs_to: coordinator)
     unless diff
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return

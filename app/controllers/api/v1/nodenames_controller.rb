@@ -5,9 +5,10 @@ class Api::V1::NodenamesController < Api::V1::BaseController
       render plain: ERROR_RESPONSE and return
     end
 
-    file_content = File.read(params[:file].tempfile)
-    parsed_nodename = VipnetParser::Nodename.new(file_content)
-    records = parsed_nodename.records
+    nodename_file = File.read(params[:file].tempfile)
+    nodename = VipnetParser::Nodename.new(nodename_file)
+    nodename.parse()
+    records = nodename.hash
 
     network = Network.find_or_create_by(network_vid: params[:network_vid])
     nodename_is_not_first = Nodename.any?(network)

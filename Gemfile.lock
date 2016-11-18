@@ -163,7 +163,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.0.3)
       execjs (>= 0.3.0, < 3)
-    vipnet_parser (0.3.3)
+    vipnet_parser (1.0.2)
     web-console (2.3.0)
       activemodel (>= 4.0)
       binding_of_caller (>= 0.7.2)
@@ -194,7 +194,7 @@ DEPENDENCIES
   sdoc (~> 0.4.0)
   spring
   uglifier (>= 1.3.0)
-  vipnet_parser (~> 0)
+  vipnet_parser (~> 1)
   web-console (~> 2.0)
   will_paginate (~> 3)
 
