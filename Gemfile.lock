@@ -68,7 +68,7 @@ GEM
       rake
     globalid (0.3.7)
       activesupport (>= 4.1.0)
-    hashdiff_sym (0.3.1)
+    hashdiff_sym (0.3.2)
     httparty (0.14.0)
       multi_xml (>= 0.5.2)
     i18n (0.7.0)
