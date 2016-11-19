@@ -8,15 +8,15 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     nodename_file = File.read(params[:file].tempfile)
     nodename = VipnetParser::Nodename.new(nodename_file)
     nodename.parse()
-    records = nodename.hash[:id]
 
     network = Network.find_or_create_by(network_vid: params[:network_vid])
     nodename_is_not_first = Nodename.any?(network)
-    diff, nodename_created_at = Nodename.push(hash: records, belongs_to: network)
+    diff, nodename_created_at = Nodename.push(hash: nodename.hash, belongs_to: network, partial: :id)
     unless diff
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return
     end
+    records = nodename.hash[:id]
 
     ascendants_ids = []
     diff.each do |changes|
