@@ -27,6 +27,9 @@ class GarlandsTest < ActiveSupport::TestCase
     @h4 = { a: "a4", b: "b1" }
     @h5 = { a: "a5", b: "b1" }
     @h6 = { a: "a6", b: "b1" }
+
+    @h7 = { interesting_key: { a: 1, b: 2 }, key2: 1, key3: 2 }
+    @h8 = { interesting_key: { a: 2, b: 1 }, key2: 2, key3: 3 }
   end
 
   test "should not save without entity" do
@@ -173,5 +176,17 @@ class GarlandsTest < ActiveSupport::TestCase
     Storage.push(@h1)
     Storage.push(@h1)
     assert_equal(1, Storage.all.size)
+  end
+
+  test "should push hashes and return partial diff" do
+    Storage.push(@h7)
+    s, _ = Storage.push(hash: @h8, partial: :interesting_key)
+    assert_equal(HashDiffSym.diff(@h7[:interesting_key], @h8[:interesting_key]), s)
+  end
+
+  test "should push hashes and return partial diff (belongs)" do
+    StorageBelongsNetwork.push(hash: @h7, belongs_to: @network1)
+    s, _ = StorageBelongsNetwork.push(hash: @h8, belongs_to: @network1, partial: :interesting_key)
+    assert_equal(HashDiffSym.diff(@h7[:interesting_key], @h8[:interesting_key]), s)
   end
 end

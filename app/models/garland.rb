@@ -20,20 +20,29 @@ class Garland < ActiveRecord::Base
     if args[:hash]
       h = args[:hash]
       b_to = args[:belongs_to]
-      b_to_id = args[:belongs_to].id
-      b_to_type = table_type(args[:belongs_to])
+      if b_to
+        b_to_id = args[:belongs_to].id
+        b_to_type = table_type(args[:belongs_to])
+      end
+      partial = args[:partial]
     else
       h = args
       b_to = nil
       b_to_id = nil
       b_to_type = nil
+      partial = nil
     end
 
     thread = self.thread(b_to)
     if thread.size == 0
       n = self.new(entity: h.to_s, entity_type: SNAPSHOT, belongs_to_id: b_to_id, belongs_to_type: b_to_type)
       if n.save
-        return HashDiffSym.diff({}, h), n.created_at
+        if partial
+          d = HashDiffSym.diff({}, h[partial])
+        else
+          d = HashDiffSym.diff({}, h)
+        end
+        return d, n.created_at
       else
         return false
       end
@@ -54,7 +63,12 @@ class Garland < ActiveRecord::Base
         if n.save
           last_e.next = n.id
           if last_e.save
-            return d, n.created_at
+            if partial
+              return_d = HashDiffSym.diff(eval(s.entity)[partial], h[partial])
+            else
+              return_d = d
+            end
+            return return_d, n.created_at
           else
             n.destroy
             return false
