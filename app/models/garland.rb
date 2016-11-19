@@ -1,6 +1,10 @@
 class Garland < ActiveRecord::Base
+  DIFF = true
+  SNAPSHOT = false
+  NEXT_ID_PENDING = 0
+
   validates :entity, presence: true
-  validates_inclusion_of :entity_type, in: [true, false]
+  validates_inclusion_of :entity_type, in: [DIFF, SNAPSHOT]
   # for given parent object, described by "belongs_to_id" and "belongs_to_type",
   # there are only one record of each type which is on top of the stack
   validates_uniqueness_of :type, scope: [
@@ -9,102 +13,112 @@ class Garland < ActiveRecord::Base
     :next,
   ], conditions: -> { where(next: nil) }
 
-  SNAPSHOT = false
-  DIFF = true
-  NEXT_ID_PENDING = 0
-
   def self.push(args)
     if args.class != Hash
-      return false
+      return nil
     end
     if args[:hash]
-      h = args[:hash]
-      b_to = args[:belongs_to]
-      if b_to
-        b_to_id = args[:belongs_to].id
-        b_to_type = table_type(args[:belongs_to])
+      hash = args[:hash]
+      belongs_to = args[:belongs_to]
+      if belongs_to
+        belongs_to_id = args[:belongs_to].id
+        belongs_to_type = table_type(args[:belongs_to])
       end
       partial = args[:partial]
     else
-      h = args
-      b_to = nil
-      b_to_id = nil
-      b_to_type = nil
+      hash = args
+      belongs_to = nil
+      belongs_to_id = nil
+      belongs_to_type = nil
       partial = nil
     end
 
-    thread = self.thread(b_to)
+    thread = self.thread(belongs_to)
     if thread.size == 0
-      n = self.new(entity: h.to_s, entity_type: SNAPSHOT, belongs_to_id: b_to_id, belongs_to_type: b_to_type)
-      if n.save
+      new_element = self.new(
+        entity: hash.to_s,
+        entity_type: SNAPSHOT,
+        belongs_to_id: belongs_to_id,
+        belongs_to_type: belongs_to_type
+      )
+      if new_element.save
         if partial
-          d = HashDiffSym.diff({}, h[partial])
+          diff = HashDiffSym.diff({}, hash[partial])
         else
-          d = HashDiffSym.diff({}, h)
+          diff = HashDiffSym.diff({}, hash)
         end
-        return d, n.created_at
+        return diff, new_element.created_at
       else
-        return false
+        return nil
       end
     else
-      s = self.snapshot(b_to)
-      last_e = thread.find_by(next: nil)
-      # can't assign next id until new record (n) is saved
-      last_e.next = NEXT_ID_PENDING
-      unless last_e.save
-        return false
+      snapshot = self.snapshot(belongs_to)
+      last_element = thread.find_by(next: nil)
+      # can't assign next id until new_element is saved
+      last_element.next = NEXT_ID_PENDING
+      unless last_element.save
+        return nil
       end
-      d = HashDiffSym.diff(eval(s.entity), h)
-      if d == []
-        return d
+      diff = HashDiffSym.diff(eval(snapshot.entity), hash)
+      if diff == []
+        return []
       else
-        n = self.new(entity: d.to_s, entity_type: DIFF, previous: last_e.id, belongs_to_id: b_to_id, belongs_to_type: b_to_type)
+        new_element = self.new(
+          entity: diff.to_s,
+          entity_type: DIFF,
+          previous: last_element.id,
+          belongs_to_id: belongs_to_id,
+          belongs_to_type: belongs_to_type
+        )
 
-        if n.save
-          last_e.next = n.id
-          if last_e.save
+        if new_element.save
+          last_element.next = new_element.id
+          if last_element.save
             if partial
-              return_d = HashDiffSym.diff(eval(s.entity)[partial], h[partial])
+              return_diff = HashDiffSym.diff(eval(snapshot.entity)[partial], hash[partial])
             else
-              return_d = d
+              return_diff = diff
             end
-            return return_d, n.created_at
+            return return_diff, new_element.created_at
           else
-            n.destroy
-            return false
+            new_element.destroy
+            return nil
           end
         else
-          return false
+          return nil
         end
       end
     end
   end
 
-  def self.snapshot(b_to = nil)
-    thread = self.thread(b_to)
-    last_s = thread.find_by(next: nil)
-    if last_s == nil
+  def self.snapshot(belongs_to = nil)
+    thread = self.thread(belongs_to)
+    last_snapshot = thread.find_by(next: nil)
+    if last_snapshot == nil
       Rails.logger.error(
         "Requested for snapshot, but either Garland has no records "\
-        "or there is broken stack top for thread with type = '#{self.name}' and belongs_to = '#{b_to}'"
+        "or there is broken stack top for thread with type = '#{self.name}' and belongs_to = '#{belongs_to}'"
       )
       return
     end
-    until last_s.entity_type == SNAPSHOT do
-      last_s = thread.find_by_id(last_s.previous)
+
+    until last_snapshot.entity_type == SNAPSHOT do
+      last_snapshot = thread.find_by_id(last_snapshot.previous)
     end
-    s = last_s
-    s_h = eval(s.entity)
-    until s.next == nil do
-      n = thread.find_by_id(s.next)
-      s_h = HashDiffSym.patch!(s_h, eval(n.entity))
-      s = n
+
+    snapshot = last_snapshot
+    snapshot_hash = eval(snapshot.entity)
+    until snapshot.next == nil do
+      next_thread = thread.find_by_id(snapshot.next)
+      snapshot_hash = HashDiffSym.patch!(snapshot_hash, eval(next_thread.entity))
+      snapshot = next_thread
     end
-    self.new(entity: s_h.to_s, entity_type: SNAPSHOT)
+
+    self.new(entity: snapshot_hash.to_s, entity_type: SNAPSHOT)
   end
 
-  def self.any?(b_to)
-    self.thread(b_to).any?
+  def self.any?(belongs_to)
+    self.thread(belongs_to).any?
   end
 
   def self.decode_changes(changes)
@@ -118,15 +132,16 @@ class Garland < ActiveRecord::Base
     if action == :add || action == :remove
       props = changes[2]
     end
-    return action, target, props, before, after
+
+    [action, target, props, before, after]
   end
 
   private
-    def self.thread(b_to)
-      if b_to == nil
+    def self.thread(belongs_to)
+      if belongs_to == nil
         return self.where("belongs_to_id is null AND belongs_to_type is null")
       else
-        return self.where("belongs_to_id = ? AND belongs_to_type = ?", b_to.id, table_type(b_to))
+        return self.where("belongs_to_id = ? AND belongs_to_type = ?", belongs_to.id, table_type(belongs_to))
       end
     end
 
