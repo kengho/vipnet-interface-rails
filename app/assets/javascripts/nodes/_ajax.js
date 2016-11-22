@@ -35,14 +35,6 @@ vipnetInterface.nodes.ajax = {
     availability: "/nodes/availability",
   },
 
-  load: function(params, history = false) {
-    vipnetInterface.nodes.ajax.doAction({
-      action: "load",
-      data: params,
-      history: history,
-    });
-  },
-
   bindProgress: function() {
     $(".pagination a").click(function() {
       $("#progress").vipnetInterface().tmpShow();
@@ -83,30 +75,35 @@ vipnetInterface.nodes.ajax = {
     });
   },
 
+  load: function(data, history = false) {
+    vipnetInterface.nodes.ajax.history = history;
+    $.ajax({
+      url: vipnetInterface.nodes.ajax.urls["load"],
+      method: "get",
+      dataType: "script",
+      data: data,
+      timeout: vipnetInterface.nodes.ajax.timeout,
+      // http://stackoverflow.com/a/14563181/6376451
+      error: function() {
+        vipnetInterface.showSnackbar(I18n["ajax_error"]);
+      },
+    }).complete(function() {
+      vipnetInterface.nodes.ajax.history = false;
+    });
+  },
+
   doAction: function(params) {
-    if(params.action != "load") {
-      vipnetInterface.nodes.ajax.renderSpinner(params);
-    }
-    if(params.history) {
-      vipnetInterface.nodes.ajax.history = true;
-    }
+    vipnetInterface.nodes.ajax.renderSpinner(params);
     $.ajax({
       url: vipnetInterface.nodes.ajax.urls[params.action],
       method: "get",
       dataType: "script",
       data: params.data,
       timeout: vipnetInterface.nodes.ajax.timeout,
-      // http://stackoverflow.com/a/14563181/6376451
-      error: function(jqXHR, exception) {
+      error: function() {
         vipnetInterface.showSnackbar(I18n["ajax_error"]);
-        if(params.action != "load") {
-          vipnetInterface.nodes.ajax.renderDefault(params);
-        }
+        vipnetInterface.nodes.ajax.renderDefault(params);
       },
-    }).complete(function() {
-      if(params.history) {
-        vipnetInterface.nodes.ajax.history = false;
-      }
     });
   },
 
