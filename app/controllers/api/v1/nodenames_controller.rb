@@ -11,7 +11,11 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
     network = Network.find_or_create_by(network_vid: params[:network_vid])
     nodename_is_not_first = Nodename.any?(network)
-    diff, nodename_created_at = Nodename.push(hash: nodename.hash, belongs_to: network, partial: :id)
+    diff, nodename_created_at = Nodename.push(
+      hash: nodename.hash,
+      belongs_to: network,
+      partial: :id
+    )
     unless diff
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return
@@ -29,7 +33,8 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
       # skip extra nodes
       # "we admin network" means "we have Nodename for it"
-      we_admin_this_network = !!Nodename.joins(:network).find_by("networks.network_vid": curent_network_vid)
+      we_admin_this_network = !!Nodename.joins(:network)
+        .find_by("networks.network_vid": curent_network_vid)
       it_is_internetworking_node = network.network_vid != curent_network_vid
       next if we_admin_this_network && it_is_internetworking_node
 
@@ -67,7 +72,8 @@ class Api::V1::NodenamesController < Api::V1::BaseController
             deletion_date: nodename_created_at,
           })
         else
-          Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' doesn't exists, nothing to delete")
+          Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' "\
+            "doesn't exists, nothing to delete")
         end
       end
 
@@ -95,13 +101,16 @@ class Api::V1::NodenamesController < Api::V1::BaseController
             end
             changing_ncc_node.update_attribute(target[:field], after)
           else
-            Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' doesn't exists, nothing to change")
+            Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' "\
+              "doesn't exists, nothing to change")
           end
         else
-          Rails.logger.info("Trying to change wrong field '#{target[:field]}' in CurrentNccNode via nodename API")
+          Rails.logger.info("Trying to change wrong field '#{target[:field]}' "\
+            "in CurrentNccNode via nodename API")
         end
       end
     end
+
     render plain: OK_RESPONSE and return
   end
 end
