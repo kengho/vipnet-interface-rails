@@ -92,17 +92,17 @@ vipnetInterface.nodes.ajax = {
     });
   },
 
-  doAction: function(params) {
-    vipnetInterface.nodes.ajax.renderSpinner(params);
+  doAction: function(args) {
+    vipnetInterface.nodes.ajax.renderSpinner(args);
     $.ajax({
-      url: vipnetInterface.nodes.ajax.urls[params.action],
+      url: vipnetInterface.nodes.ajax.urls[args.action],
       method: "get",
       dataType: "script",
-      data: params.data,
+      data: args.data,
       timeout: vipnetInterface.nodes.ajax.timeout,
       error: function() {
         vipnetInterface.showSnackbar(I18n["ajax_error"]);
-        vipnetInterface.nodes.ajax.renderDefault(params);
+        vipnetInterface.nodes.ajax.renderDefault(args);
       },
     });
   },
@@ -147,6 +147,7 @@ vipnetInterface.nodes.ajax = {
       });
 
     vipnetInterface.params = args.params;
+
     if(!vipnetInterface.nodes.ajax.history) {
       window.history.pushState(args.params, null, "nodes?" + args.paramsQuery);
     }
