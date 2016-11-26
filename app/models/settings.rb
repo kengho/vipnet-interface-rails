@@ -85,6 +85,16 @@ class Settings < RailsSettings::CachedSettings
         default_value: "false",
         accepted_values: boolean_values,
       },
+
+      "mailer_default_from" => {
+        type: :text,
+        default_value: "vi@example.com",
+      },
+
+      "host" => {
+        type: :text,
+        default_value: "https://vi.example.com",
+      },
     }
   end
 

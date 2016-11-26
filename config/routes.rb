@@ -16,6 +16,7 @@ Rails.application.routes.draw do
   get 'nodes/info', to: 'nodes#info'
   get 'nodes/history', to: 'nodes#history'
   get 'nodes/availability', to: 'nodes#availability'
+  get 'reset_password', to: 'reset_password#index'
 
   namespace :api do
     namespace :v1 do

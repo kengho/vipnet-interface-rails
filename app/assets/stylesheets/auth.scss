@@ -44,3 +44,17 @@ $error-color: #c30;
     color: $error-color;
   }
 }
+
+#reset-password-button {
+  padding-top: 24px;
+  display: inline-block;
+  cursor: pointer;
+  text-decoration: none;
+  border-bottom: 2px dashed $main-link-color;
+  color: $main-link-color;
+
+  &:hover {
+    border-bottom: 2px dashed $main-link-color-hover;
+    color: $main-link-color-hover;
+  }
+}

@@ -124,6 +124,8 @@ ru:
       nodename_api_enabled: "Включить API nodename"
       iplirconf_api_enabled: "Включить API iplirconf"
       ticket_api_enabled: "Включить API ticket"
+      mailer_default_from: "\"from\" в исходящих email"
+      host: "Хост"
       submit_label: "Сохранить"
     users:
       email: "Email"
@@ -141,6 +143,7 @@ ru:
       label: "Войти"
       submit_label: "Войти"
       remember_me: "Запомнить"
+      reset_password: "Сброс пароля"
   users:
     edit:
       submit_label: "Сохранить"
@@ -160,6 +163,11 @@ ru:
     snackbar:
       copied: "Данные скопированы в буфер обмена"
       close: "Закрыть"
+      reset_password: "Инструкция по сбросу пароля выслана"
+  mailer:
+    reset_password:
+      subject: "VI: инструкция по сбросу пароля"
+      body: "Для сброса пароля перейдите по ссылке: %{link}."
   authlogic:
     error_messages:
       login_blank: не может быть пустым

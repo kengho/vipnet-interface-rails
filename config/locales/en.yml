@@ -123,6 +123,8 @@ en:
       nodename_api_enabled: "Enable nodename API"
       iplirconf_api_enabled: "Enable iplirconf API"
       ticket_api_enabled: "Enable ticket API"
+      mailer_default_from: "\"from\" in incoming email"
+      host: "Host"
       submit_label: "Save"
     users:
       email: "Email"
@@ -140,6 +142,7 @@ en:
       label: "Sign in"
       submit_label: "Sign in"
       remember_me: "Remember me"
+      reset_password: "Reset password"
   users:
     edit:
       submit_label: "Save"
@@ -157,6 +160,11 @@ en:
     snackbar:
       copied: "Data copied to clipboard"
       close: "Close"
+      reset_password: "Reset password instructions have been sent"
+  mailer:
+    reset_password:
+      subject: "VI: reset password instructions"
+      body: "Follow this link to reset password: %{link}."
   authlogic:
     error_messages:
       login_blank: can not be blank

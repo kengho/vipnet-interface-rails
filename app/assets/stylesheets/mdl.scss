@@ -71,6 +71,7 @@
 }
 
 .mdl-snackbar {
+  z-index: 1000;
   @extend %shadow;
 }
 

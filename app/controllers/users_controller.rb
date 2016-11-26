@@ -45,13 +45,22 @@ class UsersController < ApplicationController
     end
 
     if params["user_session"]
-      if current_user.valid_password?(params["user_session"]["current_password"])
+      if current_user.valid_password?(current_user.perishable_token)
+        password_is_valid = true
+      elsif current_user.valid_password?(params["user_session"]["current_password"])
+        password_is_valid = true
+      else
+        password_is_valid = false
+      end
+
+      if password_is_valid
         if params["user_session"]["password"].to_s != params["user_session"]["password_confirmation"].to_s
           @response = :error_confirmation_password
         else
           current_user.password = params["user_session"]["password"]
           current_user.password_confirmation = params["user_session"]["password_confirmation"]
           if current_user.changed? && current_user.save
+            current_user.reset_perishable_token!
             @response = :password_successfully_changed
           else
             @response = :error_changing_password

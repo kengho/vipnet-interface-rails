@@ -38,7 +38,10 @@
         <span class="mdl-checkbox__label"><%= t(".remember_me") %></span>
       </label>
 
+      <%= content_tag(:span, t(".reset_password"), class: "auth__link--same-page", id: "reset-password-button") %>
       <%= render "shared/submit", label: t(".submit_label") %>
     <% end %>
   <% end %>
 <% end %>
+
+<%= render "shared/snackbar", light: true %>
