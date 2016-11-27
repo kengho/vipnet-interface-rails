@@ -33,8 +33,7 @@
         %>
       <% end %>
 
-      <%# otherwise user is going to reset password and don't need this field %>
-      <% unless current_user.valid_password?(current_user.perishable_token) %>
+      <% unless current_user.reset_password %>
         <%= render "shared/textfield", props: {
               id: "current_password",
               name: "user_session[current_password]",
