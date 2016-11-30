@@ -1,6 +1,7 @@
 vipnetInterface = {
   nodes: {},
   params: {},
+  localePageReloadTime: 1000,
 
   snackbarContainer: function() {
     return $("#snackbar")[0];
@@ -59,7 +60,10 @@ vipnetInterface = {
           if (name == "nodes_per_page") {
             vipnetInterface.nodes.ajax.load(vipnetInterface.params);
           } else if(name == "locale") {
-            location.reload();
+            setTimeout(
+              function() { location.reload(); },
+              vipnetInterface.localePageReloadTime
+            );
           }
         },
       });
