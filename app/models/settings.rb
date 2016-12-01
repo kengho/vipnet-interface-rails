@@ -95,6 +95,12 @@ class Settings < RailsSettings::CachedSettings
         type: :text,
         default_value: "https://vi.example.com",
       },
+
+      "demo_mode" => {
+        type: :radio,
+        default_value: "false",
+        accepted_values: boolean_values,
+      },
     }
   end
 

@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   skip_before_action :check_administrator_role
+  before_action :check_demo_mode, except: :edit
 
   def edit
     @user = current_user

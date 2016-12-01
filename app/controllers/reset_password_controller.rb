@@ -1,6 +1,7 @@
 class ResetPasswordController < ApplicationController
   skip_before_action :authenticate_user, :check_administrator_role
-
+  before_action :check_demo_mode
+  
   respond_to :js
 
   def index

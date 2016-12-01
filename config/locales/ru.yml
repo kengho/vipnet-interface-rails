@@ -125,6 +125,7 @@ ru:
       ticket_api_enabled: "Включить API ticket"
       mailer_default_from: "\"from\" в исходящих email"
       host: "Хост"
+      demo_mode: "Демо режим"
       submit_label: "Сохранить"
     users:
       email: "Email"
@@ -167,6 +168,7 @@ ru:
       copied: "Данные скопированы в буфер обмена"
       close: "Закрыть"
       reset_password: "Инструкция по сбросу пароля выслана"
+      unavailable_in_demo_mode: "Недоступно в демо-режиме"
   mailer:
     reset_password:
       subject: "VI: инструкция по сбросу пароля"

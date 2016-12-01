@@ -112,6 +112,8 @@ class NccNode < ActiveRecord::Base
     else
       if Rails.env.test?
         availability = true
+      elsif Settings.demo_mode == "true"
+        availability = self.id % 2 == 0
       else
         sleep(5)
         accessips.each do |accessip|

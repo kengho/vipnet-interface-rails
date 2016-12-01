@@ -49,4 +49,10 @@ class ApplicationController < ActionController::Base
         redirect_to sign_in_path
       end
     end
+
+    respond_to :js
+
+    def check_demo_mode
+      render "shared/unavailable_in_demo_mode" and return if Settings.demo_mode == "true"
+    end
 end

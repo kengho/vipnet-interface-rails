@@ -124,6 +124,7 @@ en:
       ticket_api_enabled: "Enable ticket API"
       mailer_default_from: "\"from\" in incoming email"
       host: "Host"
+      demo_mode: "Demo mode"
       submit_label: "Save"
     users:
       email: "Email"
@@ -164,6 +165,7 @@ en:
       copied: "Data copied to clipboard"
       close: "Close"
       reset_password: "Reset password instructions have been sent"
+      unavailable_in_demo_mode: "Unavailable in demo mode"
   mailer:
     reset_password:
       subject: "VI: reset password instructions"

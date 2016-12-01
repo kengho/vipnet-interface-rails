@@ -117,6 +117,7 @@ class NodesController < ApplicationController
 
   def availability
     @status = @ncc_node.availability
+    sleep(rand(5)) if Settings.demo_mode == "true"
   end
 
   private
