@@ -71,7 +71,7 @@
     <% end %>
 
     <%= render layout: "settings/users/td" do %>
-      <%= link_to user_path(user), method: :delete do %>
+      <%= link_to user_path(user), method: :delete, "data-remote": true do %>
         <%= render "settings/users/button", {
               color: "accent",
               id: "users__user-#{user.id}-delete",

@@ -5,6 +5,8 @@ class UsersController < ApplicationController
     @user = current_user
   end
 
+  respond_to :js
+
   def destroy
     user = User.find_by(id: params[:id])
     if user
@@ -16,10 +18,7 @@ class UsersController < ApplicationController
     else
       render nothing: true, status: :bad_request, content_type: "text/html" and return
     end
-    redirect_to "/settings#users"
   end
-
-  respond_to :js
 
   def update
     if current_user.id.to_s != params["id"]

@@ -109,8 +109,6 @@ en:
         error_creating_user: "Error creating user"
         user_saved: "User saved"
         error_saving_user: "Error saving user"
-        user_destroyed: "User deleted"
-        error_destroying_user: "Error deleting user"
         settings_saved: "Settings saved"
         error_saving_settings: "Error saving settings"
     general:
@@ -156,6 +154,10 @@ en:
       error_changing_password: "Error changing password"
       error_confirmation_password: "Error confirmation password"
       error_validating_password: "Error validating password"
+    destroy:
+      snackbar:
+        user_destroyed: "User deleted"
+        error_destroying_user: "Error deleting user"
   js:
     ajax_error: "Error"
     snackbar:

@@ -21,9 +21,7 @@ vipnetInterface = {
     }
 
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
-    $(".mdl-snackbar__action[type='button']").click(function() {
-      callback.call();
-    });
+    callback.call();
   },
 
   hideSnackbar: function() {

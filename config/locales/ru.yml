@@ -110,8 +110,6 @@ ru:
         error_creating_user: "Ошибка при создании пользователя"
         user_saved: "Пользователь сохранен"
         error_saving_user: "Не удалось сохранить пользователя"
-        user_destroyed: "Пользователь удален"
-        error_destroying_user: "Ошибка при удалении пользователя"
         settings_saved: "Настройки сохранены"
         error_saving_settings: "Ошибка сохранения настроек"
     general:
@@ -157,6 +155,10 @@ ru:
       error_changing_password: "Не удалось изменить пароль"
       error_confirmation_password: "Введенные пароли не совпадают"
       error_validating_password: "Неверный текущий пароль"
+    destroy:
+      snackbar:
+        user_destroyed: "Пользователь удален"
+        error_destroying_user: "Ошибка при удалении пользователя"
   will_paginate:
     page_gap: "..."
   js:
