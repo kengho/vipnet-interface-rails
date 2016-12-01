@@ -1,4 +1,9 @@
-<%= content_tag(:form, action: "/settings", method: "get") do %>
+<%= content_tag(:form,
+      action: "/settings",
+      method: "patch",
+      "data-remote": "true",
+    ) do
+%>
   <%= tag(:input, hidden: true, name: "general") %>
   <% Settings.values.each do |value, settings_params| %>
     <% settings = @settings.find_by(var: value) %>

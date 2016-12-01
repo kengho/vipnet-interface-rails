@@ -1,5 +1,14 @@
 class SettingsController < ApplicationController
+
   def index
+    # "thing_id is null" means this settings are not users'
+    @settings = Settings.unscoped.where("thing_id is null").reorder(var: :asc)
+    @users = User.all.reorder(email: :asc)
+  end
+
+  respond_to :js
+
+  def update
     if params[:general]
       saved_successfully = true
       params.each do |param, value|
@@ -16,7 +25,6 @@ class SettingsController < ApplicationController
       else
         flash[:notice] = :error_saving_settings
       end
-      redirect_to "/settings#general"
 
     elsif params[:users]
       user = User.find(params[:id])
@@ -27,7 +35,6 @@ class SettingsController < ApplicationController
           flash[:notice] = :error_saving_user
         end
       end
-      redirect_to "/settings#users"
 
     elsif params[:add_user]
       user = User.new(
@@ -43,11 +50,6 @@ class SettingsController < ApplicationController
       else
         flash[:notice] = :error_creating_user
       end
-      redirect_to "/settings#users"
     end
-
-    # "thing_id is null" means this settings are not users'
-    @settings = Settings.unscoped.where("thing_id is null").reorder(var: :asc)
-    @users = User.all.reorder(email: :asc)
   end
 end

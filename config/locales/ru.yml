@@ -102,6 +102,7 @@ ru:
       label: "Настройки"
       general_label: "Основные"
       users_label: "Пользователи"
+    update:
       snackbar:
         password: "Пароль"
         email: "Email"

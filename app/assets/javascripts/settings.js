@@ -24,16 +24,3 @@ $(document).ready(function() {
     });
   };
 });
-
-// http://stackoverflow.com/a/36088776/6376451
-// http://stackoverflow.com/a/5182050/6376451
-$(window).load(function() {
-  var flash = $("div[data-flash]");
-  if(flash) {
-    var message = $(flash).data("message");
-    if(message) {
-      var timeout = $(flash).data("timeout");
-      vipnetInterface.showSnackbar(message, timeout);
-    }
-  }
-});

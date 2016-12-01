@@ -31,5 +31,7 @@ Rails.application.routes.draw do
       resources :availability, only: [:index]
     end
   end
-  resources :settings, only: [:index]
+
+  match 'settings' => 'settings#index', :via => :get
+  match 'settings' => 'settings#update', :via => :patch
 end

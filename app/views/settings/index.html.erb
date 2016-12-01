@@ -15,13 +15,5 @@
     <%= content_tag(:div, render("users"), id: "users-settings", class: "table") %>
   <% end %>
 
-  <% message, timeout = snackbarize(flash) %>
-  <%= content_tag(:div, "",
-        "data-flash": true,
-        "data-message": message,
-        "data-timeout": timeout,
-      )
-  %>
-
   <%= render "shared/snackbar", light: true %>
 <% end %>

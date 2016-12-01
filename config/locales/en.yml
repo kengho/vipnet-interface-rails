@@ -101,6 +101,7 @@ en:
       label: "Settings"
       general_label: "General"
       users_label: "Users"
+    update:
       snackbar:
         password: "Password"
         email: "Email"

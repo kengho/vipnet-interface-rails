@@ -7,7 +7,7 @@ vipnetInterface = {
     return $("#snackbar")[0];
   },
 
-  showSnackbar: function(message, timeout = 3000) {
+  showSnackbar: function(message, timeout = 3000, callback = function(){}) {
     var snackbarContainer = vipnetInterface.snackbarContainer();
     var msgToShow = I18n["snackbar"][message] || message;
 
@@ -21,6 +21,9 @@ vipnetInterface = {
     }
 
     snackbarContainer.MaterialSnackbar.showSnackbar(data);
+    $(".mdl-snackbar__action[type='button']").click(function() {
+      callback.call();
+    });
   },
 
   hideSnackbar: function() {

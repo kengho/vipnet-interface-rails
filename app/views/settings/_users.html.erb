@@ -1,4 +1,10 @@
-<%= content_tag(:form, action: "/settings", method: "get", class: "tr") do %>
+<%= content_tag(:form,
+      action: "/settings",
+      method: "patch",
+      "data-remote": "true",
+      class: "tr",
+    ) do
+%>
   <%= tag(:input, hidden: true, name: "add_user") %>
   <%= tag(:input, hidden: true, name: "password", value: SecureRandom.hex(12)) %>
 
@@ -30,7 +36,13 @@
 <% end %>
 
 <% @users.each do |user| %>
-  <%= content_tag(:form, action: "/settings", method: "get", class: "tr") do %>
+  <%= content_tag(:form,
+        action: "/settings",
+        method: "patch",
+        "data-remote": "true",
+        class: "tr",
+      ) do
+  %>
     <%= tag(:input, hidden: true, name: "users") %>
     <%= tag(:input, hidden: true, name: "id", value: user.id) %>
 
