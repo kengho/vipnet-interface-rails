@@ -45,7 +45,7 @@ class UsersController < ApplicationController
     end
 
     if params["user_session"]
-      if current_user.reset_password
+      if current_user.reset_password_allowed
         password_is_valid = true
       elsif current_user.valid_password?(params["user_session"]["current_password"])
         password_is_valid = true
@@ -60,7 +60,7 @@ class UsersController < ApplicationController
           current_user.password = params["user_session"]["password"]
           current_user.password_confirmation = params["user_session"]["password_confirmation"]
           if current_user.changed? && current_user.save
-            current_user.update_attribute(:reset_password, nil)
+            current_user.update_attribute(:reset_password_allowed, nil)
             @response = :password_successfully_changed
           else
             @response = :error_changing_password

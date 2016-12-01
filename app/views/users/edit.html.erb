@@ -33,7 +33,7 @@
         %>
       <% end %>
 
-      <% unless current_user.reset_password %>
+      <% unless current_user.reset_password_allowed %>
         <%= render "shared/textfield", props: {
               id: "current_password",
               name: "user_session[current_password]",
