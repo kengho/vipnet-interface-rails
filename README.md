@@ -28,7 +28,7 @@ ViPNet™ Interface is a web app which collects and shows various information ab
 
 * [vipnet_checker-rails](https://github.com/kengho/vipnet_checker-rails) (rails)
 
-Places wherever nodes' accessips available and provides API for checking their availability.
+Provides API for checking their availability.
 
 * [vipnet_interface_config](https://github.com/kengho/vipnet_interface_config) (ruby)
 
@@ -44,7 +44,36 @@ Runs on NCC and sends `NODENAME.DOC` here via API.
 
 ## Installing
 
-I prefer this way using [rvm + passenger + nginx](https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/install_language_runtime.html/). Tested on Ubuntu 14.04.
+For ruby on rails apps I prefer [this way using rvm + passenger + nginx](https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/install_language_runtime.html/). Tested on Ubuntu 14.04.
+
+* install and setup this app
+
+After that you can collect `POST_ADMINISTRATOR_TOKEN`, `POST_HW_TOKEN`, `POST_TICKETS_TOKEN` and `CHECKER_TOKEN` from `.env`.
+
+* install [vipnet_checker-rails](https://github.com/kengho/vipnet_checker-rails) wherever nodes' accessips available
+
+Write down it's URL (aka `CHECKER_URL`). Put the same `CHECKER_TOKEN` to `.env` as one above.
+
+* install and setup [vipnet_interface_config](https://github.com/kengho/vipnet_interface_config) wherever ViPNet™ Coordinators HW ssh available.
+
+Setup `getter.yml` and `tickets.yml` using tokens above.
+
+* setup this app's "Check availability API"
+
+ Go to `/settings` and change `localhost:8080` to actual `CHECKER_URL` (don't touch `{ip}` and `{token}`).
+
+* setup [(to be committed)](https://github.com/kengho/) on each ViPNet™ Administrator's you want to gather data from
+
+* allow `CHECKER_URL` to make requests over TCP\5100 to accessips
+
+like
+```
+[tunnel]
+...
+rule= proto tcp from 192.168.0.10 to anyip:5100 pass
+```
+
+You may install this app, [vipnet_interface_config](https://github.com/kengho/vipnet_interface_config) and  [vipnet_checker-rails](https://github.com/kengho/vipnet_checker-rails) on separate servers and setup checker's routes for accessips via Coordinator, but the easiest way is to put one server behind Coordinator and setup all modules there.
 
 ## TODO (random order)
 
