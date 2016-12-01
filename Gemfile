@@ -12,7 +12,6 @@ gem "coffee-rails"
 group :development do
   gem "web-console", "~> 2.0"
   gem "spring"
-  gem "faker", "~> 1"
 end
 
 gem "material_design_lite-rails", "~> 1"
@@ -27,3 +26,4 @@ gem "authlogic", "~> 3"
 gem "vipnet_parser", "~> 1"
 gem "hashdiff_sym", "~> 0"
 gem "jquery-ui-rails", "~> 5"
+gem "faker", "~> 1"
