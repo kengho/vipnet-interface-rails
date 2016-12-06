@@ -7,7 +7,11 @@ vipnetInterface = {
     return $("#snackbar")[0];
   },
 
-  showSnackbar: function(message, timeout = 3000, callback = function(){}) {
+  showSnackbar: function(message, timeout, callback) {
+    // http://stackoverflow.com/a/8128312/6376451
+    if (typeof timeout === "undefined") { timeout = 3000; }
+    if (typeof callback === "undefined") { callback = function(){}; }
+
     var snackbarContainer = vipnetInterface.snackbarContainer();
     var msgToShow = I18n["snackbar"][message] || message;
 

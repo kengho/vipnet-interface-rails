@@ -75,7 +75,10 @@ vipnetInterface.nodes.ajax = {
     });
   },
 
-  load: function(data, history = false) {
+  load: function(data, history) {
+    // http://stackoverflow.com/a/8128312/6376451
+    if (typeof history === "undefined") { timeout = false; }
+
     vipnetInterface.nodes.ajax.history = history;
     $.ajax({
       url: vipnetInterface.nodes.ajax.urls["load"],
@@ -107,7 +110,10 @@ vipnetInterface.nodes.ajax = {
     });
   },
 
-  button: function($row, action, prop = null) {
+  button: function($row, action, prop) {
+    // http://stackoverflow.com/a/8128312/6376451
+    if (typeof prop === "undefined") { prop = null; }
+
     if(prop) {
       return $row.find("*[data-action-name='" + action + "'][data-action-prop='" + prop + "']");
     } else {
