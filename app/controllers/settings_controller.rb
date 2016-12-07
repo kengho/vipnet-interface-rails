@@ -1,5 +1,6 @@
 class SettingsController < ApplicationController
   before_action :check_demo_mode, except: :index
+  before_action :check_administrator_role
 
   def index
     # "thing_id is null" means this settings are not users'

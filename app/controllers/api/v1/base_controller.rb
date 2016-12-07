@@ -10,8 +10,12 @@ class Api::V1::BaseController < ActionController::Base
   before_action :authenticate
 
   private
+    def render_nothing(status)
+      render nothing: true, status: status, content_type: "text/html" and return
+    end
+
     def check_if_api_enabled
-      render_nothing(:service_unavailable) if Settings.disable_api
+      render_nothing(:service_unavailable) if Settings.disable_api == "true"
     end
 
     def destroy_session
