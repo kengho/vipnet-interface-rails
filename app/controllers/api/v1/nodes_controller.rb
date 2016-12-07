@@ -1,6 +1,6 @@
 class Api::V1::NodesController < Api::V1::BaseController
   def index
-    @response = Hash.new
+    @response = {}
     if params[:vid]
       only = params[:only] || ["name"]
       ncc_node = CurrentNccNode.find_by(vid: params[:vid])
@@ -10,10 +10,11 @@ class Api::V1::NodesController < Api::V1::BaseController
         detail: "Expected vid as param",
         links: {
           related: {
-            href: "/api/v1/doc"
-          }
-        }
+            href: "/api/v1/doc",
+          },
+        },
       }]
+
       render json: @response and return
     end
 
@@ -23,10 +24,11 @@ class Api::V1::NodesController < Api::V1::BaseController
         detail: "Only should be an array",
         links: {
           related: {
-            href: "/api/v1/doc"
-          }
-        }
+            href: "/api/v1/doc",
+          },
+        },
       }]
+
       render json: @response and return
     end
 
@@ -65,6 +67,7 @@ class Api::V1::NodesController < Api::V1::BaseController
     else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
     end
+    
     render json: @response and return
   end
 end

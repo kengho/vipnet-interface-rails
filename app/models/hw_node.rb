@@ -23,6 +23,7 @@ class HwNode < ActiveRecord::Base
     substitution_list.each do |regexp, outcome|
       return outcome if version =~ regexp
     end
+    
     nil
   end
 
@@ -31,6 +32,7 @@ class HwNode < ActiveRecord::Base
     self.all.each do |e|
       result.push(eval(e.to_json_hw))
     end
+
     result.to_json.gsub("null", "nil")
   end
 
@@ -77,6 +79,7 @@ class HwNode < ActiveRecord::Base
       [:coordinator_id, :ncc_node_id, :descendant_id].include?(key) ||
       false
     end
+
     tmp.to_json
   end
 

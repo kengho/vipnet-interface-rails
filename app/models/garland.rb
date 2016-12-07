@@ -75,7 +75,10 @@ class Garland < ActiveRecord::Base
           last_element.next = new_element.id
           if last_element.save
             if partial
-              return_diff = HashDiffSym.diff(eval(snapshot.entity)[partial], hash[partial])
+              return_diff = HashDiffSym.diff(
+                eval(snapshot.entity)[partial],
+                hash[partial]
+              )
             else
               return_diff = diff
             end
@@ -97,7 +100,8 @@ class Garland < ActiveRecord::Base
     if last_snapshot == nil
       Rails.logger.error(
         "Requested for snapshot, but either Garland has no records "\
-        "or there is broken stack top for thread with type = '#{self.name}' and belongs_to = '#{belongs_to}'"
+        "or there is broken stack top for thread with type = '#{self.name}' "\
+        "and belongs_to = '#{belongs_to}'"
       )
       return
     end
@@ -141,7 +145,8 @@ class Garland < ActiveRecord::Base
       if belongs_to == nil
         return self.where("belongs_to_id is null AND belongs_to_type is null")
       else
-        return self.where("belongs_to_id = ? AND belongs_to_type = ?", belongs_to.id, table_type(belongs_to))
+        return self.where("belongs_to_id = ? AND belongs_to_type = ?",
+          belongs_to.id, table_type(belongs_to))
       end
     end
 

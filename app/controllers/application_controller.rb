@@ -28,9 +28,7 @@ class ApplicationController < ActionController::Base
     end
 
     def check_administrator_role
-      unless current_user.role == "administrator"
-        redirect_to sign_in_path
-      end
+      redirect_to sign_in_path unless current_user.role == "administrator"
     end
 
     def current_user_session
@@ -44,9 +42,7 @@ class ApplicationController < ActionController::Base
     end
 
     def authenticate_user
-      unless current_user
-        redirect_to sign_in_path
-      end
+      redirect_to sign_in_path unless current_user
     end
 
     def render_nothing(status)
@@ -56,6 +52,8 @@ class ApplicationController < ActionController::Base
     respond_to :js
 
     def check_demo_mode
-      render "shared/unavailable_in_demo_mode" and return if Settings.demo_mode == "true"
+      if Settings.demo_mode == "true"
+        render "shared/unavailable_in_demo_mode" and return
+      end
     end
 end

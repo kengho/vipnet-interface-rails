@@ -25,17 +25,22 @@ class NccNode < ActiveRecord::Base
 
   def self.where_vid_like(vid)
     search_resuls = NccNode.none
-    normal_vids = VipnetParser::id(string: vid, threshold: Settings.vid_search_threshold)
+    normal_vids = VipnetParser::id(
+      string: vid,
+      threshold: Settings.vid_search_threshold,
+    )
     normal_vids.each do |normal_vid|
       search_resuls = search_resuls | NccNode.where("vid = ?", normal_vid)
     end
     search_resuls = search_resuls | NccNode.where("vid ILIKE ?", "%#{vid}%")
+
     search_resuls
   end
 
   def self.where_name_like(name)
     name_regexp = name.gsub(" ", ".*")
     search_resuls = NccNode.where("name ~* ?", name_regexp)
+
     search_resuls
   end
 
@@ -52,6 +57,7 @@ class NccNode < ActiveRecord::Base
         .joins(hw_nodes: :node_ips)
         .where("node_ips.u32 >= ? AND node_ips.u32 <= ?", lower_bound, higher_bound)
     end
+
     search_resuls
   end
 
@@ -61,6 +67,7 @@ class NccNode < ActiveRecord::Base
     search_resuls = NccNode
       .joins(:hw_nodes)
       .where("hw_nodes.#{subtype} LIKE ?", "%#{version_escaped}%")
+
     search_resuls
   end
 
@@ -80,6 +87,7 @@ class NccNode < ActiveRecord::Base
     return unless field == "deletion_date" || field == "creation_date"
     date_escaped = date.to_s.gsub("_", "\\\\_").gsub("%", "\\\\%")
     search_resuls = NccNode.where("#{field}::text LIKE ?", "%#{date_escaped}%")
+
     search_resuls
   end
 
@@ -87,6 +95,7 @@ class NccNode < ActiveRecord::Base
     search_resuls = NccNode
       .joins(:tickets)
       .where("tickets.ticket_id LIKE ?", "%#{ticket_id}%")
+
     search_resuls
   end
 
@@ -100,6 +109,7 @@ class NccNode < ActiveRecord::Base
         category: "client",
       )
     end
+
     search_resuls
   end
 
@@ -107,27 +117,26 @@ class NccNode < ActiveRecord::Base
     availability = false
     response = {}
     accessips = self.accessips
-    if accessips.empty?
-      return false
+    return false if accessips.empty?
+
+    if Rails.env.test?
+      availability = true
+    elsif Settings.demo_mode == "true"
+      availability = self.id % 2 == 0
     else
-      if Rails.env.test?
-        availability = true
-      elsif Settings.demo_mode == "true"
-        availability = self.id % 2 == 0
-      else
-        sleep(5)
-        accessips.each do |accessip|
-          http_request = Settings.checker_api
-            .gsub("{ip}", accessip)
-            .gsub("{token}", ENV["CHECKER_TOKEN"])
-          http_response = HTTParty.get(http_request)
-          if http_response.code == :ok
-            availability ||= http_response.parsed_response["data"]["availability"]
-          end
-          break if availability
+      sleep(5)
+      accessips.each do |accessip|
+        http_request = Settings.checker_api
+          .gsub("{ip}", accessip)
+          .gsub("{token}", ENV["CHECKER_TOKEN"])
+        http_response = HTTParty.get(http_request)
+        if http_response.code == :ok
+          availability ||= http_response.parsed_response["data"]["availability"]
         end
+        break if availability
       end
     end
+
     availability
   end
 
@@ -137,6 +146,7 @@ class NccNode < ActiveRecord::Base
       accessip = hw_node.accessip
       accessips.push(accessip) if accessip
     end
+
     accessips
   end
 
@@ -148,6 +158,7 @@ class NccNode < ActiveRecord::Base
         abonent_number: "0000",
         category: "server",
       )
+
       mftp_server
     end
   end
@@ -178,7 +189,15 @@ class NccNode < ActiveRecord::Base
 
       data = groups.map do |creation_date, hw_nodes_array|
         hw_nodes = HwNode.where(id: hw_nodes_array.map(&:id))
-        [creation_date, NccNode.most_likely(prop: prop, ncc_node: self, hw_nodes: hw_nodes)]
+
+        [
+          creation_date,
+          NccNode.most_likely(
+            prop: prop,
+            ncc_node: self,
+            hw_nodes: hw_nodes,
+          ),
+        ]
       end
 
       data_uniq = data.reject.with_index do |arr, i|
@@ -194,7 +213,11 @@ class NccNode < ActiveRecord::Base
   end
 
   def most_likely(prop)
-    return NccNode.most_likely(prop: prop, ncc_node: self, hw_nodes: self.hw_nodes)
+    return NccNode.most_likely(
+      prop: prop,
+      ncc_node: self,
+      hw_nodes: self.hw_nodes,
+    )
   end
 
   def self.most_likely(args)

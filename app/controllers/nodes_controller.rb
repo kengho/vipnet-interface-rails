@@ -56,7 +56,8 @@ class NodesController < ApplicationController
       NccNode.quick_searchable.each do |prop|
         search_method = "where_#{prop}_like".to_sym
         if NccNode.methods.include?(search_method)
-          search_resuls = search_resuls | NccNode.public_send(search_method, param)
+          search_resuls = search_resuls |
+            NccNode.public_send(search_method, param)
         end
       end
     else
@@ -68,14 +69,16 @@ class NodesController < ApplicationController
           values = Array(value)
           sub_search_resuls = NccNode.none
           values.each do |value|
-            sub_search_resuls = sub_search_resuls | NccNode.public_send(search_method, value)
+            sub_search_resuls = sub_search_resuls |
+              NccNode.public_send(search_method, value)
           end
           search_resuls = search_resuls & sub_search_resuls
         end
       end
     end
 
-    per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
+    per_page = current_user.settings["nodes_per_page"] ||
+      Settings.nodes_per_page
     if @search
       # http://stackoverflow.com/a/24448317/6376451
       all_ncc_nodes = NccNode

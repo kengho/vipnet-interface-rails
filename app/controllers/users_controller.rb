@@ -21,9 +21,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    if current_user.id.to_s != params["id"]
-      render_nothing(:unauthorized)
-    end
+    render_nothing(:unauthorized) if current_user.id.to_s != params["id"]
 
     # additional user settings
     name = params["name"]
@@ -44,20 +42,21 @@ class UsersController < ApplicationController
     end
 
     if params["user_session"]
+      user_session = params["user_session"]
       if current_user.reset_password_allowed
         password_is_valid = true
-      elsif current_user.valid_password?(params["user_session"]["current_password"])
+      elsif current_user.valid_password?(user_session["current_password"])
         password_is_valid = true
       else
         password_is_valid = false
       end
 
       if password_is_valid
-        if params["user_session"]["password"].to_s != params["user_session"]["password_confirmation"].to_s
+        if user_session["password"] != user_session["password_confirmation"]
           @response = :error_confirmation_password
         else
-          current_user.password = params["user_session"]["password"]
-          current_user.password_confirmation = params["user_session"]["password_confirmation"]
+          current_user.password = user_session["password"]
+          current_user.password_confirmation = user_session["password_confirmation"]
           if current_user.changed? && current_user.save
             current_user.update_attribute(:reset_password_allowed, nil)
             @response = :password_successfully_changed

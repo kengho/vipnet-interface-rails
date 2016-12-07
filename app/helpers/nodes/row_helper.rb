@@ -9,7 +9,10 @@ module Nodes::RowHelper
       view = @ncc_node.name
 
     when :creation_date
-      creation_date_view = prop_view_datetime(@ncc_node.creation_date, detalization)
+      creation_date_view = prop_view_datetime(
+        @ncc_node.creation_date,
+        detalization
+      )
       if @ncc_node.creation_date_accuracy
         view = creation_date_view
       else
@@ -53,7 +56,10 @@ module Nodes::RowHelper
       if tickets.any?
         links = []
         tickets.each do |ticket|
-          href = ticket.ticket_system.url_template.gsub("{id}", ticket.ticket_id.to_s)
+          href = ticket
+            .ticket_system
+            .url_template
+            .gsub("{id}", ticket.ticket_id.to_s)
           links.push(href: href, text: ticket.ticket_id.to_s)
         end
 
@@ -124,6 +130,7 @@ module Nodes::RowHelper
           "#{hw_node[field]}"
         )
       end
+
       long_versions.join(", ")
     end
   end

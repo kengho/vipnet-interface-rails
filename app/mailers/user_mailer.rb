@@ -6,7 +6,7 @@ class UserMailer < ApplicationMailer
       mail(
         to: email[:to],
         subject: t("mailer.reset_password.subject"),
-        body: t("mailer.reset_password.body", link: link)
+        body: t("mailer.reset_password.body", link: link),
       )
     end
   end

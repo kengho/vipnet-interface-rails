@@ -7,9 +7,9 @@ class Api::V1::AvailabilityController < Api::V1::BaseController
         detail: "Expected vid as param",
         links: {
           related: {
-            href: "/api/v1/doc"
-          }
-        }
+            href: "/api/v1/doc",
+          },
+        },
       }]
       render json: @response and return
     end

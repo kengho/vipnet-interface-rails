@@ -17,6 +17,7 @@ class NodeIp < ActiveRecord::Base
     self.all.each do |e|
       result.push(eval(e.to_json_nonmagic))
     end
+
     result.to_json.gsub("null", "nil")
   end
 end
