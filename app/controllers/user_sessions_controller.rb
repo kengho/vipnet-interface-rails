@@ -1,6 +1,5 @@
 class UserSessionsController < ApplicationController
   skip_before_action :authenticate_user, only: ["new", "create"]
-  skip_before_action :check_administrator_role
 
   def new
     @user_session = UserSession.new
@@ -9,7 +8,6 @@ class UserSessionsController < ApplicationController
   def create
     @user_session = UserSession.new(user_session_params)
     if @user_session.save
-      flash[:success] = "Welcome back!"
       redirect_to root_path
     else
       render :new
@@ -18,7 +16,6 @@ class UserSessionsController < ApplicationController
 
   def destroy
     current_user_session.destroy
-    flash[:success] = "Goodbye!"
     redirect_to root_path
   end
 

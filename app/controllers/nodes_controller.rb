@@ -1,5 +1,4 @@
 class NodesController < ApplicationController
-  skip_before_action :check_administrator_role
   before_action :check_if_ncc_node_exist, only: [:info, :history, :availability]
 
   def index

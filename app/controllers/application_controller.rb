@@ -3,7 +3,6 @@ class ApplicationController < ActionController::Base
   protect_from_forgery with: :exception unless Rails.env.test?
   before_action :set_locale
   before_action :authenticate_user
-  before_action :check_administrator_role
 
   helper_method :current_user_session, :current_user, :current
 
