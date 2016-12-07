@@ -122,8 +122,6 @@ class NodesController < ApplicationController
   private
     def check_if_ncc_node_exist
       @ncc_node = NccNode.find_by(vid: params[:vid])
-      unless @ncc_node
-        render nothing: true, status: :bad_request, content_type: "text/html" and return
-      end
+      render_nothing(:bad_request) unless @ncc_node
     end
 end

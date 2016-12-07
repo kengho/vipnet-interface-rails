@@ -49,6 +49,10 @@ class ApplicationController < ActionController::Base
       end
     end
 
+    def render_nothing(status)
+      render nothing: true, status: status, content_type: "text/html" and return
+    end
+
     respond_to :js
 
     def check_demo_mode

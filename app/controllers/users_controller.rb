@@ -16,13 +16,13 @@ class UsersController < ApplicationController
         flash[:notice] = :error_destroying_user
       end
     else
-      render nothing: true, status: :bad_request, content_type: "text/html" and return
+      render_nothing(:bad_request)
     end
   end
 
   def update
     if current_user.id.to_s != params["id"]
-      render nothing: true, status: :unauthorized, content_type: "text/html" and return
+      render_nothing(:unauthorized)
     end
 
     # additional user settings
