@@ -8,7 +8,7 @@ ru:
     v1:
       doc:
         index:
-          title: "VI → Документация API"
+          title: "VI: Документация API"
           overall_label: "Общие данные"
           request: "Запрос"
           response: "Ответ"
@@ -98,7 +98,7 @@ ru:
         ticket: "Заявки"
   settings:
     index:
-      title: "VI → Настройки"
+      title: "VI: Настройки"
       label: "Настройки"
       general_label: "Основные"
       users_label: "Пользователи"
@@ -139,7 +139,7 @@ ru:
         editor: "Редактор"
   user_sessions:
     new:
-      title: "VI → Войти"
+      title: "VI: Войти"
       label: "Войти"
       submit_label: "Войти"
       remember_me: "Запомнить"
@@ -147,7 +147,7 @@ ru:
   users:
     edit:
       submit_label: "Сохранить"
-      title: "VI → Профиль"
+      title: "VI: Профиль"
       label: "Профиль"
     snackbar:
       error_saving_user_settings: "Не удалось сохранить настройки"
