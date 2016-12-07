@@ -211,7 +211,9 @@ namespace :db do
   end
 
   def get_rand_version
-    ["3.0-670", "3.0-671", "3.0-672", "0.3-2", "4.20"].sample
+    version_list = ["3.0-670", "3.0-671", "3.0-672", "4.20"]
+    version_list_expanded = version_list*10 + ["0.3-2"]
+    version_list_expanded.sample
   end
 
   def get_rand_version_near(version)
