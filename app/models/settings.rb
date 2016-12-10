@@ -42,7 +42,7 @@ class Settings < RailsSettings::CachedSettings
 
       "nodes_per_page" => {
         type: :radio,
-        default_value: "20",
+        default_value: "10",
         accepted_values: {
           # using db_value in view
           "10" => nil,
@@ -70,7 +70,7 @@ class Settings < RailsSettings::CachedSettings
 
       "nodename_api_enabled" => {
         type: :radio,
-        default_value: "false",
+        default_value: "true",
         accepted_values: boolean_values,
       },
 
