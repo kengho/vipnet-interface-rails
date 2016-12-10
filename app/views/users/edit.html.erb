@@ -10,56 +10,58 @@
     <% end %>
 
     <%# hidden input for browser to properly update saved password using users's email %>
-    <%= content_tag(:div, user_settings_params) do %>
-      <%= content_tag(:div) do %>
-        <%= tag(:input,
-              name: "user[email]",
-              type: "text",
-              value: current_user.email,
-              hidden: true,
-            )
-        %>
-      <% end %>
-    <% end %>
-
-    <%= content_tag(:div, user_settings_params) do %>
-      <%= content_tag(:div) do %>
-        <%= tag(:input,
-              name: "user[email]",
-              type: "text",
-              value: current_user.email,
-              hidden: true,
-            )
-        %>
+    <%= content_tag(:form) do %>
+      <%= content_tag(:div, user_settings_params) do %>
+        <%= content_tag(:div) do %>
+          <%= tag(:input,
+                name: "user[email]",
+                type: "text",
+                value: current_user.email,
+                hidden: true,
+              )
+          %>
+        <% end %>
       <% end %>
 
-      <% unless current_user.reset_password_allowed %>
+      <%= content_tag(:div, user_settings_params) do %>
+        <%= content_tag(:div) do %>
+          <%= tag(:input,
+                name: "user[email]",
+                type: "text",
+                value: current_user.email,
+                hidden: true,
+              )
+          %>
+        <% end %>
+
+        <% unless current_user.reset_password_allowed %>
+          <%= render "shared/textfield", props: {
+                id: "current_password",
+                name: "user_session[current_password]",
+                autocomplete: "on",
+                type: "password",
+              }
+          %>
+        <% end %>
+
         <%= render "shared/textfield", props: {
-              id: "current_password",
-              name: "user_session[current_password]",
+              id: "password",
+              name: "user_session[password]",
               autocomplete: "on",
               type: "password",
             }
         %>
+
+        <%= render "shared/textfield", props: {
+              id: "password_confirmation",
+              name: "user_session[password_confirmation]",
+              autocomplete: "on",
+              type: "password",
+            }
+        %>
+
+        <%= render "shared/submit", label: t(".submit_label") %>
       <% end %>
-
-      <%= render "shared/textfield", props: {
-            id: "password",
-            name: "user_session[password]",
-            autocomplete: "on",
-            type: "password",
-          }
-      %>
-
-      <%= render "shared/textfield", props: {
-            id: "password_confirmation",
-            name: "user_session[password_confirmation]",
-            autocomplete: "on",
-            type: "password",
-          }
-      %>
-
-      <%= render "shared/submit", label: t(".submit_label") %>
     <% end %>
   <% end %>
 
