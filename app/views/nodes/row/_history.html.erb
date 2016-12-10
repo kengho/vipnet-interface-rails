@@ -3,7 +3,7 @@
 <%= content_tag(:div, name: "history", "data-prop": @prop, "data-closable": closable) do %>
   <% @data.each_with_index do |slice, i| %>
     <%= content_tag(:div, class: "tr") do %>
-      <% NodesHelper::COLUMN_ORDER.each do |order| %>
+      <% NodesHelper.column_order.each do |order| %>
         <% _, prop, visibility = order %>
         <% if visibility %>
           <% if prop == @prop %>

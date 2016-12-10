@@ -123,4 +123,6 @@ module NodesHelper
       end
     end
   end
+
+  module_function :column_order
 end
