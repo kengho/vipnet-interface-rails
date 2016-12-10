@@ -8,11 +8,11 @@ loop do
   STDOUT.puts "Enter password's confirmation"
   password_confirmation = STDIN.noecho(&:gets).chomp
   admin = User.new(
-            email: email,
-            password: password,
-            password_confirmation: password_confirmation,
-            role: "administrator"
-          )
+    email: email,
+    password: password,
+    password_confirmation: password_confirmation,
+    role: "administrator",
+  )
   if admin.save
     STDOUT.puts "Administrator user successfully created"
     break
@@ -28,7 +28,7 @@ POST_ADMINISTRATOR_TOKEN = SecureRandom.urlsafe_base64(64)
 CHECKER_TOKEN = SecureRandom.urlsafe_base64(64)
 POST_TICKETS_TOKEN = SecureRandom.urlsafe_base64(64)
 
-STDOUT.puts "Please create .env file in root of this app (gem dotenv) or use some other method for storing ENV vars"
+STDOUT.puts "Please create .env file in root of this app (gem 'dotenv') or use some other method for storing ENV vars"
 STDOUT.puts ""
 STDOUT.puts "GET_INFORMATION_TOKEN=#{GET_INFORMATION_TOKEN}"
 STDOUT.puts "POST_HW_TOKEN=#{POST_HW_TOKEN}"
