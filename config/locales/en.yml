@@ -196,7 +196,7 @@ en:
         remember_me: Remember me
 
   shared:
-    id_space_name_newline: "ID имя<br>..."
+    id_space_name_newline: "ID name<br>..."
     id_comma: "ID,..."
     csv: "CSV"
     textfield:
