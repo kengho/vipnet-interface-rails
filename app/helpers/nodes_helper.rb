@@ -1,26 +1,27 @@
 module NodesHelper
-  ALWAYS_VISIBLE = true
-  VISIBLE_IF_IPLIRCONF_API_ENABLED = Settings.iplirconf_api_enabled == "true"
-  VISIBLE_IF_TICKET_API_ENABLED = Settings.ticket_api_enabled == "true"
-
-  COLUMN_ORDER = [
-    # erb, prop, visibility
-    ["space",         nil,                          ALWAYS_VISIBLE],
-    ["remote_button", :availability,                VISIBLE_IF_IPLIRCONF_API_ENABLED],
-    ["cell",          :vid,                         ALWAYS_VISIBLE],
-    ["remote_button", :info,                        ALWAYS_VISIBLE],
-    ["remote_button", [:history, :name],            ALWAYS_VISIBLE],
-    ["cell",          :name,                        ALWAYS_VISIBLE],
-    ["remote_button", [:history, :version_decoded], VISIBLE_IF_IPLIRCONF_API_ENABLED],
-    ["cell",          :version_decoded,             VISIBLE_IF_IPLIRCONF_API_ENABLED],
-    ["cell",          :creation_date,               ALWAYS_VISIBLE],
-    ["cell",          :ticket,                      VISIBLE_IF_TICKET_API_ENABLED],
-    ["space",         :history_close_button,        ALWAYS_VISIBLE],
-  ]
+  def column_order
+    always_visible = true
+    visible_if_iplirconf_api_enabled = Settings.iplirconf_api_enabled == "true"
+    visible_if_ticket_api_enabled = Settings.ticket_api_enabled == "true"
+    [
+      # erb, prop, visibility
+      ["space",         nil,                          always_visible],
+      ["remote_button", :availability,                visible_if_iplirconf_api_enabled],
+      ["cell",          :vid,                         always_visible],
+      ["remote_button", :info,                        always_visible],
+      ["remote_button", [:history, :name],            always_visible],
+      ["cell",          :name,                        always_visible],
+      ["remote_button", [:history, :version_decoded], visible_if_iplirconf_api_enabled],
+      ["cell",          :version_decoded,             visible_if_iplirconf_api_enabled],
+      ["cell",          :creation_date,               always_visible],
+      ["cell",          :ticket,                      visible_if_ticket_api_enabled],
+      ["space",         :history_close_button,        always_visible],
+    ]
+  end
 
   def column_erbs(place)
     column_erbs = []
-    COLUMN_ORDER.each do |order|
+    column_order.each do |order|
       erb, prop, visibility = order
       if visibility
         if lookup_context.template_exists?("nodes/#{place}/_#{erb}")
