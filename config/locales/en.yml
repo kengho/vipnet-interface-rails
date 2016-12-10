@@ -71,7 +71,7 @@ en:
       export_selected: "Copy data from selected rows"
       select_all: "Select all"
       unselect_all: "Clear selection"
-      search_tip_pre: "E.g"
+      search_tip_pre: "E.g."
       search_tips:
         - "10.0.0.0/8"
         - "0x1a0e07e1-0x1a0e07f2"
