@@ -8,7 +8,11 @@ ViPNet™ Interface is a web app which collects and shows various information ab
 
 ## Demo
 
-[demo will be here](https://www.example.com)
+[Demo](https://vipnet-interface-demo.herokuapp.com) (may load for some time at first run).
+
+By now the demo is static and uses data generated using [Faker](https://github.com/stympy/faker) gem ([see lib/tasks/sample_data.rake](sample_data.rake)).
+
+Credentials: `demo@example.com:Password`
 
 ## Features
 
@@ -44,7 +48,7 @@ Runs on NCC and sends `NODENAME.DOC` here via API.
 
 ## Installing
 
-For ruby on rails apps I prefer [this way using rvm + passenger + nginx](https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/install_language_runtime.html/). Tested on Ubuntu 14.04.
+For ruby on rails apps I prefer [this way using rvm + passenger + nginx](https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/install_language_runtime.html/).
 
 * install and setup this app
 
