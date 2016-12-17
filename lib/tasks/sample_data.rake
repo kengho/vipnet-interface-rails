@@ -14,7 +14,7 @@ namespace :db do
 
     print "Destroying db...\n"
     ActiveRecord::Base.connection.tables.each do |table|
-      unless ["schema_migrations", "ar_internal_metadata"].include?(table)
+      unless ["users", "settings", "schema_migrations", "ar_internal_metadata"].include?(table)
         table_type = table.classify.constantize
         table_type.destroy_all
       end
