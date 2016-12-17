@@ -30,9 +30,9 @@ Credentials: `demo@example.com:Password`
 
 * rails and bunch of third-party gems
 
-* [vipnet_checker-rails](https://github.com/kengho/vipnet_checker-rails) (rails)
+* [checker](https://github.com/kengho/checker) (rails)
 
-Provides API for checking their availability.
+Provides API for checking nodes' availability.
 
 * [vipnet_interface_config](https://github.com/kengho/vipnet_interface_config) (ruby)
 
@@ -47,6 +47,8 @@ Parses incoming files.
 Runs on NCC and sends `NODENAME.DOC` here via API.
 
 ## Installing
+
+### Production
 
 For ruby on rails apps I prefer [this way using rvm + passenger + nginx](https://www.phusionpassenger.com/library/walkthroughs/deploy/ruby/ownserver/nginx/oss/install_language_runtime.html/).
 
@@ -77,7 +79,11 @@ like
 rule= proto tcp from 192.168.0.10 to anyip:5100 pass
 ```
 
-You may install this app, [vipnet_interface_config](https://github.com/kengho/vipnet_interface_config) and  [vipnet_checker-rails](https://github.com/kengho/vipnet_checker-rails) on separate servers and setup checker's routes for accessips via Coordinator, but the easiest way is to put one server behind Coordinator and setup all modules there.
+You may install this app, [vipnet_interface_config](https://github.com/kengho/vipnet_interface_config) and [checker](https://github.com/kengho/vipnet_checker) on separate servers and setup checker's routes for accessips via Coordinator, but the easiest way is to put one server behind Coordinator and setup all modules there.
+
+### Development
+
+[instructions](https://gist.github.com/kengho/37f3591a525454567b454d165dbc0132) (using ruby2.3 from ppa:brightbox/ruby-ng).
 
 ## TODO (random order)
 
