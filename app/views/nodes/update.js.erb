@@ -1,0 +1,13 @@
+(function() {
+  <% message, timeout, callback = snackbarize(flash) %>
+  <% if callback == :reload %>
+  var callback = function() {
+    $(".mdl-snackbar__action[type='button']").click(function() {
+      setTimeout(function() { location.reload(); }, 500)
+    });
+  };
+  <% else %>
+  var callback = function() {};
+  <% end %>
+  vipnetInterface.showSnackbar("<%= j message %>", <%= timeout %>, callback);
+})();
