@@ -7,6 +7,7 @@ nodes:
       unselect_all: "close"
       select_all: "select_all"
     search: "search"
+    toggle_dark_theme: invert_colors
     nav:
       settings: "settings"
       profile: "person"

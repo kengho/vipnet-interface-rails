@@ -57,11 +57,22 @@
         %>
 
         <%= content_tag(:div, id: "header__search-button") do %>
-          <%= content_tag(:button, class: ["mdl-button", "mdl-js-button", "mdl-button--icon"], type: "submit",) do %>
+          <%= content_tag(:button, class: ["mdl-button", "mdl-js-button", "mdl-button--icon"], type: "submit") do %>
             <%= content_tag(:i, i("nodes.header.search"), class: "material-icons") %>
           <% end %>
         <% end %>
       <% end %>
+    <% end %>
+
+    <%= content_tag(:div, user_settings_params.merge("data-toggle-dark-theme": true, id: "header__toggle-dark-theme")) do %>
+      <%= content_tag(:label, class: ["mdl-button", "mdl-js-button", "mdl-button--icon"]) do %>
+        <%= content_tag(:i, i("nodes.header.toggle_dark_theme"), class: "material-icons") %>
+      <% end %>
+      <%= content_tag(:div, t(".toggle_dark_theme"),
+            for: "header__toggle-dark-theme",
+            class: "mdl-tooltip",
+          )
+      %>
     <% end %>
 
     <%= content_tag(:nav, class: "mdl-navigation") do %>

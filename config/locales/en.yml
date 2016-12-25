@@ -82,6 +82,7 @@ en:
         - "version_hw: 0.3-2"
         - "ver_hw: 3.0-670"
         - "ids: 0x1a0fe167, 1A0EE6D8"
+      toggle_dark_theme: "Toggle dark theme"
       settings: "Settings"
       support: "Support"
       profile: "Profile"

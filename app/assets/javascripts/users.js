@@ -13,8 +13,26 @@ $(document).ready(function() {
       dataType: "script",
       data: {
         utf8: true,
+        name: name,
         user_session: user_session,
       },
     });
+  });
+
+  $("div[data-toggle-dark-theme]").click(function() {
+    var userUrl = $(this).data("user-url");
+
+    $.ajax({
+      url: userUrl,
+      method: "patch",
+      dataType: "script",
+      data: {
+        utf8: true,
+        name: "theme",
+        value: $("html").hasClass("dark") ? "" : "dark",
+      },
+    });
+
+    $("html").toggleClass("dark");
   });
 });
