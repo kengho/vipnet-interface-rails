@@ -1,25 +1,50 @@
 @import "_shared";
 
+$table-bgcolor: (
+  "": white,
+  dark: #222,
+);
+
+$table-bgcolor-hover: (
+  "": #eee,
+  dark: #333,
+);
+
+$table-bgcolor-selected: (
+  "": #ddd,
+  dark: #444,
+);
+
+$table-bgcolor-selected-hover: (
+  "": #ccc,
+  dark: #555,
+);
+
+$info-block-bgcolor: (
+  "": lighten(map-get($table-bgcolor-hover, ""), 5%),
+  dark: lighten(map-get($table-bgcolor-hover, dark), 5%),
+);
+
 $table-max-width: 90%;
-$table-bgcolor: white;
-$table-bgcolor-hover: darken( $table-bgcolor, 10% );
-$table-selected-bgcolor: #ddd;
-$table-selected-hover-bgcolor: darken( $table-selected-bgcolor, 10% );
 $table-border-thickness: 2px;
-$table-border: $table-border-thickness solid $body-bgcolor;
-$multi-list-border: 1px solid #ddd;
-$icon-size: 20px;
-$small-icon-size: 24px;
+
+<% Themizer.themize do %>
+$table-border: $table-border-thickness solid $body-bgcolor~;
+$multi-list-border: 1px solid $table-bgcolor-selected~;
+<% end %>
+
 $td-padding: 12px;
 $td-padding-edges: 32px;
 $td-button-padding: 0;
-$info-block-bgcolor: darken( $table-bgcolor, 5% );
-$info-block-bgcolor-hover: $info-block-bgcolor;
+$icon-size: 20px;
+$icon-size-small: 24px;
+
+<% Themizer.themize do %>
 
 .nodes .table {
   z-index: 10;
   margin: 20px auto;
-
+  color: $main-text-color~;
   max-width: $table-max-width;
 
   & .tr {
@@ -32,8 +57,8 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
 
   & .td {
     position: relative;
-    border-top: $table-border;
-    border-bottom: $table-border;
+    border-top: $table-border~;
+    border-bottom: $table-border~;
 
     &:first-of-type {
       padding-left: $td-padding-edges;
@@ -57,18 +82,17 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
 }
 
 .nodes__thead {
-  background-color: $table-bgcolor;
-  color: $main-text-color;
+  background-color: $table-bgcolor~;
+  color: $main-text-color~;
   font-size: 15px;
 }
 
 .nodes__row {
-  background-color: $table-bgcolor;
-  color: $main-text-color;
+  background-color: $table-bgcolor~;
   cursor: pointer;
 
   &:hover {
-    background-color: $table-bgcolor-hover;
+    background-color: $table-bgcolor-hover~;
     transition: background-color $animation-time;
 
     & .td--show-onhover .mdl-button {
@@ -77,15 +101,13 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
   }
 
   &--selected {
-    background-color: $table-selected-bgcolor;
+    background-color: $table-bgcolor-selected~;
 
     &:hover {
-      background-color: $table-selected-hover-bgcolor !important;
+      background-color: $table-bgcolor-selected-hover~ !important;
     }
   }
 }
-
-
 
 .row__info-block {
   z-index: 700;
@@ -93,7 +115,7 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
   position: absolute;
   min-width: 400px;
   max-width: 800px;
-  background-color: $info-block-bgcolor;
+  background-color: $info-block-bgcolor~;
   cursor: move;
   @extend %shadow;
 
@@ -120,9 +142,46 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
 
   &:hover {
     z-index: 701;
-    background-color: $info-block-bgcolor-hover;
+    // background-color: $info-block-bgcolor-hover;
   }
 }
+
+.ticket__multi {
+  z-index: 500;
+  top: 6px;
+
+  &--hover::after {
+    content: "...";
+    display: block;
+    line-height: 0;
+  }
+
+  &--list {
+    z-index: 600;
+    opacity: 0;
+    transition: opacity $animation-time;
+    visibility: hidden;
+    background: $table-bgcolor~;
+    overflow: hidden;
+    top: 36px;
+    border: $multi-list-border~;
+    border-radius: 2px;
+  }
+
+  &, &--hover, &--list {
+    text-align: center;
+    position: absolute;
+    padding: 6px;
+    left: 6px;
+  }
+
+  &--hover:hover + &--list, &--list:hover {
+    opacity: 1;
+    visibility: visible;
+  }
+}
+
+<% end %>
 
 .td--button {
   padding: $td-button-padding;
@@ -134,12 +193,12 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
 
 .td--small-icon-right label {
   right: -$td-padding;
-  min-width: $small-icon-size;
-  width: $small-icon-size;
-  height: $small-icon-size;
+  min-width: $icon-size-small;
+  width: $icon-size-small;
+  height: $icon-size-small;
 
   & i {
-    font-size: $small-icon-size * 3 / 4;
+    font-size: $icon-size-small * 3 / 4;
   }
 }
 
@@ -151,7 +210,7 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
 .td--hoverable-tooltip
 .tooltip--remote-button {
   top: 35px;
-  cursor: default;
+  cursor: "";
 }
 
 .tooltip--remote-button,
@@ -181,8 +240,8 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
 }
 
 .td--small-icon-right *[name="spinner"] .mdl-spinner {
-  width: $small-icon-size * 3 / 4 - 2px;
-  height: $small-icon-size * 3 / 4 - 2px;
+  width: $icon-size-small * 3 / 4 - 2px;
+  height: $icon-size-small * 3 / 4 - 2px;
   top: 15px;
   right: -$td-padding + 4px;
 }
@@ -197,6 +256,7 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
   position: absolute;
   top: 7px;
   opacity: 0;
+  z-index: 0;
 }
 
 .nodes *[name="status--true"] .mdl-button,
@@ -217,40 +277,5 @@ $info-block-bgcolor-hover: $info-block-bgcolor;
 
   & [name="close-button"] {
     display: table-cell;
-  }
-}
-
-.ticket__multi {
-  z-index: 500;
-  top: 6px;
-
-  &--hover::after {
-    content: "...";
-    display: block;
-    line-height: 0;
-  }
-
-  &--list {
-    z-index: 600;
-    opacity: 0;
-    transition: opacity $animation-time;
-    visibility: hidden;
-    background: white;
-    overflow: hidden;
-    top: 36px;
-    border: $multi-list-border;
-    border-radius: 2px;
-  }
-
-  &, &--hover, &--list {
-    text-align: center;
-    position: absolute;
-    padding: 6px;
-    left: 6px;
-  }
-
-  &--hover:hover + &--list, &--list:hover {
-    opacity: 1;
-    visibility: visible;
   }
 }

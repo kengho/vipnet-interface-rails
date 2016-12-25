@@ -1,5 +1,7 @@
 @import "_shared";
 
+<% Themizer.unthemize do %>
+
 .locale {
   margin-bottom: 20px;
 
@@ -15,8 +17,10 @@
   }
 
   & input[type="radio"]:checked + label {
-    background: $primary-color;
+    background: $primary-color~;
     color: white;
     cursor: default;
   }
 }
+
+<% end %>

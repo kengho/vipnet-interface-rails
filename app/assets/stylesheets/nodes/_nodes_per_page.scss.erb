@@ -1,8 +1,16 @@
 @import "_shared";
 
-$nodes-per-page-color: #888;
-$nodes-per-page-checked-color: #fff;
-$nodes-per-page-checked-bgcolor: #888;
+$nodes-per-page-color: (
+  "": #888,
+  dark: #666,
+);
+
+$nodes-per-page-color-checked: (
+  "": white,
+  dark: black,
+);
+
+<% Themizer.themize do %>
 
 .nodes-per-page {
   margin-top: 12px;
@@ -15,7 +23,7 @@ $nodes-per-page-checked-bgcolor: #888;
     display: inline-block;
     padding: 0 6px;
     cursor: pointer;
-    color: $nodes-per-page-color;
+    color: $nodes-per-page-color~;
     height: 20px;
   }
 
@@ -24,17 +32,19 @@ $nodes-per-page-checked-bgcolor: #888;
   }
 
   & input[type="radio"]:checked + label {
-    background: $nodes-per-page-checked-bgcolor;
-    color: $nodes-per-page-checked-color;
-    cursor: default;
+    background: $nodes-per-page-color~;
+    color: $nodes-per-page-color-checked~;
+    cursor: "";
   }
 
   & i {
     vertical-align: bottom;
     font-size: 20px;
-    color: $nodes-per-page-checked-bgcolor;
+    color: $nodes-per-page-color~;
   }
 }
+
+<% end %>
 
 .tooltip--nodes-per-page {
   top: 30px;

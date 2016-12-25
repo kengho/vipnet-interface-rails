@@ -1,17 +1,19 @@
 @import "_shared";
 
-body {
-  background-color: $body-bgcolor;
-}
-
 .tooltip--creation-date {
   width: 160px;
   left: -60px;
   top: 40px;
 }
 
+<% Themizer.themize do %>
+body {
+  background-color:$body-bgcolor~;
+}
+
 .nodes__link--hover {
-  border-bottom: 1px dotted #000;
+  border-bottom: 1px dotted $contrast-text-color~;
   text-decoration: none;
   cursor: pointer;
 }
+<% end %>

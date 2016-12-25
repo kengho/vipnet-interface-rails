@@ -1,17 +1,48 @@
-$body-bgcolor: #f0f0f0;
-$primary-color: #098;
-$accent-color: #40a;
-$third-color: #45b;
-$main-text-color: #333;
-$inverted-text-color: invert($main-text-color);
+$body-bgcolor: (
+  "": #f0f0f0,
+  dark: invert(#f0f0f0),
+);
+
+$primary-color: (
+  "": #098,
+  dark: #069,
+);
+
+$accent-color: (
+  "": #40a,
+  dark: lighten(#40a, 30%),
+);
+
+$third-color: (
+  "": #45b,
+  dark: lighten(#45b, 40%),
+);
+
+$contrast-text-color: (
+  "": black,
+  dark: white,
+);
+
+$main-text-color: (
+  "": #333,
+  dark: invert(#333),
+);
+
+$contrast-text-color-inverted: (
+  "": white,
+  dark: black,
+);
+
+$snackbar-light-bgcolor: (
+  "": #eee,
+  dark: invert(#eee),
+);
+
+$gray-icon-color: #777;
 $main-link-color: #478;
 $main-link-color-hover: lighten( $main-link-color, 10% );
 $dark-gray-bgcolor: #272727;
 $form-inside-bgcolor: #eee;
-$gray-icon-color: #666;
-
-$snackbar-light-text-color: $main-text-color;
-$snackbar-light-bgcolor: #eee;
 $animation-time: 200ms;
 
 %shadow {

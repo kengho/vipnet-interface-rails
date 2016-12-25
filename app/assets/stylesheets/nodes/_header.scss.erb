@@ -1,18 +1,14 @@
 @import "_shared";
 
-$variants-selected-bgcolor: rgba(white, 0.8);
-$variants-hover-bgcolor: rgba(white, 0.4);
+$variants-checked-bgcolor: (
+  "": rgba(white, 0.8),
+  dark: rgba(black, 0.8),
+);
 
-#header__title div[name="home"],
-#export-selected__variants a {
-  color: white;
-  cursor: pointer;
-}
-
-#header__subtitle {
-  position: absolute;
-  font-size: 12px;
-}
+$variants-hover-bgcolor: (
+  "": rgba(white, 0.4),
+  dark: rgba(black, 0.4),
+);
 
 #header__actions,
 #actions__export-selected,
@@ -48,6 +44,29 @@ $variants-hover-bgcolor: rgba(white, 0.4);
   }
 }
 
+#actions__unselect-all {
+  order: 1000;
+}
+
+#header__search-button {
+  position: absolute;
+  right: -40px;
+  top: -4px;
+}
+
+<% Themizer.themize do %>
+
+#header__title div[name="home"],
+#export-selected__variants a {
+  color: $contrast-text-color-inverted~;
+  cursor: pointer;
+}
+
+#header__subtitle {
+  color: $contrast-text-color-inverted~;
+  font-size: 12px;
+}
+
 .export-selected-variant {
   order: 1;
   opacity: 0;
@@ -55,7 +74,9 @@ $variants-hover-bgcolor: rgba(white, 0.4);
   display: inline-flex;
   flex-direction: column;
 
+
   & label {
+    color: $main-text-color~;
     border-radius: 2px;
     font-size: 9px;
     line-height: 8px;
@@ -69,13 +90,13 @@ $variants-hover-bgcolor: rgba(white, 0.4);
   }
 
   & input[type="radio"]:checked + label {
-    background-color: $variants-selected-bgcolor;
-    color: $main-text-color;
+    background-color: $variants-checked-bgcolor~;
+    color: $main-text-color~;
   }
 
   & input[type="radio"]:not(:checked) + label:hover {
-    background-color: $variants-hover-bgcolor;
-    color: $main-text-color;
+    background-color: $variants-hover-bgcolor~;
+    color: $main-text-color~;
     cursor: pointer;
   }
 
@@ -87,10 +108,7 @@ $variants-hover-bgcolor: rgba(white, 0.4);
 
 #actions__separator {
   order: 999;
-}
-
-#actions__unselect-all {
-  order: 1000;
+  color: $contrast-text-color-inverted~;
 }
 
 #header__search {
@@ -101,7 +119,8 @@ $variants-hover-bgcolor: rgba(white, 0.4);
   position: relative;
 
   & input {
-    color: $main-text-color !important;
+    color: $main-text-color~ !important;
+    background-color: $contrast-text-color-inverted~;
     width: 100%;
     border: none;
     padding: 4px;
@@ -109,8 +128,4 @@ $variants-hover-bgcolor: rgba(white, 0.4);
   }
 }
 
-#header__search-button {
-  position: absolute;
-  right: -40px;
-  top: -4px;
-}
+<% end %>
