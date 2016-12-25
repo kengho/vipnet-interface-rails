@@ -126,6 +126,10 @@ ru:
       mailer_default_from: "\"from\" в исходящих email"
       host: "Хост"
       demo_mode: "Демо режим"
+      theme: "Тема по умолчанию"
+      themes:
+        default: светлая
+        dark: темная
       submit_label: "Сохранить"
     users:
       email: "Email"

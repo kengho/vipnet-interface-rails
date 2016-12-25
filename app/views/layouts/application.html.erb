@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html class="<%= current_user.settings.theme %>">
+<html class="<%= current("theme") %>">
 <head>
   <%= favicon_link_tag "favicon.ico" %>
   <%= content_tag(:title, page_title) %>

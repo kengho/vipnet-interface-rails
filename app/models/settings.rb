@@ -101,6 +101,15 @@ class Settings < RailsSettings::CachedSettings
         default_value: "false",
         accepted_values: boolean_values,
       },
+
+      "theme" => {
+        type: :radio,
+        default_value: "",
+        accepted_values: {
+          "" => "settings.general.themes.default",
+          "dark" => "settings.general.themes.dark",
+        }
+      },
     }
   end
 

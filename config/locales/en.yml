@@ -125,6 +125,10 @@ en:
       mailer_default_from: "\"from\" in incoming email"
       host: "Host"
       demo_mode: "Demo mode"
+      theme: "Default theme"
+      themes:
+        default: light
+        dark: dark
       submit_label: "Save"
     users:
       email: "Email"
