@@ -57,7 +57,11 @@
         %>
 
         <%= content_tag(:div, id: "header__search-button") do %>
-          <%= content_tag(:button, class: ["mdl-button", "mdl-js-button", "mdl-button--icon"], type: "submit") do %>
+          <%= content_tag(:button,
+                class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "mdl-button--icon-inverted"],
+                type: "submit",
+              ) do
+          %>
             <%= content_tag(:i, i("nodes.header.search"), class: "material-icons") %>
           <% end %>
         <% end %>

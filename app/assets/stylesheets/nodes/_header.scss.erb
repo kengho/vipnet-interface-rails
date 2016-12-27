@@ -10,6 +10,11 @@ $variants-hover-bgcolor: (
   dark: rgba(black, 0.4),
 );
 
+$search-bgcolor-focus: (
+  "": lighten(map-get($primary-color, ""), 65%),
+  dark: darken(map-get($primary-color, dark), 15%),
+);
+
 #header__actions,
 #actions__export-selected,
 .export-selected-variant,
@@ -48,13 +53,13 @@ $variants-hover-bgcolor: (
   order: 1000;
 }
 
+<% Themizer.themize do %>
+
 #header__search-button {
   position: absolute;
-  right: -40px;
-  top: -4px;
+  left: 8px;
+  top: 4px;
 }
-
-<% Themizer.themize do %>
 
 #header__title div[name="home"],
 #export-selected__variants a {
@@ -113,18 +118,24 @@ $variants-hover-bgcolor: (
 
 #header__search {
   text-align: left;
-  margin-right: 40px;
+  margin-right: 52px;
   min-width: 200px;
   max-width: 500px;
   position: relative;
 
   & input {
     color: $main-text-color~ !important;
-    background-color: $contrast-text-color-inverted~;
+    background-color: $body-bgcolor~;
     width: 100%;
     border: none;
     padding: 4px;
-    border-radius: 2px;
+    border-radius: 4px;
+    height: 32px;
+    padding-left: 46px;
+
+    &:focus {
+      background-color: $search-bgcolor-focus~;
+    }
   }
 }
 
