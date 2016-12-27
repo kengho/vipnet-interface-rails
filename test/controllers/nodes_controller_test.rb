@@ -1,3 +1,5 @@
+require "test_helper"
+
 class NodesControllerTest < ActionController::TestCase
   setup do
     @session = UserSession.create(users(:user1))
@@ -82,6 +84,13 @@ class NodesControllerTest < ActionController::TestCase
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Marcus Forest", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Wilbur Kelly Mallory", network: @network)
     get_js(:load, { name: "wil mal" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
+
+  test "should be able to use quotes for accurate search for name" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Marcus Kelly Forest", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0002", name: "Marcus Forest", network: @network)
+    get_js(:load, { name: "\"marcus forest\"" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
