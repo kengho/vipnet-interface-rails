@@ -1,10 +1,8 @@
 <%= content_tag(:div, class: ["row__info-block"], "data-closable": true, name: "info-block") do %>
   <%= content_tag(:div, name: "close-button") do %>
-    <%= content_tag(:label, "data-stop-propagation": true,
-          class: [
-            "mdl-button", "mdl-js-button", "mdl-button--icon",
-            "mdl-button--gray",
-          ],
+    <%= content_tag(:label,
+          "data-stop-propagation": true,
+          class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "gray"],
           "data-close": true,
         ) do
     %>

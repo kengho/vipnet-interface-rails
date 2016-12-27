@@ -58,7 +58,7 @@ module NodesHelper
             t: t("nodes.row.remote_button.availability.label"),
             action_name: "availability",
             action_prop: nil,
-            color: "primary",
+            icon_class: "primary",
             disabled: false,
             additional_td_classes: ["td--show-onhover", "td--button"],
           }
@@ -69,7 +69,7 @@ module NodesHelper
             t: "#{t('nodes.row.status.deleted')} #{prop_view_datetime(@ncc_node.deletion_date, :short)}",
             action_name: nil,
             action_prop: nil,
-            color: "accent",
+            icon_class: "accent",
             disabled: true,
             additional_td_classes: ["td--button", "td--hoverable-tooltip"],
           }
@@ -80,7 +80,7 @@ module NodesHelper
             t: t("nodes.row.status.disabled"),
             action_name: nil,
             action_prop: nil,
-            color: "accent",
+            icon_class: "accent",
             disabled: true,
             additional_td_classes: ["td--button"],
           }
@@ -92,7 +92,7 @@ module NodesHelper
           t: t("nodes.row.remote_button.info.label"),
           action_name: "info",
           action_prop: nil,
-          color: "primary",
+          icon_class: "primary",
           disabled: false,
           additional_td_classes: ["td--show-onhover", "td--button"],
         }
@@ -103,7 +103,7 @@ module NodesHelper
           t: t("nodes.row.remote_button.history.label"),
           action_name: "history",
           action_prop: variant,
-          color: "gray",
+          icon_class: "gray",
           disabled: false,
           additional_td_classes: ["td--show-onhover", "td--button", "td--small-icon-right"],
         }
