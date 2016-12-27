@@ -4,7 +4,7 @@
 <%= content_tag(:div, id: "status-template--true") do %>
   <%= render "nodes/row/remote_button/status",
         name: "status--true",
-        color: "primary",
+        icon_class: "primary",
         icon: i("nodes.row.remote_button.status.true",
       )
   %>
@@ -12,7 +12,7 @@
 <%= content_tag(:div, id: "status-template--false") do %>
   <%= render "nodes/row/remote_button/status",
         name: "status--false",
-        color: "accent",
+        icon_class: "accent",
         icon: i("nodes.row.remote_button.status.false",
       )
   %>
