@@ -38,7 +38,7 @@ class NccNode < ActiveRecord::Base
   end
 
   def self.where_name_like(name)
-    if name =~ /\"(.*)\"/
+    if name =~ /^\"(.*)\"$/
       name_regexp = Regexp.last_match(1)
     else
       name_regexp = name.gsub(" ", ".*")
