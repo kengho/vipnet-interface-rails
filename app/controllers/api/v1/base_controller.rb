@@ -11,7 +11,7 @@ class Api::V1::BaseController < ActionController::Base
 
   private
     def render_nothing(status)
-      render nothing: true, status: status, content_type: "text/html" and return
+      render body: nil, status: status, content_type: "text/html" and return
     end
 
     def check_if_api_enabled

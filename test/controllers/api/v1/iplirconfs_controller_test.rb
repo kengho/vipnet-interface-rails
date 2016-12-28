@@ -12,7 +12,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
   end
 
   test "file should be provided" do
-    post(:create, { file: nil, coord_vid: "0x1a0e000a" })
+    post(:create, params: { coord_vid: "0x1a0e000a" })
     assert_equal("error", @response.body)
   end
 
@@ -21,7 +21,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/empty.conf",
       "application/octet-stream"
     )
-    post(:create, { file: iplirconf_empty, coord_vid: nil })
+    post(:create, params: { file: iplirconf_empty })
     assert_equal("error", @response.body)
   end
 
@@ -42,7 +42,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "nodenames/03_added_coordinator2.doc",
       "application/octet-stream"
     )
-    post(:create, { file: added_coordinator2_nodename, network_vid: "6670" })
+    post(:create, params: { file: added_coordinator2_nodename, network_vid: "6670" })
     @controller = iplirconfs_controller
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_HW_TOKEN\""
 
@@ -51,7 +51,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/00_0x1a0e000a_initial.conf",
       "application/octet-stream"
     )
-    post(:create, { file: initial_iplirconf, coord_vid: "0x1a0e000a" })
+    post(:create, params: { file: initial_iplirconf, coord_vid: "0x1a0e000a" })
     assert_equal(Api::V1::BaseController::OK_RESPONSE, @response.body)
     coordinator1 = Coordinator.find_by(vid: "0x1a0e000a")
     expected_hw_nodes = [
@@ -107,7 +107,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/01_added_0x1a0e000d.conf",
       "application/octet-stream"
     )
-    post(:create, { file: added_0x1a0e000d_iplirconf, coord_vid: "0x1a0e000a" })
+    post(:create, params: { file: added_0x1a0e000d_iplirconf, coord_vid: "0x1a0e000a" })
     expected_hw_nodes.push({
       type: "CurrentHwNode",
       coord_vid: "0x1a0e000a",
@@ -136,7 +136,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/02_0x1a0e000a_changed.conf",
       "application/octet-stream"
     )
-    post(:create, { file: changed_iplirconf, coord_vid: "0x1a0e000a" })
+    post(:create, params: { file: changed_iplirconf, coord_vid: "0x1a0e000a" })
     expected_hw_nodes.change_where(
       {
         coord_vid: "0x1a0e000a",
@@ -186,7 +186,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/03_0x1a0e000d_initial.conf",
       "application/octet-stream"
     )
-    post(:create, { file: coordinator2_initial_iplirconf, coord_vid: "0x1a0e000d" })
+    post(:create, params: { file: coordinator2_initial_iplirconf, coord_vid: "0x1a0e000d" })
     coordinator2 = Coordinator.find_by(vid: "0x1a0e000d")
     expected_hw_nodes.push(
       {
@@ -260,7 +260,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/04_0x1a0e000d_changed.conf",
       "application/octet-stream"
     )
-    post(:create, { file: changed_iplirconf, coord_vid: "0x1a0e000d" })
+    post(:create, params: { file: changed_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
       {
         coord_vid: "0x1a0e000d",
@@ -316,7 +316,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/05_0x1a0e000d_added_new_client.conf",
       "application/octet-stream"
     )
-    post(:create, { file: added_new_client_iplirconf, coord_vid: "0x1a0e000d" })
+    post(:create, params: { file: added_new_client_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.push({
       type: "CurrentHwNode",
       coord_vid: "0x1a0e000d",
@@ -331,7 +331,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/06_0x1a0e000d_deleted_ip.conf",
       "application/octet-stream"
     )
-    post(:create, { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
+    post(:create, params: { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.push({
       descendant_coord_vid: "0x1a0e000d",
       descendant_vid: "0x1a0e000a",
@@ -363,7 +363,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/07_0x1a0e000d_deleted_client1.conf",
       "application/octet-stream"
     )
-    post(:create, { file: deleted_client1, coord_vid: "0x1a0e000d" })
+    post(:create, params: { file: deleted_client1, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
       {
         coord_vid: "0x1a0e000d",
@@ -380,7 +380,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       "iplirconfs/08_0x1a0e000d_restored_client1.conf",
       "application/octet-stream"
     )
-    post(:create, { file: restored_client1, coord_vid: "0x1a0e000d" })
+    post(:create, params: { file: restored_client1, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
       {
         coord_vid: "0x1a0e000d",

@@ -8,7 +8,7 @@ class Api::V1::TicketsControllerTest < ActionController::TestCase
 
   test "ticket should be provided" do
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_TICKETS_TOKEN\""
-    post(:create, { ticket: nil })
+    post(:create)
     assert_equal("error", @response.body)
   end
 
@@ -21,7 +21,7 @@ class Api::V1::TicketsControllerTest < ActionController::TestCase
     )
     ncc_node_0x1a0e0001.save!
 
-    post(:create, {
+    post(:create, params: {
       ticket: { vid: "0x1a0e0001", id: "1", url_template: "http://tickets.org/ticket_id={id}" },
     })
     ticket_system1 = TicketSystem.find_by(url_template: "http://tickets.org/ticket_id={id}")
@@ -33,7 +33,7 @@ class Api::V1::TicketsControllerTest < ActionController::TestCase
       ticket_id: "1",
     )
 
-    post(:create, {
+    post(:create, params: {
       ticket: { vid: "0x1a0e0001", id: "2", url_template: "http://tickets.org/ticket_id={id}" },
     })
     assert Ticket.find_by(
@@ -43,7 +43,7 @@ class Api::V1::TicketsControllerTest < ActionController::TestCase
       ticket_id: "2",
     )
 
-    post(:create, {
+    post(:create, params: {
       ticket: { vid: "0x1a0e0001", id: "3", url_template: "http://tickets2.org/ticket_id={id}" },
     })
     ticket_system2 = TicketSystem.find_by(url_template: "http://tickets2.org/ticket_id={id}")
@@ -56,7 +56,7 @@ class Api::V1::TicketsControllerTest < ActionController::TestCase
     )
 
     # ticket without ncc_node
-    post(:create, {
+    post(:create, params: {
       ticket: { vid: "0x1a0e0002", id: "1", url_template: "http://tickets.org/ticket_id={id}" },
     })
     assert Ticket.find_by(

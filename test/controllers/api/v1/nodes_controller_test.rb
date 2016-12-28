@@ -34,12 +34,12 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
   end
 
   test "should return error if no valid token provided" do
-    get(:index, { token: "incorrect token" })
+    get(:index, params: { token: "incorrect token" })
     assert_response :unauthorized
   end
 
   test "should return error if vid not provided" do
-    get(:index, { token: "GET_INFORMATION_TOKEN" })
+    get(:index, params: { token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
     assert_routing(
@@ -49,18 +49,18 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
   end
 
   test "should return error if vid not found" do
-    get(:index, { vid: "unmatched id", token: "GET_INFORMATION_TOKEN" })
+    get(:index, params: { vid: "unmatched id", token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
   end
 
   test "should return information" do
-    get(:index, { vid: "0x1a0e0001", token: "GET_INFORMATION_TOKEN" })
+    get(:index, params: { vid: "0x1a0e0001", token: "GET_INFORMATION_TOKEN" })
     assert_equal({ data: { "name" => "client-0x1a0e0001" }}, assigns["response"])
   end
 
   test "should return information using only" do
-    get(:index, {
+    get(:index, params: {
       vid: "0x1a0e0001",
       only: ["ip", "category", "version", "version_decoded", "jibberish"],
       token: "GET_INFORMATION_TOKEN"
@@ -83,7 +83,7 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
   end
 
   test "should return error if only is not array" do
-    get(:index, { vid: "0x1a0e0001", only: "vid", token: "GET_INFORMATION_TOKEN" })
+    get(:index, params: { vid: "0x1a0e0001", only: "vid", token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
   end

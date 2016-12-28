@@ -25,21 +25,21 @@ class NodesControllerTest < ActionController::TestCase
   test "should search by vid" do
     CurrentNccNode.create!(vid: "0x1a0e0001", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", network: @network)
-    get_js(:load, { vid: "0x1a0e0002"})
+    get_js(:load, params: { vid: "0x1a0e0002"})
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
   test "should search by abnormal vids" do
     CurrentNccNode.create!(vid: "0x1a0e0001", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", network: @network)
-    get_js(:load, { vid: "1A0E0002" })
+    get_js(:load, params: { vid: "1A0E0002" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
   test "should search by part of vid" do
     CurrentNccNode.create!(vid: "0x1a0e0001", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", network: @network)
-    get_js(:load, { vid: "0002" })
+    get_js(:load, params: { vid: "0002" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
@@ -48,56 +48,56 @@ class NodesControllerTest < ActionController::TestCase
     CurrentNccNode.create!(vid: "0x1a0e0002", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0003", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0004", network: @network)
-    get_js(:load, { vid: "0x1a0e0001-0x1a0e0003" })
+    get_js(:load, params: { vid: "0x1a0e0001-0x1a0e0003" })
     assert_equal(["0x1a0e0001", "0x1a0e0002", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
 
   test "shouldn't search by range when it's too large" do
     CurrentNccNode.create!(vid: "0x1a0e0001", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0100", network: @network)
-    get_js(:load, { vid: "0x1a0e0001-0x1a0e0100" })
+    get_js(:load, params: { vid: "0x1a0e0001-0x1a0e0100" })
     assert_equal([], assigns["ncc_nodes"].vids)
   end
 
   test "should search by name" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
-    get_js(:load, { name: "Alex" })
+    get_js(:load, params: { name: "Alex" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
   test "should search by partial name" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
-    get_js(:load, { name: "Al" })
+    get_js(:load, params: { name: "Al" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
   test "should search by name (case insensitive)" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
-    get_js(:load, { name: "alex" })
+    get_js(:load, params: { name: "alex" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
   test "should search name and treat spaces like anything" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Marcus Forest", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Wilbur Kelly Mallory", network: @network)
-    get_js(:load, { name: "wil mal" })
+    get_js(:load, params: { name: "wil mal" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
   test "should be able to use quotes for accurate search for name" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Marcus Kelly Forest", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Marcus Forest", network: @network)
-    get_js(:load, { name: "\"marcus forest\"" })
+    get_js(:load, params: { name: "\"marcus forest\"" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
   test "should search name using regexp" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Wilbur Kelly Mallory", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Kelly Wilbur Mallory", network: @network)
-    get_js(:load, { name: "^wilbur\\s" })
+    get_js(:load, params: { name: "^wilbur\\s" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
@@ -108,7 +108,7 @@ class NodesControllerTest < ActionController::TestCase
     hw_node2 = CurrentHwNode.new(ncc_node: ncc_node2, coordinator: @coordinator1); hw_node2.save!
     NodeIp.create!(hw_node: hw_node1, u32: IPv4::u32("192.168.0.1"))
     NodeIp.create!(hw_node: hw_node2, u32: IPv4::u32("192.168.0.2"))
-    get_js(:load, { ip: "192.168.0.1" })
+    get_js(:load, params: { ip: "192.168.0.1" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
@@ -122,7 +122,7 @@ class NodesControllerTest < ActionController::TestCase
     NodeIp.create!(hw_node: hw_node1, u32: IPv4::u32("192.168.0.1"))
     NodeIp.create!(hw_node: hw_node2, u32: IPv4::u32("192.168.1.0"))
     NodeIp.create!(hw_node: hw_node3, u32: IPv4::u32("192.168.0.255"))
-    get_js(:load, { ip: "192.168.0.0/24" })
+    get_js(:load, params: { ip: "192.168.0.0/24" })
     assert_equal(["0x1a0e0001", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
 
@@ -136,12 +136,12 @@ class NodesControllerTest < ActionController::TestCase
     NodeIp.create!(hw_node: hw_node1, u32: IPv4::u32("192.168.0.1"))
     NodeIp.create!(hw_node: hw_node2, u32: IPv4::u32("192.168.0.255"))
     NodeIp.create!(hw_node: hw_node3, u32: IPv4::u32("192.168.0.254"))
-    get_js(:load, { ip: "192.168.0.0-192.168.0.254" })
+    get_js(:load, params: { ip: "192.168.0.0-192.168.0.254" })
     assert_equal(["0x1a0e0001", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
 
   test "shouldn't search by invalid ip" do
-    get_js(:load, { ip: "invalid ip" })
+    get_js(:load, params: { ip: "invalid ip" })
     assert_equal([], assigns["ncc_nodes"].vids)
   end
 
@@ -168,7 +168,7 @@ class NodesControllerTest < ActionController::TestCase
       coordinator: @coordinator2,
       version_decoded: "3.2",
     )
-    get_js(:load, { version_decoded: "3.1" })
+    get_js(:load, params: { version_decoded: "3.1" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
@@ -195,7 +195,7 @@ class NodesControllerTest < ActionController::TestCase
       coordinator: @coordinator2,
       version_decoded: "3.2",
     )
-    get_js(:load, { version_decoded: "3." })
+    get_js(:load, params: { version_decoded: "3." })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
@@ -206,9 +206,9 @@ class NodesControllerTest < ActionController::TestCase
       coordinator: @coordinator1,
       version_decoded: "3.0",
     )
-    get_js(:load, { version_decoded: "3_" })
+    get_js(:load, params: { version_decoded: "3_" })
     assert_equal([], assigns["ncc_nodes"].vids)
-    get_js(:load, { version_decoded: "%3" })
+    get_js(:load, params: { version_decoded: "%3" })
     assert_equal([], assigns["ncc_nodes"].vids)
   end
 
@@ -216,14 +216,14 @@ class NodesControllerTest < ActionController::TestCase
   test "should search by creation_date (tmp)" do
     CurrentNccNode.create!(vid: "0x1a0e0001", creation_date: DateTime.new(2016, 9, 1), network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", creation_date: DateTime.new(2016, 9, 2), network: @network)
-    get_js(:load, { creation_date: "2016-09-01" })
+    get_js(:load, params: { creation_date: "2016-09-01" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
   test "should search by deletion_date (tmp)" do
     CurrentNccNode.create!(vid: "0x1a0e0001", deletion_date: DateTime.new(2016, 9, 1), network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", deletion_date: DateTime.new(2016, 9, 2), network: @network)
-    get_js(:load, { deletion_date: "2016-09-01" })
+    get_js(:load, params: { deletion_date: "2016-09-01" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
   # /temporarily implementations of DateTime search
@@ -243,7 +243,7 @@ class NodesControllerTest < ActionController::TestCase
       vid: "0x1a0e0001",
       ticket_id: "2",
     )
-    get_js(:load, { ticket: "1" })
+    get_js(:load, params: { ticket: "1" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
@@ -262,7 +262,7 @@ class NodesControllerTest < ActionController::TestCase
       vid: "0x1a0e0001",
       ticket_id: "222",
     )
-    get_js(:load, { ticket: "11" })
+    get_js(:load, params: { ticket: "11" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
@@ -297,14 +297,14 @@ class NodesControllerTest < ActionController::TestCase
       server_number: "0001",
       category: "server",
     )
-    get_js(:load, { mftp_server_vid: "0x1a0e000a" })
+    get_js(:load, params: { mftp_server_vid: "0x1a0e000a" })
     assert_equal(["0x1a0e0001", "0x1a0e0004"], assigns["ncc_nodes"].vids)
   end
 
   test "shouldn't treat empty params as .*" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
-    get_js(:load, { vid: "0x1a0e0001", name: "" })
+    get_js(:load, params: { vid: "0x1a0e0001", name: "" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
@@ -312,14 +312,14 @@ class NodesControllerTest < ActionController::TestCase
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex1", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Alex2", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0010", name: "Alex", network: @network)
-    get_js(:load, { vid: "0x1a0e000", name: "Alex" })
+    get_js(:load, params: { vid: "0x1a0e000", name: "Alex" })
     assert_equal(["0x1a0e0001", "0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
   test "should do quick search by name" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "John", network: @network)
-    get_js(:load, { search: "0x1a0e0001" })
+    get_js(:load, params: { search: "0x1a0e0001" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
@@ -333,28 +333,28 @@ class NodesControllerTest < ActionController::TestCase
     NodeIp.create!(hw_node: hw_node1, u32: IPv4::u32("192.168.0.1"))
     NodeIp.create!(hw_node: hw_node2, u32: IPv4::u32("192.168.0.255"))
     NodeIp.create!(hw_node: hw_node3, u32: IPv4::u32("192.168.0.254"))
-    get_js(:load, { search: "192.168.0.1-192.168.0.254" })
+    get_js(:load, params: { search: "192.168.0.1-192.168.0.254" })
     assert_equal(["0x1a0e0001", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
 
   test "should search through DeletedNccNode if there are no such CurrentNccNode" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     DeletedNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
-    get_js(:load, { name: "Brad" })
+    get_js(:load, params: { name: "Brad" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
   test "shouldn't search through DeletedNccNode if there are such CurrentNccNode" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     DeletedNccNode.create!(vid: "0x1a0e0002", name: "Alex", network: @network)
-    get_js(:load, { name: "Alex" })
+    get_js(:load, params: { name: "Alex" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
   test "should search through DeletedNccNode in quick search" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     DeletedNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
-    get_js(:load, { search: "Brad" })
+    get_js(:load, params: { search: "Brad" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
@@ -371,21 +371,21 @@ class NodesControllerTest < ActionController::TestCase
       server_number: "0001",
       category: "client",
     )
-    get_js(:load, { mftp_server_vid: "0x1a0e0001" })
+    get_js(:load, params: { mftp_server_vid: "0x1a0e0001" })
     assert_equal([], assigns["ncc_nodes"].vids)
   end
 
   test "should parse 'search' param to perform custom search (single param)" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
-    get_js(:load, { search: "name:Brad" })
+    get_js(:load, params: { search: "name:Brad" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
   test "should parse 'search' param to perform custom search (single param with spaces)" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
-    get_js(:load, { search: "name: Brad" })
+    get_js(:load, params: { search: "name: Brad" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
@@ -393,7 +393,7 @@ class NodesControllerTest < ActionController::TestCase
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Brad1", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0013", name: "Brad2", network: @network)
-    get_js(:load, { search: "id:0x1a0e000,name:Brad" })
+    get_js(:load, params: { search: "id:0x1a0e000,name:Brad" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
@@ -401,7 +401,7 @@ class NodesControllerTest < ActionController::TestCase
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Brad1", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0013", name: "Brad2", network: @network)
-    get_js(:load, { search: "id: 0x1a0e000, name: Brad" })
+    get_js(:load, params: { search: "id: 0x1a0e000, name: Brad" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
@@ -409,7 +409,7 @@ class NodesControllerTest < ActionController::TestCase
     CurrentNccNode.create!(vid: "0x1a0e0001", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0003", network: @network)
-    get_js(:load, { search: "ids: 0x1a0e0002, 0x1a0e0003" })
+    get_js(:load, params: { search: "ids: 0x1a0e0002, 0x1a0e0003" })
     assert_equal(["0x1a0e0002", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
 
@@ -436,9 +436,9 @@ class NodesControllerTest < ActionController::TestCase
       coordinator: @coordinator2,
       version_decoded: "3.2",
     )
-    get_js(:load, { search: "version: 3.1" })
+    get_js(:load, params: { search: "version: 3.1" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
-    get_js(:load, { search: "ver: 3.1" })
+    get_js(:load, params: { search: "ver: 3.1" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
@@ -465,9 +465,9 @@ class NodesControllerTest < ActionController::TestCase
       coordinator: @coordinator2,
       version: "4.20-0",
     )
-    get_js(:load, { search: "version_hw: 0.3-2" })
+    get_js(:load, params: { search: "version_hw: 0.3-2" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
-    get_js(:load, { search: "ver_hw: 0.3-2" })
+    get_js(:load, params: { search: "ver_hw: 0.3-2" })
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 end

@@ -98,8 +98,8 @@ class GarlandsTest < ActiveSupport::TestCase
     s1_id = last.id
     assert_equal(@h1.to_s, last.entity)
     assert_equal(Garland::SNAPSHOT, last.entity_type)
-    assert_equal(nil, last.previous)
-    assert_equal(nil, last.next)
+    assert_nil last.previous
+    assert_nil last.next
 
     s2, _ = Storage.push(@h2)
     assert_equal(HashDiffSym.diff(@h1, @h2), s2)
@@ -107,7 +107,7 @@ class GarlandsTest < ActiveSupport::TestCase
     s2_id = last.id
     assert_equal(HashDiffSym.diff(@h1, @h2).to_s, last.entity)
     assert_equal(s1_id, last.previous)
-    assert_equal(nil, last.next)
+    assert_nil last.next
     assert_equal(Garland::DIFF, last.entity_type)
     assert_equal(s1_id, Storage.find_by(next: s2_id).id)
     assert_equal(s2_id, Storage.find_by(previous: s1_id).id)
@@ -142,7 +142,7 @@ class GarlandsTest < ActiveSupport::TestCase
     e = Storage.first
     e.next = Garland::NEXT_ID_PENDING
     e.save
-    assert_equal(nil, Storage.snapshot)
+    assert_nil Storage.snapshot
   end
 
   test "should be able to make snapshots (belongs)" do

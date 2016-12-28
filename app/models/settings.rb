@@ -1,5 +1,5 @@
 # RailsSettings Model
-class Settings < RailsSettings::CachedSettings
+class Settings < RailsSettings::Base
   def self.set_defaults
     Settings.unscoped.where("thing_id is null").destroy_all
     Settings.values.each do |name, props|
