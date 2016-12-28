@@ -125,8 +125,11 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
                   end
                 end
               else
-                Rails.logger.info("CurrentHwNode with ncc_node: #{ncc_node.inspect}, "\
-                "coordinator: #{coordinator.inspect} doesn't exist or has no node_ip '#{props}'")
+                Rails.logger.info(
+                  "CurrentHwNode with ncc_node: #{ncc_node.inspect},
+                  coordinator: #{coordinator.inspect}
+                  doesn't exist or has no node_ip '#{props}'"
+                .squish)
               end
             end
           else
@@ -139,8 +142,10 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             if hw_node_to_delete
               hw_node_to_delete.update_attribute(:type, "DeletedHwNode")
             else
-              Rails.logger.info("CurrentHwNode with ncc_node: #{ncc_node.inspect}, "\
-              "coordinator: #{coordinator.inspect} doesn't exists, nothing to delete")
+              Rails.logger.info(
+                "CurrentHwNode with ncc_node: #{ncc_node.inspect},
+                coordinator: #{coordinator.inspect} doesn't exists, nothing to delete"
+              .squish)
             end
           end
         end
@@ -169,8 +174,10 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
               end
               changing_hw_node.update_attribute(target[:field], after)
             else
-              Rails.logger.info("CurrentHwNode with ncc_node: #{ncc_node.inspect}, "\
-              "coordinator: #{coordinator.inspect} doesn't exists, nothing to change")
+              Rails.logger.info(
+                "CurrentHwNode with ncc_node: #{ncc_node.inspect},
+                coordinator: #{coordinator.inspect} doesn't exists, nothing to change"
+              .squish)
             end
           end
         end

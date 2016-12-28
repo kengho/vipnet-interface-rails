@@ -72,8 +72,10 @@ class Api::V1::NodenamesController < Api::V1::BaseController
             deletion_date: nodename_created_at,
           })
         else
-          Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' "\
-            "doesn't exists, nothing to delete")
+          Rails.logger.info(
+            "CurrentNccNode with vid '#{target[:vid]}'
+            doesn't exists, nothing to delete"
+          .squish)
         end
       end
 
@@ -101,12 +103,16 @@ class Api::V1::NodenamesController < Api::V1::BaseController
             end
             changing_ncc_node.update_attribute(target[:field], after)
           else
-            Rails.logger.info("CurrentNccNode with vid '#{target[:vid]}' "\
-              "doesn't exists, nothing to change")
+            Rails.logger.info(
+              "CurrentNccNode with vid '#{target[:vid]}'
+              doesn't exists, nothing to change"
+            .squish)
           end
         else
-          Rails.logger.info("Trying to change wrong field '#{target[:field]}' "\
-            "in CurrentNccNode via nodename API")
+          Rails.logger.info(
+            "Trying to change wrong field '#{target[:field]}'
+            in CurrentNccNode via nodename API"
+          .squish)
         end
       end
     end
