@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161201103431) do
+ActiveRecord::Schema.define(version: 20161228204420) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -22,9 +21,8 @@ ActiveRecord::Schema.define(version: 20161201103431) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "network_id"
+    t.index ["network_id"], name: "index_coordinators_on_network_id", using: :btree
   end
-
-  add_index "coordinators", ["network_id"], name: "index_coordinators_on_network_id", using: :btree
 
   create_table "garlands", force: :cascade do |t|
     t.text     "entity"
@@ -49,10 +47,9 @@ ActiveRecord::Schema.define(version: 20161201103431) do
     t.string   "type"
     t.integer  "descendant_id"
     t.datetime "creation_date"
+    t.index ["coordinator_id"], name: "index_hw_nodes_on_coordinator_id", using: :btree
+    t.index ["ncc_node_id"], name: "index_hw_nodes_on_ncc_node_id", using: :btree
   end
-
-  add_index "hw_nodes", ["coordinator_id"], name: "index_hw_nodes_on_coordinator_id", using: :btree
-  add_index "hw_nodes", ["ncc_node_id"], name: "index_hw_nodes_on_ncc_node_id", using: :btree
 
   create_table "ncc_nodes", force: :cascade do |t|
     t.string   "vid"
@@ -69,9 +66,8 @@ ActiveRecord::Schema.define(version: 20161201103431) do
     t.datetime "creation_date"
     t.string   "type"
     t.integer  "descendant_id"
+    t.index ["network_id"], name: "index_ncc_nodes_on_network_id", using: :btree
   end
-
-  add_index "ncc_nodes", ["network_id"], name: "index_ncc_nodes_on_network_id", using: :btree
 
   create_table "networks", force: :cascade do |t|
     t.string   "network_vid"
@@ -81,14 +77,13 @@ ActiveRecord::Schema.define(version: 20161201103431) do
   end
 
   create_table "node_ips", force: :cascade do |t|
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.integer  "u32",        limit: 8, null: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.bigint   "u32",        null: false
     t.string   "type"
     t.integer  "hw_node_id"
+    t.index ["hw_node_id"], name: "index_node_ips_on_hw_node_id", using: :btree
   end
-
-  add_index "node_ips", ["hw_node_id"], name: "index_node_ips_on_hw_node_id", using: :btree
 
   create_table "settings", force: :cascade do |t|
     t.string   "var",                   null: false
@@ -97,9 +92,8 @@ ActiveRecord::Schema.define(version: 20161201103431) do
     t.string   "thing_type", limit: 30
     t.datetime "created_at"
     t.datetime "updated_at"
+    t.index ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
   end
-
-  add_index "settings", ["thing_type", "thing_id", "var"], name: "index_settings_on_thing_type_and_thing_id_and_var", unique: true, using: :btree
 
   create_table "ticket_systems", force: :cascade do |t|
     t.string "url_template"
@@ -112,10 +106,9 @@ ActiveRecord::Schema.define(version: 20161201103431) do
     t.datetime "created_at",       null: false
     t.datetime "updated_at",       null: false
     t.integer  "ncc_node_id"
+    t.index ["ncc_node_id"], name: "index_tickets_on_ncc_node_id", using: :btree
+    t.index ["ticket_system_id"], name: "index_tickets_on_ticket_system_id", using: :btree
   end
-
-  add_index "tickets", ["ncc_node_id"], name: "index_tickets_on_ncc_node_id", using: :btree
-  add_index "tickets", ["ticket_system_id"], name: "index_tickets_on_ticket_system_id", using: :btree
 
   create_table "users", force: :cascade do |t|
     t.datetime "created_at",                              null: false

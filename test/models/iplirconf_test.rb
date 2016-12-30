@@ -12,7 +12,7 @@ class IplirconfsTest < ActiveSupport::TestCase
 
   test "when coordinator destroys, all its iplirconf destroys" do
     Iplirconf.push(hash: {}, belongs_to: @coordinator1)
-    assert_equal(1, Iplirconf.all.size)
+    assert_equal(3, Iplirconf.all.size)
     @coordinator1.destroy
     assert_equal(0, Iplirconf.all.size)
   end

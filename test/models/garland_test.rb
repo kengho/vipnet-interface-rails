@@ -21,33 +21,31 @@ class GarlandsTest < ActiveSupport::TestCase
     @network2 = networks(:network2)
     @coordinator1 = coordinators(:coordinator1)
 
-    @h1 = { a: "a1", b: "b1" }
-    @h2 = { a: "a2", b: "b1" }
-    @h3 = { a: "a3", b: "b1" }
-    @h4 = { a: "a4", b: "b1" }
-    @h5 = { a: "a5", b: "b1" }
-    @h6 = { a: "a6", b: "b1" }
-
-    @h7 = { interesting_key: { a: 1, b: 2 }, key2: 1, key3: 2 }
-    @h8 = { interesting_key: { a: 2, b: 1 }, key2: 2, key3: 3 }
+    @hash1 = { a: "a1", b: "b1" }
+    @hash2 = { a: "a2", b: "b1" }
+    @hash3 = { a: "a3", b: "b1" }
   end
 
   test "should not save without entity" do
-    s = Storage.new(entity: nil, entity_type: Garland::DIFF)
-    assert_not s.save
+    item = Storage.new(entity: nil, entity_type: Garland::DIFF)
+    assert_not item.save
   end
 
   test "should not save without entity_type" do
-    s = Storage.new(entity: "{}", entity_type: nil)
-    assert_not s.save
+    item = Storage.new(entity: "{}", entity_type: nil)
+    assert_not item.save
   end
 
   test "should not save more than one record with next is nil" do
-    Storage.create!(entity: "{}", entity_type: Garland::DIFF, next: nil)
-    s1 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: nil)
-    assert_not s1.save
-    s2 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: 1)
-    assert s2.save
+    Storage.create!(entity: "{}", entity_type: Garland::DIFF, next: nil, previous: 1)
+    item2 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: nil, previous: 1)
+    assert_not item2.save
+  end
+
+  test "should not save more than one record with previous is nil" do
+    Storage.create!(entity: "{}", entity_type: Garland::DIFF, next: 1, previous: nil)
+    item2 = Storage.new(entity: "{}", entity_type: Garland::DIFF, next: 1, previous: nil)
+    assert_not item2.save
   end
 
   test "should not save more than one record with next is nil (belongs)" do
@@ -58,14 +56,14 @@ class GarlandsTest < ActiveSupport::TestCase
       belongs_to_type: "Network",
       next: nil,
     )
-    s = StorageBelongsNetwork.new(
+    item2 = StorageBelongsNetwork.new(
       entity: "{}",
       entity_type: Garland::SNAPSHOT,
       belongs_to_id: @network1.id,
       belongs_to_type: "Network",
       next: nil,
     )
-    assert_not s.save
+    assert_not item2.save
   end
 
   test "should save more than one record with next is nil if it belongs to different objects" do
@@ -76,117 +74,70 @@ class GarlandsTest < ActiveSupport::TestCase
       belongs_to_type: "Network",
       next: 1,
     )
-    s = StorageBelongsCoordinator.new(
+    item2 = StorageBelongsCoordinator.new(
       entity: "{}",
       entity_type: Garland::SNAPSHOT,
       belongs_to_id: @coordinator1.id,
       belongs_to_type: "Coordinator",
       next: nil,
     )
-    assert s.save
+    assert item2.save
   end
 
   test "should not push not hashes" do
-    s = Storage.push("not hash")
-    assert_not s
+    item = Storage.push("not hash")
+    assert_not item
   end
 
   test "should push hashes" do
-    s1, _ = Storage.push(@h1)
-    assert_equal(HashDiffSym.diff({}, @h1), s1)
-    last = Storage.last
-    s1_id = last.id
-    assert_equal(@h1.to_s, last.entity)
-    assert_equal(Garland::SNAPSHOT, last.entity_type)
-    assert_nil last.previous
-    assert_nil last.next
+    diff1 = Storage.push(@hash1)
+    assert_equal(HashDiffSym.diff({}, @hash1), eval(diff1.entity))
+    assert Storage.continuous?(nil)
 
-    s2, _ = Storage.push(@h2)
-    assert_equal(HashDiffSym.diff(@h1, @h2), s2)
-    last = Storage.last
-    s2_id = last.id
-    assert_equal(HashDiffSym.diff(@h1, @h2).to_s, last.entity)
-    assert_equal(s1_id, last.previous)
-    assert_nil last.next
-    assert_equal(Garland::DIFF, last.entity_type)
-    assert_equal(s1_id, Storage.find_by(next: s2_id).id)
-    assert_equal(s2_id, Storage.find_by(previous: s1_id).id)
+    diff2 = Storage.push(@hash2)
+    assert_equal(HashDiffSym.diff(@hash1, @hash2), eval(diff2.entity))
+    assert Storage.continuous?(nil)
 
-    s3, _ = Storage.push(@h3)
-    assert_equal(HashDiffSym.diff(@h2, @h3), s3)
-    last = Storage.last
-    s3_id = last.id
-    assert_equal(HashDiffSym.diff(@h2, @h3).to_s, last.entity)
+    diff3 = Storage.push(@hash3)
+    assert_equal(HashDiffSym.diff(@hash2, @hash3), eval(diff3.entity))
+    assert Storage.continuous?(nil)
+  end
+
+  test "should create and restore savepoints on errors" do
   end
 
   test "should not push if table should belong to something but it is not defined" do
-    s, _ = StorageBelongsNetwork.push(@h1)
-    assert_not s
+    diff1 = StorageBelongsNetwork.push(@hash1)
+    assert_not diff1
   end
 
   test "should push to table which belong to something" do
-    s, _ = StorageBelongsNetwork.push(hash: @h1, belongs_to: @network1)
-    assert_equal(HashDiffSym.diff({}, @h1), s)
-  end
-
-  test "should be able to make snapshots" do
-    Storage.push(@h1)
-    Storage.push(@h2)
-    assert_equal(@h2, eval(Storage.snapshot.entity))
-    Storage.push(@h3)
-    assert_equal(@h3, eval(Storage.snapshot.entity))
-  end
-
-  test "snapshot should return nil if there are stack errors" do
-    Storage.push(@h1)
-    e = Storage.first
-    e.next = Garland::NEXT_ID_PENDING
-    e.save
-    assert_nil Storage.snapshot
-  end
-
-  test "should be able to make snapshots (belongs)" do
-    StorageBelongsNetwork.push(hash: @h1, belongs_to: @network1)
-    StorageBelongsNetwork.push(hash: @h2, belongs_to: @network1)
-    assert_equal(@h2, eval(StorageBelongsNetwork.snapshot(@network1).entity))
-    StorageBelongsNetwork.push(hash: @h3, belongs_to: @network1)
-    assert_equal(@h3, eval(StorageBelongsNetwork.snapshot(@network1).entity))
-
-    StorageBelongsNetwork.push(hash: @h1, belongs_to: @network2)
-    StorageBelongsNetwork.push(hash: @h2, belongs_to: @network2)
-    assert_equal(@h2, eval(StorageBelongsNetwork.snapshot(@network2).entity))
-    StorageBelongsNetwork.push(hash: @h3, belongs_to: @network2)
-    assert_equal(@h3, eval(StorageBelongsNetwork.snapshot(@network2).entity))
-  end
-
-  test "should be able to tell is there are any records belongs to given" do
-    assert_not StorageBelongsNetwork.any?(@network1)
-    StorageBelongsNetwork.push(hash: @h1, belongs_to: @network1)
-    assert StorageBelongsNetwork.any?(@network1)
+    diff1 = StorageBelongsNetwork.push(hash: @hash1, belongs_to: @network1)
+    assert_equal(HashDiffSym.diff({}, @hash1), eval(diff1.entity))
   end
 
   test "should not save if belongs_to_type doesn't matches table set in belongs_to" do
-    StorageBelongsNetwork.push(hash: "{}", belongs_to: @network1)
-    n = StorageBelongsNetwork.first
-    n.belongs_to_type = "Something"
-    assert_not n.save
+    StorageBelongsNetwork.push(hash: {}, belongs_to: @network1)
+    item1 = StorageBelongsNetwork.first
+    item1.belongs_to_type = "SomeOtherModel"
+    assert_not item1.save
   end
 
   test "should not save empty diffs" do
-    Storage.push(@h1)
-    Storage.push(@h1)
-    assert_equal(1, Storage.all.size)
+    Storage.push(@hash1)
+    Storage.push(@hash1)
+
+    # head, first_diff, tail
+    assert_equal(3, Storage.all.size)
   end
 
-  test "should push hashes and return partial diff" do
-    Storage.push(@h7)
-    s, _ = Storage.push(hash: @h8, partial: :interesting_key)
-    assert_equal(HashDiffSym.diff(@h7[:interesting_key], @h8[:interesting_key]), s)
+  test "should be able to get head" do
+    Storage.push(@hash1)
+    assert Storage.head
   end
 
-  test "should push hashes and return partial diff (belongs)" do
-    StorageBelongsNetwork.push(hash: @h7, belongs_to: @network1)
-    s, _ = StorageBelongsNetwork.push(hash: @h8, belongs_to: @network1, partial: :interesting_key)
-    assert_equal(HashDiffSym.diff(@h7[:interesting_key], @h8[:interesting_key]), s)
+  test "should be able to get tail" do
+    Storage.push(@hash1)
+    assert Storage.tail
   end
 end

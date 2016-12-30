@@ -12,7 +12,7 @@ class NodenamesTest < ActiveSupport::TestCase
 
   test "when network destroys, all its nodenames destroys" do
     Nodename.push(hash: {}, belongs_to: @network1)
-    assert_equal(1, Nodename.all.size)
+    assert_equal(3, Nodename.all.size)
     @network1.destroy
     assert_equal(0, Nodename.all.size)
   end

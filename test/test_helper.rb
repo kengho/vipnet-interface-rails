@@ -99,13 +99,13 @@ end
 
 class Network::ActiveRecord::Base
   def last_nodenames_created_at
-    Nodename.thread(self).last.created_at.iso8601(3)
+    Nodename.last_diff(self).created_at.iso8601(3)
   end
 end
 
 class Coordinator::ActiveRecord::Base
   def last_iplirconfs_created_at
-    Iplirconf.thread(self).last.created_at.iso8601(3)
+    Iplirconf.last_diff(self).created_at.iso8601(3)
   end
 end
 
