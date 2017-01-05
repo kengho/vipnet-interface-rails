@@ -1,1 +1,19 @@
-<%= content_tag(:div, t(".#{prop}"), class: "td") %>
+<%
+  text = case prop
+  when :vid
+    t(".vid")
+  when :name
+    t(".name")
+  when :ip
+    t(".ip")
+  when :version_decoded
+    t(".version_decoded")
+  when :creation_date
+    t(".creation_date")
+  when :deletion_date
+    t(".deletion_date")
+  when :ticket
+    t(".ticket")
+  end
+%>
+<%= content_tag(:div, text, class: "td") %>

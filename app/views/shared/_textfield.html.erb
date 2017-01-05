@@ -7,7 +7,19 @@
           }.merge(props)
         )
     %>
-    <% label = props[:label] ? props[:label] : t(".#{props[:id]}_label") %>
+    <%
+      user_textfield_label = case props[:name]
+      when "user_session[current_password]"
+                     t(".current_password")
+      when "user_session[password]"
+                     t(".password")
+      when "user_session[password_confirmation]"
+                     t(".password_confirmation")
+      when "user_session[email]"
+                     t(".email")
+      end
+    %>
+    <% label = props[:label] ? props[:label] : user_textfield_label %>
     <%= content_tag(:label, label,
           class: ["mdl-textfield__label", "auth__label"],
           for: props[:id],

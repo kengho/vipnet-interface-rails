@@ -53,12 +53,12 @@ ru:
           ticket: "Заявки"
         history:
           label: "История изменений"
-          "true": "Изменения загружены"
-          "false": "Изменения не найдены"
+          loaded: "Изменения загружены"
+          not_loaded: "Изменения не найдены"
         availability:
           label: "Проверить доступность"
-          "true": "Узел доступен"
-          "false": "Узел недоступен"
+          available: "Узел доступен"
+          unavailable: "Узел недоступен"
       status:
         deleted: "Узел удален"
         disabled: "Узел отключен"
@@ -208,7 +208,7 @@ ru:
     id_comma: "ID,..."
     csv: "CSV"
     textfield:
-      password_label: "Пароль"
-      password_confirmation_label: "Подтверждение пароля"
-      current_password_label: "Текущий пароль"
-      email_label: "Email"
+      password: "Пароль"
+      password_confirmation: "Подтверждение пароля"
+      current_password: "Текущий пароль"
+      email: "Email"

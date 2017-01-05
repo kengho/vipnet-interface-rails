@@ -52,12 +52,12 @@ en:
           ticket: "Tickets"
         history:
           label: "Changes"
-          "true": "Changes loaded"
-          "false": "Changes not found"
+          loaded: "Changes loaded"
+          not_loaded: "Changes not found"
         availability:
           label: "Check availability"
-          "true": "Node available"
-          "false": "Node unavailable"
+          available: "Node available"
+          unavailable: "Node unavailable"
       status:
         deleted: "Node deleted"
         disabled: "Node disabled"
@@ -205,7 +205,7 @@ en:
     id_comma: "ID,..."
     csv: "CSV"
     textfield:
-      password_label: "Password"
-      password_confirmation_label: "Password confirmation"
-      current_password_label: "Current password"
-      email_label: "Email"
+      password: "Password"
+      password_confirmation: "Password confirmation"
+      current_password: "Current password"
+      email: "Email"

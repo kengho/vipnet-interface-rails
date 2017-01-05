@@ -1,4 +1,4 @@
 <% prop_view = prop_view(prop) %>
 <%= content_tag(:div, class: "td") do %>
-  <%= content_tag(:span, prop_view.html_safe, class: "span__#{prop}") %>
+  <%= content_tag(:span, prop_view.html_safe) %>
 <% end %>

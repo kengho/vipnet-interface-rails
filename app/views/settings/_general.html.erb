@@ -7,9 +7,41 @@
   <%= tag(:input, hidden: true, name: "general") %>
   <% Settings.values.each do |value, settings_params| %>
     <% settings = @settings.find_by(var: value) %>
+    <%
+      label = case settings.var
+      when "locale"
+        t(".locale")
+      when "support_email"
+        t(".support_email")
+      when "checker_api"
+        t(".checker_api")
+      when "networks_to_ignore"
+        t(".networks_to_ignore")
+      when "nodes_per_page"
+        t(".nodes_per_page")
+      when "export_selected_variant"
+        t(".export_selected_variant")
+      when "disable_api"
+        t(".disable_api")
+      when "nodename_api_enabled"
+        t(".nodename_api_enabled")
+      when "iplirconf_api_enabled"
+        t(".iplirconf_api_enabled")
+      when "ticket_api_enabled"
+        t(".ticket_api_enabled")
+      when "mailer_default_from"
+        t(".mailer_default_from")
+      when "host"
+        t(".host")
+      when "demo_mode"
+        t(".demo_mode")
+      when "theme"
+        t(".theme")
+      end
+    %>
     <%= render "settings/general/#{settings_params[:type]}",
           settings: settings,
-          label: t(".#{settings.var}")
+          label: label
     %>
   <% end %>
 

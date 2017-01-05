@@ -9,13 +9,46 @@
       <%= content_tag(:i, i("shared.close_button"), class: "material-icons") %>
     <% end %>
   <% end %>
-
   <%= content_tag(:div, name:"text") do %>
     <% info_order.each do |prop| %>
       <% prop_view = prop_view(prop, :long) %>
       <% if !prop_view.empty? && prop_view %>
         <%= content_tag(:span, name: "line", "data-undraggable": true) do %>
-          <%= content_tag(:span, t("nodes.row.remote_button.info.#{prop}"), name: "prop") %>:&nbsp;
+          <%
+            label = case prop
+            when                             :name
+              t("nodes.row.remote_button.info.name")
+            when                             :vid
+              t("nodes.row.remote_button.info.vid")
+            when                             :network
+              t("nodes.row.remote_button.info.network")
+            when                             :enabled
+              t("nodes.row.remote_button.info.enabled")
+            when                             :category
+              t("nodes.row.remote_button.info.category")
+            when                             :ip
+              t("nodes.row.remote_button.info.ip")
+            when                             :accessip
+              t("nodes.row.remote_button.info.accessip")
+            when                             :version
+              t("nodes.row.remote_button.info.version")
+            when                             :version_decoded
+              t("nodes.row.remote_button.info.version_decoded")
+            when                             :creation_date
+              t("nodes.row.remote_button.info.creation_date")
+            when                             :deletion_date
+              t("nodes.row.remote_button.info.deletion_date")
+            when                             :mftp_server
+              t("nodes.row.remote_button.info.mftp_server")
+            when                             :clients_registered
+              t("nodes.row.remote_button.info.clients_registered")
+            when                             :ncc
+              t("nodes.row.remote_button.info.ncc")
+            when                             :ticket
+              t("nodes.row.remote_button.info.ticket")
+            end
+          %>
+          <%= content_tag(:span, label, name: "prop") %>:&nbsp;
           <%= content_tag(:span, prop_view.html_safe, name: "value") %>
           <%= tag(:br) %>
         <% end %>

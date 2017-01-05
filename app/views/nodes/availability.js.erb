@@ -1,10 +1,19 @@
+<%
+  tooltipText = case @status
+  when true
+    t("nodes.row.remote_button.availability.available")
+  when false
+    t("nodes.row.remote_button.availability.unavailable")
+  end
+%>
+
 (function() {
   vipnetInterface.nodes.ajax.renderStatus({
     action: "availability",
     data: {
       vid: "<%= @ncc_node.vid %>",
       status: "<%= @status %>",
-      tooltipText: "<%= t("nodes.row.remote_button.availability.#{@status}") %>",
+      tooltipText: "<%= tooltipText %>",
     },
   });
 })();

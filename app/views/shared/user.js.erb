@@ -1,3 +1,18 @@
+<%
+  text = case @response
+  when               :user_settings_saved
+    t("users.snackbar.user_settings_saved")
+  when               :password_successfully_changed
+    t("users.snackbar.password_successfully_changed")
+  when               :error_changing_password
+    t("users.snackbar.error_changing_password")
+  when               :error_confirmation_password
+    t("users.snackbar.error_confirmation_password")
+  when               :error_validating_password
+    t("users.snackbar.error_validating_password")
+  end
+%>
+
 (function() {
-  vipnetInterface.showSnackbar("<%= t("users.snackbar.#{@response}") %>");
+  vipnetInterface.showSnackbar("<%= text %>");
 })();

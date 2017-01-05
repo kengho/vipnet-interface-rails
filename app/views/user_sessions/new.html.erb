@@ -5,8 +5,22 @@
     <% if @user_session.errors.any? %>
       <% @user_session.errors.messages.each do |field, error_messages| %>
         <% error_messages.each do |error_message| %>
+          <%
+            field_label = case field
+            when                                  :base
+              t("authlogic.attributes.user_session.base")
+            when                                  :login
+              t("authlogic.attributes.user_session.login")
+            when                                  :email
+              t("authlogic.attributes.user_session.email")
+            when                                  :password
+              t("authlogic.attributes.user_session.password")
+            when                                  :remember_me
+              t("authlogic.attributes.user_session.remember_me")
+            end
+          %>
           <%= content_tag(:span, class: "auth__error") do %>
-            <%= t("authlogic.attributes.user_session.#{field}") %>
+            <%= field_label %>
             <%= error_message %>
           <% end %>
         <% end %>

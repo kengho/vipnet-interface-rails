@@ -76,7 +76,12 @@ module Nodes::RowHelper
       end
 
     when :enabled
-      view = I18n.t("boolean.#{@ncc_node.enabled}")
+      view = case @ncc_node.enabled
+      when true
+        I18n.t("boolean.true")
+      when false
+        I18n.t("boolean.false")
+      end
 
     when :network
       network_vid = @ncc_node.network.network_vid
@@ -84,7 +89,12 @@ module Nodes::RowHelper
       view = "#{network_vid}#{network_name ? ' (' + network_name + ')' : ''}"
 
     when :category
-      view = I18n.t("nodes.row.remote_button.info.categories.#{@ncc_node.category}")
+      view = case @ncc_node.category
+      when "client"
+        I18n.t("nodes.row.remote_button.info.categories.client")
+      when "server"
+        I18n.t("nodes.row.remote_button.info.categories.server")
+      end
 
     when :ncc
       if @ncc_node.server_number && @ncc_node.abonent_number

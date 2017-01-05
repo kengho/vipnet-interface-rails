@@ -1,3 +1,12 @@
+<%
+  tooltipText = case @status
+  when true
+    t("nodes.row.remote_button.history.loaded")
+  when false
+    t("nodes.row.remote_button.history.not_loaded")
+  end
+%>
+
 (function() {
   vipnetInterface.nodes.ajax.renderStatus({
     action: "history",
@@ -5,7 +14,7 @@
       vid: "<%= @ncc_node.vid %>",
       prop: "<%= @prop %>",
       status: "<%= @status %>",
-      tooltipText: "<%= t("nodes.row.remote_button.history.#{@status}") %>",
+      tooltipText: "<%= tooltipText %>",
     },
   });
   <% if @status %>
