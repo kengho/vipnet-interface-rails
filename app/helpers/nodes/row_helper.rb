@@ -95,7 +95,7 @@ module Nodes::RowHelper
 
     when :clients_registered
       if @ncc_node.category == "server"
-        clients_registered = NccNode.where_mftp_server_vid_like(@ncc_node.vid)
+        clients_registered = NccNode.where_prop_like("mftp_server_vid", @ncc_node.vid)
         if clients_registered
           view = render "shared/link", {
             href: "?mftp_server_vid=#{@ncc_node.vid}",

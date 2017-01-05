@@ -52,28 +52,20 @@ class NodesController < ApplicationController
     if params_expanded["search"]
       @search = true
       search_resuls = NccNode.none
-      param = params_expanded["search"]
+      value = params_expanded["search"]
       NccNode.quick_searchable.each do |prop|
-        search_method = "where_#{prop}_like".to_sym
-        if NccNode.methods.include?(search_method)
-          search_resuls = search_resuls |
-            NccNode.public_send(search_method, param)
-        end
+        search_resuls = search_resuls | NccNode.where_prop_like(prop, value)
       end
     else
       search_resuls = NccNode.all
       params_expanded.each do |prop, value|
-        search_method = "where_#{prop}_like".to_sym
-        if NccNode.methods.include?(search_method)
-          @search = true
-          values = Array(value)
-          sub_search_resuls = NccNode.none
-          values.each do |value|
-            sub_search_resuls = sub_search_resuls |
-              NccNode.public_send(search_method, value)
-          end
-          search_resuls = search_resuls & sub_search_resuls
+        @search = true
+        values = Array(value)
+        sub_search_resuls = NccNode.none
+        values.each do |value|
+          sub_search_resuls = sub_search_resuls | NccNode.where_prop_like(prop, value)
         end
+        search_resuls = search_resuls & sub_search_resuls
       end
     end
 

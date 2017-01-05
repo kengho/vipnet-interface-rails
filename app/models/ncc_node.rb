@@ -23,95 +23,74 @@ class NccNode < ActiveRecord::Base
 
   after_create :adopt_tickets
 
-  def self.where_vid_like(vid)
-    search_resuls = NccNode.none
-    normal_vids = VipnetParser::id(
-      string: vid,
-      threshold: Settings.vid_search_threshold,
-    )
-    normal_vids.each do |normal_vid|
-      search_resuls = search_resuls | NccNode.where("vid = ?", normal_vid)
-    end
-    search_resuls = search_resuls | NccNode.where("vid ILIKE ?", "%#{vid}%")
-
-    search_resuls
-  end
-
-  def self.where_name_like(name)
-    if name =~ /^\"(.*)\"$/
-      name_regexp = Regexp.last_match(1)
-    else
-      name_regexp = name.gsub(" ", ".*")
-    end
-    search_resuls = NccNode.where("name ~* ?", name_regexp)
-
-    search_resuls
-  end
-
-  def self.where_ip_like(ip)
-    search_resuls = NccNode.none
-    if IPv4::ip?(ip)
-      search_resuls = NccNode
-        .joins(hw_nodes: :node_ips)
-        .where("node_ips.u32 = ?", IPv4::u32(ip))
-    end
-    if IPv4::cidr(ip) || IPv4::range(ip)
-      lower_bound, higher_bound = IPv4::u32_bounds(ip)
-      search_resuls = NccNode
-        .joins(hw_nodes: :node_ips)
-        .where("node_ips.u32 >= ? AND node_ips.u32 <= ?", lower_bound, higher_bound)
-    end
-
-    search_resuls
-  end
-
-  def self.where_version_like(version, subtype = "version")
-    search_resuls = NccNode.none
-    version_escaped = version.gsub("_", "\\\\_").gsub("%", "\\\\%")
-    search_resuls = NccNode
-      .joins(:hw_nodes)
-      .where("hw_nodes.#{subtype} LIKE ?", "%#{version_escaped}%")
-
-    search_resuls
-  end
-
-  def self.where_version_decoded_like(version_decoded)
-    NccNode.where_version_like(version_decoded, "version_decoded")
-  end
-
-  def self.where_creation_date_like(creation_date)
-    self.where_date_like("creation_date", creation_date)
-  end
-
-  def self.where_deletion_date_like(deletion_date)
-    self.where_date_like("deletion_date", deletion_date)
-  end
-
-  def self.where_date_like(field, date)
-    return unless field == "deletion_date" || field == "creation_date"
-    date_escaped = date.to_s.gsub("_", "\\\\_").gsub("%", "\\\\%")
-    search_resuls = NccNode.where("#{field}::text LIKE ?", "%#{date_escaped}%")
-
-    search_resuls
-  end
-
-  def self.where_ticket_like(ticket_id)
-    search_resuls = NccNode
-      .joins(:tickets)
-      .where("tickets.ticket_id LIKE ?", "%#{ticket_id}%")
-
-    search_resuls
-  end
-
-  def self.where_mftp_server_vid_like(mftp_server_vid)
-    search_resuls = NccNode.none
-    mftp_server = NccNode.find_by(vid: mftp_server_vid, category: "server")
-    if mftp_server
-      search_resuls = NccNode.where(
-        network: mftp_server.network,
-        server_number: mftp_server.server_number,
-        category: "client",
+  def self.where_prop_like(prop, value)
+    case prop
+    when "vid"
+      vid = value
+      search_resuls = NccNode.none
+      normal_vids = VipnetParser::id(
+        string: vid,
+        threshold: Settings.vid_search_threshold,
       )
+      normal_vids.each do |normal_vid|
+        search_resuls = search_resuls | NccNode.where("vid = ?", normal_vid)
+      end
+      search_resuls = search_resuls | NccNode.where("vid ILIKE ?", "%#{vid}%")
+
+    when "name"
+      name = value
+      if name =~ /^\"(.*)\"$/
+        name_regexp = Regexp.last_match(1)
+      else
+        name_regexp = name.gsub(" ", ".*")
+      end
+      search_resuls = NccNode.where("name ~* ?", name_regexp)
+
+    when "ip"
+      ip = value
+      search_resuls = NccNode.none
+      if IPv4::ip?(ip)
+        search_resuls = NccNode
+          .joins(hw_nodes: :node_ips)
+          .where("node_ips.u32 = ?", IPv4::u32(ip))
+      end
+      if IPv4::cidr(ip) || IPv4::range(ip)
+        lower_bound, higher_bound = IPv4::u32_bounds(ip)
+        search_resuls = NccNode
+          .joins(hw_nodes: :node_ips)
+          .where("node_ips.u32 >= ? AND node_ips.u32 <= ?", lower_bound, higher_bound)
+      end
+
+    when "version", "version_decoded"
+      version = value
+      search_resuls = NccNode.none
+      version_escaped = version.gsub("_", "\\\\_").gsub("%", "\\\\%")
+      search_resuls = NccNode
+        .joins(:hw_nodes)
+        .where("hw_nodes.#{prop} LIKE ?", "%#{version_escaped}%")
+
+    when "creation_date", "deletion_date"
+      date = value
+      date_escaped = date.to_s.gsub("_", "\\\\_").gsub("%", "\\\\%")
+      search_resuls = NccNode.where("#{prop}::text LIKE ?", "%#{date_escaped}%")
+
+    when "ticket"
+      ticket_id = value
+      search_resuls = NccNode
+        .joins(:tickets)
+        .where("tickets.ticket_id LIKE ?", "%#{ticket_id}%")
+
+    when "mftp_server_vid"
+      mftp_server_vid = value
+      search_resuls = NccNode.none
+      mftp_server = NccNode.find_by(vid: mftp_server_vid, category: "server")
+      if mftp_server
+        search_resuls = NccNode.where(
+          network: mftp_server.network,
+          server_number: mftp_server.server_number,
+          category: "client",
+        )
+      end
     end
 
     search_resuls
@@ -252,7 +231,7 @@ class NccNode < ActiveRecord::Base
     hw_nodes.each do |hw_node|
       coordinator = hw_node.coordinator || hw_node.descendant.coordinator
       coord_vid = coordinator.vid
-      clients_registered = NccNode.where_mftp_server_vid_like(coord_vid).count
+      clients_registered = NccNode.where_prop_like("mftp_server_vid", coord_vid).count
       coordinators[{
         prop => hw_node[prop],
         vid: coord_vid,
@@ -348,9 +327,9 @@ class NccNode < ActiveRecord::Base
 
   def self.quick_searchable
     [
-      :vid, :name,
-      :version_decoded, :ip, :creation_date,
-      :ticket,
+      "vid", "name",
+      "version_decoded", "ip", "creation_date",
+      "ticket",
     ]
   end
 
