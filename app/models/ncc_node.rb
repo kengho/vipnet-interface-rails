@@ -251,7 +251,7 @@ class NccNode < ActiveRecord::Base
       return max_version[0] # 3
     end
 
-    min_coord_vid = coordinators.map { |k,v| k[:vid] }.min
+    min_coord_vid = coordinators.map { |k, v| k[:vid] }.min
     hw_node_with_min_coord_vid = hw_nodes.joins(:coordinator)
       .find_by("coordinators.vid": min_coord_vid)
     if hw_node_with_min_coord_vid
@@ -322,7 +322,7 @@ class NccNode < ActiveRecord::Base
   end
 
   def self.vids
-    all.map { |n| n.vid }.reject { |vid| !vid }.sort
+    all.map(&:vid).reject(&:!).sort
   end
 
   def self.quick_searchable

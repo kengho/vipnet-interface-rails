@@ -3,6 +3,7 @@ require "test_helper"
 class Api::V1::NodenamesControllerTest < ActionController::TestCase
   setup do
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_ADMINISTRATOR_TOKEN\""
+    Settings.networks_to_ignore = ""
   end
 
   test "correct token should be provided" do

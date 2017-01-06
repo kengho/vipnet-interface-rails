@@ -39,15 +39,15 @@ class Api::V1::NodesController < Api::V1::BaseController
         "enabled", "category", "creation_date", "creation_date_accuracy",
       ]
       only_filtered = only & avaliable_fileds
-      only_filtered_ncc = only_filtered & NccNode.props_from_nodename.map { |e| e.to_s }
-      only_filtered_hw = only_filtered & (HwNode.props_from_iplirconf + [:version_decoded]).map { |e| e.to_s }
+      only_filtered_ncc = only_filtered & NccNode.props_from_nodename.map(&:to_s)
+      only_filtered_hw = only_filtered & (HwNode.props_from_iplirconf + [:version_decoded]).map(&:to_s)
       if only_filtered_hw.any?
         ncc_node.hw_nodes.each do |hw_node|
           only_filtered_hw.each do |param|
             @response[:data].deep_merge!({
               param => {
-                hw_node.coordinator.vid => hw_node[param]
-              }
+                hw_node.coordinator.vid => hw_node[param],
+              },
             })
           end
           if only_filtered.include?("ip")
@@ -56,8 +56,8 @@ class Api::V1::NodesController < Api::V1::BaseController
             if ips.any?
               @response[:data].deep_merge!({
                 "ip" => {
-                  hw_node.coordinator.vid => ips
-                }
+                  hw_node.coordinator.vid => ips,
+                },
               })
             end
           end
@@ -67,7 +67,7 @@ class Api::V1::NodesController < Api::V1::BaseController
     else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
     end
-    
+
     render json: @response and return
   end
 end

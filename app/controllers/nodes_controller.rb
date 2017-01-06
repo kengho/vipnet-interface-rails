@@ -32,7 +32,7 @@ class NodesController < ApplicationController
       if request =~ /ids:(?<ids>.*)/
         params_expanded[:vid] = Regexp.last_match[:ids]
           .split(",")
-          .map { |id| id.strip }
+          .map(&:strip)
         custom_search = true
       else
         request.split(",").each do |partial_request|
@@ -69,8 +69,7 @@ class NodesController < ApplicationController
       end
     end
 
-    per_page = current_user.settings["nodes_per_page"] ||
-      Settings.nodes_per_page
+    per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if @search
       # http://stackoverflow.com/a/24448317/6376451
       all_ncc_nodes = NccNode
@@ -83,6 +82,7 @@ class NodesController < ApplicationController
       else
         @ncc_nodes = all_ncc_nodes
       end
+
       # calculating size here because of paginate() later
       @size = @ncc_nodes.size
     else
