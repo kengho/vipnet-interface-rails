@@ -25,7 +25,7 @@ module IPv4
     return nil unless IPv4::ip?(string)
     octets = string.split(".")
     hex_string = ""
-    octets.each { |octet| hex_string += octet.to_i.to_s(16).rjust(2, "0") }
+    octets.each { |octet| hex_string << octet.to_i.to_s(16).rjust(2, "0") }
     return hex_string.to_i(16)
   end
 
