@@ -115,10 +115,23 @@ vipnetInterface = {
       e.stopPropagation();
     });
   },
+
+  startUpdateCable: function() {
+    App.cable.subscriptions.create({
+      channel: "UpdateChannel",
+    }, {
+      received: function(data) {
+        if(data.update) {
+          vipnetInterface.nodes.ajax.load(vipnetInterface.params);
+        }
+      },
+    });
+  },
 };
 
 $(document).ready(function() {
   // radios in header and profile
   vipnetInterface.bindEventRadio();
   vipnetInterface.bindHome();
+  vipnetInterface.startUpdateCable();
 });

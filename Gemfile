@@ -12,6 +12,7 @@ gem "coffee-rails"
 group :development do
   gem "web-console", "~> 2.0"
   gem "spring"
+  gem "puma"
 end
 
 gem "material_design_lite-rails", "~> 1"
@@ -30,3 +31,4 @@ gem "faker", "~> 1"
 gem "rails_12factor"
 gem "rails-controller-testing"
 gem "themizer", "~> 0"
+gem "redis", "~> 3"

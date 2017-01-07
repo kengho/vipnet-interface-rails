@@ -71,6 +71,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
                 else
                   Rails.logger.info("Unable to save new_accendant: #{new_accendant.inspect}")
                 end
+
                 # if some prop was deleted, new_section_props will lack of it,
                 # thus update_attributes will leave this prop as it was before,
                 # but we want it to become nil
@@ -187,6 +188,9 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
       end
     end
 
+    if minutes_after_latest_update("hw_nodes", "node_ips") < 5
+      UpdateChannel.push(update: true)
+    end
     render plain: OK_RESPONSE and return
   end
 end

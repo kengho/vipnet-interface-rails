@@ -1,6 +1,5 @@
 class Api::V1::TicketsController < Api::V1::BaseController
   def create
-p params
     unless (params[:ticket])
       Rails.logger.error("Incorrect params #{params}")
       render plain: ERROR_RESPONSE and return
@@ -24,6 +23,9 @@ p params
       ticket_id: id,
     )
 
+    if minutes_after_latest_update("tickets") < 5
+      UpdateChannel.push(update: true)
+    end
     render plain: OK_RESPONSE and return
   end
 end
