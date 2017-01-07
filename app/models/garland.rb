@@ -120,57 +120,49 @@ class Garland < ActiveRecord::Base
   end
 
   def self.init(hash, belongs_to = nil)
-    ActiveRecord::Base.connection.create_savepoint("savepoint_before_init")
-
     common_props = self._split_belongs_to(belongs_to)
 
-    # first id: tail ({})
-    # second id: head (latest snapshot)
-    # third+: diffs
     tail_props = common_props.merge({ entity: {}.to_s, entity_type: SNAPSHOT })
     brand_new_tail = self.new(tail_props)
-    unless brand_new_tail.save
-      Rails.logger.error("Unable to create new tail with props '#{tail_props}'")
-      return nil
-    end
 
     diff = HashDiffSym.diff({}, hash)
     first_diff_props = common_props.merge({ entity: diff.to_s, entity_type: DIFF })
     first_diff = self.new(first_diff_props)
 
-    # belongs_to validations were in `brand_new_tail.save`
-    # here and below validations may be skipped as long as we check for continuity later
     head_props = common_props.merge({ entity: hash.to_s, entity_type: SNAPSHOT })
     brand_new_head = self.new(head_props)
-    unless brand_new_head.save(validate: false)
-      Rails.logger.error("Unable to create new head with props '#{head_props}'")
-      ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_init")
-      return nil
-    end
 
-    unless first_diff.save(validate: false)
-      Rails.logger.error("Unable to create first diff with props '#{first_diff_props}'")
-      ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_init")
-      return nil
-    end
+    self.transaction do
+       ActiveRecord::Base.connection.create_savepoint("savepoint_before_init")
 
-    brand_new_tail.update_attribute(:next, first_diff.id)
-    first_diff.update_attribute(:previous, brand_new_tail.id)
-    first_diff.update_attribute(:next, brand_new_head.id)
-    brand_new_head.update_attribute(:previous, first_diff.id)
+       # first id: tail ({})
+       # second id: head (latest snapshot)
+       # third+: diffs
+       unless brand_new_tail.save
+         Rails.logger.error("Unable to create new tail with props '#{tail_props}'")
+         return nil
+       end
 
-    unless self.continuous?(belongs_to)
-      Rails.logger.error("Initialized garland is not continuous")
-      ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_init")
-      return nil
+       # belongs_to validations were in `brand_new_tail.save`
+       # here and below validations may be skipped as long as we check for continuity later
+       first_diff.save(validate: false)
+       brand_new_head.save(validate: false)
+       brand_new_tail.update_attribute(:next, first_diff.id)
+       first_diff.update_attribute(:previous, brand_new_tail.id)
+       first_diff.update_attribute(:next, brand_new_head.id)
+       brand_new_head.update_attribute(:previous, first_diff.id)
+
+       unless self.continuous?(belongs_to)
+         Rails.logger.error("Initialized garland is not continuous")
+         ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_init")
+         return nil
+       end
     end
 
     first_diff
   end
 
   def self.insert_diff(hash, belongs_to = nil)
-    ActiveRecord::Base.connection.create_savepoint("savepoint_before_insert_diff")
-
     head = self.head(belongs_to)
     last_diff = self.find_by(id: head.previous)
     common_props = self._split_belongs_to(belongs_to)
@@ -186,32 +178,36 @@ class Garland < ActiveRecord::Base
     })
     new_diff = self.new(new_diff_props)
 
-    # insert_diff should not use skipping valudatuons methods
-    # because we don't want to check for continuity on every push
-    unless new_diff.save
-      Rails.logger.error("Unable to create new_diff with props '#{new_diff_props}'")
-      return nil
-    end
+    self.transaction do
+       ActiveRecord::Base.connection.create_savepoint("savepoint_before_insert_diff")
 
-    last_diff.next = new_diff.id
-    unless last_diff.save
-      Rails.logger.error("Unable to save last_diff with 'next' = '#{new_diff.id}'")
-      ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_insert_diff")
-      return nil
-    end
+       # insert_diff should not use skipping valudatuons methods
+       # because we don't want to check for continuity on every push
+       unless new_diff.save
+         Rails.logger.error("Unable to create new_diff with props '#{new_diff_props}'")
+         return nil
+       end
 
-    head.previous = new_diff.id
-    unless head.save
-      Rails.logger.error("Unable to save head with 'previous' = '#{new_diff.id}'")
-      ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_insert_diff")
-      return nil
-    end
+       last_diff.next = new_diff.id
+       unless last_diff.save
+         Rails.logger.error("Unable to save last_diff with 'next' = '#{new_diff.id}'")
+         ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_insert_diff")
+         return nil
+       end
 
-    head.entity = hash.to_s
-    unless head.save
-      Rails.logger.error("Unable to save head with 'entity' = '#{hash.to_s}'")
-      ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_insert_diff")
-      return nil
+       head.previous = new_diff.id
+       unless head.save
+         Rails.logger.error("Unable to save head with 'previous' = '#{new_diff.id}'")
+         ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_insert_diff")
+         return nil
+       end
+
+       head.entity = hash.to_s
+       unless head.save
+         Rails.logger.error("Unable to save head with 'entity' = '#{hash.to_s}'")
+         ActiveRecord::Base.connection.exec_rollback_to_savepoint("savepoint_before_insert_diff")
+         return nil
+       end
     end
 
     new_diff
