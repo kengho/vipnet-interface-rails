@@ -10,9 +10,9 @@ ViPNet™ Interface is a web app which collects and shows various information ab
 
 [Demo](https://vipnet-interface-demo.herokuapp.com) (may load for some time at first run).
 
-By now the demo is static and uses data generated using [Faker](https://github.com/stympy/faker) gem ([see lib/tasks/sample_data.rake](sample_data.rake)).
-
 Credentials: `demo@example.com:Password`
+
+By now the demo is static and uses data generated using [Faker](https://github.com/stympy/faker) gem (see [lib/tasks/sample_data.rake](sample_data.rake)).
 
 ## Features
 
@@ -24,6 +24,7 @@ Credentials: `demo@example.com:Password`
 * allows to check nodes' availability
 * shows nodes' statuses (like disabled or deleted)
 * main settings customises via admin panel
+* auto update page when sonething changes
 * and more
 
 ## Powered by
@@ -83,7 +84,7 @@ You may install this app, [vipnet_interface_config](https://github.com/kengho/vi
 
 ### Development
 
-[instructions](https://gist.github.com/kengho/37f3591a525454567b454d165dbc0132) (using ruby2.3 from ppa:brightbox/ruby-ng).
+[Instructions](https://gist.github.com/kengho/37f3591a525454567b454d165dbc0132).
 
 ## TODO (random order)
 
@@ -91,7 +92,6 @@ You may install this app, [vipnet_interface_config](https://github.com/kengho/vi
 * collecting users' ID's along with nodes' IDs
 * custom sort
 * advanced datetime search
-* auto-update page
 * fully JSONish data exchange
 * show proper version for coordinators
 * show IP in main page
