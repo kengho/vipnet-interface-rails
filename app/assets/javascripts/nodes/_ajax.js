@@ -217,7 +217,7 @@ vipnetInterface.nodes.ajax = {
       $infoBlock
         .draggable({
           cancel: "*[data-undraggable]",
-          containment: ".page-content",
+          containment: ".mdl-layout__content",
         })
         .click(function(e) {
           e.stopPropagation();
