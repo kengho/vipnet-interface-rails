@@ -21,7 +21,7 @@ class UsersController < ApplicationController
   end
 
   def update
-    render_nothing(:unauthorized) if current_user.id.to_s != params["id"]
+    render_nothing(:unauthorized) and return if current_user.id.to_s != params["id"]
 
     # additional user settings
     name = params["name"]

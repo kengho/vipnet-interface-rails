@@ -23,7 +23,7 @@ class HwNode < ActiveRecord::Base
     substitution_list.each do |regexp, outcome|
       return outcome if version =~ regexp
     end
-    
+
     nil
   end
 

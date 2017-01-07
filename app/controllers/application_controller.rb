@@ -46,7 +46,7 @@ class ApplicationController < ActionController::Base
     end
 
     def render_nothing(status)
-      render body: nil, status: status, content_type: "text/html" and return
+      render body: nil, status: status, content_type: "text/html"
     end
 
     respond_to :js

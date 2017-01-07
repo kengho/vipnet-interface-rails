@@ -11,11 +11,11 @@ class Api::V1::BaseController < ActionController::Base
 
   private
     def render_nothing(status)
-      render body: nil, status: status, content_type: "text/html" and return
+      render body: nil, status: status, content_type: "text/html"
     end
 
     def check_if_api_enabled
-      render_nothing(:service_unavailable) if Settings.disable_api == "true"
+      render_nothing(:service_unavailable) and return if Settings.disable_api == "true"
     end
 
     def destroy_session
@@ -51,13 +51,13 @@ class Api::V1::BaseController < ActionController::Base
       if actions_get.key?(params[:controller])
         if actions_get[params[:controller]].include?(params[:action])
           unless params[:token]
-            render_nothing(:unauthorized)
+            render_nothing(:unauthorized) and return
           end
           unless ActiveSupport::SecurityUtils.secure_compare(
             params[:token],
             ENV["GET_INFORMATION_TOKEN"]
           )
-            render_nothing(:unauthorized)
+            render_nothing(:unauthorized) and return
           end
         end
       end
@@ -70,10 +70,21 @@ class Api::V1::BaseController < ActionController::Base
             )
               true
             else
-              render_nothing(:unauthorized)
+              render_nothing(:unauthorized) and return
             end
           end
         end
       end
+    end
+
+    def minutes_after_latest_update(*tables)
+      latest_update_date = tables
+        .map { |table| table.classify.constantize.reorder(updated_at: :desc).first }
+        .reject(&:!)
+        .map(&:updated_at)
+        .sort
+        .reverse
+        .first
+      minutes_after_latest_update = (DateTime.now - latest_update_date.to_datetime) * 1.days / 1.minute
     end
 end
