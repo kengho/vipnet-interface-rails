@@ -17,6 +17,7 @@ end
 
 gem "material_design_lite-rails", "~> 1"
 gem "material_icons", "~> 2"
+
 # for respond_to
 gem "responders", "~> 2"
 gem "will_paginate", "~> 3"
@@ -25,10 +26,10 @@ gem "rails-settings-cached", "~> 0"
 gem "dotenv-rails", "~> 2"
 gem "authlogic", "~> 3"
 gem "vipnet_parser", "~> 1"
-gem "hashdiff_sym", "~> 0"
 gem "jquery-ui-rails", "~> 5"
 gem "faker", "~> 1"
 gem "rails_12factor"
 gem "rails-controller-testing"
 gem "themizer", "~> 0"
 gem "redis", "~> 3"
+gem "garland", "~> 0"

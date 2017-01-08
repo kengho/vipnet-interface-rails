@@ -24,9 +24,9 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
 
     ascendants_ids = []
     eval(diff.entity).each do |changes|
-      changes_expanded = Garland.expand_changes(changes)
+      changes_expanded = HashDiffSymUtils.expand_changes(changes)
       changes_expanded.each do |changes|
-        action, target, props, before, after = Garland.decode_changes(changes)
+        action, target, props, before, after = HashDiffSymUtils.decode_changes(changes)
         ncc_node = CurrentNccNode.find_by(vid: target[:vid])
         if ncc_node
           if action == :add
