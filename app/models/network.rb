@@ -1,5 +1,6 @@
 class Network < ActiveRecord::Base
-  has_many :nodenames, dependent: :destroy, foreign_key: "belongs_to_id"
+  include GarlandRails::Extend
+  has_many :nodenames, dependent: :destroy
   has_many :coordinators, dependent: :destroy
   has_many :ncc_nodes, dependent: :destroy
   validates :network_vid, presence: true, uniqueness: true
