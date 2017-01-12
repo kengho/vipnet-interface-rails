@@ -178,6 +178,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     )
     post(:create, params: { file: added_node_from_ignoring_network_nodename, network_vid: "6670" })
     assert_ncc_nodes_should_be expected_ncc_nodes
+    Settings.networks_to_ignore = ""
 
     # 07_added_internetworking_node_from_network_we_admin
     # (nothing should change)
@@ -197,7 +198,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     Nodename.thread(another_network_we_admin).destroy_all
 
     # 08_group_changed
-    # (group isn't in NccNode.props_from_nodename, so there are souldn't be any changes)
+    # (group isn't in NccNode.props_from_nodename, so there souldn't be any changes)
     group_changed_nodename = fixture_file_upload(
       "nodenames/08_group_changed.doc",
       "application/octet-stream"
@@ -233,6 +234,25 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     )
     expected_ncc_nodes.reject_nil_keys
     assert_ncc_nodes_should_be expected_ncc_nodes
-    # @TODO: add some other networks' Nodenames
+
+
+    # 10_added_internetworking_node
+    added_internetworking_node_nodename = fixture_file_upload(
+      "nodenames/10_added_internetworking_node.doc",
+      "application/octet-stream"
+    )
+    post(:create, params: { file: added_internetworking_node_nodename, network_vid: "6670" })
+    expected_ncc_nodes.push({
+      type: "CurrentNccNode",
+      vid: "0x1a0f000d",
+      name: "3rd-party",
+      enabled: true,
+      category: "client",
+      abonent_number: "0001",
+      server_number: "0001",
+      creation_date: network1.last_nodenames_created_at,
+      creation_date_accuracy: true,
+    })
+    assert_ncc_nodes_should_be expected_ncc_nodes
   end
 end

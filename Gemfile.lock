@@ -85,7 +85,7 @@ GEM
       thor (>= 0.14, < 2.0)
     jquery-ui-rails (5.0.5)
       railties (>= 3.2.16)
-    json (1.8.3)
+    json (1.8.5)
     loofah (2.0.3)
       nokogiri (>= 1.5.9)
     mail (2.6.4)
@@ -182,7 +182,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.0.4)
       execjs (>= 0.3.0, < 3)
-    vipnet_parser (1.0.3)
+    vipnet_parser (2.0.0)
     web-console (2.3.0)
       activemodel (>= 4.0)
       binding_of_caller (>= 0.7.2)
@@ -222,7 +222,7 @@ DEPENDENCIES
   spring
   themizer (~> 0)
   uglifier (>= 1.3.0)
-  vipnet_parser (~> 1)
+  vipnet_parser (~> 2)
   web-console (~> 2.0)
   will_paginate (~> 3)
 

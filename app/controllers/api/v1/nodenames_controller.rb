@@ -7,7 +7,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
     nodename_file = File.read(params[:file].tempfile)
     nodename = VipnetParser::Nodename.new(nodename_file)
-    nodename.parse()
+    nodename.parse({ normalize_names: true })
 
     network = Network.find_or_create_by(network_vid: params[:network_vid])
     nodename_is_not_first = Nodename.any?(network)
