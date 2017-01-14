@@ -33,10 +33,10 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             if target[:field] && target[:index]
               # ["+", "0x1a0e000b.:ip[0]", "192.0.2.55"]
               if target[:field] == :ip && IPv4::ip?(props)
-                hw_node = CurrentHwNode.find_by({
+                hw_node = CurrentHwNode.find_by(
                   ncc_node: ncc_node,
                   coordinator: coordinator,
-                })
+                )
                 NodeIp.create!(hw_node: hw_node, u32: IPv4::u32(props))
               end
             else
@@ -104,10 +104,10 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             if target[:field] && target[:index]
               # ["-", "0x1a0e000a.:ip[0]", "192.0.2.51"]
               if target[:field] == :ip && IPv4::ip?(props)
-                changing_hw_node = CurrentHwNode.find_by({
+                changing_hw_node = CurrentHwNode.find_by(
                   ncc_node: ncc_node,
                   coordinator: coordinator,
-                })
+                )
                 node_ip = NodeIp.find_by(hw_node: changing_hw_node, u32: IPv4::u32(props))
                 if changing_hw_node && node_ip
                   accendant = HwNode
@@ -138,10 +138,10 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             else
               # ["-", "0x1a0e000c", {:id=>"0x1a0e000c", ...]
               # (entire section is deleted)
-              hw_node_to_delete = CurrentHwNode.find_by({
+              hw_node_to_delete = CurrentHwNode.find_by(
                 ncc_node: ncc_node,
                 coordinator: coordinator,
-              })
+              )
               if hw_node_to_delete
                 hw_node_to_delete.update_attribute(:type, "DeletedHwNode")
               else

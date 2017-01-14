@@ -7,7 +7,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
     nodename_file = File.read(params[:file].tempfile)
     nodename = VipnetParser::Nodename.new(nodename_file)
-    nodename.parse({ normalize_names: true })
+    nodename.parse(normalize_names: true)
 
     network = Network.find_or_create_by(network_vid: params[:network_vid])
     nodename_is_not_first = Nodename.any?(network)
@@ -52,10 +52,10 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
           # may occur only when old ncc db restores, no need for saving history
           if deleted_ncc_node
-            deleted_ncc_node.update_attributes({
+            deleted_ncc_node.update_attributes(
               type: "CurrentNccNode",
               deletion_date: nil,
-            })
+            )
           else
             props.reject! { |p| !NccNode.props_from_nodename.include?(p) }
             CurrentNccNode.create!({
@@ -70,10 +70,10 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         if action == :remove
           ncc_node_to_delete = CurrentNccNode.find_by(vid: target[:vid])
           if ncc_node_to_delete
-            ncc_node_to_delete.update_attributes({
+            ncc_node_to_delete.update_attributes(
               type: "DeletedNccNode",
               deletion_date: nodename_created_at,
-            })
+            )
           else
             Rails.logger.info(
               "CurrentNccNode with vid '#{target[:vid]}'
