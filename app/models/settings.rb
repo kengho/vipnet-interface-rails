@@ -19,7 +19,7 @@ class Settings < RailsSettings::Base
       "false" => "boolean.false",
     }
 
-    values = {
+    {
       "locale" => {
         type: :radio,
         accepted_values: Hash[available_locales.each_slice(1).to_a],
@@ -108,7 +108,7 @@ class Settings < RailsSettings::Base
         accepted_values: {
           "" => "settings.general.themes.default",
           "dark" => "settings.general.themes.dark",
-        }
+        },
       },
     }
   end

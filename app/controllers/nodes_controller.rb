@@ -59,6 +59,7 @@ class NodesController < ApplicationController
     else
       search_resuls = NccNode.all
       params_expanded.each do |prop, value|
+        next if prop == "page"
         @search = true
         values = Array(value)
         sub_search_resuls = NccNode.none

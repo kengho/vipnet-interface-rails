@@ -124,6 +124,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     if minutes_after_latest_update("ncc_nodes") < 5
       UpdateChannel.push(update: true)
     end
-    render plain: OK_RESPONSE and return
+    
+    render plain: OK_RESPONSE
   end
 end

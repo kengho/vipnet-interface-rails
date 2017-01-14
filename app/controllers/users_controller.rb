@@ -9,19 +9,16 @@ class UsersController < ApplicationController
 
   def destroy
     user = User.find_by(id: params[:id])
-    if user
-      if user.destroy
-        flash[:notice] = :user_destroyed
-      else
-        flash[:notice] = :error_destroying_user
-      end
+    render_nothing(:bad_request) unless user
+    if user.destroy
+      flash[:notice] = :user_destroyed
     else
-      render_nothing(:bad_request)
+      flash[:notice] = :error_destroying_user
     end
   end
 
   def update
-    render_nothing(:unauthorized) and return if current_user.id.to_s != params["id"]
+    render_nothing(:unauthorized) and return unless current_user.id.to_s == params["id"]
 
     # additional user settings
     name = params["name"]
@@ -51,24 +48,27 @@ class UsersController < ApplicationController
         password_is_valid = false
       end
 
-      if password_is_valid
-        if user_session["password"] != user_session["password_confirmation"]
-          @response = :error_confirmation_password
-        else
-          current_user.password = user_session["password"]
-          current_user.password_confirmation = user_session["password_confirmation"]
-          if current_user.changed? && current_user.save
-            current_user.update_attribute(:reset_password_allowed, nil)
-            @response = :password_successfully_changed
-          else
-            @response = :error_changing_password
-          end
-        end
-      else
+      unless password_is_valid
         @response = :error_validating_password
+        respond_with(@response, template: "shared/user") and return
+      end
+
+      password_confirmed = user_session["password"] == user_session["password_confirmation"]
+      unless password_confirmed
+        @response = :error_confirmation_password
+        respond_with(@response, template: "shared/user") and return
+      end
+
+      current_user.password = user_session["password"]
+      current_user.password_confirmation = user_session["password_confirmation"]
+      if current_user.changed? && current_user.save
+        current_user.update_attribute(:reset_password_allowed, nil)
+        @response = :password_successfully_changed
+      else
+        @response = :error_changing_password
       end
     end
 
-    respond_with(@response, template: "shared/user") and return
+    respond_with(@response, template: "shared/user")
   end
 end

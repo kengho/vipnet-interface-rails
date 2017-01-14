@@ -26,6 +26,7 @@ class Api::V1::TicketsController < Api::V1::BaseController
     if minutes_after_latest_update("tickets") < 5
       UpdateChannel.push(update: true)
     end
-    render plain: OK_RESPONSE and return
+
+    render plain: OK_RESPONSE
   end
 end

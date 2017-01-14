@@ -3,7 +3,7 @@ class SettingsController < ApplicationController
   before_action :check_administrator_role
 
   def index
-    # "thing_id is null" means this settings are not users'
+    # "thing_id is null" means this settings is not users'
     @settings = Settings.unscoped.where("thing_id is null").reorder(var: :asc)
     @users = User.all.reorder(email: :asc)
   end
@@ -30,12 +30,11 @@ class SettingsController < ApplicationController
 
     elsif params[:users]
       user = User.find(params[:id])
-      if user
-        if user.update_attributes(role: params[:role], email: params[:email])
-          flash[:notice] = :user_saved
-        else
-          flash[:notice] = :error_saving_user
-        end
+      return unless user
+      if user.update_attributes(role: params[:role], email: params[:email])
+        flash[:notice] = :user_saved
+      else
+        flash[:notice] = :error_saving_user
       end
 
     elsif params[:add_user]

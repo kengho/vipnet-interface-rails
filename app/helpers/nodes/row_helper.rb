@@ -146,13 +146,12 @@ module Nodes::RowHelper
   end
 
   def prop_view_datetime(datetime, detalization = :short)
-    if datetime.class == ActiveSupport::TimeWithZone
-      case detalization
-      when :short
-        datetime.strftime("%Y-%m-%d")
-      when :long
-        datetime.strftime("%Y-%m-%d %H:%M UTC")
-      end
+    return unless datetime.class == ActiveSupport::TimeWithZone
+    case detalization
+    when :short
+      datetime.strftime("%Y-%m-%d")
+    when :long
+      datetime.strftime("%Y-%m-%d %H:%M UTC")
     end
   end
 end

@@ -23,13 +23,12 @@ module NodesHelper
     column_erbs = []
     column_order.each do |order|
       erb, prop, visibility = order
-      if visibility
-        if lookup_context.template_exists?("nodes/#{place}/_#{erb}")
-          params = erb_params(erb, prop)
-          column_erbs.push(erb: "nodes/#{place}/#{erb}", params: params)
-        else
-          column_erbs.push(erb: "nodes/space")
-        end
+      next unless visibility
+      if lookup_context.template_exists?("nodes/#{place}/_#{erb}")
+        params = erb_params(erb, prop)
+        column_erbs.push(erb: "nodes/#{place}/#{erb}", params: params)
+      else
+        column_erbs.push(erb: "nodes/space")
       end
     end
 

@@ -4,7 +4,7 @@ module IPv4
     return false unless octets.size == 4
     octets.each do |octet|
       return false unless octet =~ /^\d+$/
-      return false unless octet.to_i >= 0 && octet.to_i <= 255
+      return false unless octet.to_i.between?(0, 255)
     end
     return true
   end
@@ -17,7 +17,7 @@ module IPv4
     probably_mask = Regexp.last_match[2]
     return nil unless IPv4::ip?(probably_ip)
     return nil unless probably_mask =~ /^\d+$/
-    return nil unless probably_mask.to_i >= 0 && probably_mask.to_i <= 32
+    return nil unless probably_mask.to_i.between?(0, 32)
     return [probably_ip, probably_mask.to_i]
   end
 
@@ -31,7 +31,7 @@ module IPv4
 
   def ip(u32)
     return nil unless u32.class == Fixnum
-    return nil unless u32 >= 0 && u32 <= "0xffffffff".to_i(16)
+    return nil unless u32.between?(0, 0xffffffff)
     # http://stackoverflow.com/a/12039844/6376451
     hex_octets = u32.to_s(16).rjust(8, "0").chars.each_slice(2).map(&:join)
     return hex_octets.map { |octet| octet.to_i(16) }.join(".")

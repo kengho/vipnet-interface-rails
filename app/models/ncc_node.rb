@@ -97,53 +97,45 @@ class NccNode < ActiveRecord::Base
   end
 
   def availability
-    availability = false
-    response = {}
     accessips = self.accessips
     return false if accessips.empty?
-
-    if Rails.env.test?
-      availability = true
-    elsif Settings.demo_mode == "true"
-      availability = self.id % 2 == 0
-    else
+    return true if Rails.env.test?
+    if Settings.demo_mode == "true"
       sleep(5)
-      accessips.each do |accessip|
-        http_request = Settings.checker_api
-          .gsub("{ip}", accessip)
-          .gsub("{token}", ENV["CHECKER_TOKEN"])
-        http_response = HTTParty.get(http_request)
-        if http_response.code == :ok
-          availability ||= http_response.parsed_response["data"]["availability"]
-        end
-        break if availability
+      return self.id.even?
+    end
+
+    availability = false
+    accessips.each do |accessip|
+      http_request = Settings.checker_api
+        .gsub("{ip}", accessip)
+        .gsub("{token}", ENV["CHECKER_TOKEN"])
+      http_response = HTTParty.get(http_request)
+      if http_response.code == :ok
+        availability ||= http_response.parsed_response["data"]["availability"]
       end
+      break if availability
     end
 
     availability
   end
 
   def accessips
-    accessips = []
-    HwNode.where(ncc_node: self).each do |hw_node|
-      accessip = hw_node.accessip
-      accessips.push(accessip) if accessip
-    end
-
-    accessips
+    HwNode.where(ncc_node: self)
+      .map(&:accessip)
+      .reject(&:!)
   end
 
   def mftp_server
-    if self.category == "client"
-      mftp_server = NccNode.find_by(
-        network: self.network,
-        server_number: self.server_number,
-        abonent_number: "0000",
-        category: "server",
-      )
+    return unless self.category == "client"
+    mftp_server = NccNode.find_by(
+      network: self.network,
+      server_number: self.server_number,
+      abonent_number: "0000",
+      category: "server",
+    )
 
-      mftp_server
-    end
+    mftp_server
   end
 
   def history(prop)
@@ -155,13 +147,13 @@ class NccNode < ActiveRecord::Base
       return data.map { |slice| slice.symbolize_keys }
     elsif prop == :ip
      elsif HwNode.props_from_iplirconf.include?(prop)
-      # group HwNodes' ascendants by days they created (desc)
+      # group HwNodes' ascendants by days they were created (desc)
       # for each group figure out most likely value of prop
       # leave only earliest unique values
 
-      ascendants_ids = self.hw_nodes.map { |hw_node|
+      ascendants_ids = self.hw_nodes.flat_map { |hw_node|
         hw_node.ascendants.where("#{prop} IS NOT NULL").ids
-      }.flatten
+      }
       ascendants = HwNode.where(id: ascendants_ids)
 
       groups = ascendants
@@ -232,11 +224,13 @@ class NccNode < ActiveRecord::Base
       coordinator = hw_node.coordinator || hw_node.descendant.coordinator
       coord_vid = coordinator.vid
       clients_registered = NccNode.where_prop_like("mftp_server_vid", coord_vid).count
-      coordinators[{
+      coordinator_props = {
         prop => hw_node[prop],
         vid: coord_vid,
-      }] = clients_registered
+      }
+      coordinators[coordinator_props] = clients_registered
     end
+
     # http://stackoverflow.com/a/10695463/6376451
     max_quantity = coordinators.values.max
     max_clients_registered = coordinators.select { |k, v| v == max_quantity }.keys
@@ -313,12 +307,9 @@ class NccNode < ActiveRecord::Base
   end
 
   def self.to_json_ncc
-    result = []
-    self.all.each do |e|
-      result.push(eval(e.to_json_ncc))
-    end
-
-    result.to_json.gsub("null", "nil")
+    self.all
+      .map { |e| eval(e.to_json_ncc) }
+      .to_json.gsub("null", "nil")
   end
 
   def self.vids
@@ -344,15 +335,9 @@ class NccNode < ActiveRecord::Base
   end
 
   def status
-    deleted = self.type == "DeletedNccNode"
-    disabled = self.enabled == false
-    if deleted
-      return :deleted
-    elsif disabled
-      return :disabled
-    else
-      return :ok
-    end
+    return :deleted if self.type == "DeletedNccNode"
+    return :disabled if self.enabled == false
+    return :ok
   end
 
   private

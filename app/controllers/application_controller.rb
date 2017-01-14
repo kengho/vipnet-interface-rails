@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
       else
         current_settings = system_settings
       end
+
       current_settings
     end
 

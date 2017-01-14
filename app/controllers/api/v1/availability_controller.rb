@@ -20,6 +20,7 @@ class Api::V1::AvailabilityController < Api::V1::BaseController
     else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
     end
-    render json: @response and return
+
+    render json: @response
   end
 end

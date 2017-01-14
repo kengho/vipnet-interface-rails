@@ -49,30 +49,25 @@ class Api::V1::BaseController < ActionController::Base
       }
 
       if actions_get.key?(params[:controller])
-        if actions_get[params[:controller]].include?(params[:action])
-          unless params[:token]
-            render_nothing(:unauthorized) and return
-          end
-          unless ActiveSupport::SecurityUtils.secure_compare(
-            params[:token],
-            ENV["GET_INFORMATION_TOKEN"]
+        action_is_valid = actions_get[params[:controller]].include?(params[:action])
+        render_nothing(:unauthorized) and return unless action_is_valid
+        render_nothing(:unauthorized) and return unless params[:token]
+        token_is_valid = ActiveSupport::SecurityUtils.secure_compare(
+          params[:token],
+          ENV["GET_INFORMATION_TOKEN"]
+        )
+        render_nothing(:unauthorized) and return unless token_is_valid
+        return true
+      elsif actions_post.key?(params[:controller])
+        action_is_valid = actions_post[params[:controller]][:actions].include?(params[:action])
+        render_nothing(:unauthorized) and return unless action_is_valid
+        authenticate_or_request_with_http_token do |token, _|
+          token_is_valid = ActiveSupport::SecurityUtils.secure_compare(
+            token,
+            ENV[actions_post[params[:controller]][:token_name]]
           )
-            render_nothing(:unauthorized) and return
-          end
-        end
-      end
-      if actions_post.key?(params[:controller])
-        if actions_post[params[:controller]][:actions].include?(params[:action])
-          authenticate_or_request_with_http_token do |token, _|
-            if ActiveSupport::SecurityUtils.secure_compare(
-              token,
-              ENV[actions_post[params[:controller]][:token_name]]
-            )
-              true
-            else
-              render_nothing(:unauthorized) and return
-            end
-          end
+          render_nothing(:unauthorized) and return unless token_is_valid
+          return true
         end
       end
     end
@@ -85,6 +80,7 @@ class Api::V1::BaseController < ActionController::Base
         .sort
         .reverse
         .first
+
       minutes_after_latest_update = (DateTime.now - latest_update_date.to_datetime) * 1.days / 1.minute
     end
 end

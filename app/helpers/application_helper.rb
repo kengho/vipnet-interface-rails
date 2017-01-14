@@ -9,9 +9,9 @@ module ApplicationHelper
     title_locale_path = "#{params[:controller].gsub("/", ".")}.#{params[:action]}.title"
     title = t(title_locale_path)
     if title.class == String
-      t(title_locale_path)
+      return t(title_locale_path)
     else
-      t("default.title")
+      return t("default.title")
     end
   end
 
@@ -24,7 +24,7 @@ module ApplicationHelper
   end
 
   def paginate(collection, params = {})
-    will_paginate collection, params.merge(renderer: ApplicationHelper::LinkRenderer)
+    will_paginate(collection, params.merge(renderer: ApplicationHelper::LinkRenderer))
   end
 
   def i(path)
@@ -33,6 +33,7 @@ module ApplicationHelper
     path.split(".").each do |turn|
       icon = icon[turn]
     end
+
     icon
   end
 end
