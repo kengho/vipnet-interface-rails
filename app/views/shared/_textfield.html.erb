@@ -1,5 +1,5 @@
 <%= content_tag(:div, class: "field") do %>
-  <%= content_tag(:div, class: ["mdl-textfield", "mdl-js-textfield", "mdl-textfield--floating-label", "auth__textfield"]) do %>
+  <%= content_tag(:div, class: %w[mdl-textfield mdl-js-textfield mdl-textfield--floating-label auth__textfield]) do %>
     <%= tag(:input,
           {
             class: "mdl-textfield__input",
@@ -21,7 +21,7 @@
     %>
     <% label = props[:label] ? props[:label] : user_textfield_label %>
     <%= content_tag(:label, label,
-          class: ["mdl-textfield__label", "auth__label"],
+          class: %w[mdl-textfield__label auth__label],
           for: props[:id],
         )
     %>

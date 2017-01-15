@@ -108,8 +108,8 @@ class NccNode < ActiveRecord::Base
     availability = false
     accessips.each do |accessip|
       http_request = Settings.checker_api
-        .gsub("{ip}", accessip)
-        .gsub("{token}", ENV["CHECKER_TOKEN"])
+        .sub("{ip}", accessip)
+        .sub("{token}", ENV["CHECKER_TOKEN"])
       http_response = HTTParty.get(http_request)
       if http_response.code == :ok
         availability ||= http_response.parsed_response["data"]["availability"]
@@ -182,7 +182,7 @@ class NccNode < ActiveRecord::Base
       # we lose creation_date precision here, but
       # as long as we show only round days in view, it doesn't matter
       return data_uniq.map do |arr|
-         { :creation_date => arr[0], prop => arr[1] }
+         { :creation_date => arr.first, prop => arr.last }
       end
     end
   end
@@ -204,10 +204,7 @@ class NccNode < ActiveRecord::Base
     # 4: hw_node which belongs to coordinator with the lovest vid
     # 5: first hw_node's value
 
-    prop = args[:prop]
-    ncc_node = args[:ncc_node]
-    hw_nodes = args[:hw_nodes]
-
+    prop, ncc_node, hw_nodes = args.values_at(:prop, :ncc_node, :hw_nodes)
     return nil if hw_nodes.empty?
 
     mftp_server = ncc_node.mftp_server
@@ -235,14 +232,14 @@ class NccNode < ActiveRecord::Base
     max_quantity = coordinators.values.max
     max_clients_registered = coordinators.select { |k, v| v == max_quantity }.keys
     if max_clients_registered.size == 1
-      return max_clients_registered[0][prop] # 2
+      return max_clients_registered.first[prop] # 2
     end
 
     count = hw_nodes.select(prop).group(prop).count
     max_quantity = count.values.max
     max_version = count.select { |k, v| v == max_quantity }.keys
     if max_version.size == 1
-      return max_version[0] # 3
+      return max_version.first # 3
     end
 
     min_coord_vid = coordinators.map { |k, v| k[:vid] }.min
@@ -259,15 +256,17 @@ class NccNode < ActiveRecord::Base
     js_data = {}
     all.each do |ncc_node|
       ncc_node = ncc_node.descendant if ncc_node.descendant
-      js_data[ncc_node.vid] = ncc_node.as_json(only: [
-        :name,
-        :creation_date,
-        :deletion_date,
-        :enabled,
-        :category,
-        :abonent_number,
-        :server_number,
-      ])
+      js_data[ncc_node.vid] = ncc_node.as_json(
+        only: %i[
+          name
+          creation_date
+          deletion_date
+          enabled
+          category
+          abonent_number
+          server_number
+        ]
+      )
     end
 
     js_data
@@ -275,14 +274,15 @@ class NccNode < ActiveRecord::Base
 
   def to_json_ncc
     json = self.to_json(
-      only: NccNode.props_from_nodename + [
-        :type,
-        :vid,
-        :descendant_id,
-        :creation_date,
-        :creation_date_accuracy,
-        :deletion_date,
-      ]
+      only: NccNode.props_from_nodename +
+        %i[
+          type
+          vid
+          descendant_id
+          creation_date
+          creation_date_accuracy
+          deletion_date
+        ]
     ).gsub("null", "nil")
     json = eval(json)
     tmp = json.clone
@@ -317,20 +317,16 @@ class NccNode < ActiveRecord::Base
   end
 
   def self.quick_searchable
-    [
-      "vid", "name",
-      "version_decoded", "ip", "creation_date",
-      "ticket",
-    ]
+    %w[vid name version_decoded ip creation_date ticket]
   end
 
   def self.props_from_nodename
-    [
-      :name,
-      :enabled,
-      :category,
-      :abonent_number,
-      :server_number,
+    %i[
+      name
+      enabled
+      category
+      abonent_number
+      server_number
     ]
   end
 

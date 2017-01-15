@@ -13,7 +13,7 @@
           <% elsif closable && prop == :history_close_button && i == 0 %>
             <%= content_tag(:div, name: "close-button") do %>
               <%= content_tag(:label, "data-close": true,
-                    class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "gray"]
+                    class: %w[mdl-button mdl-js-button mdl-button--icon gray]
                   ) do
               %>
                 <%= content_tag(:i, i("shared.close_button"), class: "material-icons") %>

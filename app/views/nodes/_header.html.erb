@@ -14,7 +14,7 @@
       %>
 
       <%= content_tag(:div, id: "actions__export-selected") do %>
-        <%= content_tag(:label, class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "mdl-button--white"]) do %>
+        <%= content_tag(:label, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
           <%= content_tag(:i, i("nodes.header.export_selected.copy"), class: "material-icons") %>
         <% end %>
         <%= content_tag(:textarea, "") %>
@@ -28,7 +28,7 @@
       <%= content_tag(:div, "｜", id: "actions__separator") %>
 
       <%= content_tag(:div, id: "actions__unselect-all", class: "mdl-badge") do %>
-        <%= content_tag(:button, class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "mdl-button--white"]) do %>
+        <%= content_tag(:button, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
           <%= content_tag(:i, i("nodes.header.export_selected.unselect_all"), class: "material-icons") %>
         <% end %>
       <% end %>
@@ -37,7 +37,7 @@
     <% end %>
 
     <%= content_tag(:div, id: "header__select-all") do %>
-      <%= content_tag(:button, class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "mdl-button--white"]) do %>
+      <%= content_tag(:button, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
         <%= content_tag(:i, i("nodes.header.export_selected.select_all"), class: "material-icons") %>
       <% end %>
     <% end %>
@@ -58,7 +58,7 @@
 
         <%= content_tag(:div, id: "header__search-button") do %>
           <%= content_tag(:button,
-                class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "gray"],
+                class: %w[mdl-button mdl-js-button mdl-button--icon gray],
                 type: "submit",
               ) do
           %>
@@ -69,7 +69,7 @@
     <% end %>
 
     <%= content_tag(:div, user_settings_params.merge("data-toggle-dark-theme": true, id: "header__toggle-dark-theme")) do %>
-      <%= content_tag(:label, class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "mdl-button--white"]) do %>
+      <%= content_tag(:label, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
         <%= content_tag(:i, i("nodes.header.toggle_dark_theme"), class: "material-icons") %>
       <% end %>
       <%= content_tag(:div, t(".toggle_dark_theme"),
@@ -88,7 +88,7 @@
                   :label,
                   content_tag(:i, icon, class: "material-icons"),
                   id: id,
-                  class: ["mdl-button", "mdl-js-button", "mdl-button--icon", "mdl-button--white"],
+                  class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white],
                 )
             %>
             <%= content_tag(:div, label, for: id, class: "mdl-tooltip") %>

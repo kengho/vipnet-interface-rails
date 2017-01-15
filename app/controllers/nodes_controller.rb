@@ -2,7 +2,7 @@ class NodesController < ApplicationController
   before_action :check_if_ncc_node_exist, only: [:info, :history, :availability]
 
   def index
-    @params = params.reject { |k, _| ["controller", "action"].include?(k) }
+    @params = params.reject { |k, _| %w[controller action].include?(k) }
   end
 
   respond_to :js
@@ -12,7 +12,7 @@ class NodesController < ApplicationController
     params_expanded = params.each { |_, value| value.strip! }
     params_expanded.reject! do |key, value|
       value.empty? ||
-      ["controller", "action", "format", "_"].include?(key) ||
+      %w[controller action format _].include?(key) ||
       false
     end
 
@@ -30,16 +30,16 @@ class NodesController < ApplicationController
       request = params_expanded["search"]
 
       if request =~ /ids:(?<ids>.*)/
-        params_expanded[:vid] = Regexp.last_match[:ids]
+        params_expanded[:vid] = Regexp.last_match(:ids)
           .split(",")
           .map(&:strip)
         custom_search = true
       else
         request.split(",").each do |partial_request|
           if partial_request =~ /^(?<prop>.*):(?<value>.*)$/
-            prop = Regexp.last_match[:prop].strip
+            prop = Regexp.last_match(:prop).strip
             prop = aliases[prop] if aliases[prop]
-            value = Regexp.last_match[:value].strip
+            value = Regexp.last_match(:value).strip
 
             params_expanded[prop] = value
             custom_search = true

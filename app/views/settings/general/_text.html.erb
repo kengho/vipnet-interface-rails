@@ -1,6 +1,6 @@
 <%= content_tag(:div, class: "settings__text") do %>
   <%= content_tag(:span, label) %>
-  <%= content_tag(:div, class: ["mdl-textfield", "mdl-js-textfield"]) do %>
+  <%= content_tag(:div, class: %w[mdl-textfield mdl-js-textfield]) do %>
     <% id = "settings__#{settings.var}" %>
     <%= tag(:input,
           name: settings.var,

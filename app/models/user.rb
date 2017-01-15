@@ -10,7 +10,7 @@ class User < ActiveRecord::Base
 
   def self.roles
     {
-      list: ["administrator", "user", "editor"],
+      list: %w[administrator user editor],
       default: "user",
     }
   end

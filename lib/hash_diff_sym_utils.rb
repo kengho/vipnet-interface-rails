@@ -1,6 +1,6 @@
 module HashDiffSymUtils
   def decode_changes(changes)
-    action = { "+" => :add, "-" => :remove, "~" => :change }[changes[0]]
+    action = { "+" => :add, "-" => :remove, "~" => :change }[changes.first]
     target = {}
     target[:vid], target[:field], target[:index] = HashDiffSym.decode_property_path(changes[1])
     if action == :change
@@ -22,7 +22,7 @@ module HashDiffSymUtils
       # [["+", "0x1a0e000a", {:name=>"coordinator1"], ...
       if Regexp.last_match(:vid).empty?
         changes[2].each do |id, section|
-          changes_expanded.push([changes[0], id, section])
+          changes_expanded.push([changes.first, id, section])
         end
       # ["+", ":id.0x1a0e000d", {:name=>"coordinator2", :filterdefault=>"pass", ...
       # =>

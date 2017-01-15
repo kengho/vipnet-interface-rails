@@ -5,15 +5,12 @@
       ) do
   %>
     <%= content_tag(:label,
-          class: [
-            "mdl-button", "mdl-js-button", "mdl-button--icon",
-            icon_class, "tooltip-hover",
-          ],
           disabled: disabled,
+          class: %w[mdl-button mdl-js-button mdl-button--icon tooltip-hover] + [icon_class],
         ) do
     %>
       <%= content_tag(:i, icon, class: "material-icons") %>
     <% end %>
-    <%= content_tag(:div, t, class: ["tooltip", "tooltip--remote-button"]) %>
+    <%= content_tag(:div, t, class: %w[tooltip tooltip--remote-button]) %>
   <% end %>
 <% end %>

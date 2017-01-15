@@ -84,10 +84,10 @@ class HwNode < ActiveRecord::Base
   end
 
   def self.props_from_iplirconf
-    [
-      :accessip,
-      :version,
-      :version_decoded,
+    %i[
+      accessip
+      version
+      version_decoded
     ]
   end
 

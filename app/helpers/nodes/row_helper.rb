@@ -59,7 +59,7 @@ module Nodes::RowHelper
           href = ticket
             .ticket_system
             .url_template
-            .gsub("{id}", ticket.ticket_id.to_s)
+            .sub("{id}", ticket.ticket_id.to_s)
           links.push(href: href, text: ticket.ticket_id.to_s)
         end
 
