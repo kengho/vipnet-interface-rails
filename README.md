@@ -43,7 +43,7 @@ Gets `iplir.conf`, tickets and sends it here via API.
 
 Parses incoming files.
 
-* [(to be committed)](https://github.com/kengho/) (windows scripts)
+* [(vipnet_administrator_post)](https://github.com/kengho/vipnet_administrator_post) (windows scripts)
 
 Runs on NCC and sends `NODENAME.DOC` here via API.
 
