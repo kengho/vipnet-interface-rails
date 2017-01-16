@@ -50,6 +50,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         # example_datetime.iso8601(3) => "2016-09-29T16:39:01.899Z"
         creation_date: network1.last_nodenames_created_at,
         creation_date_accuracy: false,
+        network_vid: "6670",
       },
       {
         type: "CurrentNccNode",
@@ -61,6 +62,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         server_number: "0001",
         creation_date: network1.last_nodenames_created_at,
         creation_date_accuracy: false,
+        network_vid: "6670",
       },
     ]
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -81,6 +83,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       server_number: "0001",
       creation_date: network1.last_nodenames_created_at,
       creation_date_accuracy: true,
+      network_vid: "6670",
     })
     assert_ncc_nodes_should_be expected_ncc_nodes
 
@@ -121,6 +124,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         server_number: "0002",
         creation_date: network1.last_nodenames_created_at,
         creation_date_accuracy: true,
+        network_vid: "6670",
       },
       {
         descendant_vid: "0x1a0e000c",
@@ -235,7 +239,6 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     expected_ncc_nodes.reject_nil_keys
     assert_ncc_nodes_should_be expected_ncc_nodes
 
-
     # 10_added_internetworking_node
     added_internetworking_node_nodename = fixture_file_upload(
       "nodenames/10_added_internetworking_node.doc",
@@ -252,6 +255,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       server_number: "0001",
       creation_date: network1.last_nodenames_created_at,
       creation_date_accuracy: true,
+      network_vid: "6671",
     })
     assert_ncc_nodes_should_be expected_ncc_nodes
   end

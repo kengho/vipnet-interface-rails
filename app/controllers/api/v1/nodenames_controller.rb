@@ -47,6 +47,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
           next if props[:category] == :group
         end
 
+        curent_network = Network.find_or_create_by(network_vid: curent_network_vid)
         if action == :add
           deleted_ncc_node = DeletedNccNode.find_by(vid: target[:vid])
 
@@ -61,7 +62,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
             CurrentNccNode.create!({
               vid: target[:vid],
               creation_date: nodename_created_at,
-              network: network,
+              network: curent_network,
               creation_date_accuracy: nodename_is_not_first,
             }.merge(props))
           end
@@ -124,7 +125,7 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     if minutes_after_latest_update("ncc_nodes") < 5
       UpdateChannel.push(update: true)
     end
-    
+
     render plain: OK_RESPONSE
   end
 end

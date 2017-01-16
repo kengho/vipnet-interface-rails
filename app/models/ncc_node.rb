@@ -282,6 +282,7 @@ class NccNode < ActiveRecord::Base
           creation_date
           creation_date_accuracy
           deletion_date
+          network_id
         ]
     ).gsub("null", "nil")
     json = eval(json)
@@ -290,6 +291,8 @@ class NccNode < ActiveRecord::Base
     json.each do |key, value|
       if key == :network_id
         network = Network.find_by(id: value)
+
+        # network may not exist, if ncc_node is an accendant
         tmp[:network_vid] = network.network_vid if network
       elsif key == :descendant_id
         descendant = NccNode.find_by(id: value)
@@ -299,6 +302,7 @@ class NccNode < ActiveRecord::Base
 
     tmp.reject! do |key, value|
       key == :descendant_id ||
+      key == :network_id ||
       value == nil ||
       false
     end
