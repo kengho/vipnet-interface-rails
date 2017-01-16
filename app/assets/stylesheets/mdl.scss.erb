@@ -38,16 +38,15 @@ $snackbar-light-text-color: black;
   }
 }
 
+.mdl-layout__header-row {
+  justify-content: space-between !important;
+}
+
 <% Themizer.themize do %>
 
 .mdl-layout__header {
   background-color: $primary-color~ !important;
   box-shadow: none !important;
-
-  & nav {
-    margin-left: auto !important;
-    margin-right: 0 !important;
-  }
 }
 
 .mdl-button--white {

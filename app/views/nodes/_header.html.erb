@@ -6,77 +6,79 @@
       <%= content_tag(:div, "", id: "header__subtitle",  class: "mdl-layout-title") %>
     <% end %>
 
-    <%= content_tag(:div, id: "header__actions", disabled: "disabled") do %>
-      <%= content_tag(:div, t(".export_selected"),
-            for: "actions__export-selected",
-            class: "mdl-tooltip",
-          )
-      %>
-
-      <%= content_tag(:div, id: "actions__export-selected") do %>
-        <%= content_tag(:label, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
-          <%= content_tag(:i, i("nodes.header.export_selected.copy"), class: "material-icons") %>
-        <% end %>
-        <%= content_tag(:textarea, "") %>
-      <% end %>
-
-      <%# div #export-selected__variants should be below #actions__export-selected for :hover to work %>
-      <%= content_tag(:div, user_settings_params.merge(class: "export-selected-variant")) do %>
-        <%= render "shared/user_settings/radio", name: "export_selected_variant" %>
-      <% end %>
-
-      <%= content_tag(:div, "｜", id: "actions__separator") %>
-
-      <%= content_tag(:div, id: "actions__unselect-all", class: "mdl-badge") do %>
-        <%= content_tag(:button, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
-          <%= content_tag(:i, i("nodes.header.export_selected.unselect_all"), class: "material-icons") %>
-        <% end %>
-      <% end %>
-
-      <%= content_tag(:div, t(".unselect_all"), class: "mdl-tooltip", for: "actions__unselect-all") %>
-    <% end %>
-
-    <%= content_tag(:div, id: "header__select-all") do %>
-      <%= content_tag(:button, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
-        <%= content_tag(:i, i("nodes.header.export_selected.select_all"), class: "material-icons") %>
-      <% end %>
-    <% end %>
-
-    <%= content_tag(:div, t(".select_all"), for: "header__select-all", class:"mdl-tooltip") %>
-
-    <%= content_tag(:div, id: "header__search", class: "mdl-layout-spacer") do %>
-      <%= content_tag(:form, action: "/nodes/load",  method: "get",  "data-remote": "true") do %>
-        <%= tag(:input,
-                  "autofocus": "autofocus",
-                  "name": "search",
-                  "type": "text",
-                  "tabindex": "1",
-                  "placeholder": "#{t('.search_tip_pre')}, \"#{t('.search_tips').sample}\"",
-                  "value": params[:search],
+    <%= content_tag(:div, class: "flex-center") do %>
+      <%= content_tag(:div, id: "header__actions", disabled: "disabled") do %>
+        <%= content_tag(:div, t(".export_selected"),
+              for: "actions__export-selected",
+              class: "mdl-tooltip",
             )
         %>
 
-        <%= content_tag(:div, id: "header__search-button") do %>
-          <%= content_tag(:button,
-                class: %w[mdl-button mdl-js-button mdl-button--icon gray],
-                type: "submit",
-              ) do
+        <%= content_tag(:div, id: "actions__export-selected") do %>
+          <%= content_tag(:label, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
+            <%= content_tag(:i, i("nodes.header.export_selected.copy"), class: "material-icons") %>
+          <% end %>
+          <%= content_tag(:textarea, "") %>
+        <% end %>
+
+        <%# div #export-selected__variants should be below #actions__export-selected for :hover to work %>
+        <%= content_tag(:div, user_settings_params.merge(class: "export-selected-variant")) do %>
+          <%= render "shared/user_settings/radio", name: "export_selected_variant" %>
+        <% end %>
+
+        <%= content_tag(:div, "｜", id: "actions__separator") %>
+
+        <%= content_tag(:div, id: "actions__unselect-all", class: "mdl-badge") do %>
+          <%= content_tag(:button, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
+            <%= content_tag(:i, i("nodes.header.export_selected.unselect_all"), class: "material-icons") %>
+          <% end %>
+        <% end %>
+
+        <%= content_tag(:div, t(".unselect_all"), class: "mdl-tooltip", for: "actions__unselect-all") %>
+      <% end %>
+
+      <%= content_tag(:div, id: "header__select-all") do %>
+        <%= content_tag(:button, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
+          <%= content_tag(:i, i("nodes.header.export_selected.select_all"), class: "material-icons") %>
+        <% end %>
+      <% end %>
+
+      <%= content_tag(:div, t(".select_all"), for: "header__select-all", class:"mdl-tooltip") %>
+
+      <%= content_tag(:div, id: "header__search", class: "mdl-layout-spacer") do %>
+        <%= content_tag(:form, action: "/nodes/load",  method: "get",  "data-remote": "true") do %>
+          <%= tag(:input,
+                    "autofocus": "autofocus",
+                    "name": "search",
+                    "type": "text",
+                    "tabindex": "1",
+                    "placeholder": "#{t('.search_tip_pre')}, \"#{t('.search_tips').sample}\"",
+                    "value": params[:search],
+              )
           %>
-            <%= content_tag(:i, i("nodes.header.search"), class: "material-icons") %>
+
+          <%= content_tag(:div, id: "header__search-button") do %>
+            <%= content_tag(:button,
+                  class: %w[mdl-button mdl-js-button mdl-button--icon gray],
+                  type: "submit",
+                ) do
+            %>
+              <%= content_tag(:i, i("nodes.header.search"), class: "material-icons") %>
+            <% end %>
           <% end %>
         <% end %>
       <% end %>
-    <% end %>
 
-    <%= content_tag(:div, user_settings_params.merge("data-toggle-dark-theme": true, id: "header__toggle-dark-theme")) do %>
-      <%= content_tag(:label, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
-        <%= content_tag(:i, i("nodes.header.toggle_dark_theme"), class: "material-icons") %>
+      <%= content_tag(:div, user_settings_params.merge("data-toggle-dark-theme": true, id: "header__toggle-dark-theme")) do %>
+        <%= content_tag(:label, class: %w[mdl-button mdl-js-button mdl-button--icon mdl-button--white]) do %>
+          <%= content_tag(:i, i("nodes.header.toggle_dark_theme"), class: "material-icons") %>
+        <% end %>
+        <%= content_tag(:div, t(".toggle_dark_theme"),
+              for: "header__toggle-dark-theme",
+              class: "mdl-tooltip",
+            )
+        %>
       <% end %>
-      <%= content_tag(:div, t(".toggle_dark_theme"),
-            for: "header__toggle-dark-theme",
-            class: "mdl-tooltip",
-          )
-      %>
     <% end %>
 
     <%= content_tag(:nav, class: "mdl-navigation") do %>
@@ -96,5 +98,6 @@
         <% end %>
       <% end %>
     <% end %>
+
   <% end %>
 <% end %>
