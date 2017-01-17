@@ -9,57 +9,19 @@ class NodesController < ApplicationController
 
   def load
     @search = false
+    clear_params = clear_params(params)
+    expanded_params = expand_params(clear_params)
 
-    params_expanded = params.to_unsafe_h.clone
-    params_expanded.each_value(&:strip!)
-    params_expanded.reject! do |key, value|
-      value.empty? ||
-      %w[controller action format _].include?(key) ||
-      false
-    end
-    @params = params_expanded.clone
-
-    if params_expanded["search"]
-      custom_search = false
-      aliases = {
-        "id" => "vid",
-        "version" => "version_decoded",
-        "ver" => "version_decoded",
-        "version_hw" => "version",
-        "ver_hw" => "version",
-       }
-      request = params_expanded["search"]
-
-      if request =~ /ids:(?<ids>.*)/
-        params_expanded[:vid] = Regexp.last_match(:ids)
-          .split(",")
-          .map(&:strip)
-        custom_search = true
-      else
-        request.split(",").each do |partial_request|
-          if partial_request =~ /^(?<prop>.*):(?<value>.*)$/
-            prop = Regexp.last_match(:prop).strip
-            prop = aliases[prop] if aliases[prop]
-            value = Regexp.last_match(:value).strip
-
-            params_expanded[prop] = value
-            custom_search = true
-          end
-        end
-      end
-      params_expanded.delete("search") if custom_search
-    end
-
-    if params_expanded["search"]
+    if expanded_params["search"]
       @search = true
       search_resuls = NccNode.none
-      value = params_expanded["search"]
+      value = expanded_params["search"]
       NccNode.quick_searchable.each do |prop|
         search_resuls = search_resuls | NccNode.where_prop_like(prop, value)
       end
     else
       search_resuls = NccNode.all
-      params_expanded.each do |prop, value|
+      expanded_params.each do |prop, value|
         next if prop == "page"
         @search = true
         values = Array(value)
@@ -97,7 +59,7 @@ class NodesController < ApplicationController
     @ncc_nodes = @ncc_nodes
       .paginate(page: params[:page])
       .includes(:descendant, :hw_nodes, hw_nodes: [:node_ips])
-    # @params defined in the beginning
+    @params = clear_params.clone
     @js_data = @ncc_nodes.js_data
   end
 

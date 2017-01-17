@@ -49,6 +49,55 @@ class ApplicationController < ActionController::Base
     def render_nothing(status)
       render body: nil, status: status, content_type: "text/html"
     end
+    
+    def clear_params(params)
+      clear_params = params.to_unsafe_h.clone
+      clear_params.each_value(&:strip!)
+      clear_params.reject! do |key, value|
+        value.empty? ||
+        %w[controller action format _].include?(key) ||
+        false
+      end
+
+      clear_params
+    end
+
+    def expand_params(params)
+      expanded_params = params.clone
+
+      if expanded_params["search"]
+        custom_search = false
+        aliases = {
+          "id" => "vid",
+          "version" => "version_decoded",
+          "ver" => "version_decoded",
+          "version_hw" => "version",
+          "ver_hw" => "version",
+         }
+        request = expanded_params["search"]
+
+        if request =~ /ids:(?<ids>.*)/
+          expanded_params[:vid] = Regexp.last_match(:ids)
+            .split(",")
+            .map(&:strip)
+          custom_search = true
+        else
+          request.split(",").each do |partial_request|
+            if partial_request =~ /^(?<prop>.*):(?<value>.*)$/
+              prop = Regexp.last_match(:prop).strip
+              prop = aliases[prop] if aliases[prop]
+              value = Regexp.last_match(:value).strip
+
+              expanded_params[prop] = value
+              custom_search = true
+            end
+          end
+        end
+        expanded_params.delete("search") if custom_search
+      end
+
+      expanded_params
+    end
 
     respond_to :js
 
