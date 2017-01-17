@@ -25,8 +25,8 @@ nodes:
             #  warning
             #  block
       status:
-        true: check_circle
-        false: error
+        "true": check_circle
+        "false": error
   paginate:
     next: chevron_right
     previous: chevron_left
