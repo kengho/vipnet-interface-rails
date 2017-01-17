@@ -9,8 +9,9 @@ class NodesController < ApplicationController
 
   def load
     @search = false
+
     params_expanded = params.to_unsafe_h.clone
-    params_expanded.each { |_, value| value.strip! } # TODO: each_value()
+    params_expanded.each_value(&:strip!)
     params_expanded.reject! do |key, value|
       value.empty? ||
       %w[controller action format _].include?(key) ||
