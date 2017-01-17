@@ -8,30 +8,11 @@ class NodesController < ApplicationController
   respond_to :js
 
   def load
-    @search = false
     clear_params = clear_params(params)
     expanded_params = expand_params(clear_params)
 
-    if expanded_params["search"]
-      @search = true
-      search_resuls = NccNode.none
-      value = expanded_params["search"]
-      NccNode.quick_searchable.each do |prop|
-        search_resuls = search_resuls | NccNode.where_prop_like(prop, value)
-      end
-    else
-      search_resuls = NccNode.all
-      expanded_params.each do |prop, value|
-        next if prop == "page"
-        @search = true
-        values = Array(value)
-        sub_search_resuls = NccNode.none
-        values.each do |value|
-          sub_search_resuls = sub_search_resuls | NccNode.where_prop_like(prop, value)
-        end
-        search_resuls = search_resuls & sub_search_resuls
-      end
-    end
+    search_resuls = NccNode.search(expanded_params)
+    @search = !!search_resuls
 
     per_page = current_user.settings["nodes_per_page"] || Settings.nodes_per_page
     if @search

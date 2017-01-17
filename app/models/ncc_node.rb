@@ -23,6 +23,38 @@ class NccNode < ActiveRecord::Base
 
   after_create :adopt_tickets
 
+  def self.search(expanded_params)
+    search = false
+
+    if expanded_params["search"]
+      search = true
+      search_resuls = NccNode.none
+      value = expanded_params["search"]
+      NccNode.quick_searchable.each do |prop|
+        search_resuls = search_resuls | NccNode.where_prop_like(prop, value)
+      end
+    else
+      search_resuls = NccNode.all
+      expanded_params.each do |prop, value|
+        # FIXME: even wrong params considered as search params
+        search = true
+        next if prop == "page"
+        values = Array(value)
+        sub_search_resuls = NccNode.none
+        values.each do |value|
+          sub_search_resuls = sub_search_resuls | NccNode.where_prop_like(prop, value)
+        end
+        search_resuls = search_resuls & sub_search_resuls
+      end
+    end
+
+    if search
+      return search_resuls
+    else
+      return nil
+    end
+  end
+
   def self.where_prop_like(prop, value)
     case prop
     when "vid"
