@@ -19,5 +19,7 @@ $(document).ready(function() {
   $("div[data-clear-search-bar]").click(function() {
     var $searchBar = $(this).parent().find("input[type=text]");
     $searchBar.val("");
+    vipnetInterface.params = {};
+    vipnetInterface.nodes.ajax.load();
   });
 });
