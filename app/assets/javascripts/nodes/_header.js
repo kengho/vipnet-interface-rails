@@ -18,8 +18,14 @@ $(document).ready(function() {
 
   $("div[data-clear-search-bar]").click(function() {
     var $searchBar = $(this).parent().find("input[type=text]");
-    $searchBar.val("");
-    vipnetInterface.params = {};
-    vipnetInterface.nodes.ajax.load();
+    if ($searchBar.val()) {
+      $searchBar.val("");
+
+      // if (vipnetInterface.params != {})
+      if (Object.keys(vipnetInterface.params).length > 0) {
+        vipnetInterface.params = {};
+        vipnetInterface.nodes.ajax.load();
+      }
+    }
   });
 });
