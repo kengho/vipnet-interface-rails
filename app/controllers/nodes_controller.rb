@@ -9,15 +9,15 @@ class NodesController < ApplicationController
 
   def load
     @search = false
-    params_expanded = params.each { |_, value| value.strip! }
+    params_expanded = params.to_unsafe_h.clone
+    params_expanded.each { |_, value| value.strip! } # TODO: each_value()
     params_expanded.reject! do |key, value|
       value.empty? ||
       %w[controller action format _].include?(key) ||
       false
     end
+    @params = params_expanded.clone
 
-    # { "search" => "id: 0x1a0e0001, name: Alex" } =>
-    # { "vid" => "0x1a0e0001", "name" => "Alex" }
     if params_expanded["search"]
       custom_search = false
       aliases = {
@@ -96,7 +96,7 @@ class NodesController < ApplicationController
     @ncc_nodes = @ncc_nodes
       .paginate(page: params[:page])
       .includes(:descendant, :hw_nodes, hw_nodes: [:node_ips])
-    @params = params_expanded
+    # @params defined in the beginning
     @js_data = @ncc_nodes.js_data
   end
 
