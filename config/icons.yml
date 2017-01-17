@@ -8,6 +8,7 @@ nodes:
       select_all: "select_all"
     search: "search"
     toggle_dark_theme: invert_colors
+    clear_search_bar: close
     nav:
       settings: "settings"
       profile: "person"

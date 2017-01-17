@@ -67,6 +67,12 @@
             <% end %>
           <% end %>
         <% end %>
+
+        <%= content_tag(:div, "data-clear-search-bar": true, id: "header__clear-search-bar") do %>
+          <%= content_tag(:label, class: %w[mdl-button mdl-js-button mdl-button--icon gray]) do %>
+            <%= content_tag(:i, i("nodes.header.clear_search_bar"), class: "material-icons") %>
+          <% end %>
+        <% end %>
       <% end %>
 
       <%= content_tag(:div, user_settings_params.merge("data-toggle-dark-theme": true, id: "header__toggle-dark-theme")) do %>
