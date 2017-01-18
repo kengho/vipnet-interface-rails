@@ -6,7 +6,7 @@ module NodesHelper
     [
       # erb, prop, visibility
       ["space",         nil,                          always_visible],
-      ["remote_button", :availability,                visible_if_iplirconf_api_enabled],
+      ["remote_button", :availability,                always_visible],
       ["cell",          :vid,                         always_visible],
       ["remote_button", :info,                        always_visible],
       ["remote_button", [:history, :name],            always_visible],

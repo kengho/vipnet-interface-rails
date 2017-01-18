@@ -1,16 +1,22 @@
-<%= content_tag(:div, class: ["td"] + additional_td_classes) do %>
-  <%= content_tag(:div, name: "button", "data-stop-propagation": true,
-        "data-action-name": action_name,
-        "data-action-prop": action_prop,
-      ) do
-  %>
-    <%= content_tag(:label,
-          disabled: disabled,
-          class: %w[mdl-button mdl-js-button mdl-button--icon tooltip-hover] + [icon_class],
+<%# HACK: remake visibility considering fact that %>
+<%#    statuses goes into availability and availability API may be disabled %>
+<% if action_name == "availability" && Settings.iplirconf_api_enabled == "false" && @ncc_node.status == :ok %>
+  <%= render "nodes/space" %>
+<% else %>
+  <%= content_tag(:div, class: ["td"] + additional_td_classes) do %>
+    <%= content_tag(:div, name: "button", "data-stop-propagation": true,
+          "data-action-name": action_name,
+          "data-action-prop": action_prop,
         ) do
     %>
-      <%= content_tag(:i, icon, class: "material-icons") %>
+      <%= content_tag(:label,
+            disabled: disabled,
+            class: %w[mdl-button mdl-js-button mdl-button--icon tooltip-hover] + [icon_class],
+          ) do
+      %>
+        <%= content_tag(:i, icon, class: "material-icons") %>
+      <% end %>
+      <%= content_tag(:div, t, class: %w[tooltip tooltip--remote-button]) %>
     <% end %>
-    <%= content_tag(:div, t, class: %w[tooltip tooltip--remote-button]) %>
   <% end %>
 <% end %>
