@@ -59,7 +59,7 @@ module NodesHelper
             action_prop: nil,
             icon_class: "primary",
             disabled: false,
-            additional_td_classes: ["td--show-onhover", "td--button"],
+            additional_td_classes: %w[td--show-onhover td--button],
           }
 
         when :deleted
@@ -70,7 +70,7 @@ module NodesHelper
             action_prop: nil,
             icon_class: "accent",
             disabled: true,
-            additional_td_classes: ["td--button", "td--hoverable-tooltip"],
+            additional_td_classes: %w[td--button td--hoverable-tooltip],
           }
 
         when :disabled
@@ -93,7 +93,7 @@ module NodesHelper
           action_prop: nil,
           icon_class: "primary",
           disabled: false,
-          additional_td_classes: ["td--show-onhover", "td--button"],
+          additional_td_classes: %w[td--show-onhover td--button],
         }
 
       when :history
@@ -104,7 +104,7 @@ module NodesHelper
           action_prop: variant,
           icon_class: "gray",
           disabled: false,
-          additional_td_classes: ["td--show-onhover", "td--button", "td--small-icon-right"],
+          additional_td_classes: %w[td--show-onhover td--button td--small-icon-right],
         }
       end
     end
