@@ -36,9 +36,10 @@ class NccNode < ActiveRecord::Base
     else
       search_resuls = NccNode.all
       expanded_params.each do |prop, value|
+        next if prop == "page"
+
         # FIXME: even wrong params considered as search params
         search = true
-        next if prop == "page"
         values = Array(value)
         sub_search_resuls = NccNode.none
         values.each do |value|
