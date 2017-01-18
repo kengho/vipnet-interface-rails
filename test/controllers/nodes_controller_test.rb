@@ -87,6 +87,13 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
   end
 
+  test "should search name and try to escape special regexp characters" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Marcus Forest(first)", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0002", name: "Marcus Forest(second)", network: @network)
+    get_js(:load, params: { name: "Forest(second)" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
+
   test "should be able to use quotes for accurate search for name" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Marcus Kelly Forest", network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", name: "Marcus Forest", network: @network)

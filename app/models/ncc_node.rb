@@ -78,6 +78,8 @@ class NccNode < ActiveRecord::Base
         name_regexp = name.gsub(" ", ".*")
       end
       search_resuls = NccNode.where("name ~* ?", name_regexp)
+      name_escaped = Regexp.escape(name)
+      search_resuls |= NccNode.where("name ILIKE ?", "%#{name_escaped}%")
 
     when "ip"
       ip = value
