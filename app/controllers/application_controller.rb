@@ -49,7 +49,7 @@ class ApplicationController < ActionController::Base
     def render_nothing(status)
       render body: nil, status: status, content_type: "text/html"
     end
-    
+
     def clear_params(params)
       clear_params = params.to_unsafe_h.clone
       clear_params.each_value(&:strip!)
@@ -83,7 +83,7 @@ class ApplicationController < ActionController::Base
           custom_search = true
         else
           request.split(",").each do |partial_request|
-            if partial_request =~ /^(?<prop>.*):(?<value>.*)$/
+            if partial_request =~ /^(?<prop>.+):(?<value>.+)$/
               prop = Regexp.last_match(:prop).strip
               prop = aliases[prop] if aliases[prop]
               value = Regexp.last_match(:value).strip

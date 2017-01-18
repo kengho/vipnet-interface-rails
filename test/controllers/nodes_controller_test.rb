@@ -344,6 +344,13 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(["0x1a0e0001", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
 
+  test "quick search shouldn't fail if you search for something with ':' in it" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", name: "Marcus", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0002", name: "Kelly:", network: @network)
+    get_js(:load, params: { search: ":" })
+    assert_equal(["0x1a0e0002"], assigns["ncc_nodes"].vids)
+  end
+
   test "should search through DeletedNccNode if there are no such CurrentNccNode" do
     CurrentNccNode.create!(vid: "0x1a0e0001", name: "Alex", network: @network)
     DeletedNccNode.create!(vid: "0x1a0e0002", name: "Brad", network: @network)
