@@ -1,3 +1,4 @@
+<%# TODO: break this file. %>
 <%= content_tag(:header, class: "mdl-layout__header") do %>
   <%= content_tag(:div, class: "mdl-layout__header-row") do %>
 
@@ -21,7 +22,7 @@
           <%= content_tag(:textarea, "") %>
         <% end %>
 
-        <%# div #export-selected__variants should be below #actions__export-selected for :hover to work %>
+        <%# div #export-selected__variants should be below #actions__export-selected for :hover to work. %>
         <%= content_tag(:div, user_settings_params.merge(class: "export-selected-variant")) do %>
           <%= render "shared/user_settings/radio", name: "export_selected_variant" %>
         <% end %>

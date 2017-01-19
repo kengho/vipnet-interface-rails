@@ -26,11 +26,11 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
   end
 
   test "create" do
-    # prepare configuration, where there are
-    # 0x1a0e000a coordinator1,
-    # 0x1a0e000b administrator,
-    # 0x1a0e000c client1,
-    # 0x1a0e000d coordinator2
+    # Prepare configuration, where there are
+    # "0x1a0e000a coordinator1",
+    # "0x1a0e000b administrator",
+    # "0x1a0e000c client1",
+    # "0x1a0e000d coordinator2".
     Settings.networks_to_ignore = ""
     Nodename.destroy_all
     Iplirconf.destroy_all
@@ -46,7 +46,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     @controller = iplirconfs_controller
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_HW_TOKEN\""
 
-    # upload iplirconf with administrator, client1 and coordinator1 (:add)
+    # Upload iplirconf with administrator, client1 and coordinator1 (:add).
     initial_iplirconf = fixture_file_upload(
       "iplirconfs/00_0x1a0e000a_initial.conf",
       "application/octet-stream"
@@ -277,7 +277,8 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         ncc_node_vid: "0x1a0e000a",
       },
       {
-        # deep_merge deletes "192.0.2.3" here if not speciied
+        # "deep_merge" in "change_where" deletes "192.0.2.3"
+        # if not present here.
         node_ips: [
           {
             u32: IPv4::u32("192.0.2.3"),

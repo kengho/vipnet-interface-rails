@@ -53,6 +53,9 @@ class ApplicationController < ActionController::Base
     def clear_params(params)
       clear_params = params.to_unsafe_h.clone
       clear_params.each_value(&:strip!)
+
+      # "_" is "cache buster".
+      # http://stackoverflow.com/a/5355707/6376451
       clear_params.reject! do |key, value|
         value.empty? ||
         %w[controller action format _].include?(key) ||

@@ -38,7 +38,7 @@ class NccNode < ActiveRecord::Base
       expanded_params.each do |prop, value|
         next if prop == "page"
 
-        # FIXME: even wrong params considered as search params
+        # FIXME: even wrong params considered as search params.
         search = true
         values = Array(value)
         sub_search_resuls = NccNode.none
@@ -182,9 +182,10 @@ class NccNode < ActiveRecord::Base
       return data.map { |slice| slice.symbolize_keys }
     elsif prop == :ip
      elsif HwNode.props_from_iplirconf.include?(prop)
-      # group HwNodes' ascendants by days they were created (desc)
-      # for each group figure out most likely value of prop
-      # leave only earliest unique values
+      # Algorithm:
+      # 1) group HwNodes' ascendants by days they were created (desc),
+      # 2) for each group figure out most likely value of prop,
+      # 3) leave only earliest unique values.
 
       ascendants_ids = self.hw_nodes.flat_map { |hw_node|
         hw_node.ascendants.where("#{prop} IS NOT NULL").ids
@@ -214,8 +215,9 @@ class NccNode < ActiveRecord::Base
         data[i+1] && arr[1] == data[i+1][1]
       end
 
-      # we lose creation_date precision here, but
-      # as long as we show only round days in view, it doesn't matter
+      # We lose creation_date precision here, but,
+      # as long as we show only round days in view, it doesn't matter.
+      # TODO: find a way to preserve precision.
       return data_uniq.map do |arr|
          { :creation_date => arr.first, prop => arr.last }
       end
@@ -231,13 +233,13 @@ class NccNode < ActiveRecord::Base
   end
 
   def self.most_likely(args)
-    # gets most likely value of property (e.g. :version) in set if hw_nodes
-    # priorities:
-    # 1: hw_node which belongs to ncc_node's mftp_server
-    # 2: hw_node which belongs to coordinator with the most registered clients
-    # 3: highest count of the same values between hw_nodes
-    # 4: hw_node which belongs to coordinator with the lovest vid
-    # 5: first hw_node's value
+    # Gets most likely value of property (e.g. "version") in set if "hw_nodes".
+    # Values priorities:
+    # 1) Value of "hw_node" which belongs to "ncc_node"'s "mftp_server".
+    # 2) Value of "hw_node" which belongs to coordinator with the most registered clients.
+    # 3) Value which have highest count between all "hw_nodes".
+    # 4) Value of "hw_node" which belongs to coordinator with the lovest "vid".
+    # 5) First "hw_node"'s value.
 
     prop, ncc_node, hw_nodes = args.values_at(:prop, :ncc_node, :hw_nodes)
     return nil if hw_nodes.empty?
@@ -247,7 +249,7 @@ class NccNode < ActiveRecord::Base
       hw_node_mftp_server = hw_nodes.joins(:coordinator)
         .find_by("coordinators.vid": mftp_server.vid)
       if hw_node_mftp_server
-        return hw_node_mftp_server[prop] # 1
+        return hw_node_mftp_server[prop] # priority 1
       end
     end
 
@@ -267,24 +269,24 @@ class NccNode < ActiveRecord::Base
     max_quantity = coordinators.values.max
     max_clients_registered = coordinators.select { |k, v| v == max_quantity }.keys
     if max_clients_registered.size == 1
-      return max_clients_registered.first[prop] # 2
+      return max_clients_registered.first[prop] # priority 2
     end
 
     count = hw_nodes.select(prop).group(prop).count
     max_quantity = count.values.max
     max_version = count.select { |k, v| v == max_quantity }.keys
     if max_version.size == 1
-      return max_version.first # 3
+      return max_version.first # priority 3
     end
 
     min_coord_vid = coordinators.map { |k, v| k[:vid] }.min
     hw_node_with_min_coord_vid = hw_nodes.joins(:coordinator)
       .find_by("coordinators.vid": min_coord_vid)
     if hw_node_with_min_coord_vid
-      return hw_node_with_min_coord_vid[prop] # 4
+      return hw_node_with_min_coord_vid[prop] # priority 4
     end
 
-    hw_nodes.first[prop] # 5
+    hw_nodes.first[prop] # priority 5
   end
 
   def self.js_data
@@ -327,7 +329,7 @@ class NccNode < ActiveRecord::Base
       if key == :network_id
         network = Network.find_by(id: value)
 
-        # network may not exist, if ncc_node is an accendant
+        # "network" may not exist, if "ncc_node" is an accendant.
         tmp[:network_vid] = network.network_vid if network
       elsif key == :descendant_id
         descendant = NccNode.find_by(id: value)

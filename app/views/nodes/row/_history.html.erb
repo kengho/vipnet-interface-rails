@@ -1,4 +1,5 @@
-<%# so closable is true by default, but may be reset %>
+<%# So, closable is true by default, but may be reset by passing param. %>
+<%# (Uses in history view.) %>
 <% closable = true unless closable == false %>
 <%= content_tag(:div, name: "history", "data-prop": @prop, "data-closable": closable) do %>
   <% @data.each_with_index do |slice, i| %>

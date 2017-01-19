@@ -29,18 +29,18 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         action, target, props, before, after = HashDiffSymUtils.decode_changes(changes)
         curent_network_vid = VipnetParser.network(target[:vid])
 
-        # skip ignored networks
+        # Skip ignored networks.
         networks_to_ignore = Settings.networks_to_ignore.split(",")
         next if networks_to_ignore.include?(curent_network_vid)
 
-        # skip extra nodes
-        # "we admin network" means "we have Nodename for it"
+        # Skip extra nodes.
+        # ("we admin this network" means "we have Nodename for it".)
         we_admin_this_network = !!Nodename.joins(:network)
           .find_by("networks.network_vid": curent_network_vid)
         it_is_internetworking_node = network.network_vid != curent_network_vid
         next if we_admin_this_network && it_is_internetworking_node
 
-        # skip groups
+        # Skip groups.
         if records[target[:vid]]
           next if records[target[:vid]][:category] == :group
         elsif props[:category]
@@ -48,10 +48,12 @@ class Api::V1::NodenamesController < Api::V1::BaseController
         end
 
         curent_network = Network.find_or_create_by(network_vid: curent_network_vid)
+
         if action == :add
           deleted_ncc_node = DeletedNccNode.find_by(vid: target[:vid])
 
-          # may occur only when old ncc db restores, no need for saving history
+          # May occur only when old ncc db restores,
+          # so there are no need for creating ascendant.
           if deleted_ncc_node
             deleted_ncc_node.update_attributes(
               type: "CurrentNccNode",

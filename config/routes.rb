@@ -23,11 +23,11 @@ Rails.application.routes.draw do
   namespace :api do
     namespace :v1 do
       resources :doc, only: [:index]
-      # in
+      # In.
       resources :iplirconfs, only: [:create]
       resources :nodenames, only: [:create]
       resources :tickets, only: [:create]
-      # out
+      # Out.
       resources :nodes, only: [:index]
       resources :accessips, only: [:index]
       resources :availability, only: [:index]

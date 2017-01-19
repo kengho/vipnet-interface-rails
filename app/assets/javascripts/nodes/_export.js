@@ -4,8 +4,14 @@ vipnetInterface.nodes.export = {
   CSVSeparator: ";",
 
   updateData: function(data) {
-    // remove non-selected rows from data object
-    // at the same time, remove rows in data, already contained in selected rows
+    // "data" is a jsoned object passed from NodesController#load.
+    // "vipnetInterface.nodes.export.data" is the stored data.
+    // This function
+    // 1) removes dublicates from new "data",
+    // 2) removes non-selected rows from stored "data"
+    // (if we moving thought pages we don't need nodes on pages we leave anymore,
+    // unless we selected them),
+    // 3) and merges new "data" into stored one.
     // http://stackoverflow.com/a/18202926/6376451
     Object.keys(vipnetInterface.nodes.export.data).forEach(function(vid, _) {
       if(vipnetInterface.nodes.export.data[vid].selected) {
@@ -15,7 +21,6 @@ vipnetInterface.nodes.export = {
       }
     });
 
-    // merge data
     Object.assign(vipnetInterface.nodes.export.data, data);
   },
 
@@ -100,7 +105,9 @@ vipnetInterface.nodes.export = {
 
   exportData: function() {
     // vipnetInterface.nodes.export.data => selectedRowsDataArray
-    // {{ vid1: { name: ..., ... }, { vid2: { name: ..., ... }, ...} => [{ vid: vid1, name: ...}, [{ vid: vid2, name: ...}, ...]
+    // {{ vid1: { name: ..., ... }, { vid2: { name: ..., ... }, ...}
+    // =>
+    // [{ vid: vid1, name: ...}, [{ vid: vid2, name: ...}, ...]
     // sorted by vids and only for selected rows ("selected" key is omitted)
     var selectedRowsDataArray = Object.keys(vipnetInterface.nodes.export.data).map(function(vid) {
       if(vipnetInterface.nodes.export.data[vid].selected) {
@@ -112,8 +119,7 @@ vipnetInterface.nodes.export = {
         });
         return Object.assign({ vid: vid }, dataObj);
       }
-    })
-      .filter(function(e) { return e != undefined })
+    }).filter(function(e) { return e != undefined })
       .sort(function(a, b) {
         return a.vid.localeCompare(b.vid)
       });

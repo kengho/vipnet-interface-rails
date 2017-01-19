@@ -9,7 +9,7 @@
       <%= render "shared/user_settings/radio", name: "locale" %>
     <% end %>
 
-    <%# hidden input for browser to properly update saved password using users's email %>
+    <%# Hidden input for browsers to properly update saved password using users' email. %>
     <%= content_tag(:form) do %>
       <%= content_tag(:div, user_settings_params) do %>
         <%= content_tag(:div) do %>

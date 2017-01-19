@@ -20,7 +20,7 @@ class UsersController < ApplicationController
   def update
     render_nothing(:unauthorized) and return unless current_user.id.to_s == params["id"]
 
-    # additional user settings
+    # Additional user settings.
     name = params["name"]
     corresponding_settings = Settings.values[name]
     if corresponding_settings
@@ -38,6 +38,7 @@ class UsersController < ApplicationController
       end
     end
 
+    # User emails and passwords.
     if params["user_session"]
       user_session = params["user_session"]
       if current_user.reset_password_allowed

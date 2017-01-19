@@ -42,12 +42,12 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             end
           else
             # ["+", "0x1a0e000a", {:id=>"0x1a0e000a", :name=>"coordinator1", ... }]
-            # (entire section is added)
-            # at first, we are trying to figure out, was there such section in past or not?
-            # maybe link between node and coordinator was deleted and added again
-            # if so, HwNode should go from "DeletedHwNode" to "CurrentHwNode" and it's attributes should be upgraded
-            # also, old attributes of deleted_hw_node should be saved in ascendant
-            # (at this point we don't save HwNode's status ("Deleted" or "Current") in ascendant)
+            # Entire section is added.
+            # At first, we are trying to figure out, was there such section in past or not?
+            # Maybe connection between node and coordinator was deleted and added again?
+            # If so, HwNode should go from "DeletedHwNode" to "CurrentHwNode" and it's attributes should be upgraded.
+            # Also, old attributes of "deleted_hw_node" should be saved in ascendant.
+            # (At this point we don't save HwNode's status ("Deleted" or "Current") in ascendant.)
             deleted_hw_node = DeletedHwNode.find_by(
               ncc_node: ncc_node,
               coordinator: coordinator,
@@ -73,9 +73,9 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
                 Rails.logger.info("Unable to save new_accendant: #{new_accendant.inspect}")
               end
 
-              # if some prop was deleted, new_section_props will lack of it,
-              # thus update_attributes will leave this prop as it was before,
-              # but we want it to become nil
+              # If some prop was deleted, "new_section_props" will lack of it,
+              # thus "update_attributes" will leave this prop as it was before,
+              # but we want it to become "nil".
               # http://stackoverflow.com/a/11772866/6376451
               # ["prop1", "prop2", "prop3"] =>  { "prop1"=>nil, "prop2"=>nil, "prop3"=>nil }
               nil_props = Hash[*HwNode.props_from_iplirconf.flat_map { |x| [x, nil] }]
@@ -139,7 +139,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
             end
           else
             # ["-", "0x1a0e000c", {:id=>"0x1a0e000c", ...]
-            # (entire section is deleted)
+            # (Entire section is deleted.)
             hw_node_to_delete = CurrentHwNode.find_by(
               ncc_node: ncc_node,
               coordinator: coordinator,

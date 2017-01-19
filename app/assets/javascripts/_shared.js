@@ -90,8 +90,8 @@ vipnetInterface = {
         vipnetInterface.nodes.export.shiftSelectRow(vid);
       } else {
         // http://stackoverflow.com/a/10390097/6376451
-        // e.button == 1 for middle button
-        // prevent triggering by middle button or text select
+        // "e.button == 1" for middle button.
+        // Prevents triggering by middle button or by selecting text.
         var selection = getSelection().toString();
         if(!selection && e.button != 1) {
           vipnetInterface.nodes.export.toggleSelectRow(vid);
@@ -130,7 +130,7 @@ vipnetInterface = {
 };
 
 $(document).ready(function() {
-  // radios in header and profile
+  // Radio buttons in header and profile.
   vipnetInterface.bindEventRadio();
   vipnetInterface.bindHome();
   vipnetInterface.startUpdateCable();

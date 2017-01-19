@@ -28,11 +28,11 @@ class NodesController < ApplicationController
         @ncc_nodes = current_ncc_nodes
       end
 
-      # calculating size here because of paginate() later
+      # We calculating size here because of "paginate()" later.
       @size = @ncc_nodes.size
     else
-      # there are mess in pagination if creation_date is the same
-      # and there are only one ordering prop
+      # Pagination becomes random when some nodes have
+      # the same "creation_date" and there are only one ordering prop.
       @ncc_nodes = CurrentNccNode.order(creation_date: :desc, vid: :desc)
       CurrentNccNode.per_page = per_page
     end

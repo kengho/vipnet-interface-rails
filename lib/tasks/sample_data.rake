@@ -103,7 +103,8 @@ namespace :db do
       changing_props = [:name, :enabled, :abonent_number, :server_number]
       rand(5).times do |_|
         new_ascendant = NccNode.new(descendant: ncc_node)
-        # up to 2 random props changing simultaneously
+
+        # Up to 2 random props changing simultaneously.
         rand_changing_props = changing_props.sample(rand(3))
         rand_changing_props.each { |p| new_ascendant[p] = send("get_rand_#{p}") }
         new_ascendant.creation_date = get_rand_date_after(ncc_node.creation_date)
@@ -113,7 +114,7 @@ namespace :db do
 
     print "Filling CurrentHwNode, NodeIp and Ticket...\n"
     CurrentNccNode.all.each_with_index do |ncc_node, i|
-      # +4 corresponds to coordinators' NccNode
+      # +4 corresponds to coordinators' NccNode.
       print "#{i+1}/#{n+4}..."
       current_version = get_rand_version
       Coordinator.all.each do |coordinator|
@@ -166,8 +167,12 @@ namespace :db do
 
   def get_rand_network_and_vid
     rand_network = Network.order("RANDOM()").first
-    rand_vid = "0x" + rand_network.network_vid.to_i.to_s(16) + rand("0x10000".to_i(16)).to_s(16).rjust(4, "0")
-    # as long as n is significantly smaller than 0x10000, recursion is ok (0 < number_of_steps < 1)
+    rand_vid = "0x"
+      + rand_network.network_vid.to_i.to_s(16)
+      + rand("0x10000".to_i(16)).to_s(16).rjust(4, "0")
+
+    # As long as "n" is significantly smaller than 0x10000,
+    # recursion is OK (0 < number_of_steps < 1).
     if NccNode.find_by(vid: rand_vid)
       get_rand_network_and_vid
     else

@@ -27,7 +27,7 @@
   <%= content_tag(:main, class: "mdl-layout__content") do %>
     <%= content_tag(:div, class: "page-content") do %>
       <%= content_tag(:div, id: "nodes-container") do %>
-        <%# for $(".nodes").fadeOut() before first load() %>
+        <%# div is needed for $(".nodes").fadeOut() before first load(). %>
         <%= content_tag(:div, "", class: "nodes") %>
       <% end %>
 

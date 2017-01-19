@@ -219,7 +219,7 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal([], assigns["ncc_nodes"].vids)
   end
 
-  # temporarily implementations of DateTime search
+  # Temporarily implementations of DateTime search.
   test "should search by creation_date (tmp)" do
     CurrentNccNode.create!(vid: "0x1a0e0001", creation_date: DateTime.new(2016, 9, 1), network: @network)
     CurrentNccNode.create!(vid: "0x1a0e0002", creation_date: DateTime.new(2016, 9, 2), network: @network)
@@ -233,7 +233,6 @@ class NodesControllerTest < ActionController::TestCase
     get_js(:load, params: { deletion_date: "2016-09-01" })
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
-  # /temporarily implementations of DateTime search
 
   test "should search by ticket" do
     ncc_node1 = CurrentNccNode.new(vid: "0x1a0e0001", network: @network); ncc_node1.save!

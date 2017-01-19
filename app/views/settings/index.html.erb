@@ -5,12 +5,12 @@
       <%= t(".label") %>
     <% end %>
 
-    <%# ids of settings' divs below should be equal to "#{data-anchor}-settings" for js to work; %>
+    <%# IDs of settings' divs below should be equal to "#{data-anchor}-settings" for js to work. %>
     <%= content_tag(:a, t(".general_label"), "data-anchor": "general") %>
     <%= content_tag(:a, t(".users_label"), "data-anchor": "users") %>
 
-    <%# keep "-settings" (or any other) postfix in divs' ids %>
-    <%# for disabling default anchor behaviour in browsers %>
+    <%# Keep "-settings" (or any other) postfix in divs' IDs %>
+    <%# for disabling default anchor behaviour in browsers. %>
     <%= content_tag(:div, render("general"), id: "general-settings") %>
     <%= content_tag(:div, render("users"), id: "users-settings", class: "table") %>
   <% end %>

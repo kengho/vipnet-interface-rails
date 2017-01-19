@@ -1,5 +1,5 @@
-<%# HACK: remake visibility considering fact that %>
-<%#    statuses goes into availability and availability API may be disabled %>
+<%# TODO: remake visibility considering fact that %>
+<%#    statuses goes into availability and availability API may be disabled. %>
 <% if action_name == "availability" && Settings.iplirconf_api_enabled == "false" && @ncc_node.status == :ok %>
   <%= render "nodes/space" %>
 <% else %>

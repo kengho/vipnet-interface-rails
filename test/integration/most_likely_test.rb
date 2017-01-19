@@ -74,12 +74,14 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
     CurrentHwNode.create!(coordinator: @coordinator2, ncc_node: ncc_node, version: "3")
     CurrentHwNode.create!(coordinator: @coordinator3, ncc_node: ncc_node, version: "4")
     CurrentHwNode.create!(coordinator: @coordinator4, ncc_node: ncc_node, version: "4")
+
+    # "coordinator2" is ncc_node's mftp server, therefore here comes "3".
     assert_equal("3", ncc_node.most_likely(:version))
-    # because coordinator2 is ncc_node's mftp_server
   end
 
   test "should calculate most likely version out of all (weights)" do
     ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001"); ncc_node.save!
+
     # 0x1a0e000a: 2 clients registered
     CurrentNccNode.create!(
       network: @network1,
@@ -135,8 +137,8 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
     CurrentHwNode.create!(coordinator: @coordinator3, ncc_node: ncc_node, version: "4")
     CurrentHwNode.create!(coordinator: @coordinator4, ncc_node: ncc_node, version: "4")
 
+    # We trust the most in coordinator2's data because it have more clients registered.
     assert_equal("3", ncc_node.most_likely(:version))
-    # because we trust the most in coordinator2
   end
 
   test "should calculate most likely version out of all (lowest vid)" do
@@ -179,8 +181,8 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
     CurrentHwNode.create!(coordinator: @coordinator3, ncc_node: ncc_node, version: "3.1")
     CurrentHwNode.create!(coordinator: @coordinator4, ncc_node: ncc_node, version: "3.2 (11.19855)")
 
+    # "Coordinator1" have the lowest vid.
     assert_equal("4", ncc_node.most_likely(:version))
-    # because coordinator1 have the lowest vid
   end
 
   test "should work if any relation of hw_nodes is given" do

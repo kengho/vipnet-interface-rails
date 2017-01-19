@@ -44,7 +44,7 @@ class Settings < RailsSettings::Base
         type: :radio,
         default_value: "10",
         accepted_values: {
-          # using db_value in view
+          # "nil" means we are using db_value in view.
           "10" => nil,
           "20" => nil,
           "50" => nil,

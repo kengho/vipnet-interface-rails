@@ -55,7 +55,7 @@ class Api::V1::TicketsControllerTest < ActionController::TestCase
       ticket_id: "3",
     )
 
-    # ticket without ncc_node
+    # Ticket without "ncc_node".
     post(:create, params: {
       ticket: { vid: "0x1a0e0002", id: "1", url_template: "http://tickets.org/ticket_id={id}" },
     })

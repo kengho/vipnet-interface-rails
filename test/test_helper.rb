@@ -1,6 +1,7 @@
 ENV['RAILS_ENV'] ||= 'test'
 require File.expand_path('../../config/environment', __FILE__)
 require 'rails/test_help'
+
 # http://stackoverflow.com/a/10980700/6376451
 include ActionDispatch::TestProcess
 
@@ -99,6 +100,7 @@ end
 
 class Network::ActiveRecord::Base
   def last_nodenames_created_at
+    # example_datetime.iso8601(3) => "2016-09-29T16:39:01.899Z"
     Nodename.last_diff(self).created_at.iso8601(3)
   end
 end

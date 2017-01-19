@@ -3,7 +3,7 @@ class SettingsController < ApplicationController
   before_action :check_administrator_role
 
   def index
-    # "thing_id is null" means this settings is not users'
+    # "thing_id is null" means this settings is not users'.
     @settings = Settings.unscoped.where("thing_id is null").reorder(var: :asc)
     @users = User.all.reorder(email: :asc)
   end

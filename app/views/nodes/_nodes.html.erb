@@ -42,7 +42,7 @@
 %>
 <%= paginate %>
 
-<%# paginate is nil if there are only 1 page %>
+<%# "paginate" is "nil" if there are only 1 page. %>
 <% if paginate %>
   <%= content_tag(:div, user_settings_params.merge(class: "nodes-per-page")) do %>
     <%= content_tag(:div, class: "tooltip-wrapper") do %>

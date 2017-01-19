@@ -45,9 +45,6 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         category: "server",
         abonent_number: "0000",
         server_number: "0001",
-        # example_datetime.to_json =>    "2016-09-29T16:39:01.899Z"
-        # example_datetime.iso8601 =>    "2016-09-29T16:39:01Z"
-        # example_datetime.iso8601(3) => "2016-09-29T16:39:01.899Z"
         creation_date: network1.last_nodenames_created_at,
         creation_date_accuracy: false,
         network_vid: "6670",
@@ -174,7 +171,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 06_added_node_from_ignoring_network
-    # (nothing should change)
+    # (Nothing should change.)
     Settings.networks_to_ignore = "6671"
     added_node_from_ignoring_network_nodename = fixture_file_upload(
       "nodenames/06_added_node_from_ignoring_network.doc",
@@ -185,9 +182,9 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     Settings.networks_to_ignore = ""
 
     # 07_added_internetworking_node_from_network_we_admin
-    # (nothing should change)
-    # network we admin is network for such we have nodename
-    # first_network_we_admin = Network.find_by(network_vid: "6670")
+    # (Nothing should change.)
+    # "network we admin" is network for such we have Nodename.
+    # "first_network_we_admin" = Network.find_by(network_vid: "6670")
     another_network_we_admin = Network.new(network_vid: "6672")
     another_network_we_admin.save!
     Nodename.push(hash: {}, belongs_to: another_network_we_admin)
@@ -197,12 +194,13 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     )
     post(:create, params: { file: added_internetworking_node_we_admins_nodename, network_vid: "6670" })
     assert_ncc_nodes_should_be expected_ncc_nodes
-    # cleaning up
+
+    # Cleaning up.
     another_network_we_admin.destroy
     Nodename.thread(another_network_we_admin).destroy_all
 
     # 08_group_changed
-    # (group isn't in NccNode.props_from_nodename, so there souldn't be any changes)
+    # ("group" isn't in NccNode.props_from_nodename, so there souldn't be any changes.)
     group_changed_nodename = fixture_file_upload(
       "nodenames/08_group_changed.doc",
       "application/octet-stream"
