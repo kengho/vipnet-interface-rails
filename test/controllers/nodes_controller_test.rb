@@ -427,6 +427,14 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(["0x1a0e0002", "0x1a0e0003"], assigns["ncc_nodes"].vids)
   end
 
+  test "should show deleted nodes when search for multiple ids" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", network: @network)
+    DeletedNccNode.create!(vid: "0x1a0e0002", network: @network)
+    CurrentNccNode.create!(vid: "0x1a0e0003", network: @network)
+    get_js(:load, params: { search: "ids: 0x1a0e0002, 0x1a0e0003" })
+    assert_equal(["0x1a0e0002", "0x1a0e0003"], assigns["ncc_nodes"].vids)
+  end
+
   test "should parse 'search' param to perform custom search (version, ver)" do
     ncc_node1 = CurrentNccNode.new(vid: "0x1a0e0001", network: @network); ncc_node1.save!
     ncc_node2 = CurrentNccNode.new(vid: "0x1a0e0002", network: @network); ncc_node2.save!

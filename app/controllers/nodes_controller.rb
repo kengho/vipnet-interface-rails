@@ -22,10 +22,10 @@ class NodesController < ApplicationController
         .order(vid: :asc)
       current_ncc_nodes = all_ncc_nodes.where(type: "CurrentNccNode")
       NccNode.per_page = per_page
-      if current_ncc_nodes.size > 0
-        @ncc_nodes = current_ncc_nodes
-      else
+      if current_ncc_nodes.size == 0 || expanded_params[:vid]
         @ncc_nodes = all_ncc_nodes
+      else
+        @ncc_nodes = current_ncc_nodes
       end
 
       # calculating size here because of paginate() later
