@@ -79,6 +79,7 @@ vipnetInterface = {
     $("*[data-load='home']").click(function() {
       $("#progress").vipnetInterface().tmpShow();
       vipnetInterface.nodes.ajax.load();
+      vipnetInterface.clearSearchBar();
     });
   },
 
@@ -126,6 +127,19 @@ vipnetInterface = {
         }
       },
     });
+  },
+
+  gotoHome: function() {
+    // if (vipnetInterface.params != {})
+    if (Object.keys(vipnetInterface.params).length > 0) {
+      vipnetInterface.params = {};
+      vipnetInterface.nodes.ajax.load();
+    }
+  },
+
+  clearSearchBar: function() {
+    var $searchBar = $("#header__search").find("input[type=text]");
+    if ($searchBar.val()) { searchBar.val(""); }
   },
 };
 
