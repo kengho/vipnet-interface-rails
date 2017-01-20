@@ -9,8 +9,8 @@ vipnetInterface = {
 
   showSnackbar: function(message, timeout, callback) {
     // http://stackoverflow.com/a/8128312/6376451
-    if (typeof timeout === "undefined") { timeout = 3000; }
-    if (typeof callback === "undefined") { callback = function(){}; }
+    if(typeof timeout === "undefined") { timeout = 3000; }
+    if(typeof callback === "undefined") { callback = function(){}; }
 
     var snackbarContainer = vipnetInterface.snackbarContainer();
     var msgToShow = I18n["snackbar"][message] || message;
@@ -62,7 +62,7 @@ vipnetInterface = {
           value: value,
         },
         success: function() {
-          if (name == "nodes_per_page") {
+          if(name == "nodes_per_page") {
             vipnetInterface.nodes.ajax.load(vipnetInterface.params);
           } else if(name == "locale") {
             setTimeout(
@@ -130,8 +130,8 @@ vipnetInterface = {
   },
 
   gotoHome: function() {
-    // if (vipnetInterface.params != {})
-    if (Object.keys(vipnetInterface.params).length > 0) {
+    //if(vipnetInterface.params != {})
+    if(Object.keys(vipnetInterface.params).length > 0) {
       vipnetInterface.params = {};
       vipnetInterface.nodes.ajax.load();
     }
@@ -139,7 +139,7 @@ vipnetInterface = {
 
   clearSearchBar: function() {
     var $searchBar = $("#header__search").find("input[type=text]");
-    if ($searchBar.val()) { searchBar.val(""); }
+    if($searchBar.val()) { searchBar.val(""); }
   },
 };
 
