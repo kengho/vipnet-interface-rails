@@ -75,6 +75,18 @@ vipnetInterface.nodes.ajax = {
     });
   },
 
+  bindLinkyButtons: function() {
+    $("button[data-action-name]").click(function() {
+      var action = $(this).data("action-name");
+      var data = $(this).data("action-data");
+
+      vipnetInterface.nodes.ajax.doAction({
+        action: action,
+        data: data,
+      });
+    });
+  },
+
   load: function(data, history) {
     // http://stackoverflow.com/a/8128312/6376451
     if (typeof history === "undefined") { timeout = false; }
@@ -142,7 +154,7 @@ vipnetInterface.nodes.ajax = {
         $("#nodes-container")
           .html(args.html)
           .fadeIn(vipnetInterface.nodes.ajax.animationTime, function() {
-            // radio in nodes_per_page
+            // Radio button in "nodes_per_page".
             vipnetInterface.bindEventRadio();
             vipnetInterface.bindSelectRow();
             vipnetInterface.stopPropagation();
@@ -156,6 +168,11 @@ vipnetInterface.nodes.ajax = {
 
     if(!vipnetInterface.nodes.ajax.history) {
       window.history.pushState(args.params, null, "nodes?" + args.paramsQuery);
+    }
+
+    var $searchBar = $("#header__search").find("input[type=text]");
+    if(!$searchBar.val()) {
+      $searchBar.val(args.paramsSearchBar);
     }
   },
 
@@ -230,6 +247,8 @@ vipnetInterface.nodes.ajax = {
         vipnetInterface.nodes.ajax.showRemoteInfoTime,
         $infoBlock
       );
+
+      vipnetInterface.nodes.ajax.bindLinkyButtons();
     }
   },
 

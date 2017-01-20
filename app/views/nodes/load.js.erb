@@ -11,6 +11,7 @@
     html: "<%= j render "nodes" %>",
     params: <%= @params.to_json.html_safe %>,
     paramsQuery: "<%= @params.to_query.html_safe %>",
+    paramsSearchBar: "<%= searchbarize_params(@params) %>",
   });
 
   vipnetInterface.nodes.export.updateData(<%= @js_data.to_json.html_safe %>);

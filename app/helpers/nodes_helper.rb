@@ -123,5 +123,13 @@ module NodesHelper
     end
   end
 
+  def searchbarize_params(params)
+    return params.fetch("search") if params["search"]
+
+    params.to_a
+      .map { |e| e.join(": ") }
+      .join(", ")
+  end
+
   module_function :column_order
 end

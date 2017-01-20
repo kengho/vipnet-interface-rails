@@ -107,9 +107,10 @@ module Nodes::RowHelper
       if @ncc_node.category == "server"
         clients_registered = NccNode.where_prop_like("mftp_server_vid", @ncc_node.vid)
         if clients_registered
-          view = render "shared/link", {
-            href: "?mftp_server_vid=#{@ncc_node.vid}",
-            text: clients_registered.size.to_s,
+          view = render "shared/linky_button", {
+            action: "load",
+            params: { "mftp_server_vid" => @ncc_node.vid },
+            text: clients_registered.size,
           }
         end
       end
@@ -117,8 +118,9 @@ module Nodes::RowHelper
     when :mftp_server
       mftp_server = @ncc_node.mftp_server
       if mftp_server
-        view = render "shared/link", {
-          href: "?vid=#{mftp_server.vid}",
+        view = render "shared/linky_button", {
+          action: "load",
+          params: { "vid" => mftp_server.vid },
           text: mftp_server.vid,
         }
       end
