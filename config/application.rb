@@ -20,8 +20,6 @@ module Vi
     # config.i18n.load_path += Dir[Rails.root.join('my', 'locales', '*.{rb,yml}').to_s]
     config.i18n.default_locale = :en
 
-    # Do not swallow errors in after_commit/after_rollback callbacks.
-    config.active_record.raise_in_transactional_callbacks = true
     # http://stackoverflow.com/a/22933820
     config.generators.javascript_engine :js
     # http://stackoverflow.com/a/19650564/6376451
