@@ -24,6 +24,13 @@ ActiveRecord::Schema.define(version: 20170120205508) do
     t.index ["network_id"], name: "index_coordinators_on_network_id", using: :btree
   end
 
+  create_table "garland_vars", force: :cascade do |t|
+    t.string   "var",        null: false
+    t.text     "value"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "garlands", force: :cascade do |t|
     t.text     "entity"
     t.boolean  "entity_type"
