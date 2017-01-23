@@ -22,7 +22,7 @@ module Nodes::HeaderHelper
         { "href" => "/settings#general" },
         i("nodes.header.nav.settings"),
         t(".settings"),
-        current_user.role == "administrator",
+        current_user.role == "admin",
       ],
       [
         "header__support",

@@ -24,7 +24,7 @@ class ApplicationController < ActionController::Base
     end
 
     def check_administrator_role
-      redirect_to sign_in_path unless current_user.role == "administrator"
+      redirect_to sign_in_path unless current_user.role == "admin"
     end
 
     def current_user_session

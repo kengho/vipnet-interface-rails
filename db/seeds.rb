@@ -11,7 +11,7 @@ loop do
     email: email,
     password: password,
     password_confirmation: password_confirmation,
-    role: "administrator",
+    role: "admin",
   )
   if admin.save
     STDOUT.puts "Administrator user successfully created"

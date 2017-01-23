@@ -1,7 +1,7 @@
 class User < ActiveRecord::Base
   validates :role, presence: true
   validates :role, uniqueness: {
-    conditions: -> { where(role: "administrator") },
+    conditions: -> { where(role: "admin") },
   }
 
   acts_as_authentic do |c|
@@ -12,7 +12,7 @@ class User < ActiveRecord::Base
 
   def self.roles
     {
-      list: %w(administrator user editor),
+      list: %w(admin user editor),
       default: "user",
     }
   end

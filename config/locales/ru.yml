@@ -139,7 +139,7 @@ ru:
         save: "Сохранить"
         delete: "Удалить"
       select_role:
-        administrator: "Администратор"
+        admin: "Администратор"
         user: "Пользователь"
         editor: "Редактор"
   user_sessions:

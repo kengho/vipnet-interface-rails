@@ -138,7 +138,7 @@ en:
         save: "Save"
         delete: "Delete"
       select_role:
-        administrator: "Administrator"
+        admin: "Administrator"
         user: "User"
         editor: "Editor"
   user_sessions:
