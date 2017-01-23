@@ -126,7 +126,9 @@ module NodesHelper
   def searchbarize_params(params)
     return params.fetch("search") if params["search"]
 
-    params.to_a
+    params
+      .reject { |k, _| k == "page" }
+      .to_a
       .map { |e| e.join(": ") }
       .join(", ")
   end

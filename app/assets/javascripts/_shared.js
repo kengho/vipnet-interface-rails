@@ -130,7 +130,7 @@ vipnetInterface = {
   },
 
   gotoHome: function() {
-    //if(vipnetInterface.params != {})
+    // if(vipnetInterface.params != {})
     if(Object.keys(vipnetInterface.params).length > 0) {
       vipnetInterface.params = {};
       vipnetInterface.nodes.ajax.load();
@@ -139,7 +139,7 @@ vipnetInterface = {
 
   clearSearchBar: function() {
     var $searchBar = $("#header__search").find("input[type=text]");
-    if($searchBar.val()) { searchBar.val(""); }
+    if($searchBar.val()) { $searchBar.val(""); }
   },
 };
 
