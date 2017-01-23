@@ -3,11 +3,11 @@ class Settings < RailsSettings::Base
   def self.set_defaults
     Settings.unscoped.where("thing_id is null").destroy_all
     Settings.values.each do |name, props|
-      if props[:default_value]
-        value = props[:default_value]
-      else
-        value = ""
-      end
+      value = if props[:default_value]
+                props[:default_value]
+              else
+                ""
+              end
       Settings.create!(var: name, value: value)
     end
   end
@@ -112,7 +112,6 @@ class Settings < RailsSettings::Base
       },
     }
   end
-
 
   def self.available_locales
     # ["ru", "en", ...]

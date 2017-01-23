@@ -2,13 +2,14 @@ class HwNode < ActiveRecord::Base
   belongs_to :coordinator
   belongs_to :ncc_node
   has_many :node_ips, dependent: :destroy
-  has_many :ascendants, dependent: :destroy,
+  has_many :ascendants,
+           dependent: :destroy,
            class_name: "HwNode",
-           foreign_key:"descendant_id"
+           foreign_key: "descendant_id"
   belongs_to :descendant,
              class_name: "HwNode",
-             foreign_key:"descendant_id"
-  validates_presence_of :descendant, unless: :type?
+             foreign_key: "descendant_id"
+  validates :descendant, presence: { unless: :type? }
 
   before_save :update_version_decoded, if: :version_changed?
 
@@ -29,7 +30,7 @@ class HwNode < ActiveRecord::Base
 
   def self.to_json_hw
     result = []
-    self.all.each do |e|
+    all.find_each do |e|
       result.push(eval(e.to_json_hw))
     end
 
@@ -37,22 +38,22 @@ class HwNode < ActiveRecord::Base
   end
 
   def to_json_hw
-    json = self.to_json(
+    json = to_json(
       include: {
         node_ips: {
           only: :u32,
         },
       },
-      only: [
-        :type,
-        :ncc_node_id,
-        :coordinator_id,
-        :descendant_id,
-        :creation_date,
-        :accessip,
-        :version,
-        :version_decoded,
-      ],
+      only: %i(
+        type
+        ncc_node_id
+        coordinator_id
+        descendant_id
+        creation_date
+        accessip
+        version
+        version_decoded
+      ),
     ).gsub("null", "nil")
     json = eval(json)
     tmp = json.clone
@@ -76,23 +77,23 @@ class HwNode < ActiveRecord::Base
     end
     tmp.reject! do |key, value|
       [nil, []].include?(value) ||
-      [:coordinator_id, :ncc_node_id, :descendant_id].include?(key) ||
-      false
+        %i(coordinator_id ncc_node_id descendant_id).include?(key)
     end
 
     tmp.to_json
   end
 
   def self.props_from_iplirconf
-    %i[
+    %i(
       accessip
       version
       version_decoded
-    ]
+    )
   end
 
   private
+
     def update_version_decoded
-      self.version_decoded = HwNode.decode_version(self.version)
+      self.version_decoded = HwNode.decode_version(version)
     end
 end

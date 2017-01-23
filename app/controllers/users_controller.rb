@@ -10,15 +10,17 @@ class UsersController < ApplicationController
   def destroy
     user = User.find_by(id: params[:id])
     render_nothing(:bad_request) unless user
-    if user.destroy
-      flash[:notice] = :user_destroyed
-    else
-      flash[:notice] = :error_destroying_user
-    end
+    flash[:notice] = if user.destroy
+                       :user_destroyed
+                     else
+                       :error_destroying_user
+                     end
   end
 
   def update
-    render_nothing(:unauthorized) and return unless current_user.id.to_s == params["id"]
+    unless current_user.id.to_s == params["id"]
+      render_nothing(:unauthorized) and return
+    end
 
     # Additional user settings.
     name = params["name"]
@@ -26,35 +28,36 @@ class UsersController < ApplicationController
     if corresponding_settings
       value = params["value"]
       accepted_values = corresponding_settings[:accepted_values]
-      if !accepted_values
-        current_user.settings[name] = value
-      elsif accepted_values.include?(value)
+      if !accepted_values || accepted_values.include?(value)
         current_user.settings[name] = value
       end
-      if current_user.save
-        @response = :user_settings_saved
-      else
-        @response = :error_saving_user_settings
-      end
+      @response = if current_user.save
+                    :user_settings_saved
+                  else
+                    :error_saving_user_settings
+                  end
     end
 
     # User emails and passwords.
     if params["user_session"]
       user_session = params["user_session"]
-      if current_user.reset_password_allowed
-        password_is_valid = true
-      elsif current_user.valid_password?(user_session["current_password"])
-        password_is_valid = true
-      else
-        password_is_valid = false
-      end
+      password_is_valid = current_user
+                            .valid_password?(user_session["current_password"])
+      password_is_accepted = if current_user.reset_password_allowed
+                               true
+                             elsif password_is_valid
+                               true
+                             else
+                               false
+                             end
 
-      unless password_is_valid
+      unless password_is_accepted
         @response = :error_validating_password
         respond_with(@response, template: "shared/user") and return
       end
 
-      password_confirmed = user_session["password"] == user_session["password_confirmation"]
+      password_confirmed = user_session["password"] ==
+                           user_session["password_confirmation"]
       unless password_confirmed
         @response = :error_confirmation_password
         respond_with(@response, template: "shared/user") and return
@@ -63,7 +66,7 @@ class UsersController < ApplicationController
       current_user.password = user_session["password"]
       current_user.password_confirmation = user_session["password_confirmation"]
       if current_user.changed? && current_user.save
-        current_user.update_attribute(:reset_password_allowed, nil)
+        current_user.update_attributes(reset_password_allowed: nil)
         @response = :password_successfully_changed
       else
         @response = :error_changing_password

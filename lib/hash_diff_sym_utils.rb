@@ -2,14 +2,13 @@ module HashDiffSymUtils
   def decode_changes(changes)
     action = { "+" => :add, "-" => :remove, "~" => :change }[changes.first]
     target = {}
-    target[:vid], target[:field], target[:index] = HashDiffSym.decode_property_path(changes[1])
+    target[:vid], target[:field], target[:index] =
+      HashDiffSym.decode_property_path(changes[1])
     if action == :change
       before = changes[2]
       after = changes[3]
     end
-    if action == :add || action == :remove
-      props = changes[2]
-    end
+    props = changes[2] if action == :add || action == :remove
 
     [action, target, props, before, after]
   end

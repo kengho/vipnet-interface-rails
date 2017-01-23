@@ -1,5 +1,5 @@
 class UserSessionsController < ApplicationController
-  skip_before_action :authenticate_user, only: ["new", "create"]
+  skip_before_action :authenticate_user, only: %w(new create)
 
   def new
     @user_session = UserSession.new
@@ -20,6 +20,7 @@ class UserSessionsController < ApplicationController
   end
 
   private
+
     def user_session_params
       params.require(:user_session).permit(:email, :password, :remember_me)
     end

@@ -19,7 +19,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
   test "coord_vid should be provided" do
     iplirconf_empty = fixture_file_upload(
       "iplirconfs/empty.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: iplirconf_empty })
     assert_equal("error", @response.body)
@@ -40,7 +40,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     @controller = Api::V1::NodenamesController.new
     added_coordinator2_nodename = fixture_file_upload(
       "nodenames/03_added_coordinator2.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: added_coordinator2_nodename, network_vid: "6670" })
     @controller = iplirconfs_controller
@@ -49,7 +49,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     # Upload iplirconf with administrator, client1 and coordinator1 (:add).
     initial_iplirconf = fixture_file_upload(
       "iplirconfs/00_0x1a0e000a_initial.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: initial_iplirconf, coord_vid: "0x1a0e000a" })
     assert_equal(Api::V1::BaseController::OK_RESPONSE, @response.body)
@@ -64,10 +64,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         creation_date: coordinator1.last_iplirconfs_created_at,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.1"),
+            u32: IPv4.u32("192.0.2.1"),
           },
           {
-            u32: IPv4::u32("192.0.2.3"),
+            u32: IPv4.u32("192.0.2.3"),
           },
         ],
       },
@@ -79,9 +79,9 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         version: "3.2-672",
         version_decoded: HwNode.decode_version("3.2-672"),
         creation_date: coordinator1.last_iplirconfs_created_at,
-        node_ips:[
+        node_ips: [
           {
-            u32: IPv4::u32("192.0.2.5"),
+            u32: IPv4.u32("192.0.2.5"),
           },
         ],
       },
@@ -95,7 +95,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         creation_date: coordinator1.last_iplirconfs_created_at,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.7"),
+            u32: IPv4.u32("192.0.2.7"),
           },
         ],
       },
@@ -105,10 +105,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     # 01_added_0x1a0e000d (:add)
     added_0x1a0e000d_iplirconf = fixture_file_upload(
       "iplirconfs/01_added_0x1a0e000d.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: added_0x1a0e000d_iplirconf, coord_vid: "0x1a0e000a" })
-    expected_hw_nodes.push({
+    expected_hw_nodes.push(
       type: "CurrentHwNode",
       coord_vid: "0x1a0e000a",
       ncc_node_vid: "0x1a0e000d",
@@ -118,13 +118,13 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       creation_date: coordinator1.last_iplirconfs_created_at,
       node_ips: [
         {
-          u32: IPv4::u32("192.0.2.9"),
+          u32: IPv4.u32("192.0.2.9"),
         },
         {
-          u32: IPv4::u32("192.0.2.10"),
+          u32: IPv4.u32("192.0.2.10"),
         },
       ],
-    })
+    )
     assert_hw_nodes_should_be expected_hw_nodes
 
     # 02_changed_client1_and_administrator
@@ -134,7 +134,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     # 0x1a0e000c client1 "accessip= 198.51.100.3" => "accessip= 192.0.2.7"
     changed_iplirconf = fixture_file_upload(
       "iplirconfs/02_0x1a0e000a_changed.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: changed_iplirconf, coord_vid: "0x1a0e000a" })
     expected_hw_nodes.change_where(
@@ -147,17 +147,19 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         version_decoded: HwNode.decode_version("3.2-673"),
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.55"),
+            u32: IPv4.u32("192.0.2.55"),
           },
         ],
-      }
+      },
     )
     expected_hw_nodes.change_where(
       {
         coord_vid: "0x1a0e000a",
         ncc_node_vid: "0x1a0e000c",
       },
-      { accessip: "192.0.2.7" }
+      {
+        accessip: "192.0.2.7",
+      },
     )
     expected_hw_nodes.push(
       {
@@ -174,9 +176,9 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         creation_date: coordinator1.last_iplirconfs_created_at,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.5"),
+            u32: IPv4.u32("192.0.2.5"),
           },
-        ]
+        ],
       },
     )
     assert_hw_nodes_should_be expected_hw_nodes
@@ -184,7 +186,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     # 03_0x1a0e000d_initial (:add)
     coordinator2_initial_iplirconf = fixture_file_upload(
       "iplirconfs/03_0x1a0e000d_initial.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: coordinator2_initial_iplirconf, coord_vid: "0x1a0e000d" })
     coordinator2 = Coordinator.find_by(vid: "0x1a0e000d")
@@ -199,10 +201,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.1"),
+            u32: IPv4.u32("192.0.2.1"),
           },
           {
-            u32: IPv4::u32("192.0.2.3"),
+            u32: IPv4.u32("192.0.2.3"),
           },
         ],
       },
@@ -216,7 +218,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.55"),
+            u32: IPv4.u32("192.0.2.55"),
           },
         ],
       },
@@ -230,7 +232,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.7"),
+            u32: IPv4.u32("192.0.2.7"),
           },
         ],
       },
@@ -243,10 +245,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.9"),
+            u32: IPv4.u32("192.0.2.9"),
           },
           {
-            u32: IPv4::u32("192.0.2.10"),
+            u32: IPv4.u32("192.0.2.10"),
           },
         ],
       },
@@ -258,7 +260,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     # 0x1a0e000b administrator "version= 3.2-673" => "version= 3.2-672"
     changed_iplirconf = fixture_file_upload(
       "iplirconfs/04_0x1a0e000d_changed.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: changed_iplirconf, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
@@ -269,7 +271,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       {
         version: "3.2-672",
         version_decoded: HwNode.decode_version("3.2-672"),
-      }
+      },
     )
     expected_hw_nodes.change_where(
       {
@@ -281,13 +283,13 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         # if not present here.
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.3"),
+            u32: IPv4.u32("192.0.2.3"),
           },
           {
-            u32: IPv4::u32("192.0.2.51"),
+            u32: IPv4.u32("192.0.2.51"),
           },
         ],
-      }
+      },
     )
     expected_hw_nodes.push(
       {
@@ -303,7 +305,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         creation_date: coordinator2.last_iplirconfs_created_at,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.1"),
+            u32: IPv4.u32("192.0.2.1"),
           },
         ],
       },
@@ -315,34 +317,34 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     ncc_node_0x1a0e000e.save!
     added_new_client_iplirconf = fixture_file_upload(
       "iplirconfs/05_0x1a0e000d_added_new_client.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: added_new_client_iplirconf, coord_vid: "0x1a0e000d" })
-    expected_hw_nodes.push({
+    expected_hw_nodes.push(
       type: "CurrentHwNode",
       coord_vid: "0x1a0e000d",
       ncc_node_vid: "0x1a0e000e",
       creation_date: coordinator2.last_iplirconfs_created_at,
-    })
+    )
     assert_hw_nodes_should_be expected_hw_nodes
 
     # 06_0x1a0e000d_deleted_ip (:remove)
     # 0x1a0e000a coordinator1 "deleted ip= 192.0.2.51"
     deleted_ip_iplirconf = fixture_file_upload(
       "iplirconfs/06_0x1a0e000d_deleted_ip.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: deleted_ip_iplirconf, coord_vid: "0x1a0e000d" })
-    expected_hw_nodes.push({
+    expected_hw_nodes.push(
       descendant_coord_vid: "0x1a0e000d",
       descendant_vid: "0x1a0e000a",
       creation_date: coordinator2.last_iplirconfs_created_at,
       node_ips: [
         {
-          u32: IPv4::u32("192.0.2.51"),
+          u32: IPv4.u32("192.0.2.51"),
         },
       ],
-    })
+    )
     expected_hw_nodes.change_where(
       {
         coord_vid: "0x1a0e000d",
@@ -351,10 +353,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       {
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.3"),
+            u32: IPv4.u32("192.0.2.3"),
           },
         ],
-      }
+      },
     )
     assert_hw_nodes_should_be expected_hw_nodes
 
@@ -362,7 +364,7 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
     # 0x1a0e000c client1 "deleted section"
     deleted_client1 = fixture_file_upload(
       "iplirconfs/07_0x1a0e000d_deleted_client1.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: deleted_client1, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
@@ -372,14 +374,14 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       },
       {
         type: "DeletedHwNode",
-      }
+      },
     )
     assert_hw_nodes_should_be expected_hw_nodes
 
     # 08_0x1a0e000d_restored_client1 (:add)
     restored_client1 = fixture_file_upload(
       "iplirconfs/08_0x1a0e000d_restored_client1.conf",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: restored_client1, coord_vid: "0x1a0e000d" })
     expected_hw_nodes.change_where(
@@ -394,12 +396,12 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
         version_decoded: nil,
         node_ips: [
           {
-            u32: IPv4::u32("192.0.2.18"),
+            u32: IPv4.u32("192.0.2.18"),
           },
         ],
-      }
+      },
     )
-    expected_hw_nodes.push({
+    expected_hw_nodes.push(
       descendant_coord_vid: "0x1a0e000d",
       descendant_vid: "0x1a0e000c",
       accessip: "203.0.113.3",
@@ -408,10 +410,10 @@ class Api::V1::IplirconfsControllerTest < ActionController::TestCase
       creation_date: coordinator2.last_iplirconfs_created_at,
       node_ips: [
         {
-          u32: IPv4::u32("192.0.2.7"),
+          u32: IPv4.u32("192.0.2.7"),
         },
       ],
-    })
+    )
     expected_hw_nodes.reject_nil_keys
     assert_hw_nodes_should_be expected_hw_nodes
   end

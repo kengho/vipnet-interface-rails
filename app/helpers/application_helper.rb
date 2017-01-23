@@ -6,13 +6,12 @@ module ApplicationHelper
   end
 
   def page_title
-    title_locale_path = "#{params[:controller].gsub("/", ".")}.#{params[:action]}.title"
+    title_locale_path = "#{params[:controller].tr('/', '.')}"\
+                        ".#{params[:action]}.title"
     title = t(title_locale_path)
-    if title.class == String
-      return t(title_locale_path)
-    else
-      return t("default.title")
-    end
+    return t("default.title") unless title.class == String
+
+    title
   end
 
   # https://gist.github.com/jeroenr/3142686
@@ -24,11 +23,12 @@ module ApplicationHelper
   end
 
   def paginate(collection, params = {})
-    will_paginate(collection, params.merge(renderer: ApplicationHelper::LinkRenderer))
+    paginate_params = params.merge(renderer: ApplicationHelper::LinkRenderer)
+    will_paginate(collection, paginate_params)
   end
 
   def i(path)
-    icons = YAML.load_file(Rails.root.join("config/icons.yml"))
+    icons = YAML.load_file(Rails.root.join("config", "icons.yml"))
     icon = icons.clone
     path.split(".").each do |turn|
       icon = icon[turn]

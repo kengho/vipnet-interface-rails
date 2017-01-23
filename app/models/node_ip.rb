@@ -1,6 +1,6 @@
 class NodeIp < ActiveRecord::Base
   belongs_to :hw_node
-  validates_uniqueness_of :u32, scope: [:hw_node_id, :type]
+  validates :u32, uniqueness: { scope: [:hw_node_id, :type] }
   validates :hw_node, presence: true
   validates_each :u32 do |record, attr, value|
     unless value.to_i.between?(0, 0xffffffff)

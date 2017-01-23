@@ -11,16 +11,18 @@ module Nodes::RowHelper
     when :creation_date
       creation_date_view = prop_view_datetime(
         @ncc_node.creation_date,
-        detalization
+        detalization,
       )
       if @ncc_node.creation_date_accuracy
         view = creation_date_view
       else
         case detalization
         when :short
-          view = render "nodes/row/creation_date", creation_date: creation_date_view
+          view = render "nodes/row/creation_date",
+                        creation_date: creation_date_view
         when :long
-          view = "#{I18n.t('nodes.row.creation_date.before')} #{creation_date_view}"
+          view = "#{I18n.t('nodes.row.creation_date.before')}
+            #{creation_date_view}".squish
         end
       end
 
@@ -32,15 +34,16 @@ module Nodes::RowHelper
       @ncc_node.hw_nodes.each do |hw_node|
         hw_node.node_ips.each { |node_ip| ips.push(node_ip.u32) }
       end
-      view = ips.sort.map {|ip| IPv4::ip(ip) }.join(", ")
+      view = ips.sort.map { |ip| IPv4.ip(ip) }.join(", ")
 
     when :accessip
       accessips = []
       @ncc_node.hw_nodes.each do |hw_node|
         accessips.push(
-          "<a href='?vid=#{hw_node.coordinator.vid}'>#{hw_node.coordinator.vid}</a>"\
+          "<a href='?vid=#{hw_node.coordinator.vid}'>"\
+          "#{hw_node.coordinator.vid}</a>"\
           "&nbsp;→&nbsp;"\
-          "#{hw_node.accessip}"
+          "#{hw_node.accessip}",
         )
       end
       view = accessips.join(", ")
@@ -57,9 +60,9 @@ module Nodes::RowHelper
         links = []
         tickets.each do |ticket|
           href = ticket
-            .ticket_system
-            .url_template
-            .sub("{id}", ticket.ticket_id.to_s)
+                   .ticket_system
+                   .url_template
+                   .sub("{id}", ticket.ticket_id.to_s)
           links.push(href: href, text: ticket.ticket_id.to_s)
         end
 
@@ -69,7 +72,7 @@ module Nodes::RowHelper
         when :long
           htmls = []
           links.each do |link|
-            htmls.push(render "shared/link", link)
+            htmls.push(render("shared/link", link))
           end
           view = htmls.join(", ")
         end
@@ -77,11 +80,11 @@ module Nodes::RowHelper
 
     when :enabled
       view = case @ncc_node.enabled
-      when true
-        I18n.t("boolean.true")
-      when false
-        I18n.t("boolean.false")
-      end
+             when true
+               I18n.t("boolean.true")
+             when false
+               I18n.t("boolean.false")
+             end
 
     when :network
       network_vid = @ncc_node.network.network_vid
@@ -90,43 +93,50 @@ module Nodes::RowHelper
 
     when :category
       view = case @ncc_node.category
-      when "client"
-        I18n.t("nodes.row.remote_button.info.categories.client")
-      when "server"
-        I18n.t("nodes.row.remote_button.info.categories.server")
-      end
+             when "client"
+               I18n.t("nodes.row.remote_button.info.categories.client")
+             when "server"
+               I18n.t("nodes.row.remote_button.info.categories.server")
+             end
 
     when :ncc
       if @ncc_node.server_number && @ncc_node.abonent_number
-        server_number_normal = sprintf("%05d", @ncc_node.server_number.to_i(16))
-        abonent_number_normal = sprintf("%05d", @ncc_node.abonent_number.to_i(16))
+        server_number_normal = format(
+          "%05d",
+          @ncc_node.server_number.to_i(16),
+        )
+        abonent_number_normal = format(
+          "%05d",
+          @ncc_node.abonent_number.to_i(16),
+        )
         view = "#{server_number_normal}&nbsp;→&nbsp;#{abonent_number_normal}"
       end
 
     when :clients_registered
       if @ncc_node.category == "server"
-        clients_registered = NccNode.where_prop_like("mftp_server_vid", @ncc_node.vid)
+        clients_registered = NccNode.where_prop_like(
+          "mftp_server_vid",
+          @ncc_node.vid,
+        )
         if clients_registered
-          view = render "shared/linky_button", {
-            action: "load",
-            params: { "mftp_server_vid" => @ncc_node.vid },
-            text: clients_registered.size,
-          }
+          view = render "shared/linky_button",
+                        action: "load",
+                        params: { "mftp_server_vid" => @ncc_node.vid },
+                        text: clients_registered.size
         end
       end
 
     when :mftp_server
       mftp_server = @ncc_node.mftp_server
       if mftp_server
-        view = render "shared/linky_button", {
-          action: "load",
-          params: { "vid" => mftp_server.vid },
-          text: mftp_server.vid,
-        }
+        view = render "shared/linky_button",
+                      action: "load",
+                      params: { "vid" => mftp_server.vid },
+                      text: mftp_server.vid
       end
     end
 
-    return view || ""
+    view || ""
   end
 
   def prop_view_version(field, detalization = :short)
@@ -137,9 +147,10 @@ module Nodes::RowHelper
       long_versions = []
       @ncc_node.hw_nodes.each do |hw_node|
         long_versions.push(
-          "<a href='?vid=#{hw_node.coordinator.vid}'>#{hw_node.coordinator.vid}</a>"\
+          "<a href='?vid=#{hw_node.coordinator.vid}'>"\
+          "#{hw_node.coordinator.vid}</a>"\
           "&nbsp;→&nbsp;"\
-          "#{hw_node[field]}"
+          "#{hw_node[field]}",
         )
       end
 

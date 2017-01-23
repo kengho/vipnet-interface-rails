@@ -1,4 +1,4 @@
-<% classes = %w[mdl-js-snackbar mdl-snackbar] %>
+<% classes = %w(mdl-js-snackbar mdl-snackbar) %>
 <% classes.push("mdl-snackbar--light") if light if defined?(light) %>
 <%= content_tag(:div, id: "snackbar", class: classes) do %>
   <%= content_tag(:div, "", class: "mdl-snackbar__text") %>

@@ -1,6 +1,8 @@
 class User < ActiveRecord::Base
-  validates_presence_of :role
-  validates_uniqueness_of :role, conditions: -> { where(role: "administrator") }
+  validates :role, presence: true
+  validates :role, uniqueness: {
+    conditions: -> { where(role: "administrator") },
+  }
 
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
@@ -10,7 +12,7 @@ class User < ActiveRecord::Base
 
   def self.roles
     {
-      list: %w[administrator user editor],
+      list: %w(administrator user editor),
       default: "user",
     }
   end

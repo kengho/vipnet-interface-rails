@@ -34,7 +34,7 @@ class ResetPasswordController < ApplicationController
     user = User.find_using_perishable_token(params[:token])
     render_nothing(:unauthorized) unless user
     UserSession.create(user)
-    user.update_attribute(:reset_password_allowed, true)
+    user.update_attributes(reset_password_allowed: true)
     redirect_to edit_user_url(user)
   end
 end

@@ -15,7 +15,11 @@ class Api::V1::AccessipsControllerTest < ActionController::TestCase
     get(:index, params: { token: "GET_INFORMATION_TOKEN" })
     assert assigns["response"][:errors]
     assert_equal("external", assigns["response"][:errors][0][:title])
-    assert_routing(assigns["response"][:errors][0][:links][:related][:href], { controller: "api/v1/doc", action: "index" })
+    assert_routing(
+      assigns["response"][:errors][0][:links][:related][:href],
+      controller: "api/v1/doc",
+      action: "index",
+    )
   end
 
   test "should return error when no valid token provided" do

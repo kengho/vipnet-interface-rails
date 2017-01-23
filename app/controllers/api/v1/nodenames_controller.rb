@@ -1,6 +1,6 @@
 class Api::V1::NodenamesController < Api::V1::BaseController
   def create
-    unless (params[:file] && params[:network_vid])
+    unless params[:file] && params[:network_vid]
       Rails.logger.error("Incorrect params #{params}")
       render plain: ERROR_RESPONSE and return
     end
@@ -23,10 +23,11 @@ class Api::V1::NodenamesController < Api::V1::BaseController
     records = nodename.hash[:id]
 
     ascendants_ids = []
-    eval(diff.entity).each do |changes|
+    diff.safe_eval_entity.each do |changes|
       changes_expanded = HashDiffSymUtils.expand_changes(changes)
-      changes_expanded.each do |changes|
-        action, target, props, before, after = HashDiffSymUtils.decode_changes(changes)
+      changes_expanded.each do |change|
+        action, target, props, before, after = HashDiffSymUtils
+                                                 .decode_changes(change)
         curent_network_vid = VipnetParser.network(target[:vid])
 
         # Skip ignored networks.
@@ -35,8 +36,12 @@ class Api::V1::NodenamesController < Api::V1::BaseController
 
         # Skip extra nodes.
         # ("we admin this network" means "we have Nodename for it".)
-        we_admin_this_network = !!Nodename.joins(:network)
-          .find_by("networks.network_vid": curent_network_vid)
+        we_admin_this_network = Nodename
+                                  .joins(:network)
+                                  .find_by(
+                                    "networks.network_vid" =>
+                                      curent_network_vid,
+                                  )
         it_is_internetworking_node = network.network_vid != curent_network_vid
         next if we_admin_this_network && it_is_internetworking_node
 
@@ -47,7 +52,8 @@ class Api::V1::NodenamesController < Api::V1::BaseController
           next if props[:category] == :group
         end
 
-        curent_network = Network.find_or_create_by(network_vid: curent_network_vid)
+        curent_network = Network
+                           .find_or_create_by(network_vid: curent_network_vid)
 
         if action == :add
           deleted_ncc_node = DeletedNccNode.find_by(vid: target[:vid])
@@ -80,21 +86,23 @@ class Api::V1::NodenamesController < Api::V1::BaseController
           else
             Rails.logger.info(
               "CurrentNccNode with vid '#{target[:vid]}'
-              doesn't exists, nothing to delete"
-            .squish)
+              doesn't exists, nothing to delete".squish,
+            )
           end
         end
 
+        # FIXME
+        # rubocop:disable Metrics/BlockNesting
         if action == :change
           # [["~", "0x1a0e000c.:name", "client1", "client1-renamed1"]]
           if NccNode.props_from_nodename.include?(target[:field])
             changing_ncc_node = CurrentNccNode.find_by(vid: target[:vid])
             if changing_ncc_node
               ascendant = NccNode
-                .where(id: ascendants_ids)
-                .find_by(descendant: changing_ncc_node)
+                            .where(id: ascendants_ids)
+                            .find_by(descendant: changing_ncc_node)
               if ascendant
-                ascendant.update_attribute(target[:field], before)
+                ascendant.update_attributes(target[:field] => before)
               else
                 new_ascendant = NccNode.new(
                   :descendant => changing_ncc_node,
@@ -104,23 +112,27 @@ class Api::V1::NodenamesController < Api::V1::BaseController
                 if new_ascendant.save!
                   ascendants_ids.push(new_ascendant.id)
                 else
-                  Rails.logger.info("Unable to save new_ascendant: #{new_ascendant.inspect}")
+                  Rails.logger.info(
+                    "Unable to save new_ascendant:
+                    #{new_ascendant.inspect}".squish,
+                  )
                 end
               end
-              changing_ncc_node.update_attribute(target[:field], after)
+              changing_ncc_node.update_attributes(target[:field] => after)
             else
               Rails.logger.info(
                 "CurrentNccNode with vid '#{target[:vid]}'
-                doesn't exists, nothing to change"
-              .squish)
+                doesn't exists, nothing to change".squish,
+              )
             end
           else
             Rails.logger.info(
               "Trying to change wrong field '#{target[:field]}'
-              in CurrentNccNode via nodename API"
-            .squish)
+              in CurrentNccNode via nodename API".squish,
+            )
           end
         end
+        # rubocop:enable Metrics/BlockNesting
       end
     end
 

@@ -2,7 +2,7 @@ class LocalesTest < ActionController::TestCase
   test "have same keys" do
     locales = {}
     Settings.available_locales.each do |locale|
-      locales[locale] = YAML.load(File.read("config/locales/#{locale}.yml"))[locale]
+      locales[locale] = YAML.safe_load(File.read("config/locales/#{locale}.yml"))[locale]
     end
     locales.each do |locale1, locales1|
       locales.each do |locale2, locales2|
@@ -11,7 +11,7 @@ class LocalesTest < ActionController::TestCase
         compare_hash_by_keys(
           diff,
           [locale1, locales1],
-          [locale2, locales2]
+          [locale2, locales2],
         )
         assert_empty(diff)
       end
@@ -24,18 +24,16 @@ class LocalesTest < ActionController::TestCase
   end
 
   def no_hash1_keys_in_hash2(diff, hash1, hash2)
-    hash1[1].each do |key, value|
-      if hash2[1].class == Hash
-        if hash1[1][key].class != Hash
-          unless hash2[1].key?(key)
-            diff.push("no '#{key}' of '#{hash1[0]}' in '#{hash2[0]}'")
-          end
-        else
-          no_hash1_keys_in_hash2(
-            diff,
-            [hash1[0], hash1[1][key]], [hash2[0], hash2[1][key]]
-          )
-        end
+    hash1.second.each_key do |key|
+      next unless hash2.second.class == Hash
+      if hash1.second[key].class != Hash
+        next if hash2.second.key?(key)
+        diff.push("no '#{key}' of '#{hash1.first}' in '#{hash2.first}'")
+      else
+        no_hash1_keys_in_hash2(
+          diff,
+          [hash1.first, hash1.second[key]], [hash2.first, hash2.second[key]]
+        )
       end
     end
   end

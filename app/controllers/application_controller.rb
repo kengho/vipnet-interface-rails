@@ -7,21 +7,16 @@ class ApplicationController < ActionController::Base
   helper_method :current_user_session, :current_user, :current
 
   private
-    def current(settings)
-      system_settings =
-         Settings[settings] ||
-         Settings.values[settings][:default_value] ||
-         true
-      if current_user
-        current_settings =
-          current_user.settings[settings] ||
-          system_settings ||
-          true
-      else
-        current_settings = system_settings
-      end
 
-      current_settings
+    def current(settings)
+      system_settings = Settings[settings] ||
+                        Settings.values[settings][:default_value]
+
+      if current_user
+        current_user.settings[settings] || system_settings
+      else
+        system_settings
+      end
     end
 
     def set_locale
@@ -57,9 +52,7 @@ class ApplicationController < ActionController::Base
       # "_" is "cache buster".
       # http://stackoverflow.com/a/5355707/6376451
       clear_params.reject! do |key, value|
-        value.empty? ||
-        %w[controller action format _].include?(key) ||
-        false
+        value.empty? || %w(controller action format _).include?(key)
       end
 
       clear_params
@@ -76,24 +69,25 @@ class ApplicationController < ActionController::Base
           "ver" => "version_decoded",
           "version_hw" => "version",
           "ver_hw" => "version",
-         }
+        }
         request = expanded_params["search"]
 
         if request =~ /ids:(?<ids>.*)/
-          expanded_params[:vid] = Regexp.last_match(:ids)
-            .split(",")
-            .map(&:strip)
+          expanded_params[:vid] = Regexp
+                                    .last_match(:ids)
+                                    .split(",")
+                                    .map(&:strip)
           custom_search = true
         else
           request.split(",").each do |partial_request|
-            if partial_request =~ /^(?<prop>.+):(?<value>.+)$/
-              prop = Regexp.last_match(:prop).strip
-              prop = aliases[prop] if aliases[prop]
-              value = Regexp.last_match(:value).strip
+            next unless partial_request =~ /^(?<prop>.+):(?<value>.+)$/
 
-              expanded_params[prop] = value
-              custom_search = true
-            end
+            prop = Regexp.last_match(:prop).strip
+            prop = aliases[prop] if aliases[prop]
+            value = Regexp.last_match(:value).strip
+
+            expanded_params[prop] = value
+            custom_search = true
           end
         end
         expanded_params.delete("search") if custom_search
@@ -105,8 +99,7 @@ class ApplicationController < ActionController::Base
     respond_to :js
 
     def check_demo_mode
-      if Settings.demo_mode == "true"
-        render "shared/unavailable_in_demo_mode" and return
-      end
+      demo_mode = Settings.demo_mode == "true"
+      render "shared/unavailable_in_demo_mode" and return if demo_mode
     end
 end

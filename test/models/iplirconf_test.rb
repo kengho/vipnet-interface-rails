@@ -6,7 +6,7 @@ class IplirconfsTest < ActiveSupport::TestCase
   end
 
   test "shouldn't save without coordinator" do
-    iplirconf = Iplirconf.new()
+    iplirconf = Iplirconf.new
     assert_not iplirconf.save
   end
 

@@ -8,7 +8,7 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
       network: networks(:network1),
       enabled: true,
       category: "client",
-      creation_date: DateTime.now,
+      creation_date: DateTime.current,
       creation_date_accuracy: true,
     )
     ncc_node.save!
@@ -28,9 +28,9 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
       version_decoded: HwNode.decode_version("3.0-670"),
     )
     hw_node2.save!
-    NodeIp.create!(hw_node: hw_node1, u32: IPv4::u32("192.0.2.1"))
-    NodeIp.create!(hw_node: hw_node1, u32: IPv4::u32("192.0.2.2"))
-    NodeIp.create!(hw_node: hw_node2, u32: IPv4::u32("192.0.2.3"))
+    NodeIp.create!(hw_node: hw_node1, u32: IPv4.u32("192.0.2.1"))
+    NodeIp.create!(hw_node: hw_node1, u32: IPv4.u32("192.0.2.2"))
+    NodeIp.create!(hw_node: hw_node2, u32: IPv4.u32("192.0.2.3"))
   end
 
   test "should return error if no valid token provided" do
@@ -44,7 +44,8 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
     assert_equal("external", assigns["response"][:errors][0][:title])
     assert_routing(
       assigns["response"][:errors][0][:links][:related][:href],
-      { controller: "api/v1/doc", action: "index" }
+      controller: "api/v1/doc",
+      action: "index",
     )
   end
 
@@ -60,26 +61,32 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
   end
 
   test "should return information using only" do
-    get(:index, params: {
-      vid: "0x1a0e0001",
-      only: ["ip", "category", "version", "version_decoded", "jibberish"],
-      token: "GET_INFORMATION_TOKEN"
-    })
-    assert_equal({ data: {
-      "ip" => {
-        "0x1a0e000a" => ["192.0.2.1", "192.0.2.2"],
-        "0x1a0e000b" => ["192.0.2.3"],
+    get(
+      :index,
+      params: {
+        vid: "0x1a0e0001",
+        only: %w(ip category version version_decoded jibberish),
+        token: "GET_INFORMATION_TOKEN",
       },
-      "version" => {
-        "0x1a0e000a" => "0.3-2",
-        "0x1a0e000b" => "3.0-670",
+    )
+    expected_response = {
+      data: {
+        "ip" => {
+          "0x1a0e000a" => %w(192.0.2.1 192.0.2.2),
+          "0x1a0e000b" => ["192.0.2.3"],
+        },
+        "version" => {
+          "0x1a0e000a" => "0.3-2",
+          "0x1a0e000b" => "3.0-670",
+        },
+        "version_decoded" => {
+          "0x1a0e000a" => HwNode.decode_version("0.3-2"),
+          "0x1a0e000b" => HwNode.decode_version("3.0-670"),
+        },
+        "category" => "client",
       },
-      "version_decoded" => {
-        "0x1a0e000a" => HwNode.decode_version("0.3-2"),
-        "0x1a0e000b" => HwNode.decode_version("3.0-670"),
-      },
-      "category" => "client",
-    }}, assigns["response"])
+    }
+    assert_equal(expected_response, assigns["response"])
   end
 
   test "should return error if only is not array" do

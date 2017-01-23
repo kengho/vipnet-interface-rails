@@ -6,7 +6,7 @@ class NetworksTest < ActiveSupport::TestCase
   end
 
   test "shouldn't save without network_vid" do
-    network = Network.new()
+    network = Network.new
     assert_not network.save
   end
 

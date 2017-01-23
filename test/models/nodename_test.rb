@@ -6,7 +6,7 @@ class NodenamesTest < ActiveSupport::TestCase
   end
 
   test "shouldn't save without network" do
-    nodename = Nodename.new()
+    nodename = Nodename.new
     assert_not nodename.save
   end
 

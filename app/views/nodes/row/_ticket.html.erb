@@ -3,7 +3,7 @@
     <%= render "shared/link", links.first %>
   <% end %>
 <% else %>
-  <%= content_tag(:div, class: %w[ticket__multi ticket__multi--hover]) do %>
+  <%= content_tag(:div, class: %w(ticket__multi ticket__multi--hover)) do %>
     <%= render "shared/link", links.first %>
   <% end %>
   <%= content_tag(:div, class: ["ticket__multi--list"]) do %>

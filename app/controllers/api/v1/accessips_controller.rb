@@ -13,7 +13,7 @@ class Api::V1::AccessipsController < Api::V1::BaseController
       }]
       render json: @response and return
     end
-    unless IPv4::ip?(params[:accessip])
+    unless IPv4.ip?(params[:accessip])
       @response[:errors] = [{
         title: "external",
         detail: "Expected valid IPv4 as 'accessip' param",
@@ -22,14 +22,14 @@ class Api::V1::AccessipsController < Api::V1::BaseController
     end
 
     ncc_node = CurrentNccNode
-      .joins(:hw_nodes)
-      .find_by("hw_nodes.accessip": params[:accessip])
+                 .joins(:hw_nodes)
+                 .find_by("hw_nodes.accessip" => params[:accessip])
     if ncc_node
       @response[:data] = { "vid" => ncc_node.vid }
-      render json: @response and return
     else
       @response[:errors] = [{ title: "external", detail: "Node not found" }]
-      render json: @response and return
     end
+
+    render json: @response and return
   end
 end

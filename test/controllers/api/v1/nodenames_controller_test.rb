@@ -20,7 +20,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
   test "network_vid should be provided" do
     nodename_empty = fixture_file_upload(
       "nodenames/empty.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: nodename_empty })
     assert_equal("error", @response.body)
@@ -32,7 +32,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     # 00_initial (:add)
     initial_nodename = fixture_file_upload(
       "nodenames/00_initial.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: initial_nodename, network_vid: "6670" })
     network1 = Network.first
@@ -67,10 +67,10 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     # 01_added_client1 (:add)
     added_client1_nodename = fixture_file_upload(
       "nodenames/01_added_client1.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: added_client1_nodename, network_vid: "6670" })
-    expected_ncc_nodes.push({
+    expected_ncc_nodes.push(
       type: "CurrentNccNode",
       vid: "0x1a0e000c",
       name: "client1",
@@ -81,33 +81,36 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       creation_date: network1.last_nodenames_created_at,
       creation_date_accuracy: true,
       network_vid: "6670",
-    })
+    )
     assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 02_renamed_client1 (:change)
     renamed_client1_nodename = fixture_file_upload(
       "nodenames/02_renamed_client1.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: renamed_client1_nodename, network_vid: "6670" })
-    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" },
+    expected_ncc_nodes.change_where(
+      {
+        vid: "0x1a0e000c",
+      },
       {
         name: "client1-renamed1",
         enabled: false,
-      }
+      },
     )
-    expected_ncc_nodes.push({
+    expected_ncc_nodes.push(
       descendant_vid: "0x1a0e000c",
       name: "client1",
       enabled: true,
       creation_date: network1.last_nodenames_created_at,
-    })
+    )
     assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 03_added_coordinator2 (:add)
     added_coordinator2_nodename = fixture_file_upload(
       "nodenames/03_added_coordinator2.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: added_coordinator2_nodename, network_vid: "6670" })
     expected_ncc_nodes.push(
@@ -127,46 +130,59 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
         descendant_vid: "0x1a0e000c",
         enabled: false,
         creation_date: network1.last_nodenames_created_at,
-      }
+      },
     )
-    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" }, { enabled: true })
+    expected_ncc_nodes.change_where(
+      {
+        vid: "0x1a0e000c",
+      },
+      {
+        enabled: true,
+      },
+    )
     assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 04_client1_moved_to_coordinator2 (:change)
     client1_moved_to_coordinator2_nodename = fixture_file_upload(
       "nodenames/04_client1_moved_to_coordinator2.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: client1_moved_to_coordinator2_nodename, network_vid: "6670" })
-    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" },
+    expected_ncc_nodes.change_where(
+      {
+        vid: "0x1a0e000c",
+      },
       {
         abonent_number: "0001",
         server_number: "0002",
-      }
+      },
     )
     expected_ncc_nodes.push(
-      {
-        descendant_vid: "0x1a0e000c",
-        abonent_number: "0002",
-        server_number: "0001",
-        creation_date: network1.last_nodenames_created_at,
-      }
+      descendant_vid: "0x1a0e000c",
+      abonent_number: "0002",
+      server_number: "0001",
+      creation_date: network1.last_nodenames_created_at,
     )
     assert_ncc_nodes_should_be expected_ncc_nodes
 
     # 05_client1_disabled (:change)
     client1_disabled_nodename = fixture_file_upload(
       "nodenames/05_client1_disabled.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: client1_disabled_nodename, network_vid: "6670" })
-    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" }, { enabled: false })
-    expected_ncc_nodes.push(
+    expected_ncc_nodes.change_where(
       {
-        descendant_vid: "0x1a0e000c",
-        enabled: true,
-        creation_date: network1.last_nodenames_created_at,
-      }
+        vid: "0x1a0e000c",
+      },
+      {
+        enabled: false,
+      },
+    )
+    expected_ncc_nodes.push(
+      descendant_vid: "0x1a0e000c",
+      enabled: true,
+      creation_date: network1.last_nodenames_created_at,
     )
     assert_ncc_nodes_should_be expected_ncc_nodes
 
@@ -175,7 +191,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     Settings.networks_to_ignore = "6671"
     added_node_from_ignoring_network_nodename = fixture_file_upload(
       "nodenames/06_added_node_from_ignoring_network.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: added_node_from_ignoring_network_nodename, network_vid: "6670" })
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -190,7 +206,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     Nodename.push(hash: {}, belongs_to: another_network_we_admin)
     added_internetworking_node_we_admins_nodename = fixture_file_upload(
       "nodenames/07_added_internetworking_node_we_admins.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: added_internetworking_node_we_admins_nodename, network_vid: "6670" })
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -203,7 +219,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     # ("group" isn't in NccNode.props_from_nodename, so there souldn't be any changes.)
     group_changed_nodename = fixture_file_upload(
       "nodenames/08_group_changed.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: group_changed_nodename, network_vid: "6670" })
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -211,28 +227,34 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     # 09_client1_removed (:remove)
     client1_removed_nodename = fixture_file_upload(
       "nodenames/09_client1_removed.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: client1_removed_nodename, network_vid: "6670" })
-    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" },
+    expected_ncc_nodes.change_where(
+      {
+        vid: "0x1a0e000c",
+      },
       {
         type: "DeletedNccNode",
         deletion_date: network1.last_nodenames_created_at,
-      }
+      },
     )
     assert_ncc_nodes_should_be expected_ncc_nodes
 
     # restore 0x1a0e000c client1
     restore_client1_nodename = fixture_file_upload(
       "nodenames/08_group_changed.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: restore_client1_nodename, network_vid: "6670" })
-    expected_ncc_nodes.change_where({ vid: "0x1a0e000c" },
+    expected_ncc_nodes.change_where(
+      {
+        vid: "0x1a0e000c",
+      },
       {
         type: "CurrentNccNode",
         deletion_date: nil,
-      }
+      },
     )
     expected_ncc_nodes.reject_nil_keys
     assert_ncc_nodes_should_be expected_ncc_nodes
@@ -240,10 +262,10 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
     # 10_added_internetworking_node
     added_internetworking_node_nodename = fixture_file_upload(
       "nodenames/10_added_internetworking_node.doc",
-      "application/octet-stream"
+      "application/octet-stream",
     )
     post(:create, params: { file: added_internetworking_node_nodename, network_vid: "6670" })
-    expected_ncc_nodes.push({
+    expected_ncc_nodes.push(
       type: "CurrentNccNode",
       vid: "0x1a0f000d",
       name: "3rd-party",
@@ -254,7 +276,7 @@ class Api::V1::NodenamesControllerTest < ActionController::TestCase
       creation_date: network1.last_nodenames_created_at,
       creation_date_accuracy: true,
       network_vid: "6671",
-    })
+    )
     assert_ncc_nodes_should_be expected_ncc_nodes
   end
 end

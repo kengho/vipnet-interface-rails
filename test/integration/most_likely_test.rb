@@ -40,7 +40,8 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
   end
 
   test "should calculate most likely version out of all" do
-    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001"); ncc_node.save!
+    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001")
+    ncc_node.save!
     CurrentHwNode.create!(coordinator: @coordinator1, ncc_node: ncc_node, version: "4")
     CurrentHwNode.create!(coordinator: @coordinator2, ncc_node: ncc_node, version: "3")
     CurrentHwNode.create!(coordinator: @coordinator3, ncc_node: ncc_node, version: "4")
@@ -80,7 +81,8 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
   end
 
   test "should calculate most likely version out of all (weights)" do
-    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001"); ncc_node.save!
+    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001")
+    ncc_node.save!
 
     # 0x1a0e000a: 2 clients registered
     CurrentNccNode.create!(
@@ -142,7 +144,8 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
   end
 
   test "should calculate most likely version out of all (lowest vid)" do
-    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001"); ncc_node.save!
+    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001")
+    ncc_node.save!
 
     # 0x1a0e000a: 1 client registered
     CurrentNccNode.create!(
@@ -186,13 +189,15 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
   end
 
   test "should work if any relation of hw_nodes is given" do
-    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001"); ncc_node.save!
+    ncc_node = CurrentNccNode.new(network: @network1, vid: "0x1a0e0001")
+    ncc_node.save!
 
     hw_node = CurrentHwNode.new(
       coordinator: @coordinator1,
       ncc_node: ncc_node,
       version: "4",
-    ); hw_node.save!
+    )
+    hw_node.save!
     HwNode.create!(descendant: hw_node, version: "3")
     HwNode.create!(descendant: hw_node, version: "3.2")
     HwNode.create!(descendant: hw_node, version: "3.1")
@@ -203,7 +208,7 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
         prop: :version,
         ncc_node: ncc_node,
         hw_nodes: HwNode.all,
-      )
+      ),
     )
   end
 end

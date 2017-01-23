@@ -20,7 +20,7 @@
   vipnetInterface.nodes.ajax.load(<%= @params.to_json.html_safe %>);
 <% end %>
 
-<%= content_tag(:div, class: %w[mdl-layout mdl-js-layout mdl-layout--fixed-header]) do %>
+<%= content_tag(:div, class: %w(mdl-layout mdl-js-layout mdl-layout--fixed-header)) do %>
   <%= render "progress" %>
   <%= render "header" %>
 

@@ -1,6 +1,6 @@
-ENV['RAILS_ENV'] ||= 'test'
-require File.expand_path('../../config/environment', __FILE__)
-require 'rails/test_help'
+ENV["RAILS_ENV"] ||= "test"
+require File.expand_path("../../config/environment", __FILE__)
+require "rails/test_help"
 
 # http://stackoverflow.com/a/10980700/6376451
 include ActionDispatch::TestProcess
@@ -39,13 +39,15 @@ class ActiveSupport::TestCase
   end
 
   def get_js(action, params)
-    get(action, params.merge(format: :js))
+    params_expanded = params[:params].clone
+    params_expanded[:format] = :js
+    get(action, params: params_expanded)
   end
 end
 
 class Array
   def sort_ncc
-    self.sort! do |a, b|
+    sort! do |a, b|
       if a[:vid] && b[:vid]
         a[:vid] <=> b[:vid]
       elsif a[:vid] && b[:descendant_vid]
@@ -59,26 +61,24 @@ class Array
   end
 
   def sort_hw
-    self.sort! do |a, b|
-      if a[:ncc_node_vid] && a[:coord_vid] &&
-         b[:ncc_node_vid] && b[:coord_vid]
+    sort! do |a, b|
+      if a[:ncc_node_vid] && a[:coord_vid] && b[:ncc_node_vid] && b[:coord_vid]
         [a[:ncc_node_vid], a[:coord_vid], a[:creation_date]] <=>
-        [b[:ncc_node_vid], b[:coord_vid], b[:creation_date]]
+          [b[:ncc_node_vid], b[:coord_vid], b[:creation_date]]
       elsif a[:ncc_node_vid] && a[:coord_vid] && b[:descendant_vid] && b[:descendant_coord_vid]
         1
       elsif a[:descendant_vid] && a[:descendant_coord_vid] && b[:ncc_node_vid] && b[:coord_vid]
         -1
-      elsif a[:descendant_vid] && a[:descendant_coord_vid] &&
-            b[:descendant_vid] && b[:descendant_coord_vid]
+      elsif a[:descendant_vid] && a[:descendant_coord_vid] && b[:descendant_vid] && b[:descendant_coord_vid]
         [a[:descendant_vid], a[:descendant_coord_vid], a[:creation_date]] <=>
-        [b[:descendant_vid], b[:descendant_coord_vid], b[:creation_date]]
+          [b[:descendant_vid], b[:descendant_coord_vid], b[:creation_date]]
       end
     end
   end
 
   def which_indexes(hash)
     indexes = []
-    self.each_with_index do |_, i|
+    each_with_index do |_, i|
       indexes.push(i) if self[i] == self[i].merge(hash)
     end
     indexes
@@ -90,11 +90,11 @@ class Array
 
   def delete_where(where)
     which_indexes(where).each { |i| self[i] = :to_delete }
-    self.delete_if { |e| e == :to_delete }
+    delete_if { |e| e == :to_delete }
   end
 
   def reject_nil_keys
-    self.each { |h| h.reject! { |_, v| v == nil }}
+    each { |h| h.reject! { |_, v| v.nil? } }
   end
 end
 

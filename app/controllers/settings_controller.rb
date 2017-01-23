@@ -15,27 +15,32 @@ class SettingsController < ApplicationController
       saved_successfully = true
       params.each do |param, value|
         settings = Settings.find_by(var: param)
-        if settings
-          unless settings.update_attribute(:value, value)
-            saved_successfully = false
-            break
-          end
+
+        next unless settings
+        unless settings.update_attributes(value: value)
+          saved_successfully = false
+          break
         end
       end
-      if saved_successfully
-        flash[:notice] = :settings_saved
-      else
-        flash[:notice] = :error_saving_settings
-      end
+      flash[:notice] = if saved_successfully
+                         :settings_saved
+                       else
+                         :error_saving_settings
+                       end
 
     elsif params[:users]
       user = User.find(params[:id])
       return unless user
-      if user.update_attributes(role: params[:role], email: params[:email])
-        flash[:notice] = :user_saved
-      else
-        flash[:notice] = :error_saving_user
-      end
+
+      user_updated = user.update_attributes(
+        role: params[:role],
+        email: params[:email],
+      )
+      flash[:notice] = if user_updated
+                         :user_saved
+                       else
+                         :error_saving_user
+                       end
 
     elsif params[:add_user]
       user = User.new(
