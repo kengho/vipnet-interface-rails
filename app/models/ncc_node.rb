@@ -309,7 +309,11 @@ class NccNode < ActiveRecord::Base
 
   def self.js_data
     js_data = {}
-    all.find_each do |ncc_node|
+
+    # "find_each" is ineffective here.
+    # TODO: benchmark.
+    # rubocop: disable Rails/FindEach:
+    all.each do |ncc_node|
       ncc_node = ncc_node.descendant if ncc_node.descendant
       js_data[ncc_node.vid] = ncc_node.as_json(
         only: %i(
@@ -323,6 +327,7 @@ class NccNode < ActiveRecord::Base
         ),
       )
     end
+    # rubocop: enable Rails/FindEach:
 
     js_data
   end
