@@ -1,9 +1,13 @@
 vipnetInterface.nodes.export = {
   data: {},
+  currentPageVids: [],
   lastSelectedRowVid: null,
   CSVSeparator: ";",
 
   updateData: function(data) {
+    // currentPageVids == ["0x1a0e0001", "0x1a0e0002", ...]
+    vipnetInterface.nodes.export.currentPageVids = Object.keys(data)
+
     // "data" is a jsoned object passed from NodesController#load.
     // "vipnetInterface.nodes.export.data" is the stored data.
     // This function
@@ -52,7 +56,12 @@ vipnetInterface.nodes.export = {
 
   unselectAllRows: function() {
     Object.keys(vipnetInterface.nodes.export.data).forEach(function(vid, _) {
-      vipnetInterface.nodes.export.unSelectRow(vid);
+      // Remove all not current data and unselect everything that remains.
+      if ($.inArray(vid, vipnetInterface.nodes.export.currentPageVids) == -1) {
+        delete vipnetInterface.nodes.export.data[vid];
+      } else {
+        vipnetInterface.nodes.export.unSelectRow(vid);
+      }
     });
   },
 
