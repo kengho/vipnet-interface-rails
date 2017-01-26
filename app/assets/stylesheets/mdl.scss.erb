@@ -68,10 +68,14 @@ $snackbar-light-text-color: black;
   background-color: $primary-color~ !important;
 }
 
-.mdl-textfield__label {
-  .mdl-textfield--floating-label.is-focused & {
-    color: $primary-color~ !important;
-  }
+// .mdl-textfield__label {
+//   .mdl-textfield--floating-label.is-focused & {
+//     color: $primary-color~ !important;
+//   }
+// }
+
+.mdl-textfield--floating-label.is-focused .mdl-textfield__label {
+  color: $primary-color~ !important;
 }
 
 .mdl-checkbox.is-checked .mdl-checkbox__box-outline {
