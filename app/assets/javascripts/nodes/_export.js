@@ -57,7 +57,7 @@ vipnetInterface.nodes.export = {
   unselectAllRows: function() {
     Object.keys(vipnetInterface.nodes.export.data).forEach(function(vid, _) {
       // Remove all not current data and unselect everything that remains.
-      if ($.inArray(vid, vipnetInterface.nodes.export.currentPageVids) == -1) {
+      if($.inArray(vid, vipnetInterface.nodes.export.currentPageVids) == -1) {
         delete vipnetInterface.nodes.export.data[vid];
       } else {
         vipnetInterface.nodes.export.unSelectRow(vid);
