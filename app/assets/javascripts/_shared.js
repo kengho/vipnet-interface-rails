@@ -77,10 +77,25 @@ vipnetInterface = {
 
   bindHome: function() {
     $("*[data-load='home']").click(function() {
-      $("#progress").vipnetInterface().tmpShow();
-      vipnetInterface.nodes.ajax.load();
-      vipnetInterface.clearSearchBar();
+      vipnetInterface.gotoPage(1);
     });
+  },
+
+
+  gotoPage: function(page) {
+    if(!page) {
+      page = "1"
+    }
+    if(!vipnetInterface.params.page) {
+      vipnetInterface.params.page = "1"
+    }
+
+    // if(vipnetInterface.params != { page: page })
+    if(Object.keys(vipnetInterface.params).length > 1 || vipnetInterface.params.page != page) {
+      $("#progress").vipnetInterface().tmpShow();
+      vipnetInterface.params = { page: page };
+      vipnetInterface.nodes.ajax.load();
+    }
   },
 
   bindSelectRow: function() {
@@ -127,14 +142,6 @@ vipnetInterface = {
         }
       },
     });
-  },
-
-  gotoHome: function() {
-    // if(vipnetInterface.params != {})
-    if(Object.keys(vipnetInterface.params).length > 0) {
-      vipnetInterface.params = {};
-      vipnetInterface.nodes.ajax.load();
-    }
   },
 
   clearSearchBar: function() {

@@ -18,6 +18,6 @@ $(document).ready(function() {
 
   $("div[data-clear-search-bar]").click(function() {
     vipnetInterface.clearSearchBar();
-    vipnetInterface.gotoHome();
+    vipnetInterface.gotoPage(vipnetInterface.params.page);
   });
 });
