@@ -55,7 +55,8 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
       vid: "0x1a0e0001",
       category: "client",
       server_number: "0002",
-    ); ncc_node.save!
+    )
+    ncc_node.save!
 
     # 0x1a0e000a: 2 clients registered
     CurrentNccNode.create!(
@@ -63,7 +64,8 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
       vid: "0x1a0e0002",
       category: "client",
       server_number: "0001",
-    ); ncc_node.save!
+    )
+    ncc_node.save!
     CurrentNccNode.create!(
       network: @network1,
       vid: "0x1a0e0003",
@@ -90,7 +92,8 @@ class MostLikelyTest < ActionDispatch::IntegrationTest
       vid: "0x1a0e0002",
       category: "client",
       server_number: "0001",
-    ); ncc_node.save!
+    )
+    ncc_node.save!
     CurrentNccNode.create!(
       network: @network1,
       vid: "0x1a0e0003",
