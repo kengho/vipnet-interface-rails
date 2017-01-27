@@ -1,4 +1,5 @@
 class Api::V1::IplirconfsController < Api::V1::BaseController
+  # TODO: break.
   def create
     unless params[:file] && params[:coord_vid]
       Rails.logger.error("Incorrect params #{params}")
@@ -6,38 +7,86 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     end
 
     iplirconf_file = File.read(params[:file].tempfile)
-    iplirconf = VipnetParser::Iplirconf.new(iplirconf_file)
-    iplirconf.parse
+    current_iplirconf = VipnetParser::Iplirconf.new(iplirconf_file)
+    current_iplirconf.parse
+    current_iplirconf_version = current_iplirconf.version
 
-    coord_vid = params[:coord_vid]
-    network = Network
-                .find_or_create_by(network_vid: VipnetParser.network(coord_vid))
-    coordinator = Coordinator
-                    .find_or_create_by(vid: coord_vid, network: network)
-    diff = Iplirconf.push(
-      hash: iplirconf.hash,
+    network_vid = VipnetParser.network(params[:coord_vid])
+    network = Network.find_or_create_by(network_vid: network_vid)
+    coordinator = Coordinator.find_or_create_by(
+      vid: params[:coord_vid],
+      network: network,
+    )
+    garland_diff = Iplirconf.push(
+      hash: current_iplirconf.hash,
       belongs_to: coordinator,
     )
-    unless diff
+    unless garland_diff
       Rails.logger.error("Unable to push hash")
       render plain: ERROR_RESPONSE and return
     end
-    iplirconf_created_at = diff.created_at
+    iplirconf_created_at = garland_diff.created_at
+
+    last_diff = Iplirconf.last_diff(coordinator)
+    if last_diff
+      previous_iplirconf_hash = Iplirconf.head(coordinator).safe_eval_entity
+
+      # TODO: implement and use snapshots in Garland.
+      HashDiffSym.unpatch!(
+        previous_iplirconf_hash,
+        last_diff.safe_eval_entity,
+      )
+      previous_iplirconf = VipnetParser::Iplirconf.new
+      previous_iplirconf.hash = previous_iplirconf_hash
+      previous_iplirconf_version = previous_iplirconf.version
+    else
+      previous_iplirconf_version = nil
+    end
+
+    iplirconf_versions_equal = !previous_iplirconf_version ||
+                               previous_iplirconf_version ==
+                               current_iplirconf_version
+    if iplirconf_versions_equal
+      diff = garland_diff.safe_eval_entity
+    else
+      unless current_iplirconf.downgrade(previous_iplirconf_version)
+        Rails.logger.info(
+          "Falied to downgrade 'current_iplirconf'.
+          Hash: #{current_iplirconf.hash}".squish,
+        )
+        render plain: ERROR_RESPONSE and return
+      end
+      diff = HashDiffSym.diff(previous_iplirconf.hash, current_iplirconf.hash)
+    end
 
     ascendants_ids = []
-    diff.safe_eval_entity.each do |changes|
+    diff.each do |changes|
       changes_expanded = HashDiffSymUtils.expand_changes(changes)
       changes_expanded.each do |change|
         action, target, props, before, after = HashDiffSymUtils
                                                  .decode_changes(change)
+
+        # REVIEW: all HwNode.props_from_iplirconf.include? below
+        change_is_useful = HwNode
+                             .props_from_iplirconf
+                             .include?(target[:field]) ||
+                           target[:field] == :ip ||
+                           !target[:field]
+
+        next unless change_is_useful
         ncc_node = CurrentNccNode.find_by(vid: target[:vid])
         next unless ncc_node
+        if target[:field] == :ip
+          ip_format_v4 = props =~ /(?<ip>.+),\s(?<accessip>.+)/
+          props = Regexp.last_match(:ip) if ip_format_v4
+        end
 
         # FIXME
         # rubocop:disable Metrics/BlockNesting
         if action == :add
           if target[:field] && target[:index]
             # ["+", "0x1a0e000b.:ip[0]", "192.0.2.55"]
+
             if target[:field] == :ip && IPv4.ip?(props)
               hw_node = CurrentHwNode.find_by(
                 ncc_node: ncc_node,
@@ -128,13 +177,14 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
           if target[:field] && target[:index]
             # ["-", "0x1a0e000a.:ip[0]", "192.0.2.51"]
             if target[:field] == :ip && IPv4.ip?(props)
+              ip = props
               changing_hw_node = CurrentHwNode.find_by(
                 ncc_node: ncc_node,
                 coordinator: coordinator,
               )
               node_ip = NodeIp.find_by(
                 hw_node: changing_hw_node,
-                u32: IPv4.u32(props),
+                u32: IPv4.u32(ip),
               )
               if changing_hw_node && node_ip
                 accendant = HwNode
@@ -161,7 +211,7 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
                 Rails.logger.info(
                   "CurrentHwNode with ncc_node: #{ncc_node.inspect},
                   coordinator: #{coordinator.inspect}
-                  doesn't exist or has no node_ip '#{props}'".squish,
+                  doesn't exist or has no node_ip '#{ip}'".squish,
                 )
               end
             end

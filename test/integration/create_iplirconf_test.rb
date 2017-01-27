@@ -92,11 +92,6 @@ class CreateIplirconfTest < ActionDispatch::IntegrationTest
     )
     post(
       api_v1_iplirconfs_url,
-      params: { file: initial_iplirconf, coord_vid: "0x1a0e000a" },
-      headers: @headers,
-    )
-    post(
-      api_v1_iplirconfs_url,
       params: { file: added_0x1a0e000d_iplirconf, coord_vid: "0x1a0e000a" },
       headers: @headers,
     )
@@ -435,6 +430,48 @@ class CreateIplirconfTest < ActionDispatch::IntegrationTest
       ],
     )
     expected_hw_nodes.reject_nil_keys
+    assert_hw_nodes_should_be expected_hw_nodes
+
+    # 09_0x1a0e000a_moved_to_v4 (nothing should change)
+    moved_to_v4_iplifconf = fixture_file_upload(
+      "iplirconfs/09_0x1a0e000a_moved_to_v4.conf",
+      "application/octet-stream",
+    )
+    post(
+      api_v1_iplirconfs_url,
+      params: { file: moved_to_v4_iplifconf, coord_vid: "0x1a0e000a" },
+      headers: @headers,
+    )
+    assert_hw_nodes_should_be expected_hw_nodes
+
+    # 10_0x1a0e000a_changed (:change)
+    iplifconf_v4_changed = fixture_file_upload(
+      "iplirconfs/10_0x1a0e000a_changed.conf",
+      "application/octet-stream",
+    )
+    post(
+      api_v1_iplirconfs_url,
+      params: { file: iplifconf_v4_changed, coord_vid: "0x1a0e000a" },
+      headers: @headers,
+    )
+
+    expected_hw_nodes.change_where(
+      {
+        coord_vid: "0x1a0e000a",
+        ncc_node_vid: "0x1a0e000c",
+      },
+      {
+        version: "3.0-670",
+        version_decoded: HwNode.decode_version("3.0-670"),
+      },
+    )
+    expected_hw_nodes.push(
+      descendant_coord_vid: "0x1a0e000a",
+      descendant_vid: "0x1a0e000c",
+      version: "0.3-2",
+      version_decoded: HwNode.decode_version("0.3-2"),
+      creation_date: coordinator1.last_iplirconfs_created_at,
+    )
     assert_hw_nodes_should_be expected_hw_nodes
   end
 end

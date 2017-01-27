@@ -93,6 +93,7 @@ class Api::V1::BaseController < ActionController::Base
                              .map(&:updated_at)
                              .sort
                              .last
+      return Float::INFINITY unless latest_update_date
 
       (DateTime.current - latest_update_date.to_datetime) * 1.day / 1.minute
     end
