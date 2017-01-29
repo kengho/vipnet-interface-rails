@@ -68,7 +68,7 @@ GEM
     ffi-compiler (1.0.1)
       ffi (>= 1.0.0)
       rake
-    garland (1.2.2)
+    garland (1.3.0)
       hashdiff_sym (~> 0)
     globalid (0.3.7)
       activesupport (>= 4.1.0)
@@ -182,7 +182,7 @@ GEM
       thread_safe (~> 0.1)
     uglifier (3.0.4)
       execjs (>= 0.3.0, < 3)
-    vipnet_parser (2.4.4)
+    vipnet_parser (2.4.5)
     web-console (2.3.0)
       activemodel (>= 4.0)
       binding_of_caller (>= 0.7.2)

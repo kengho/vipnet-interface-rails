@@ -9,7 +9,6 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     iplirconf_file = File.read(params[:file].tempfile)
     current_iplirconf = VipnetParser::Iplirconf.new(iplirconf_file)
     current_iplirconf.parse
-    current_iplirconf_version = current_iplirconf.version
 
     network_vid = VipnetParser.network(params[:coord_vid])
     network = Network.find_or_create_by(network_vid: network_vid)
@@ -17,6 +16,15 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
       vid: params[:coord_vid],
       network: network,
     )
+
+    # Initialize "previous_iplirconf_version" variable for "coordinator".
+    coordinator.current_iplirconf_version ||= current_iplirconf.version
+    coordinator.save! if coordinator.changed?
+
+    # Considering "coordinator.current_iplirconf_version" to be previous version,
+    # and "current_iplirconf"'s to be current.
+    previous_iplirconf_version = coordinator.current_iplirconf_version
+
     garland_diff = Iplirconf.push(
       hash: current_iplirconf.hash,
       belongs_to: coordinator,
@@ -27,37 +35,27 @@ class Api::V1::IplirconfsController < Api::V1::BaseController
     end
     iplirconf_created_at = garland_diff.created_at
 
-    last_diff = Iplirconf.last_diff(coordinator)
-    if last_diff
-      previous_iplirconf_hash = Iplirconf.head(coordinator).safe_eval_entity
-
-      # TODO: implement and use snapshots in Garland.
-      HashDiffSym.unpatch!(
-        previous_iplirconf_hash,
-        last_diff.safe_eval_entity,
-      )
-      previous_iplirconf = VipnetParser::Iplirconf.new
-      previous_iplirconf.hash = previous_iplirconf_hash
-      previous_iplirconf_version = previous_iplirconf.version
-    else
-      previous_iplirconf_version = nil
-    end
-
-    iplirconf_versions_equal = !previous_iplirconf_version ||
-                               previous_iplirconf_version ==
-                               current_iplirconf_version
+    iplirconf_versions_equal = previous_iplirconf_version ==
+                               current_iplirconf.version
     if iplirconf_versions_equal
       diff = garland_diff.safe_eval_entity
     else
       unless current_iplirconf.downgrade(previous_iplirconf_version)
-        Rails.logger.info(
-          "Falied to downgrade 'current_iplirconf'.
-          Hash: #{current_iplirconf.hash}".squish,
-        )
+        Rails.logger.info("Falied to downgrade current_iplirconf")
         render plain: ERROR_RESPONSE and return
       end
-      diff = HashDiffSym.diff(previous_iplirconf.hash, current_iplirconf.hash)
+
+      previous_snapshot = Iplirconf
+                            .head(coordinator)
+                            .previous
+                            .previous
+                            .snapshot
+      previous_iplirconf_hash = previous_snapshot.safe_eval_entity
+      diff = HashDiffSym.diff(previous_iplirconf_hash, current_iplirconf.hash)
     end
+    coordinator.update_attributes(
+      current_iplirconf_version: current_iplirconf.version,
+    )
 
     ascendants_ids = []
     diff.each do |changes|
