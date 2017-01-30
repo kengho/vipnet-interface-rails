@@ -1,6 +1,7 @@
 class Api::V1::IplirconfsController < Api::V1::BaseController
   def create
     coordinator, creation_date, diff = Utils.prepare(params)
+    render plain: ERROR_RESPONSE and return unless coordinator
 
     # Storage for ids of accendants created within one create() run.
     # Uses to group changes that happened at once in one accendant.

@@ -2,7 +2,7 @@ module Api::V1::IplirconfsController::Utils
   def prepare(params)
     unless params[:file] && params[:coord_vid]
       Rails.logger.error("Incorrect params #{params}")
-      render plain: ERROR_RESPONSE and return
+      return nil
     end
 
     iplirconf_content = File.read(params[:file].tempfile)
@@ -30,7 +30,7 @@ module Api::V1::IplirconfsController::Utils
     )
     unless garland_diff
       Rails.logger.error("Unable to push hash")
-      render plain: ERROR_RESPONSE and return
+      return nil
     end
     iplirconf_created_at = garland_diff.created_at
 
@@ -40,7 +40,7 @@ module Api::V1::IplirconfsController::Utils
     else
       unless current_iplirconf.downgrade(previous_iplirconf_version)
         Rails.logger.info("Falied to downgrade current_iplirconf")
-        render plain: ERROR_RESPONSE and return
+        return nil
       end
 
       previous_snapshot = Iplirconf
