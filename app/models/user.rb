@@ -1,8 +1,6 @@
 class User < ActiveRecord::Base
-  validates :role, presence: true
-  validates :role, uniqueness: {
-    conditions: -> { where(role: "admin") },
-  }
+  validates :role, presence: true,
+                   uniqueness: { conditions: -> { where(role: "admin") }}
 
   acts_as_authentic do |c|
     c.crypto_provider = Authlogic::CryptoProviders::Sha512
