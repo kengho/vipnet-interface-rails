@@ -66,7 +66,6 @@ vipnetInterface.nodes.export = {
   },
 
   selectAllRows: function() {
-    vipnetInterface.nodes.export.unselectAllRows();
     Object.keys(vipnetInterface.nodes.export.data).forEach(function(vid, _) {
       vipnetInterface.nodes.export.selectRow(vid);
     });
