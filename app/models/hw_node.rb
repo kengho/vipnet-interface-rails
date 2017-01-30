@@ -28,6 +28,95 @@ class HwNode < ActiveRecord::Base
     nil
   end
 
+  def self.create_with_ips(props)
+    hw_node_props = props.reject { |prop, _| prop == :ip }
+    hw_node = CurrentHwNode.create!(hw_node_props)
+    hw_node.create_ips(props[:ip])
+  end
+
+  def update_with_ips(props)
+    hw_node_props = props.reject { |prop, _| prop == :ip }
+    update_attributes(hw_node_props)
+    create_ips(props[:ip])
+  end
+
+  def find_or_create_accendant(ascendants_ids, creation_date)
+    accendant = HwNode
+                  .where(id: ascendants_ids)
+                  .find_by(descendant: self)
+
+    return accendant if accendant
+
+    accendant = HwNode.create!(
+      descendant: self,
+      creation_date: creation_date,
+    )
+    ascendants_ids.push(accendant.id)
+
+    accendant
+  end
+
+  def delete_ip(ip, ascendant)
+    node_ip = NodeIp.find_by(
+      hw_node: self,
+      u32: IPv4.u32(ip),
+    )
+    return unless node_ip
+
+    node_ip.update_attributes(hw_node_id: ascendant.id)
+  end
+
+  def undelete(new_props, creation_date)
+    # At first, we are trying to figure out, was there such section in past or not?
+    # Maybe connection between node and coordinator was deleted and added again?
+    # If so, HwNode should go from "DeletedHwNode" to "CurrentHwNode" and it's attributes should be upgraded.
+    # Also, old attributes of "deleted_hw_node" should be saved in ascendant.
+    # (At this point we don't save HwNode's status ("Deleted" or "Current") in ascendant.)
+    #
+    # Create accendant.
+    accendant_props = attributes
+    accendant_props.reject! do |prop, _|
+      !HwNode.props_from_iplirconf.include?(prop.to_sym)
+    end
+
+    accendant_props[:descendant] = self
+    accendant_props[:creation_date] = creation_date
+    accendant = HwNode.create!(accendant_props)
+
+    # Move ips to accendant.
+    node_ips.each do |node_ip|
+      node_ip.update_attributes(hw_node_id: accendant.id)
+    end
+
+    # Prepare new props.
+    #
+    # If some prop was deleted, "new_section_props" will lack of it,
+    # thus "update_attributes" will leave this prop as it was before,
+    # but we want it to become "nil".
+    # ["prop1", "prop2", "prop3"]
+    #  =>
+    # { "prop1" => nil, "prop2" => nil, "prop3" => nil }
+    nil_props_array = HwNode
+                        .props_from_iplirconf
+                        .flat_map { |x| [x, nil] }
+    deleted_hw_node_props = Hash[*nil_props_array]
+    deleted_hw_node_props.merge!(new_props)
+    deleted_hw_node_props[:type] = "CurrentHwNode"
+
+    # Update self.
+    update_with_ips(deleted_hw_node_props)
+
+    accendant
+  end
+
+  def create_ips(ips)
+    return unless ips
+    ips.each do |ip|
+      next unless IPv4.ip?(ip)
+      NodeIp.create!(hw_node: self, u32: IPv4.u32(ip))
+    end
+  end
+
   def self.to_json_hw
     result = []
     all.find_each do |e|
@@ -85,6 +174,7 @@ class HwNode < ActiveRecord::Base
 
   def self.props_from_iplirconf
     %i(
+      ip
       accessip
       version
       version_decoded

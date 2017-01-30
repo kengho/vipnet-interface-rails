@@ -10,6 +10,11 @@ module HashDiffSymUtils
     end
     props = changes[2] if action == :add || action == :remove
 
+    if target[:field] == :ip
+      ip_format_v4 = props =~ /(?<ip>.+),\s(?<accessip>.+)/
+      props = Regexp.last_match(:ip) if ip_format_v4
+    end
+
     [action, target, props, before, after]
   end
 
