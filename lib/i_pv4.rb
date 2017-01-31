@@ -26,14 +26,12 @@ module IPv4
   def u32(string)
     return nil unless IPv4.ip?(string)
     octets = string.split(".")
-    hex_string = ""
-    octets.each { |octet| hex_string << octet.to_i.to_s(16).rjust(2, "0") }
 
-    hex_string.to_i(16)
+    octets.map { |octet| octet.to_i.to_s(16).rjust(2, "0") }.join.to_i(16)
   end
 
   def ip(u32)
-    return nil unless u32.is_a? Numeric
+    return nil unless u32.is_a?(Numeric)
     return nil unless u32.between?(0, 0xffffffff)
 
     # http://stackoverflow.com/a/12039844/6376451
@@ -63,7 +61,7 @@ module IPv4
     return nil unless cidr || range
 
     if cidr
-      bitwise_mask = 0xffffffff >> (32 - cidr[1]) << (32 - cidr[1])
+      bitwise_mask = 0xffffffff >> (32 - cidr.last) << (32 - cidr.last)
       network_size = 1 << (32 - cidr.last)
       lower_bound = IPv4.u32(cidr.first) & bitwise_mask
       higher_bound = lower_bound + network_size - 1

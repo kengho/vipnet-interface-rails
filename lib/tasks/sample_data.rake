@@ -22,10 +22,8 @@ namespace :db do
     end
 
     print "Filling Network...\n"
-    network1 = Network.new(network_vid: "6670")
-    network1.save!
-    network2 = Network.new(network_vid: "6671")
-    network2.save!
+    network1 = Network.create!(network_vid: "6670")
+    network2 = Network.create!(network_vid: "6671")
 
     print "Filling Coordinator...\n"
     Coordinator.create!(vid: "0x1a0e000a", network: network1)
@@ -94,7 +92,7 @@ namespace :db do
       rand_creation_date = rand_date
       rand_type, rand_deletion_date =
         rand_type_and_deletion_date_after(rand_creation_date)
-      ncc_node = NccNode.new(
+      ncc_node = NccNode.create!(
         type: rand_type,
         name: rand_name,
         vid: rand_vid,
@@ -107,7 +105,6 @@ namespace :db do
         abonent_number: rand_abonent_number,
         server_number: rand_server_number,
       )
-      ncc_node.save!
 
       changing_props = %i(name enabled abonent_number server_number)
       rand(5).times do |_|
@@ -130,14 +127,13 @@ namespace :db do
       print "#{i + 1}/#{n + 4}..."
       current_version = rand_version
       Coordinator.all.each do |coordinator|
-        hw_node = CurrentHwNode.new(
+        hw_node = CurrentHwNode.create!(
           ncc_node: ncc_node,
           coordinator: coordinator,
           accessip: rand_ip,
           version: rand_version_near(current_version),
           creation_date: rand_date,
         )
-        hw_node.save!
 
         create_random_ip_for(hw_node)
 
