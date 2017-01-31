@@ -2,7 +2,7 @@ require "test_helper"
 
 class Api::V1::NodesControllerTest < ActionController::TestCase
   setup do
-    ncc_node = CurrentNccNode.new(
+    ncc_node = CurrentNccNode.create!(
       vid: "0x1a0e0001",
       name: "client-0x1a0e0001",
       network: networks(:network1),
@@ -11,23 +11,20 @@ class Api::V1::NodesControllerTest < ActionController::TestCase
       creation_date: DateTime.current,
       creation_date_accuracy: true,
     )
-    ncc_node.save!
-    hw_node1 = CurrentHwNode.new(
+    hw_node1 = CurrentHwNode.create!(
       ncc_node: ncc_node,
       coordinator: coordinators(:coordinator1),
       accessip: "198.51.100.1",
       version: "0.3-2",
       version_decoded: HwNode.decode_version("0.3-2"),
     )
-    hw_node1.save!
-    hw_node2 = CurrentHwNode.new(
+    hw_node2 = CurrentHwNode.create!(
       ncc_node: ncc_node,
       coordinator: coordinators(:coordinator2),
       accessip: "198.51.100.2",
       version: "3.0-670",
       version_decoded: HwNode.decode_version("3.0-670"),
     )
-    hw_node2.save!
     NodeIp.create!(hw_node: hw_node1, u32: IPv4.u32("192.0.2.1"))
     NodeIp.create!(hw_node: hw_node1, u32: IPv4.u32("192.0.2.2"))
     NodeIp.create!(hw_node: hw_node2, u32: IPv4.u32("192.0.2.3"))

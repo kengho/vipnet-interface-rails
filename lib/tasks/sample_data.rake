@@ -216,7 +216,7 @@ namespace :db do
   end
 
   def rand_abonent_number
-    rand("0x1000".to_i(16)).to_s(16).upcase.rjust(4, "0")
+    rand(0x1000).to_s(16).upcase.rjust(4, "0")
   end
 
   def rand_server_number

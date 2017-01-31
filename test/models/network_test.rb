@@ -22,7 +22,7 @@ class NetworksTest < ActiveSupport::TestCase
   end
 
   test "should save network with network_vid in range 0x1-0xffff" do
-    network1 = Network.new(network_vid: "0xffff".to_i(16).to_s)
+    network1 = Network.new(network_vid: 0xffff.to_s)
     network2 = Network.new(network_vid: "1")
     assert network1.save
     assert network2.save

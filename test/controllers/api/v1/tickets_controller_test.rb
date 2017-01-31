@@ -15,11 +15,10 @@ class Api::V1::TicketsControllerTest < ActionController::TestCase
   test "create" do
     request.env["HTTP_AUTHORIZATION"] = "Token token=\"POST_TICKETS_TOKEN\""
     TicketSystem.destroy_all
-    ncc_node_0x1a0e0001 = CurrentNccNode.new(
+    ncc_node_0x1a0e0001 = CurrentNccNode.create!(
       vid: "0x1a0e0001",
       network: networks(:network1),
     )
-    ncc_node_0x1a0e0001.save!
 
     post(
       :create,

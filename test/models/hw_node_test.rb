@@ -2,8 +2,7 @@ require "test_helper"
 
 class HwNodesTest < ActiveSupport::TestCase
   setup do
-    @ncc_node = CurrentNccNode.new(network: networks(:network1), vid: "0x1a0e0001")
-    @ncc_node.save!
+    @ncc_node = CurrentNccNode.create!(network: networks(:network1), vid: "0x1a0e0001")
     @coordinator = coordinators(:coordinator1)
   end
 

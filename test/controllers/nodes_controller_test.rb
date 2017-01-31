@@ -2,13 +2,13 @@ require "test_helper"
 
 class NodesControllerTest < ActionController::TestCase
   setup do
-    @session = UserSession.create(users(:user1))
+    @session = UserSession.create!(users(:user1))
     @network = networks(:network1)
     @coordinator1 = coordinators(:coordinator1)
     @coordinator2 = coordinators(:coordinator2)
     @ticket_system1 = TicketSystem.create!(url_template: "http://tickets.org/ticket_id={id}")
     @ticket_system2 = TicketSystem.create!(url_template: "http://tickets2.org/ticket_id={id}")
-    Settings.vid_search_threshold = "0xff".to_i(16)
+    Settings.vid_search_threshold = 0xff
   end
 
   test "shouldn't be available without login" do
