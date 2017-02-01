@@ -151,14 +151,27 @@ class NccNode < ActiveRecord::Base
 
     availability = false
     accessips.each do |accessip|
-      http_request = Settings
-                       .checker_api
-                       .sub("{ip}", accessip)
-                       .sub("{token}", ENV["CHECKER_TOKEN"])
-      http_response = HTTParty.get(http_request)
-      if http_response.code == :ok
-        availability ||= http_response.parsed_response["data"]["availability"]
+      url = Settings.checker_api
+                      .sub("{ip}", accessip)
+                      .sub("{token}", ENV["CHECKER_TOKEN"])
+      url << "&port=5100"
+
+      begin
+        response = RestClient.get(url, accept: :json)
+      rescue => e
+        Rails.logger.error(
+          "Error while checking availability
+          vid: '#{vid}', accessip: '#{accessip}':
+          '#{e}'".squish,
+        )
       end
+
+      next unless response
+      next unless response.code == 200
+      parsed_response = JSON.parse(response)
+      data = parsed_response["data"]
+      next unless data
+      availability ||= data["availability"]
       break if availability
     end
 
