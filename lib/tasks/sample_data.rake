@@ -5,6 +5,16 @@ namespace :db do
   # rake db:populate[100]
   desc "Fill database with sample data"
   task :populate, [:n] => [:environment] do |_, args|
+    print "ATTENTION! This will destroy all youd data
+    (excluding 'users' and 'settinsg' tables). Are you sure?
+    Type 'Yes' (with capital 'Y') to proceed.".squish
+    print "\n"
+    confirmation = STDIN.gets.strip
+    unless confirmation == "Yes"
+      print "Cancelled by user.\n"
+      next
+    end
+
     DEFAULT_N = 200
     n = if args[:n]
           args[:n].to_i
