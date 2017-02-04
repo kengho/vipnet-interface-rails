@@ -10,17 +10,7 @@ class NccNode < ActiveRecord::Base
              class_name: "NccNode",
              foreign_key: "descendant_id"
   validates :descendant, presence: { unless: :type? }
-
-  def self.vid_regexp
-    /\A0x[0-9a-f]{8}\z/
-  end
-
-  validates :vid,
-            format: {
-              with: NccNode.vid_regexp,
-              message: "vid should be like \"#{NccNode.vid_regexp}\"",
-            },
-            allow_blank: true
+  validates :vid, vid: true, allow_blank: true
 
   after_create :adopt_tickets
 
@@ -151,9 +141,10 @@ class NccNode < ActiveRecord::Base
 
     availability = false
     accessips.each do |accessip|
-      url = Settings.checker_api
-                      .sub("{ip}", accessip)
-                      .sub("{token}", ENV["CHECKER_TOKEN"])
+      url = Settings
+              .checker_api
+              .sub("{ip}", accessip)
+              .sub("{token}", ENV["CHECKER_TOKEN"])
       url << "&port=5100"
 
       begin

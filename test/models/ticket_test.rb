@@ -23,7 +23,7 @@ class TicketTest < ActiveSupport::TestCase
   end
 
   test "should not save same ticket_system for such vid and ticket_id" do
-    ticket1 = Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
+    Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
     ticket2 = Ticket.new(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
     ticket3 = Ticket.new(ticket_system: @ticket_system2, vid: "0x1a0e0001", ticket_id: "1")
     assert_not ticket2.save
@@ -31,7 +31,7 @@ class TicketTest < ActiveSupport::TestCase
   end
 
   test "should not save same vid for such ticket_system and ticket_id" do
-    ticket1 = Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
+    Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
     ticket2 = Ticket.new(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
     ticket3 = Ticket.new(ticket_system: @ticket_system1, vid: "0x1a0e0002", ticket_id: "1")
     assert_not ticket2.save
@@ -39,7 +39,7 @@ class TicketTest < ActiveSupport::TestCase
   end
 
   test "should not save same ticket_id for such ticket_system and vid" do
-    ticket1 = Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
+    Ticket.create!(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
     ticket2 = Ticket.new(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "1")
     ticket3 = Ticket.new(ticket_system: @ticket_system1, vid: "0x1a0e0001", ticket_id: "2")
     assert_not ticket2.save
