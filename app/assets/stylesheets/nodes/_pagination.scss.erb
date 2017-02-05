@@ -1,5 +1,10 @@
 @import "_shared";
 
+$current-page-text-color: (
+  "": white,
+  dark: map-get($main-text-color, "dark"),
+);
+
 <% Themizer.themize do %>
 
 .pagination {
@@ -28,7 +33,7 @@
 
   & em.current {
     background-color: $primary-color~;
-    color: $contrast-text-color-inverted~;
+    color: $current-page-text-color~;
   }
 }
 
