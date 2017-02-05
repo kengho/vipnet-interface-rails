@@ -48,8 +48,7 @@ vipnetInterface.nodes.ajax = {
     $("#header__search input").keypress(function(e) {
         var event = e || window.event;
         var charCode = event.which || event.keyCode;
-        // <Enter>
-        if(charCode == "13") {
+        if(charCode == "13") { // <Enter>
           $("#progress").vipnetInterface().tmpShow();
         }
     })
@@ -87,10 +86,7 @@ vipnetInterface.nodes.ajax = {
     });
   },
 
-  load: function(data, history) {
-    // http://stackoverflow.com/a/8128312/6376451
-    if(typeof history === "undefined") { timeout = false; }
-
+  load: function(data, history = false) {
     vipnetInterface.nodes.ajax.history = history;
     $.ajax({
       url: vipnetInterface.nodes.ajax.urls["load"],
@@ -122,14 +118,11 @@ vipnetInterface.nodes.ajax = {
     });
   },
 
-  button: function($row, action, prop) {
-    // http://stackoverflow.com/a/8128312/6376451
-    if(typeof prop === "undefined") { prop = null; }
-
+  button: function($row, action, prop = null) {
     if(prop) {
-      return $row.find("*[data-action-name='" + action + "'][data-action-prop='" + prop + "']");
+      return $row.find(`*[data-action-name='${action}'][data-action-prop='${prop}']`);
     } else {
-      return $row.find("*[data-action-name='" + action + "']");
+      return $row.find(`*[data-action-name='${action}']`);
     }
   },
 
@@ -256,10 +249,10 @@ vipnetInterface.nodes.ajax = {
     var $row = vipnetInterface.nodes.row(args.vid);
 
     // @TODO store selector somehow
-    var $history = $row.nextAll("*[name='history'][data-prop='" + args.prop + "']");
+    var $history = $row.nextAll(`*[name='history'][data-prop='${args.prop}']`);
     if($history.length == 0) {
       $row.after(args.html);
-      var $history = $row.nextAll("*[name='history'][data-prop='" + args.prop + "']");
+      var $history = $row.nextAll(`*[name='history'][data-prop='${args.prop}']`);
       vipnetInterface.nodes.ajax.bindCloseButton($history);
 
       setTimeout(

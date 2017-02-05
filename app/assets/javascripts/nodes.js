@@ -3,6 +3,6 @@ vipnetInterface.nodes = {
   export: {},
 
   row: function(vid) {
-    return $("*[data-vid='" + vid + "']");
+    return $(`*[data-vid='${vid}']`);
   },
 };

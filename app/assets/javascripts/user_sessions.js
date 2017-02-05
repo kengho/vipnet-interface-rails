@@ -6,7 +6,7 @@ $(document).ready(function() {
       .val();
 
     $.ajax({
-      url: "/reset_password?email=" + email,
+      url: `/reset_password?email=${email}`,
       method: "get",
       dataType: "script",
     });

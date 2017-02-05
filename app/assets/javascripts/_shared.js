@@ -2,16 +2,13 @@ vipnetInterface = {
   nodes: {},
   params: {},
   localePageReloadTime: 1000,
+  defaultSnackbarTime: 3000,
 
   snackbarContainer: function() {
     return $("#snackbar")[0];
   },
 
-  showSnackbar: function(message, timeout, callback) {
-    // http://stackoverflow.com/a/8128312/6376451
-    if(typeof timeout === "undefined") { timeout = 3000; }
-    if(typeof callback === "undefined") { callback = function(){}; }
-
+  showSnackbar: function(message, timeout = vipnetInterface.defaultSnackbarTime, callback = function(){}) {
     var snackbarContainer = vipnetInterface.snackbarContainer();
     var msgToShow = I18n["snackbar"][message] || message;
 

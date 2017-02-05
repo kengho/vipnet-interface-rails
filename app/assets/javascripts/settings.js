@@ -12,8 +12,8 @@ $(document).ready(function() {
     location.href = "#" + tab;
     $("a[data-anchor]").each(function(_, a) {
       var iteratingTab = $(a).data("anchor");
-      var settingsDivQuery = "#" + iteratingTab + "-settings";
-      var linkIdQuery = "a[data-anchor='" + iteratingTab + "']";
+      var settingsDivQuery = `#${iteratingTab}-settings`;
+      var linkIdQuery = `a[data-anchor='${iteratingTab}']`;
       if(iteratingTab == tab) {
         $(settingsDivQuery).css("display", "block");
         $(linkIdQuery).addClass("settings__tab--selected");

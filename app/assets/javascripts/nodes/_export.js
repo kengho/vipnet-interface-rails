@@ -56,11 +56,11 @@ vipnetInterface.nodes.export = {
 
   unselectAllRows: function() {
     Object.keys(vipnetInterface.nodes.export.data).forEach(function(vid, _) {
-      // Remove all not current data and unselect everything that remains.
+      vipnetInterface.nodes.export.unSelectRow(vid);
+
+      // Remove all not current data.
       if($.inArray(vid, vipnetInterface.nodes.export.currentPageVids) == -1) {
         delete vipnetInterface.nodes.export.data[vid];
-      } else {
-        vipnetInterface.nodes.export.unSelectRow(vid);
       }
     });
   },
@@ -73,9 +73,7 @@ vipnetInterface.nodes.export = {
 
   shiftSelectRow: function(vid) {
     var lastSelectedRowVid = vipnetInterface.nodes.export.lastSelectedRowVid;
-    if(vid == lastSelectedRowVid) {
-      return;
-    }
+    if(vid == lastSelectedRowVid) { return; }
     var $rows = $(".nodes__row", ".nodes");
     var start = false;
     var end = false;
@@ -158,24 +156,3 @@ vipnetInterface.nodes.export = {
     }
   },
 }
-
-$(document).ready(function() {
-  $("#actions__unselect-all").click(function() {
-    vipnetInterface.nodes.export.unselectAllRows();
-  });
-
-  $("#header__select-all").click(function() {
-    vipnetInterface.nodes.export.selectAllRows();
-  });
-
-  $("#actions__export-selected").click(function() {
-    if(!$("#actions__export-selected label").attr("disabled")) {
-      // http://stackoverflow.com/a/30810322
-      $("#actions__export-selected textarea")
-        .val(vipnetInterface.nodes.export.exportData())
-        .select();
-      document.execCommand("copy");
-      vipnetInterface.showSnackbar("copied");
-    }
-  });
-});

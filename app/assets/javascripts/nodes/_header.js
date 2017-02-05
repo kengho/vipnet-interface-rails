@@ -1,23 +1,42 @@
 $(document).ready(function() {
-    $("div[data-toggle-dark-theme]").click(function() {
-      var userUrl = $(this).data("user-url");
+  $("#actions__export-selected").click(function() {
+    if(!$("#actions__export-selected label").attr("disabled")) {
+      // http://stackoverflow.com/a/30810322
+      $("#actions__export-selected textarea")
+      .val(vipnetInterface.nodes.export.exportData())
+      .select();
+      document.execCommand("copy");
+      vipnetInterface.showSnackbar("copied");
+    }
+  });
 
-      $.ajax({
-        url: userUrl,
-        method: "patch",
-        dataType: "script",
-        data: {
-          utf8: true,
-          name: "theme",
-          value: $("html").hasClass("dark") ? "" : "dark",
-        },
-      });
+  $("#actions__unselect-all").click(function() {
+    vipnetInterface.nodes.export.unselectAllRows();
+  });
 
-      $("html").toggleClass("dark");
-    });
+  $("#header__select-all").click(function() {
+    vipnetInterface.nodes.export.selectAllRows();
+  });
 
   $("div[data-clear-search-bar]").click(function() {
     vipnetInterface.clearSearchBar();
     vipnetInterface.gotoPage(vipnetInterface.params.page);
+  });
+
+  $("div[data-toggle-dark-theme]").click(function() {
+    var userUrl = $(this).data("user-url");
+
+    $.ajax({
+      url: userUrl,
+      method: "patch",
+      dataType: "script",
+      data: {
+        utf8: true,
+        name: "theme",
+        value: $("html").hasClass("dark") ? "" : "dark",
+      },
+    });
+
+    $("html").toggleClass("dark");
   });
 });
