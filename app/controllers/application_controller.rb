@@ -69,6 +69,7 @@ class ApplicationController < ActionController::Base
           "ver" => "version_decoded",
           "version_hw" => "version",
           "ver_hw" => "version",
+          "network" => "network_vid",
         }
         request = expanded_params["search"]
 

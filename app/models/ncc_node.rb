@@ -125,6 +125,16 @@ class NccNode < ActiveRecord::Base
           category: "client",
         )
       end
+    when "network_vid"
+      network_vid = value
+p value
+p NccNode.all
+      search_resuls = NccNode
+                        .joins(:network)
+                        .where("network_vid = ?", network_vid)
+
+    else
+      search_resuls = NccNode.none
     end
 
     search_resuls
@@ -384,7 +394,7 @@ class NccNode < ActiveRecord::Base
   end
 
   def self.quick_searchable
-    %w(vid name version_decoded ip creation_date ticket)
+    %w(network_vid vid name version_decoded ip creation_date ticket)
   end
 
   def self.props_from_nodename
