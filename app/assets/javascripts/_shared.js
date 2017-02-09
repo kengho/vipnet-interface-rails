@@ -72,12 +72,11 @@ vipnetInterface = {
     });
   },
 
-  bindHome: function() {
-    $("*[data-load='home']").click(function() {
-      vipnetInterface.gotoPage(1);
-    });
-  },
-
+  // bindHome: function() {
+  //   $("*[data-load='home']").click(function() {
+  //     vipnetInterface.gotoPage(1);
+  //   });
+  // },
 
   gotoPage: function(page) {
     if(!page) {
@@ -150,6 +149,5 @@ vipnetInterface = {
 $(document).ready(function() {
   // Radio buttons in header and profile.
   vipnetInterface.bindEventRadio();
-  vipnetInterface.bindHome();
   vipnetInterface.startUpdateCable();
 });

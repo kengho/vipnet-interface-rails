@@ -1,4 +1,13 @@
 $(document).ready(function() {
+  $("*[data-load='home']").click(function(e) {
+    // "e.button == 1" for middle button.
+    if(e.button == 1) {
+      window.open("nodes", "_blank")
+    } else {
+      vipnetInterface.gotoPage(1);
+    }
+  });
+
   $("#actions__export-selected").click(function() {
     if(!$("#actions__export-selected label").attr("disabled")) {
       // http://stackoverflow.com/a/30810322
