@@ -65,12 +65,23 @@ class NccNode < ActiveRecord::Base
 
     when "name"
       name = value
+      search_resuls = NccNode.none
       name_regexp = if name =~ /^\"(.*)\"$/
                       Regexp.last_match(1)
                     else
                       name.gsub(" ", ".*")
                     end
-      search_resuls = NccNode.where("name ~* ?", name_regexp)
+
+      # Handeling incorrect regexps errors.
+      begin
+        # REVIEW: is there are other way?
+        #   PG errors seems not to rescue properly.
+        "" =~ Regexp.new(name_regexp)
+        search_resuls |= NccNode.where("name ~* ?", name_regexp)
+      rescue => e
+        Rails.logger.error("Error while searching using regexp: '#{e}'".squish)
+      end
+
       name_escaped = Regexp.escape(name)
       search_resuls |= NccNode.where("name ILIKE ?", "%#{name_escaped}%")
 

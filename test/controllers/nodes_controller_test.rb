@@ -109,6 +109,12 @@ class NodesControllerTest < ActionController::TestCase
     assert_equal(["0x1a0e0001"], assigns["ncc_nodes"].vids)
   end
 
+  test "shouldn't raise server error in case regexp is invalid" do
+    CurrentNccNode.create!(vid: "0x1a0e0001", network: @network1)
+    get_js(:load, params: { search: "++" })
+    assert_equal([], assigns["ncc_nodes"].vids)
+  end
+
   test "should search by ip" do
     ncc_node1 = CurrentNccNode.new(vid: "0x1a0e0001", network: @network1)
     ncc_node1.save!
