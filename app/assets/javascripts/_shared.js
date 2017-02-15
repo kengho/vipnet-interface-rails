@@ -143,6 +143,7 @@ vipnetInterface = {
   clearSearchBar: function() {
     var $searchBar = $("#header__search").find("input[type=text]");
     if($searchBar.val()) { $searchBar.val(""); }
+    $("#header__clear-search-bar").css("visibility", "hidden");
   },
 };
 

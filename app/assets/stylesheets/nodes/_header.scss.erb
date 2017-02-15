@@ -85,6 +85,7 @@ $search-bgcolor-focus: (
 }
 
 #header__clear-search-bar {
+  visibility: hidden;
   position: absolute;
   right: 8px;
   top: 8px;
@@ -97,8 +98,7 @@ $search-bgcolor-focus: (
 
 <% Themizer.themize do %>
 
-#header__title div[name="home"],
-#export-selected__variants a {
+#header__title div[name="home"] {
   order: 1;
   color: $contrast-text-color-inverted~;
   cursor: pointer;

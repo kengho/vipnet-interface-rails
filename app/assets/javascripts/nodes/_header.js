@@ -27,6 +27,15 @@ $(document).ready(function() {
     vipnetInterface.nodes.export.selectAllRows();
   });
 
+  $("#header__search input").on("input", function() {
+    var searchBarContentLength = $(this).val().length;
+    if(searchBarContentLength == 0) {
+      $("#header__clear-search-bar").css("visibility", "hidden");
+    } else {
+      $("#header__clear-search-bar").css("visibility", "visible");
+    }
+  });
+
   $("div[data-clear-search-bar]").click(function() {
     vipnetInterface.clearSearchBar();
     vipnetInterface.gotoPage(vipnetInterface.params.page);
