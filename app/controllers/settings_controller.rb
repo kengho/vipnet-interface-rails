@@ -4,7 +4,12 @@ class SettingsController < ApplicationController
 
   def index
     # "thing_id is null" means this settings is not users'.
-    @settings = Settings.unscoped.where("thing_id is null").reorder(var: :asc)
+    @settings = Settings
+                  .unscoped
+                  .where(
+                    "var IN (?) AND thing_id is null",
+                    Settings.values.keys,
+                  )
     @users = User.all.reorder(email: :asc)
   end
 
