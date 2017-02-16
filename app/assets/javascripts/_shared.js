@@ -44,39 +44,37 @@ vipnetInterface = {
   },
 
   bindEventRadio: function() {
-    $("div[data-user-settings] input[type='radio']").change(function() {
-      var userUrl = $(this).parent().data("user-url");
-      var name = $(this).attr("name");
-      var value = $(this).attr("value");
+    // Unbind solves error with double firing "change()".
+    // http://stackoverflow.com/a/29582829/6376451
+    $("div[data-user-settings] input[type='radio']")
+      .unbind()
+      .change(function(e) {
+        var userUrl = $(this).parent().data("user-url");
+        var name = $(this).attr("name");
+        var value = $(this).attr("value");
 
-      $.ajax({
-        url: userUrl,
-        method: "patch",
-        dataType: "script",
-        data: {
-          utf8: true,
-          name: name,
-          value: value,
-        },
-        success: function() {
-          if(name == "nodes_per_page") {
-            vipnetInterface.nodes.ajax.load(vipnetInterface.params);
-          } else if(name == "locale") {
-            setTimeout(
-              function() { location.reload(); },
-              vipnetInterface.localePageReloadTime
-            );
-          }
-        },
+        $.ajax({
+          url: userUrl,
+          method: "patch",
+          dataType: "script",
+          data: {
+            utf8: true,
+            name: name,
+            value: value,
+          },
+          success: function() {
+            if(name == "nodes_per_page") {
+              vipnetInterface.nodes.ajax.load(vipnetInterface.params);
+            } else if(name == "locale") {
+              setTimeout(
+                function() { location.reload(); },
+                vipnetInterface.localePageReloadTime
+              );
+            }
+          },
+        });
       });
-    });
   },
-
-  // bindHome: function() {
-  //   $("*[data-load='home']").click(function() {
-  //     vipnetInterface.gotoPage(1);
-  //   });
-  // },
 
   gotoPage: function(page) {
     if(!page) {
