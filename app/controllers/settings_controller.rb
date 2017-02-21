@@ -16,12 +16,13 @@ class SettingsController < ApplicationController
   respond_to :js
 
   def update
+    # TODO: check settings type.
     if params[:general]
       saved_successfully = true
       params.each do |param, value|
         settings = Settings.find_by(var: param)
-
         next unless settings
+
         unless settings.update_attributes(value: value)
           saved_successfully = false
           break

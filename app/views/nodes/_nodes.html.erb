@@ -9,7 +9,7 @@
       <% end %>
 
       <%# REVIEW: view have too complex logic. %>
-      <%# TODO: controller shoul provide view correct data: %>
+      <%# TODO: controller should provide view correct data: %>
       <%#   ncc_node, should it show history and (if yes) what props. %>
       <% printed_nodes_ids = [] %>
       <% @ncc_nodes.each do |ncc_node| %>
@@ -22,7 +22,7 @@
         <% end %>
 
         <%# Filtering out nodes that have been found through descendants %>
-        <%# more than one times. %>
+        <%# more than one time. %>
         <% next if printed_nodes_ids.include?(@ncc_node.id) %>
         <% printed_nodes_ids.push(@ncc_node.id) %>
 

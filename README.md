@@ -2,17 +2,17 @@
 
 ## Summary
 
-ViPNet™ Interface is a web app which collects and shows various information about your ViPNet™ networks' nodes.
+ViPNet™ Interface is an web app which collects and shows various information about your ViPNet™ networks' nodes.
 
-![ViPNet™ Interface main window](/doc/img/main.png?raw=true)
+![main window](/doc/img/main.png?raw=true)
 
 ## Demo
 
 [Demo](https://vipnet-interface-demo.herokuapp.com) (may load for some time at first run).
 
-Credentials: `demo@example.com:Password`
+Credentials: `demo@example.com:Password`.
 
-By now the demo is static and uses data generated using [Faker](https://github.com/stympy/faker) gem (see [lib/tasks/sample_data.rake](sample_data.rake)).
+By now demo is static and shows [Faker](https://github.com/stympy/faker)-generated data [Faker](https://github.com/stympy/faker) (see [lib/tasks/sample_data.rake](sample_data.rake)).
 
 ## Features
 
@@ -23,8 +23,8 @@ By now the demo is static and uses data generated using [Faker](https://github.c
 * provides powerful search
 * allows to check nodes' availability
 * shows nodes' statuses (like disabled or deleted)
-* main settings customises via admin panel
-* auto update page when sonething changes
+* main settings are customizable via admin panel
+* auto updates page when something changes
 * and more
 
 ## Powered by
@@ -45,7 +45,7 @@ Parses incoming files.
 
 * [(vipnet_administrator_post)](https://github.com/kengho/vipnet_administrator_post) (windows scripts)
 
-Runs on NCC and sends `NODENAME.DOC` here via API.
+Runs beside NCC and sends `NODENAME.DOC` here via API.
 
 ## Installing
 
@@ -69,7 +69,7 @@ Setup `getter.yml` and `tickets.yml` using tokens above.
 
  Go to `/settings` and change `localhost:8080` to actual `CHECKER_URL` (don't touch `{ip}` and `{token}`).
 
-* setup [(to be committed)](https://github.com/kengho/) on each ViPNet™ Administrator's you want to gather data from
+* setup [(vipnet_administrator_post)](https://github.com/kengho/vipnet_administrator_post) on each ViPNet™ Administrator's you want to gather data from
 
 * allow `CHECKER_URL` to make requests over TCP\5100 to accessips
 
@@ -80,7 +80,7 @@ like
 rule= proto tcp from 192.168.0.10 to anyip:5100 pass
 ```
 
-You may install this app, [vipnet_interface_config](https://github.com/kengho/vipnet_interface_config) and [checker](https://github.com/kengho/vipnet_checker) on separate servers and setup checker's routes for accessips via Coordinator, but the easiest way is to put one server behind Coordinator and setup all modules there.
+You may install this app, [vipnet_interface_config](https://github.com/kengho/vipnet_interface_config) and [checker](https://github.com/kengho/vipnet_checker) on separate servers and setup checker's routes for accessips via Coordinator, but (of course) the easiest way is to put one server behind Coordinator and setup all modules there.
 
 ### Development
 
@@ -94,11 +94,13 @@ You may install this app, [vipnet_interface_config](https://github.com/kengho/vi
 * advanced datetime search
 * fully JSONish data exchange
 * show proper version for coordinators
-* show IP in main page
+* show IP on main page
 * user setup columns' visibility
+* content-based columns' visibility
 * user invites
 * user registration
 * MS Windows AD integration
+* code improvements
 
 ## License
 

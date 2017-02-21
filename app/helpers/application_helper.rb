@@ -30,9 +30,7 @@ module ApplicationHelper
   def i(path)
     icons = YAML.load_file(Rails.root.join("config", "icons.yml"))
     icon = icons.clone
-    path.split(".").each do |turn|
-      icon = icon[turn]
-    end
+    path.split(".").each { |turn| icon = icon[turn] }
 
     icon
   end
