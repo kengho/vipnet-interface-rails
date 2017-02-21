@@ -12,7 +12,7 @@ ViPNet™ Interface is an web app which collects and shows various information a
 
 Credentials: `demo@example.com:Password`.
 
-By now demo is static and shows [Faker](https://github.com/stympy/faker)-generated data [Faker](https://github.com/stympy/faker) (see [lib/tasks/sample_data.rake](sample_data.rake)).
+By now demo is static and shows [faker](https://github.com/stympy/faker)-generated data (see [lib/tasks/sample_data.rake](sample_data.rake)).
 
 ## Features
 
